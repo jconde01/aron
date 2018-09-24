@@ -1,0 +1,5 @@
+use App\Profile;
+$p = Profile::first();
+$pos = $p->options();
+$po = $pos->first();
+$opciones = $po->options();

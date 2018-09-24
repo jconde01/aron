@@ -1,0 +1,99 @@
+/* Unicamente para el muestrario */  
+body{font-family: 'Nunito Sans', sans-serif !important;} 
+h6{
+    margin-bottom: 10px;
+    font-weight:300; 
+    color: #9b9b9b ;
+}  
+.row{margin-left: 0!important; margin-right: 0!important; margin-bottom: 40px;}
+.no-pad{
+    /* padding: 0 !important; */
+} 
+.vert{
+    display: grid;
+}
+section{margin-bottom: 100px;}
+.separation{
+    /* margin-right: 15px; */
+}
+button.primario.hover{
+    background: #5084F4;
+}
+button.primario.focus{
+background: #1D51C1;
+} 
+button.secundario.hover{
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2); -webkit-box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2); -moz-box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+}
+button.secundario.focus{
+background: #E0EDF9;
+}  
+.input.hover{
+    box-shadow: inset 0 1px 4px 0 rgba(0, 0, 0, 0.2); -webkit-box-shadow: inset 0 1px 4px 0 rgba(0, 0, 0, 0.2); -moz-box-shadow: inset 0 1px 4px 0 rgba(0, 0, 0, 0.2);
+}
+.input.focus{
+    border: 1px solid #00C6FF;
+    box-shadow: 0 3px 7px 0 rgba(0, 198, 255, 0.2); -webkit-box-shadow: 0 3px 7px 0 rgba(0, 198, 255, 0.2); -moz-box-shadow: 0 3px 7px 0 rgba(0, 198, 255, 0.2);
+} 
+.btn.dropdown-forma.hover{
+    -webkit-box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.5);
+    -moz-box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.5);
+    box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.5);
+}
+.dropdown-menu.open {
+    display: block;
+    margin-bottom: 5px !important;
+    clear: left;
+} 
+.dropdown-menu>li>a.hover{
+    background: #E0EDF9!important; 
+    color: #2566F2!important;
+} 
+.dropdown-menu>li>a.focus{
+    color: #E0EDF9!important; 
+    background: #2566F2!important;
+} 
+
+.modal-{
+    position: relative!important;
+    display:table!important;
+}  
+
+.example .tooltip{
+    opacity: 1 !important;
+    position: relative !important; 
+    z-index: 1049;
+}  
+
+.tooltip .titulo{
+    text-align: left;
+}
+.tooltip .parrafo{
+    text-align: left;
+} 
+.tooltip.invert .titulo{
+    text-align: center;
+}
+.tooltip.invert .parrafo{
+    text-align: center;
+}
+  /* End */
+  /* Para centrar el modal */
+  .modal {
+    text-align: center;
+  }
+  
+  @media screen and (min-width: 768px) { 
+    .modal:before {
+      display: inline-block;
+      vertical-align: middle;
+      content: " ";
+      height: 100%;
+    }
+  }
+  
+  .modal-dialog {
+    display: inline-block;
+    text-align: left;
+    vertical-align: middle;
+  }
