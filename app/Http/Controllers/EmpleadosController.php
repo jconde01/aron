@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\ProfileController;
 use App\Job;
-use App\depto;
+use App\Depto;
 use App\Estados;
 use App\DatosGe;
 use App\DatosAfo;
@@ -21,14 +21,14 @@ class EmpleadosController extends Controller
     {
         $this->middleware('database');
     }
-        
+
     public function index()
     {   //$selProceso = \Cache::get('selProceso');
         $selProceso = Session::get('selProceso');
         //Config::set("database.connections.sqlsrv2", Session::get('sqlsrv2'));
     	$emps = Empleado::where('TIPONO', $selProceso)->get();
         $jobs = Job::all();
-        $deps = depto::all();
+        $deps = Depto::all();
         $perfil = auth()->user()->profile->id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
     	return view('catalogos.empleados.index')->with(compact('navbar','emps', 'jobs', 'deps'));
@@ -45,7 +45,7 @@ class EmpleadosController extends Controller
         $puesto1 = Job::where('PUESTO', $puesto)->get()->first();
         $puesto2 = $puesto1->NOMBRE;
         $depto = $empleado->DEPTO;
-        $depto1 = depto::where('DEPTO', $depto)->get()->first();
+        $depto1 = Depto::where('DEPTO', $depto)->get()->first();
         $depto2 = $depto1->DESCRIP;
         $localidad = $empleado2->CIUDAD;
         $telefono = $empleado2->TELEFONO;
@@ -70,7 +70,7 @@ class EmpleadosController extends Controller
         $selProceso = Session::get('selProceso');
         //$selProceso = \Cache::get('selProceso');
         $jobs = Job::all();
-        $deps = depto::all();
+        $deps = Depto::all();
         $ests = Estados::all();
         $perfil = auth()->user()->profile->id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
@@ -293,7 +293,7 @@ $selProceso = Session::get('selProceso');
         $empl1 = DatosGe::where('EMP', $emp)->get()->first();
         $empl11 = DatosAfo::where('EMP', $emp)->get()->first();
         $jobs = Job::all();
-        $deps = depto::all();
+        $deps = Depto::all();
         $ests = Estados::all();
        $perfil = auth()->user()->profile->id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
