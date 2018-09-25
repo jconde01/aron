@@ -158,7 +158,25 @@ Route::middleware(['auth'])->prefix('consultas')->group(function () {
 	Route::get('/recibos/{id}/consulta','ConsultasController@consulta');
 	Route::get('/contratos','ConsultasController@indexContrato');
 	Route::get('/contratos/{id}/consulta','ConsultasController@consultaContrato');
+	Route::get('/timbrado','TimbradoController@index');
+	Route::get('/timbrado/firma','TimbradoController@firma');
+
 });
 
+
+// Rutas para tickets
+Route::middleware(['auth'])->prefix('tickets')->group(function () {
+	Route::get('/usuarios','ticketsController@index');
+	Route::get('/usuarios/create','ticketsController@create');
+	Route::post('/usuarios','ticketsController@store');
+	Route::get('/usuarios/{folio}/cancel','ticketsController@cancel');
+	Route::get('/sistema','ticketsController@tickets');
+	Route::get('/sistema/{folio}/atender','ticketsController@atender');
+	Route::get('/sistema/aceptado','ticketsController@aceptado');
+	Route::get('/sistema/{folio}/seguimiento','ticketsController@seguimiento');
+	Route::post('/sistema/aceptado','ticketsController@update');
+	Route::get('/sistema/consultar','ticketsController@consultar');
+	Route::get('/sistema/{folio}/ver','ticketsController@ver');
+});
 
 
