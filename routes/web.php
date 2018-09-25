@@ -41,15 +41,9 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth'])->prefix('sistema')->group(function () {
 	//Route::get('/chooseClienteYNomina', 'AppController@index');	
 	Route::get('/chooseTipoYProceso', 'AppController@index');	
-<<<<<<< HEAD
 	Route::post('/get-procesos','AppController@getProcesos');					// Ajax call
-	Route::post('/set-session-data','HomeController@setSessionData');
-	Route::post('/testProcesos','AppController@testProcesos');
-=======
-	Route::post('/get-procesos','AppController@getProcesos');		// Ajax call
 	//Route::post('/testProcesos/{tipo}','AppController@testProcesos');
-	Route::post('/set-session-data','AppController@setSessionData');
->>>>>>> b5b41dbe96be2895ab4276d8f0741bab86e4f8ec
+	Route::post('/set-session-data','HomeController@setSessionData');
 });
 
 // Rutas para los catálogos
@@ -93,16 +87,11 @@ Route::middleware(['auth'])->prefix('utilerias')->group(function () {
 Route::middleware(['auth'])->prefix('procesos')->group(function () {
 	Route::get('/nomina','ProcessController@nomina');
 	Route::post('/nomina','ProcessController@requestNomina');
-<<<<<<< HEAD
 	Route::get('/firmaDigital','ProcessController@generaFirma');
 	Route::get('/getPDFText','ProcessController@getPDFText');
 });
 
-=======
-});
 
-
->>>>>>> b5b41dbe96be2895ab4276d8f0741bab86e4f8ec
 // Rutas para transacciones
 Route::middleware(['auth'])->prefix('transacciones')->group(function () {
 	Route::get('/porConcepto','XActsController@porConcepto')->name('porConcepto');

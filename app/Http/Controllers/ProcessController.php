@@ -2,22 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use Session;
 use Illuminate\Http\Request;
 use App\User;
 use App\Periodo;
 use App\Message;
 use App\Notifications\MessageSent;
-<<<<<<< HEAD
 use webcoder31\ezxmldsig\XMLDSigToken;
 
-=======
->>>>>>> b5b41dbe96be2895ab4276d8f0741bab86e4f8ec
 
 class ProcessController extends Controller
 {
 	public function Nomina()
 	{
-		$selProceso = \Cache::get('selProceso');
+		$selProceso = Session::get('selProceso');
 		$periodo = Periodo::where('TIPONO',$selProceso)->where('SWCIERRE','0')->first();
 		return view('procesos.nomina')->with(compact('periodo'));
 	}
@@ -25,7 +23,7 @@ class ProcessController extends Controller
 	public function requestNomina(Request $data)
 	{
     	$recipient = User::find(1);		// Por ahora, lo manda al usuario 1
-    	$selCliente = \Cache::get('selCliente');
+    	$selCliente = Session::get('selCliente');
         // crea el mensaje
     	$message = Message::create([
     		'sender_id' => auth()->id(),
@@ -36,7 +34,7 @@ class ProcessController extends Controller
 
     	return back()->with('flash','Notificación enviada');		
 	}
-<<<<<<< HEAD
+
 
 	public function generaFirma()
 	{
@@ -181,6 +179,4 @@ class ProcessController extends Controller
     output ( "Extracted file contents :\n" ) ; 
     output ( $pdf -> Text ) ; 				
 	}
-=======
->>>>>>> b5b41dbe96be2895ab4276d8f0741bab86e4f8ec
 }

@@ -34,23 +34,15 @@ class HomeController extends Controller
      */
     public function index()
     {
-<<<<<<< HEAD
-        $selCliente = auth()->user()->client;
-        //\Cache::put('selCliente',$selCliente,1440);
-        if (Auth::check()){
-            session(['selCliente' => $selCliente]);
-        }
-        
-        
-=======
+
         $cliente = auth()->user()->client;
-        \Cache::put('selCliente',$cliente,1440);
->>>>>>> b5b41dbe96be2895ab4276d8f0741bab86e4f8ec
+        if (Auth::check()){
+            session(['selCliente' => $cliente]);
+        }
+
         $perfil = auth()->user()->profile->id;
         $navbar = ProfileController::getNavBar('',0,$perfil);
-        //$selCliente = Config::get('tisanom.selCliente');
         $selProceso = Session::get('selProceso');
-        //$selProceso = \Cache::get('selProceso');
 
         if ($perfil == env('APP_ADMIN_PROFILE')) {
             //if ($selProceso != '') {
