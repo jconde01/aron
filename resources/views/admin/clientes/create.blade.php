@@ -42,7 +42,6 @@
                     </div>
                 </div>
 
-<<<<<<< HEAD
                 <div class="col-sm-6" style="">
                     <div class="form-group content-descripcion-left-input">
                         <label class="label-left">Dominio</label>
@@ -58,18 +57,6 @@
                                 <option value="{{ $giro->id }}">{{ $giro->nombre }}</option>
                             @endforeach
                         </select>
-=======
-                <div class="row text-center">
-                    <div class="col-sm-4 col-sm-offset-4">
-                         <div class="form-group"  style=" width: 350px;">
-                            <label class="control-label" style="float: left; padding-top: 5px;">Giro</label>                        
-                            <select class="form-control giros_list" name="Giro" style="float: right; width: 300px;">
-                                @foreach ($giros as $giro)
-                                    <option value="{{ $giro->id }}">{{ $giro->nombre }}</option>
-                                @endforeach
-                            </select>
-                        </div>                         
->>>>>>> b5b41dbe96be2895ab4276d8f0741bab86e4f8ec
                     </div>
                 </div>
     <br><br><br><br>

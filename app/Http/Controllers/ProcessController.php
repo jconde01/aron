@@ -9,10 +9,17 @@ use App\Periodo;
 use App\Message;
 use App\Notifications\MessageSent;
 use webcoder31\ezxmldsig\XMLDSigToken;
-
+use PdfToText;
 
 class ProcessController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('database');
+    }
+
 	public function Nomina()
 	{
 		$selProceso = Session::get('selProceso');
@@ -39,7 +46,7 @@ class ProcessController extends Controller
 	public function generaFirma()
 	{
 		// Load required classes manualy.
-		require(dirname(__DIR__) .'\..\..\vendor\robrichards\xmlseclibs\xmlseclibs.php');
+		require(dirname(__DIR__) .'/../../vendor/robrichards/xmlseclibs/xmlseclibs.php');
 		require(dirname(__DIR__) . '/../../vendor/webcoder31/ezxmldsig/ezxmldsig.php');
 
 		// Autoload required classes.
@@ -65,6 +72,7 @@ class ProcessController extends Controller
 
 		// Display the XML Digital Signature.
 		//return htmlentities($sig);		# code...
+		var_dump($sig);
 
 		// Now, verify the token
 
@@ -154,29 +162,43 @@ class ProcessController extends Controller
 		die();		
 	}
 
-    function output ( $message ) 
-       { 
-        if ( php_sapi_name ( ) == 'cli' ) 
-            echo ( $message ) ; 
-        else 
-            echo ( nl2br ( $message ) ) ; 
-        } 
+
 
 	public function getPDFText()
 	{
-		require(dirname(__DIR__) . '/../../vendor/phpclasses/PdfToText.phpclass');
+
+    	function output( $message ) { 
+	        if ( php_sapi_name ( ) == 'cli' ) 
+	            echo ( $message ) ; 
+	        else 
+	            echo ( nl2br ( $message ) ) ; 
+	    }
+
+	    function getLastLine($text) {
+	    	$line = ''; $pos = strrpos($text,'|'); $veces =0;
+	    	while ( $pos != 0 && $veces <= 3) {
+	    		$line = substr($text,$pos);
+	    		$npos = (strlen($text) - $pos) * -1;
+	    		$pos = strrpos($text,'|',--$npos);
+	    		$veces++;
+	    	}
+	    	echo $line;
+	    }
+
+		require_once('./phpclasses/PdfToText.phpclass');
 
 		// Autoload required classes.
-		require dirname(__DIR__) . '/../../vendor/autoload.php';
+		//require dirname(__DIR__) . '/../../vendor/autoload.php';
 
     $file = public_path() . '/files/Reporte_servicio_vally' ; 
     $pdf = new PdfToText ( "$file.pdf" ) ; 
 
-    output ( "Original file contents :\n" ) ; 
-    output ( file_get_contents ( "$file.txt" ) ) ; 
-    output ( "-----------------------------------------------------------\n" ) ; 
+    //output( "Original file contents :\n" ) ; 
+    //output( file_get_contents( "$file.pdf" ) ) ; 
+    output( "-----------------------------------------------------------\n" ) ; 
 
-    output ( "Extracted file contents :\n" ) ; 
-    output ( $pdf -> Text ) ; 				
+    output( "Extracted file contents :\n" ) ; 
+    output( getLastLine($pdf -> Text) );
+
 	}
 }

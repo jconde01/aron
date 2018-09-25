@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class Periodo extends Model
 {
     protected $connection = 'sqlsrv2';
-    protected $table = 'dbo.CONTROL';
+    protected $table = 'CONTROL';
 }
