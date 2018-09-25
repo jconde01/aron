@@ -12,14 +12,21 @@ use QRcode;
 
 class ConsultasController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('database');
+    }
+
     public function index()
     {
     	$selProceso = Session::get('selProceso');
     	$emps = Empleado::where('TIPONO', $selProceso)->get();
 		$perfil = auth()->user()->profile->id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
-        require_once "./phpqrcode/qrlib.php";
-        QRcode::png("prueba numero 1","./contratos/qr.png",'H',5,2);
+        // require_once "./phpqrcode/qrlib.php";
+        // QRcode::png("prueba numero 1","./contratos/qr.png",'H',5,2);
 
   //       require_once('./fpdf/fpdf.php'); // Incluímos las librerías anteriormente mencionadas
 		//  // Incluímos las librerías anteriormente mencionadas
@@ -36,7 +43,7 @@ class ConsultasController extends Controller
 
 		// $pdf->Output("./contratos/QUMS.pdf", "F");
 		
-    	return view('consultas.recibos.index')->with(compact('emps', 'navbar', 'pdf'));
+    	return view('consultas.recibos.index')->with(compact('emps', 'navbar'));
     }
 
      public function consulta($id)
