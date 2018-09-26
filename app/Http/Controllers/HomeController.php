@@ -35,32 +35,35 @@ class HomeController extends Controller
     public function index()
     {
 
-        $cliente = auth()->user()->client;
-        if (Auth::check()){
-            session(['selCliente' => $cliente]);
-        }
-
-        $perfil = auth()->user()->profile->id;
-        $navbar = ProfileController::getNavBar('',0,$perfil);
-        $selProceso = Session::get('selProceso');
-
         if ($perfil == env('APP_ADMIN_PROFILE')) {
-            //if ($selProceso != '') {
-            //    return view('home')->with(compact('navbar'));
-            //} else {
-                return view('home');
-            //}
+            return view('home');
         } else {
             // $clientes = Client::where('company_id',auth()->user()->company_id)->get();
             // $tipoNomina = Nomina::all();
             // return view('sistema.chooseClienteYNomina')->with(compact('clientes'));
             //return redirect('/sistema/chooseClienteYNomina');
             //$selCliente = auth()->user()->client->id;
-            if ($selProceso != '') {
+            if (auth()->user()->client->id == 0) {
+                // Es un usuario de una célula
+                $perfil = auth()->user()->profile->id;
+                $navbar = ProfileController::getNavBar('',0,$perfil);
                 return view('home')->with(compact('navbar'));
             } else {
-                //return redirect('/sistema/chooseTipoYProceso');
-                return view('sistema.chooseTipoYProceso')->with(compact('cliente'));
+                // Usuario normal de un cliente
+                $cliente = auth()->user()->client;
+                if (Auth::check()){
+                    session(['selCliente' => $cliente]);
+                }
+                // Checa si ya se seleccionó el Tipo y Proceso de Nomina
+                $selProceso = Session::get('selProceso');
+                if ($selProceso != '') {
+                    $perfil = auth()->user()->profile->id;
+                    $navbar = ProfileController::getNavBar('',0,$perfil);
+                    return view('home')->with(compact('navbar'));
+                } else {
+                    //return redirect('/sistema/chooseTipoYProceso');
+                    return view('sistema.chooseTipoYProceso')->with(compact('cliente'));
+                }
             }
         }
     }

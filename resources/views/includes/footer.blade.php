@@ -3,7 +3,7 @@
         <nav class="pull-left">
             <ul>
                 <li>
-                    <a href="#">
+                    <a href="{{url('/tickets/usuarios/')}}">
                         ¿Necesitas ayuda?
                     </a>
                 </li>
