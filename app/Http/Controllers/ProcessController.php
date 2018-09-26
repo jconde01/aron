@@ -29,6 +29,7 @@ class ProcessController extends Controller
 
 	public function requestNomina(Request $data)
 	{
+		
     	$recipient = User::find(1);		// Por ahora, lo manda al usuario 1
     	$selCliente = Session::get('selCliente');
         // crea el mensaje

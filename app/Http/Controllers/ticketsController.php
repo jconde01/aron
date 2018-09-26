@@ -13,7 +13,7 @@ class ticketsController extends Controller
 {
     public function index()
     {
-    	$a= Auth::user()->name;
+    	$a = Auth::user()->name;
 		$perfil = auth()->user()->profile->id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
         $tickets = tickets::where('emisor', $a)->get();

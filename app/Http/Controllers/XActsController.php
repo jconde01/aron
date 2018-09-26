@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Concepto;
 use App\Periodo;
 use App\Movtos;
 use App\Empleado;
 use App\Imss;
+use App\Incapa;
 use Session;
 
 class XActsController extends Controller
@@ -16,6 +18,7 @@ class XActsController extends Controller
 
     public function __construct()
     {
+    	$this->middleware('auth');
         $this->middleware('database');
     }
 
@@ -59,13 +62,11 @@ class XActsController extends Controller
 
 	public function getConcepto(Request $data)
 	{
-		//$selProceso = \Cache::get('selProceso');
 		$selProceso = Session::get('selProceso');
 		$concepto = Concepto::where('TIPONO', $selProceso)
 				->where('CONCEPTO', $data->concepto)
 				->first();
-        return array($concepto);	// response()->json($concepto);
-        //return response(array(['EMP' => $selProceso, 'NOMBRE' => $data->concepto,'CALCULO' => $data->periodo]));
+        return array($concepto);
 	}
 
 	public function storeMovtos(Request $data)
@@ -119,15 +120,6 @@ class XActsController extends Controller
 
 	public function storeIncapacidad(Request $data)
 	{
-	    // Sql = "DELETE FROM MOVTOS WHERE TIPONO='" & TipNom & "' AND  CONCEPTO='" & CveCon & "'"
-	    // Sql = Sql & " " & IIf(Numper > 0, " AND PERIODO=" & Numper, "")
-	    // Set cn = New ADODB.Connection
-	    // cn.Open Cnstr
-	    // Afectados = 0
-	    // cn.Execute Sql, Afectados
-	    // cn.Close
-	    
-	    // DelByClave = Afectados
 
         $messages = [
             'emp.required' => 'No se ha ingresado ningún empleado'
@@ -163,13 +155,18 @@ class XActsController extends Controller
 		}
 
 		DB::transaction(function () use($data) {
-			//$selProceso = \Cache::get('selProceso');
+		    // Sql = "DELETE FROM MOVTOS WHERE TIPONO='" & TipNom & "' AND  CONCEPTO='" & CveCon & "'"
+		    // Sql = Sql & " " & IIf(Numper > 0, " AND PERIODO=" & Numper, "")
+		    // Set cn = New ADODB.Connection
+		    // cn.Open Cnstr
+		    // Afectados = 0
+		    // cn.Execute Sql, Afectados
+		    // cn.Close
+		    // DelByClave = Afectados			
 			$selProceso = Session::get('selProceso');
-			//$sumRes = substr($data->Metodo, 1, 1) == "3"? "2" : "0";
 			$deleted1 = Movtos::where('TIPONO',$selProceso)->where('CONCEPTO',$data->Concepto)->where('PERIODO',$data->Periodo)->delete();
 			$deleted2 = Imss::where('TIPONO',$selProceso)->where('CONCEPTO',$data->Concepto)->where('PERIODO',$data->Periodo)->delete();
-			// Aqui nos quedamos... Hay que crear el modelo Incapa
-			$incapa = Incapa::all();
+			//$sumRes = substr($data->Metodo, 1, 1) == "3"? "2" : "0";
 		    foreach ($data->emp as $key => $emp) {
 		    	$empleado = Empleado::where('TIPONO',$selProceso)->where('EMP',$emp)->select('cuenta')->get()->first();
 		    	$imss = New Imss();
@@ -207,7 +204,23 @@ class XActsController extends Controller
 	            // End If
 
 				if ($data->RefIMSS != '') {
-					// Aqui nos quedamos... Transferir el codigo de arriba
+					try {
+						$incapa = Incapa::where('EMP',$emp)->where('REFIMSS',$data->RefIMSS)->where('FECHA',$data->Fecha)->firstOrFail();
+						$incapa->DIAS = $data->dias;
+						$incapa->TIPO = $data->tipo;
+						$incapa->save();
+					} catch (ModelNotFoundException $ex) {
+						// Error handling code
+					  	// No se encontró el registro. Crea uno nuevo...
+					  	$incapa = New Incapa();
+					  	$incapa->EMP = $emp;
+					  	$incapa->REFIMSS = $data->RefIMSS;
+					  	$incapa->Fecha = $data->Fecha;
+					  	$incapa->DIAS = $data->dias;
+					  	$incapa->TIPO = $data->tipo;
+					  	$incapa->REGPAT = "";
+					  	$incapa->save();
+					}
 				}
 
 		    	$mov = New Movtos();
