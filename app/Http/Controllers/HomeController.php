@@ -35,6 +35,7 @@ class HomeController extends Controller
     public function index()
     {
 
+        $perfil = auth()->user()->profile->id;
         if ($perfil == env('APP_ADMIN_PROFILE')) {
             return view('home');
         } else {
@@ -43,9 +44,8 @@ class HomeController extends Controller
             // return view('sistema.chooseClienteYNomina')->with(compact('clientes'));
             //return redirect('/sistema/chooseClienteYNomina');
             //$selCliente = auth()->user()->client->id;
-            if (auth()->user()->client->id == 0) {
+            if (auth()->user()->client == NULL) {
                 // Es un usuario de una célula
-                $perfil = auth()->user()->profile->id;
                 $navbar = ProfileController::getNavBar('',0,$perfil);
                 return view('home')->with(compact('navbar'));
             } else {
@@ -57,7 +57,6 @@ class HomeController extends Controller
                 // Checa si ya se seleccionó el Tipo y Proceso de Nomina
                 $selProceso = Session::get('selProceso');
                 if ($selProceso != '') {
-                    $perfil = auth()->user()->profile->id;
                     $navbar = ProfileController::getNavBar('',0,$perfil);
                     return view('home')->with(compact('navbar'));
                 } else {
