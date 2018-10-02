@@ -6,11 +6,11 @@
 @section('content')
 <div class="row">
     <div class="col-md-10 col-md-offset-1">
-        <div class="jumbotron">
+        <div class="jumbotron" id="jumbotron2">
             <h1 class="titulo">Bienvenido a Aron.</h1>
-            <p style="color:Azure">Una herramienta efectiva para el control de las nóminas de tu empresa.</p>
+            <p style="color:white;" id="hola">Una herramienta efectiva para el control de las nóminas de tu empresa.</p>
             <br />
-            <a class="primario1" href="#" role="button"><i class="fas fa-bolt icon-left"></i>¿Como funciona?</a>
+            <a class="primario1 oculto" href="#" role="button"><i class="fas fa-bolt icon-left"></i>¿Como funciona?</a>
         </div>
     </div>
     @include('includes.footer');

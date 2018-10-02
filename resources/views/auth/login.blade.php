@@ -3,12 +3,12 @@
 @section('body-class','')
 
 @section('content')
-<div class="jumbotron" style=" max-width: 1100px; margin: auto; max-height: 550px;">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">
+<div class="jumbotron" style=" max-width: 1100px; margin: auto; max-height: 550px;" id="movil">
+    <div class="container" >
+        <div class="row" >
+            <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3" >
 <!--            <div class="card card-signup">  -->
-                <div class="fichas-simples secundario" style="">
+                <div class="fichas-simples secundario" >
                     <form class="form" method="POST" action="{{ route('login') }}">
                         {{ csrf_field() }}
                         <div class="articulo text-center">Inicio de sesión</div>
