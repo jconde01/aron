@@ -72,7 +72,9 @@ class EmpleadosController extends Controller
         $ests = Estados::all();
         $perfil = auth()->user()->profile_id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
-    	return view('catalogos.empleados.create')->with(compact('jobs','deps', 'ests', 'selProceso', 'navbar'));
+        $emp = new Empleado();
+        $emp->TIPONO = $selProceso;
+    	return view('catalogos.empleados.create')->with(compact('jobs','deps', 'ests', 'selProceso', 'navbar','emp'));
     }
 
 

@@ -40,6 +40,9 @@
                             <select class="form-control pdo" id="periodo" name="Periodo">
                                 <!-- option value="0">Seleccione el período...</option -->
                                 @foreach ($periodos as $pdo)
+                                	@if (!isset($iniPer)) 
+                                	  	{ $iniPer = date('Y-m-d', strtotime($pdo->FECINI)); }
+                                	@endif
                                     <option value="{{ $pdo->PERIODO }}" {{ ($pdo->PERIODO == $periCalc)? 'selected':'' }}>
                                     	{{ $pdo->PERIODO . ' - Inicia: ' . date('d-m-Y',strtotime($pdo->FECINI)) . ' - Finaliza: ' . date('d-m-Y',strtotime($pdo->FECFIN)) }}</option>
                                 @endforeach

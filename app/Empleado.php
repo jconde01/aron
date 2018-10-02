@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Nomina;
 
 class Empleado extends Model
 {
@@ -12,5 +13,8 @@ class Empleado extends Model
     public $primaryKey  = 'EMP';
     protected $casts = [ 'EMP' => 'string' ];
     
+    public function tipoNo() {
+    	return $this->belongsTo(Nomina::class,'TIPONO');
+    }    
 }
  

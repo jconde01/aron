@@ -30,7 +30,7 @@
                     <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Tipo Nomina</p></div>
-                            <input type="text" name="TIPONO" value="<?php echo $selProceso; ?>" readonly="readonly" class="bloqueado">
+                            <input type="text" name="TIPONO" value="{{ $emp->tipoNo->NOMBRE }}" readonly="readonly" class="bloqueado">
                         </div> 
                     </div>
 

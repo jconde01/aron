@@ -12,7 +12,6 @@
             <table id="table_id" class="display"> 
                     <thead>                           
                         <tr>
-                            <th class="parrafo">Tipo de Nomina</th>
                             <th class="parrafo">Empleado</th>
                             <th class="parrafo">Nombre</th>
                             <th class="parrafo">Puesto</th>
@@ -28,7 +27,6 @@
                         
                     <tbody>@foreach ($emps as $emp)
                         <tr>
-                            <td class="parrafo">{{$emp->TIPONO}}</td>
                             <td class="parrafo">{{$emp->EMP}}</td>
                             <!-- <td class="parrafo" > <input type="" name="" id="nombre" value="{{$emp->NOMBRE}}" readonly style="border: 0px;" href=""data-toggle="modal" data-target="#GSCCModal"> <a></a></td> -->
                             <td class="parrafo" ><a href=""data-toggle="modal" data-target="#GSCCModal" id="{{$emp->EMP}}" name="nom">{{$emp->NOMBRE}} <input type="hidden" name="{{$emp->EMP}}" value="{{$emp->EMP}}"> </a></td>

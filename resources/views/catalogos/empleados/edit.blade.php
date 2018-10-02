@@ -24,7 +24,7 @@
                     <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Tipo Nomina</p></div>
-                            <input type="number" name="TIPONO" value="{{$empl->TIPONO}}" readonly="readonly" class="bloqueado">
+                            <input type="text" name="TIPONO" value="{{ $empl->tipoNo->NOMBRE }}" readonly="readonly" class="bloqueado">
                         </div> 
                     </div>
 
