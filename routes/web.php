@@ -17,6 +17,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
+
 // Rutas para las opciones que NO son del menu asociado al perfil ( o sea, que TODOS puedem accesar)
 Route::middleware(['auth'])->group(function () {
 	Route::get('/home', 'HomeController@index')->name('home');
@@ -36,6 +37,9 @@ Route::middleware(['auth'])->prefix('sistema')->group(function () {
 	Route::post('/get-procesos','AppController@getProcesos');					// Ajax call
 	//Route::post('/testProcesos/{tipo}','AppController@testProcesos');
 	Route::post('/set-session-data','HomeController@setSessionData');
+	Route::get('/graficas', 'HomeController@graficas');
+	Route::post('/home', 'HomeController@update');
+
 });
 
 // Rutas para los catálogos
@@ -91,7 +95,7 @@ Route::middleware(['auth'])->prefix('transacciones')->group(function () {
 	Route::get('/porIncapacidad','XActsController@porIncapacidad')->name('porIncapacidad');
 	Route::post('/porIncapacidad','XActsController@storeIncapacidad');	
 	//Route::get('/get-movtos','XActsController@buscaMovtos');
-	Route::post('/get-movtos','XActsController@getMovtosCapturados');			// Ajax call
+	Route::post('/get-movtos','XActsController@getMovtosCapturados');					// Ajax call
 	Route::post('/get-concepto','XActsController@getConcepto');					// Ajax call
 });
 
@@ -103,6 +107,10 @@ Route::middleware(['auth','admin'])->prefix('admin')->group(function () {
 	Route::post('/giros','GirosController@store');								// guardar nuevo giro
 	Route::get('/giros/{id}/edit','GirosController@edit');						// forma para editar giro
 	Route::post('/giros/{id}/edit','GirosController@update');					// guardar cambios del giro
+
+	Route::get('/celulas','CellController@index');								
+	Route::get('/celulas/create','CellController@create');						
+	Route::post('/celulas','CellController@store');										
 
 	Route::get('/empresas','CompanyController@index');							// listado de Empresas
 	Route::get('/empresas/create','CompanyController@create');					// forma para crear nueva empresa
@@ -151,7 +159,7 @@ Route::middleware(['auth'])->prefix('consultas')->group(function () {
 	Route::get('/contratos','ConsultasController@indexContrato');
 	Route::get('/contratos/{id}/consulta','ConsultasController@consultaContrato');
 	Route::get('/timbrado','TimbradoController@index');
-	Route::get('/timbrado/firma','TimbradoController@firma');
+	Route::get('/timbrado/firmar','TimbradoController@firmar');
 
 });
 

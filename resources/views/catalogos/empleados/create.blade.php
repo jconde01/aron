@@ -1,8 +1,7 @@
- @extends('layouts.app')
+@extends('layouts.app')
 @section('body-class', 'profile-page sidebar-collapse')  
 @section('content')
-    <?php 
-    $selProceso = \Cache::get('selProceso'); ?>
+
   <div class="main main-raised">
     <div>
  

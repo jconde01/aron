@@ -23,13 +23,12 @@ class EmpleadosController extends Controller
     }
 
     public function index()
-    {   //$selProceso = \Cache::get('selProceso');
+    {  
         $selProceso = Session::get('selProceso');
-        //Config::set("database.connections.sqlsrv2", Session::get('sqlsrv2'));
     	$emps = Empleado::where('TIPONO', $selProceso)->get();
         $jobs = Job::all();
         $deps = Depto::all();
-        $perfil = auth()->user()->profile->id;        
+        $perfil = auth()->user()->profile_id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
     	return view('catalogos.empleados.index')->with(compact('navbar','emps', 'jobs', 'deps'));
     }
@@ -68,11 +67,10 @@ class EmpleadosController extends Controller
     public function create() 
     {
         $selProceso = Session::get('selProceso');
-        //$selProceso = \Cache::get('selProceso');
         $jobs = Job::all();
         $deps = Depto::all();
         $ests = Estados::all();
-        $perfil = auth()->user()->profile->id;        
+        $perfil = auth()->user()->profile_id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
     	return view('catalogos.empleados.create')->with(compact('jobs','deps', 'ests', 'selProceso', 'navbar'));
     }
@@ -81,25 +79,24 @@ class EmpleadosController extends Controller
     public function getSalarioIntegrado(Request $data) {
         //$integrado = calculaIntegrado;
         // Calcula Salario Integrado
-     // anios = CInt(Date - CDate(dingreso.value))
-     // If anios <> 0 Then
-     //   anios = anios / 365
-     // End If
-     // Set rsinteg = Integ.GetBatchOptimistic(Empresa.NominaCnStr, "TABINTEG", "TIPONO= '" & Empresa.Tiponom & "' AND  NUMANO= " & anios)
-     // If rsinteg.RecordCount > 0 Then
-     //    FACT = rsinteg!Factor
-     // Else
-     //    FACT = 0
-     // End If
-     // BUSTOPE CDate(dingreso.value), wkte, wkti
-     // If Round(tntsueldo.value * FACT, 2) > wkte Then
-     //    tntinteg.value = wkte
-     // Else
-     //    tntinteg.value = Round(tntsueldo.value * FACT, 2)
-     // End If
-        //$selProceso = \Cache::get('selProceso');
+        // anios = CInt(Date - CDate(dingreso.value))
+        // If anios <> 0 Then
+        //   anios = anios / 365
+        // End If
+        // Set rsinteg = Integ.GetBatchOptimistic(Empresa.NominaCnStr, "TABINTEG", "TIPONO= '" & Empresa.Tiponom & "' AND  NUMANO= " & anios)
+        // If rsinteg.RecordCount > 0 Then
+        //    FACT = rsinteg!Factor
+        // Else
+        //    FACT = 0
+        // End If
+        // BUSTOPE CDate(dingreso.value), wkte, wkti
+        // If Round(tntsueldo.value * FACT, 2) > wkte Then
+        //    tntinteg.value = wkte
+        // Else
+        //    tntinteg.value = Round(tntsueldo.value * FACT, 2)
+        // End If
+
         $selProceso = Session::get('selProceso');
-        //$minimoDF = \Cache::get('minimoDF'); 
         $minimoDF = Session::get('minimoDF');               
         $hoy = date_create();
         $ingreso2 = date('d-m-Y', strtotime($data->fldIngreso));
@@ -151,8 +148,10 @@ class EmpleadosController extends Controller
 
     public function store(Request $request)
     {
+        $selProceso = Session::get('selProceso');
+
     	$emp = new Empleado();
-        $emp->TIPONO = 1;
+        $emp->TIPONO = $selProceso;
         $emp->EMP = $request->input('EMP');
         $emp->NOMBRE = $request->input('NOMBRES') . ' ' . $request->input('PATERNO') . ' ' . $request->input('MATERNO');
         $emp->PUESTO = $request->input('PUESTO');
@@ -194,10 +193,8 @@ class EmpleadosController extends Controller
         $emp->PRESDEC = $request->input('PRESDEC');
         $emp->NOCRED = $request->input('NOCRED');
         
-       $emp->save();
+        $emp->save();
 
-//$selProceso = \Cache::get('selProceso');
-$selProceso = Session::get('selProceso');
         $dage = new DatosGe();
         $dage->EMP = $request->input('EMP2');
         $dage->NIVEL = $request->input('NIVEL') . "";
@@ -226,7 +223,7 @@ $selProceso = Session::get('selProceso');
         $dage->DISP_VIAJE = $request->input('DISP_VIAJE');
         $dage->BORN = date('d-m-Y', strtotime($request->input('BORN')));
         $dage->NACIM = $request->input('NACIM') . "";
-        $dage->TIPONO = 1;
+        $dage->TIPONO = $selProceso;
         $dage->NACIONAL = $request->input('NACIONAL');
         $dage->DEPENDIENT = $request->input('DEPENDIENT') . "";
         $dage->MEDIO = $request->input('MEDIO');
@@ -250,13 +247,11 @@ $selProceso = Session::get('selProceso');
         else{
             
         }  
-       $dage->save();
+        $dage->save();
 
-        //$selProceso = \Cache::get('selProceso');
-        $selProceso = Session::get('selProceso');
         $daafo = new DatosAfo();
         $daafo->EMP = $request->input('EMP');
-        $daafo->TIPONO = 1;
+        $daafo->TIPONO = $selProceso;
         $daafo->CURP = $request->input('CURP');
         $daafo->IMSS = $request->input('IMSS2');
         $daafo->NOMBRES = $request->input('NOMBRES');
@@ -267,9 +262,7 @@ $selProceso = Session::get('selProceso');
         $daafo->save();
        
         $imss = new Imss();
-        //$selProceso = \Cache::get('selProceso');
-        $selProceso = Session::get('selProceso');
-        $imss->TIPONO = 1;
+        $imss->TIPONO = $selProceso;
         $imss->EMP = $request->input('EMP');
         $imss->FECHA = date('d-m-Y', strtotime($request->input('INGRESO')));
         $imss->CLAVE = 15;
@@ -295,27 +288,26 @@ $selProceso = Session::get('selProceso');
         $jobs = Job::all();
         $deps = Depto::all();
         $ests = Estados::all();
-       $perfil = auth()->user()->profile->id;        
+        $perfil = auth()->user()->profile_id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
     	return view('catalogos.empleados.edit')->with(compact('empl', 'jobs', 'deps', 'ests', 'empl1', 'empl11', 'navbar')); 
     }
 
      public function update(Request $request, $EMP)
     {
+        $selProceso = Session::get('selProceso');
         $EMP = $request->input('EMP');
         $BajaImss = $request->input('BajaImss');
         //actualizar estado de empleado en la tabla imss por movimiento de status
-         $estatus = $request->input('ESTATUS');
-         $emps = Empleado::where('EMP', $EMP)->get()->first();
-         if ($emps->ESTATUS==$estatus) {
-             echo "no hubo cambio";
-         }else{
+        $estatus = $request->input('ESTATUS');
+        $emps = Empleado::where('EMP', $EMP)->get()->first();
+        if ($emps->ESTATUS==$estatus) {
+             echo "No hubo cambio";
+        } else{
             
             if (($estatus=='A') && ($emps->ESTATUS!=='M')) {
                 $imss = new Imss();
-                //$selProceso = \Cache::get('selProceso');
-                $selProceso = Session::get('selProceso');
-                $imss->TIPONO = 1;
+                $imss->TIPONO = $selProceso;
                 $imss->EMP = $request->input('EMP');
                 $imss->FECHA = date('d-m-Y', strtotime($request->input('INGRESO')));
                 $imss->CLAVE = 8;
@@ -330,9 +322,7 @@ $selProceso = Session::get('selProceso');
 
             if (($estatus=='B') && ($BajaImss==1)) {
                 $imss = new Imss();
-                //$selProceso = \Cache::get('selProceso');
-                $selProceso = Session::get('selProceso');
-                $imss->TIPONO = 1;
+                $imss->TIPONO = $selProceso;
                 $imss->EMP = $request->input('EMP');
                 $imss->FECHA = date('d-m-Y', strtotime($request->input('BAJA')));
                 $imss->CLAVE = 2;
@@ -348,9 +338,7 @@ $selProceso = Session::get('selProceso');
 
          }  
         $emple = Empleado::where('EMP', $EMP)->get()->first();
-        //$selProceso = \Cache::get('selProceso');
-        $selProceso = Session::get('selProceso');
-        $emple->TIPONO = 1;
+        $emple->TIPONO = $selProceso;
         $emple->EMP = $request->input('EMP');
         $emple->NOMBRE = $request->input('NOMBRES') . ' ' . $request->input('PATERNO') . ' ' . $request->input('MATERNO');
         $emple->PUESTO = $request->input('PUESTO');
@@ -420,7 +408,6 @@ $selProceso = Session::get('selProceso');
         $emple1->DISP_VIAJE = $request->input('DISP_VIAJE');
         $emple1->BORN = date('d-m-Y', strtotime($request->input('BORN')));
         $emple1->NACIM = $request->input('NACIM') . "";
-        $emple1->TIPONO = 1;
         $emple1->NACIONAL = $request->input('NACIONAL');
         $emple1->DEPENDIENT = $request->input('DEPENDIENT') . "";
         $emple1->MEDIO = $request->input('MEDIO');
@@ -445,7 +432,6 @@ $selProceso = Session::get('selProceso');
         }
         $emple1->save();
 
-        
         $emple11 = DatosAfo::where('EMP', $EMP)->get()->first();
         $emple11->CURP = $request->input('CURP');
         $emple11->IMSS = $request->input('IMSS2');

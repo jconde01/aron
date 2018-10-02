@@ -13,16 +13,33 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#">
-                       Blog
+                    <a href="/files/vally.pdf">
+                       Presentación
                     </a>
                 </li>
                 <li>
-                    <a href="#">
-                        Videos
+                    <a href=""data-toggle="modal" data-target="#GSCCModal1">
+                        Video
                     </a>
+                    
+
                 </li>
             </ul>
+            <div style="" id="GSCCModal1" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                             <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">                                 
+                                    <h4 class="modal-title" id="myModalLabel">Video</h4>
+                                  </div>
+                                  <div class="modal-body" style="text-align: center;">
+                                    <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/ZDCRHgOl0aU?rel=0&amp;controls=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Aceptar</button>                  
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
         </nav>
         <div class="copyright pull-right">
             &copy; 2018, hecho con <i class="fa fa-heart heart"></i> por <a href="http://grupotisa.com.mx" target="_blank">Vally Tecnologías</a>
