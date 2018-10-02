@@ -17,7 +17,7 @@ class ClientController extends Controller
     	$empresas = Company::all();
     	$clientes = Client::paginate(5);
         $BDA = Empresa::all(); // empresa asociada en TISANOM
-        $perfil = auth()->user()->profile->id;        
+        $perfil = auth()->user()->profile_id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
     	return view('admin.clientes.index')->with(compact('clientes','empresas','BDA', 'navbar'));		// listado de clientes
     }

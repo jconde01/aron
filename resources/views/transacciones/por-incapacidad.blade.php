@@ -22,7 +22,7 @@
 				<input type="hidden" id="Metodo"  name="Metodo" value="">
 				<input type="hidden" id="MetodoISP"  name="MetodoISP" value="">
                 <!-- <p class="text-center" style="color:Azure; text-align: center;">Ingresa tus datos</p> -->
-                <div class="row">
+                <div class="row" style="margin-bottom: 0px;">
                     <div class="col-md-6">
                         <div class="form-group label-floating">
                             <label class="control-label">Concepto:</label>
@@ -38,16 +38,17 @@
                         <div class="form-group label-floating">
                             <label class="control-label">Período:</label>
                             <select class="form-control pdo" id="periodo" name="Periodo">
-                                <option value="0" selected>Seleccione el período...</option>
+                                <!-- option value="0">Seleccione el período...</option -->
                                 @foreach ($periodos as $pdo)
-                                    <option value="{{ $pdo->PERIODO }}">{{ $pdo->PERIODO . ' - Inicia: ' . date('d-m-Y',strtotime($pdo->FECINI)) . ' - Finaliza: ' . date('d-m-Y',strtotime($pdo->FECFIN)) }}</option>
+                                    <option value="{{ $pdo->PERIODO }}" {{ ($pdo->PERIODO == $periCalc)? 'selected':'' }}>
+                                    	{{ $pdo->PERIODO . ' - Inicia: ' . date('d-m-Y',strtotime($pdo->FECINI)) . ' - Finaliza: ' . date('d-m-Y',strtotime($pdo->FECFIN)) }}</option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
                 </div>
                 <div class="row text-center">
-                	<button type="button" class="btn btn-info btn-sm" id="btnNuevo">Nuevo</button>
+                	<button type="button" class="btn btn-info btn-sm" id="btnNuevo">Agregar empleado</button>
                 </div>
                 <table class="row table" name="Movtos" id="captura">
                 	<thead>                    	
@@ -86,10 +87,40 @@
                 </select>
             </div>
             <div class="input-data">
-				<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;"> 
-    				<label class="label-left" style="font-size: 14px;">Descuentos:</label>
-    				<input type="text" id="descuento" name="Descuento" value="">
-        		</div>            
+				<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;">
+        			<label class="label-left" style="font-size: 14px;">Fecha</label>
+        			<input type="date" id="fecha" name="Fecha" value="">
+        		</div>
+				<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;">
+    				<label class="label-left" style="font-size: 14px;">Dias</label>
+    				<input type="text" id="dias" name="Dias" value="">
+				</div>
+				<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;">
+    				<label class="label-left" style="font-size: 14px;">Ref. IMSS</label>
+    				<input type="text" id="refIMSS" name="RefIMSS" value="">
+				</div>
+			<!--Grid.Columns.Item("tipinc").ValueList.Add "EG", "EG"
+			    Grid.Columns.Item("tipinc").ValueList.Add "AT", "AT"
+			    Grid.Columns.Item("tipinc").ValueList.Add "MA", "MA"
+			    Grid.Columns.Item("tipinc").ValueList.Add "MD", "MD"
+			    Grid.Columns.Item("tipinc").ValueList.Add "TR", "TR"
+			    Grid.Columns.Item("tipinc").ValueList.Add "EP", "EP" -->				
+			<!--<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;">
+            		<label class="label-left" style="font-size: 14px;">Tipo</label>
+            		<input type="text" id="tipo" name="Tipo" value="">
+        		</div> -->
+            	<div class="form-group label-floating">
+                	<label class="control-label">Tipo de Incapacidad:</label>        		
+	                <select class="form-control emp" id="tipo" name="Tipo">
+		                <option value="0" selected>Seleccione...</option>
+		                <option value="EG">EG</option>
+		                <option value="AT">AT</option>
+		                <option value="MA">MA</option>
+		                <option value="MD">MD</option>
+		                <option value="TR">TR</option>
+		                <option value="EP">EP</option>	                
+	                </select>
+	            </div>
         	</div>
         </div>
         <div class="modal-footer">
@@ -134,42 +165,39 @@
 	var sueldo;
 	var tipConcep;
 	var varClave;
-	var conceptParam = [];
-	var unidadesFld = '<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;"> ' +
-            			'	<label class="label-left" style="font-size: 14px;">Unidades</label>' +
-            			'	<input type="text" id="unidades" name="Unidades" value="">' +
-        				'</div>';
-	var fechaFld = '<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;"> ' +
-            			'	<label class="label-left" style="font-size: 14px;">Fecha</label>' +
-            			'	<input type="text" id="fecha" name="Fecha" value="">' +
-        				'</div>';
-	var sueldoFld =  '<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;"> ' +
-            			'	<label class="label-left" style="font-size: 14px;">Importe</label>' +
-            			'	<input type="text" id="importe" name="Importe" value="">' +
-        				'</div>';
-	var integFld =  '<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;"> ' +
-            			'	<label class="label-left" style="font-size: 14px;">Integrado</label>' +
-            			'	<input type="text" id="integ" name="Integ" value="">' +
-        				'</div>';
-	var diasFld =  '<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;"> ' +
-            			'	<label class="label-left" style="font-size: 14px;">Dias</label>' +
-            			'	<input type="text" id="dias" name="Dias" value="">' +
-        				'</div>';
+	//var conceptParam = [];
+
+	// var fechaFld = '<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;"> ' +
+ //            			'	<label class="label-left" style="font-size: 14px;">Fecha</label>' +
+ //            			'	<input type="text" id="fecha" name="Fecha" value="">' +
+ //        				'</div>';
+	// var diasFld =  '<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;"> ' +
+ //            			'	<label class="label-left" style="font-size: 14px;">Dias</label>' +
+ //            			'	<input type="text" id="dias" name="Dias" value="">' +
+ //        				'</div>';
+	// var refIMSSFld =  '<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;"> ' +
+ //            			'	<label class="label-left" style="font-size: 14px;">Importe</label>' +
+ //            			'	<input type="text" id="refIMSS" name="RefIMSS" value="">' +
+ //        				'</div>';
+	// var tipoIncapFld =  '<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;"> ' +
+ //            			'	<label class="label-left" style="font-size: 14px;">Integrado</label>' +
+ //            			'	<input type="text" id="tipo" name="Tipo" value="">' +
+ //        				'</div>';
 
 	$(document).ready(function() {
 		token = $('input[name=_token]').val();
     	tabla = this.getElementById("captura");
 		console.log('here we are. The token is: ' + token);
+	    creaPantalla();
 
-		$("#nuevo").on('show.bs.modal', function() {
-			// Agrega al MODAL, el array de los campos que se deben capturar (inputFields)
-			var inputFields = $(".input-data");	
-		    inputFields[0].innerHTML = unidadesFld;
-		    inputFields[1].innerHTML = fechaFld;
-			inputFields[2].innerHTML = sueldoFld;    			
-			inputFields[3].innerHTML = integFld;
-			inputFields[4].innerHTML = diasFld;
-		});
+		// $("#nuevo").on('show.bs.modal', function() {
+		// 	// Agrega al MODAL, el array de los campos que se deben capturar (inputFields)
+		// 	var inputFields = $(".input-data");	
+		//     inputFields[0].innerHTML = fechaFld;
+		// 	inputFields[1].innerHTML = diasFld;
+		// 	inputFields[2].innerHTML = refIMSSFld;
+		// 	inputFields[3].innerHTML = tipoIncapFld;
+		// });
 	});
 
     $("#btnNuevo").click(function(){
@@ -207,28 +235,25 @@
         }
 
 		if (bOK) {
-			var unidades = $('#unidades').val();
-	    	if ( unidades != 0 ) {
-	            switch (metodo) {
-	                case "06":
-	                    // Sal.Base * param1 * uni.dias  
-			            importe = sueldo * unidades;
-	                    break;
-	                case "21":
-	                    //ObjCal.DedPrim rs, RsAux, rstinteg, RstCon, rstnom, Afe100con, Result, sr, tipn
-	                    break;
-	            }
+			var dias = $('#dias').val();
+			var fecha = $('#fecha').val();
+			var refIMSS = $('#refIMSS').val();
+			var tipo = $('#tipo').val();
+	    	if ( dias != 0 ) {
 	        	var row = tabla.insertRow(tabla.rows.length);
 	        	var col1 = row.insertCell(0);
 	        	var col2 = row.insertCell(1);
 	        	var col3 = row.insertCell(2);
 	        	var col4 = row.insertCell(3);
 	        	var col5 = row.insertCell(4);
-				col1.innerHTML = '<td style="text-align:right;"><input type="text" name="emp[]" value="'+empleado+'" /></td>';
-				col2.innerHTML = nombre;
-				col3.innerHTML = periodo;
-				col4.innerHTML = '<td style="text-align:right;"><input type="text" name="unidades[]" value="'+unidades+'" /></td>';
-				col5.innerHTML = '<td style="text-align:right;"><input type="text" name="calculo[]" value="'+importe+'" /></td>';
+	        	var col6 = row.insertCell(5);
+
+				col1.innerHTML = '<td><input type="text" name="emp[]" value="'+empleado+'"/></td>'; col1.style.display = 'none'; col1.style.width = "0%";
+				col2.innerHTML = '<td>' + nombre + '</td>'; col2.style.width = "60%";
+				col3.innerHTML = '<td><input type="text" name="fecha[]" value="'+fecha+'"/></td>'; col3.style.width = "10%";
+				col4.innerHTML = '<td style="text-align:right;"><input type="text" name="dias[]" value="'+dias+'"/></td>'; col4.style.width = "10%";
+				col5.innerHTML = '<td><input type="text" name="refIMSS[]" value="'+refIMSS+'"/></td>'; col5.style.width = "10%";
+				col6.innerHTML = '<td><input type="text" name="tipo[]" value="'+tipo+'"/></td>'; col6.style.width = "10%";
 	        } else {
 	           alert('No ha capturado las unidades!');
 	        }			    
@@ -242,13 +267,12 @@
 		concepto = $('.cpto').val();
         $.post("get-concepto", { concepto: concepto, _token: token }, function( data ) {
             conceptData = Object.values(data);
-            //metodo = conceptData[0]["TIPCONCEP"] + conceptData[0]["TIPCALCUL"] + conceptData[0]["METODO"];
             metodo = conceptData[0]["METODO"];
             metodoIsp = conceptData[0]["METODOISP"];
             tipConcep = conceptData[0]["TIPCONCEP"];
             tipCalcul = conceptData[0]["TIPCALCUL"]
-            conceptParam[1] = Number(conceptData[0]["PARAM1"]);
-            conceptParam[2] = Number(conceptData[0]["PARAM2"]);
+            //conceptParam[1] = Number(conceptData[0]["PARAM1"]);
+            //conceptParam[2] = Number(conceptData[0]["PARAM2"]);
 			document.getElementById("Metodo").value = metodo;
 			document.getElementById("MetodoISP").value = metodoIsp;
             tipoCaptura = conceptData[0]["TIPCAPT"];
@@ -273,26 +297,7 @@
 				case CONINCAP9:
 					varClave = 11;
 					break;
-				// default:
-				// 	//console.log(tipoCaptura);
-	   			//  switch (tipoCaptura) {
-			 	//    		case "1": 	// CAPUNI : Captura Unidades y calcula importe
-			 	//    			pantalla = 3;
-			 	//    			break;
-			 	//    		case "2": 	// CAPIMP : Captura Importes 
-			 	//    			pantalla = 4;
-			 	//    			break;
-			 	//    		case "3": 	// Captura Saldo Automático
-			 	//    			if (metodo == "2303" || metodo == "2310" || metodo == "2323" || metodo == "2327" || metodo == "2328" ) {
-			 	//    				pantalla = 1;
-			 	//    			} else {
-			 	//    				pantalla = 5;
-			 	//    			}
-			 	//    			break;
-			 	//    	}
-			 	//    	break;
 	    	}
-	    	creaPantalla();
         });
 	});
 
@@ -300,7 +305,6 @@
 	$('.pdo').change(function() {
 		var concepto  =  $('.cpto').val();
 		periodo = $('.pdo').val();
-    	//console.log(concepto + ' - ' + periodo);
     	// checa si hay movimientos capturados del período en cuyo caso los despliega
         $.post("get-movtos", { concepto: concepto, periodo: periodo, _token: token }, function( data ) {
             var movtos = Object.values(data);
@@ -308,31 +312,31 @@
 		    while (tabla.rows.length > 1) {
 		        tabla.deleteRow(tabla.rows.length-1);
     		}
-    	    for (var i = 0; i < movtos.length; i++) {
-    	    	switch (pantalla) {
-    	    		case 1:
-    	    			break;
-    	    		case 2:
-    	    			break;
-    	    		case 3:
-		            	var row = tabla.insertRow(tabla.rows.length);
-		            	var col1 = row.insertCell(0);
-		            	var col2 = row.insertCell(1);
-		            	var col3 = row.insertCell(2);
-			        	var col4 = row.insertCell(3);
-			        	var col5 = row.insertCell(4);
-						col1.innerHTML = '<td style="text-align:right;"><input type="text" name="emp[]" value="'+movtos[i]["EMP"]+'" /></td>';
-						col2.innerHTML = movtos[i]["NOMBRE"];
-						col3.innerHTML = periodo;
-						col4.innerHTML = '<td style="text-align:right;"><input type="text" name="unidades[]" value="'+movtos[i]["UNIDADES"]+'" /></td>';
-						col5.innerHTML = '<td style="text-align:right;"><input type="text" name="calculo[]" value="'+movtos[i]["CALCULO"]+'" /></td>';
-						break;
-    	    		case 4:
-    	    		case 5:
-    	    			break;
-    	    	}
+    	 //    for (var i = 0; i < movtos.length; i++) {
+    	 //    	switch (pantalla) {
+    	 //    		case 1:
+    	 //    			break;
+    	 //    		case 2:
+    	 //    			break;
+    	 //    		case 3:
+		    //         	var row = tabla.insertRow(tabla.rows.length);
+		    //         	var col1 = row.insertCell(0);
+		    //         	var col2 = row.insertCell(1);
+		    //         	var col3 = row.insertCell(2);
+			   //      	var col4 = row.insertCell(3);
+			   //      	var col5 = row.insertCell(4);
+						// col1.innerHTML = '<td style="text-align:right;"><input type="text" name="emp[]" value="'+movtos[i]["EMP"]+'" /></td>';
+						// col2.innerHTML = movtos[i]["NOMBRE"];
+						// col3.innerHTML = periodo;
+						// col4.innerHTML = '<td style="text-align:right;"><input type="text" name="unidades[]" value="'+movtos[i]["UNIDADES"]+'" /></td>';
+						// col5.innerHTML = '<td style="text-align:right;"><input type="text" name="calculo[]" value="'+movtos[i]["CALCULO"]+'" /></td>';
+						// break;
+    	 //    		case 4:
+    	 //    		case 5:
+    	 //    			break;
+    	 //    	}
 
-            }
+         //   }
         });		
 	});
 
@@ -349,25 +353,13 @@
 		var col4 = row.insertCell(3);
 		var col5 = row.insertCell(4);
 		var col6 = row.insertCell(5);
-		var col7 = row.insertCell(6);
-		var col8 = row.insertCell(7);
-		var col9 = row.insertCell(8);
-		var col10 = row.insertCell(9);
-		var col11 = row.insertCell(10);
-		var col12 = row.insertCell(11);
 
-		col1.innerHTML = "Empleado";
-		col2.innerHTML = "Nombre";
-		col3.innerHTML = "Unidades";
-		col4.innerHTML = "Fecha";
-		col5.innerHTML = "Sueldo";
-		col6.innerHTML = "Integ";
-		col7.innerHTML = "Dias";
-		col8.innerHTML = "IntIv";
-		col9.innerHTML = "IntegNue";
-		col10.innerHTML = "IntIvNue";
-		col11.innerHTML = "RefIMSS";
-		col12.innerHTML = "Tipo";		
+		col1.innerHTML = '<th>Empleado</th>'; 	col1.style.display = 'none';
+		col2.innerHTML = '<th>Nombre</th>'; 	col2.style.width = "60%";
+		col3.innerHTML = '<th>Fecha</th>'; 		col3.style.width = "10%";
+		col4.innerHTML = '<th>Dias</th>'; 		col4.style.width = "10%";
+		col5.innerHTML = '<th>Ref. IMSS</th>'; 	col5.style.width = "10%";
+		col6.innerHTML = '<th>Tipo</th>'; 		col6.style.width = "10%";
 	}
 </script>            
 @endsection 

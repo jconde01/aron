@@ -22,7 +22,7 @@
 				<input type="hidden" id="Metodo"  name="Metodo" value="">
 				<input type="hidden" id="MetodoISP"  name="MetodoISP" value="">
                 <!-- <p class="text-center" style="color:Azure; text-align: center;">Ingresa tus datos</p> -->
-                <div class="row">
+                <div class="row" style="margin-bottom: 0px;">
                     <div class="col-md-6">
                         <div class="form-group label-floating">
                             <label class="control-label">Concepto:</label>
@@ -47,7 +47,7 @@
                     </div>
                 </div>
                 <div class="row text-center">
-                	<button type="button" class="btn btn-info btn-sm" id="btnNuevo">Nuevo</button>
+                	<button type="button" class="btn btn-info btn-sm" id="btnNuevo">Agregar empleado</button>
                 </div>
                 <table class="row table" name="Movtos" id="captura">
                 	<thead>                    	

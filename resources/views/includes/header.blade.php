@@ -42,7 +42,7 @@
 			                        {{ Auth::user()->name }} <span class="caret"></span>
 			                    </a>
 			                    <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="">
-			                    	<div style="text-align: center;">
+			                    	<div style="text-align: center;">	
 			                        @if (auth()->user()->profile_id == env('APP_ADMIN_PROFILE'))
 			                            <a style="text-decoration: none;" href="{{ url('/admin/clientes') }}">Clientes</a>
 			                            <a style="text-decoration: none;" href="{{ url('/admin/empresas') }}">Empresas</a>

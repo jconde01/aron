@@ -14,7 +14,7 @@ class ProfileController extends Controller
     public function index()
     {
     	$perfiles = Profile::paginate(5);
-        $perfil = auth()->user()->profile->id;        
+        $perfil = auth()->user()->profile_id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
         return view('admin.perfiles.index')->with(compact('perfiles', 'navbar'));
     }

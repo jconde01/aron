@@ -31,7 +31,7 @@
                                 <td class="text-center">{{ $usuario->id }}</td>
                                 <td class="text-left">{{ $usuario->name }}</td>
                                 <td class="text-left">{{ $usuario->email }}</td>
-                                <td class="text-left">{{ $usuario->profile->nombre }}</td>
+                                <td class="text-left">{{ ($usuario->profile == NULL)? 'Web Master': $usuario->profile->nombre }}</td>
                                 @if ($usuario->client_id == 0)
                                     <td class="text-left">No Asignado</td>
                                 @else

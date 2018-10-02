@@ -35,7 +35,7 @@ class HomeController extends Controller
     public function index()
     {
 
-        $perfil = auth()->user()->profile->id;
+        $perfil = auth()->user()->profile_id;
         if ($perfil == env('APP_ADMIN_PROFILE')) {
             return view('home');
         } else {

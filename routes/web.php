@@ -17,14 +17,6 @@ Route::get('/', function () {
 
 Auth::routes();
 
-//Route::post('/sistema/get-procesos/{cia}','AppController@getProcesos');
-// Route::post('/sistema/get-procesos/{cia}', function () {
-// 	dd($cia);
-// });
-
-
-//Route::post('/sistema/prueba3','AppController@getProcesos');
-
 // Rutas para las opciones que NO son del menu asociado al perfil ( o sea, que TODOS puedem accesar)
 Route::middleware(['auth'])->group(function () {
 	Route::get('/home', 'HomeController@index')->name('home');
@@ -99,7 +91,7 @@ Route::middleware(['auth'])->prefix('transacciones')->group(function () {
 	Route::get('/porIncapacidad','XActsController@porIncapacidad')->name('porIncapacidad');
 	Route::post('/porIncapacidad','XActsController@storeIncapacidad');	
 	//Route::get('/get-movtos','XActsController@buscaMovtos');
-	Route::post('/get-movtos','XActsController@buscaMovtos');					// Ajax call
+	Route::post('/get-movtos','XActsController@getMovtosCapturados');			// Ajax call
 	Route::post('/get-concepto','XActsController@getConcepto');					// Ajax call
 });
 

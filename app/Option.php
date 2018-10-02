@@ -28,7 +28,7 @@ class Option extends Model
 
     public function profileEnabled($profile = 0)
     {
-        if ($profile == 0) $profile = auth()->user()->profile->id;
+        if ($profile == 0) $profile = auth()->user()->profile_id;
         $profileOption = ProfileOption::where([['profile_id',$profile],['option_id', $this->id]])
                 ->select('enabled')
                 ->first();

@@ -6,9 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Concepto;
+use App\Empleado;
 use App\Periodo;
 use App\Movtos;
-use App\Empleado;
+use App\Nomina;
 use App\Imss;
 use App\Incapa;
 use Session;
@@ -26,7 +27,7 @@ class XActsController extends Controller
 
 	public function porConcepto()
 	{
-		$perfil = auth()->user()->profile->id; 
+		$perfil = auth()->user()->profile_id; 
         $navbar = ProfileController::getNavBar('',0,$perfil);
 		$selProceso = Session::get('selProceso');
 		$conceptos = Concepto::where('TIPONO',$selProceso)->where('TIPCAPT','<>','0')->orderBy('NOMBRE')->get();
@@ -37,16 +38,17 @@ class XActsController extends Controller
 
 	public function porIncapacidad()
 	{
-		$perfil = auth()->user()->profile->id; 
+		$perfil = auth()->user()->profile_id; 
         $navbar = ProfileController::getNavBar('',0,$perfil);
 		$selProceso = Session::get('selProceso');
 		$conceptos = Concepto::where('TIPONO',$selProceso)->where('TIPCAPT','<>','0')->whereIn('CONCEPTO',$this::conIncap)->orderBy('NOMBRE')->get();
+		$periCalc = Nomina::where('TIPONO',$selProceso)->select('PERICALC')->first();
 		$periodos = Periodo::where('TIPONO',$selProceso)->where('SWCIERRE','0')->get();
 		$empleados = Empleado::where('TIPONO',$selProceso)->where('ESTATUS','A')->get();
-		return view('transacciones.por-incapacidad')->with(compact('navbar','conceptos','periodos','empleados'));
+		return view('transacciones.por-incapacidad')->with(compact('navbar','conceptos','periCalc','periodos','empleados'));
 	}
 
-	public function buscaMovtos(Request $data)
+	public function getMovtosCapturados(Request $data)
 	{
 		$selProceso = Session::get('selProceso');
 		$capturado = DB::connection('sqlsrv2')->table('Movtos')->join('Empleado','MOVTOS.EMP', '=', 'EMPLEADO.EMP')
