@@ -133,29 +133,6 @@ class XActsController extends Controller
         // validar
         $this->validate($data,$rules,$messages);
 
-		switch ($data->Concepto) {
-			case $this::conIncap[11]:
-				$varClave = 5;
-				break;
-			case $this::conIncap[0]:
-			case $this::conIncap[1]:
-			case $this::conIncap[2]:
-			case $this::conIncap[3]:
-			case $this::conIncap[4]:
-			case $this::conIncap[9]:
-			case $this::conIncap[10]:
-				$varClave = 12;
-				break;
-			case $this::conIncap[5]:
-			case $this::conIncap[6]:
-			case $this::conIncap[7]:
-			case $this::conIncap[8]:
-				$varClave = 11;
-				break;
-			default:
-				$varClave = 0;
-		}
-
 		DB::transaction(function () use($data) {
 		    // Sql = "DELETE FROM MOVTOS WHERE TIPONO='" & TipNom & "' AND  CONCEPTO='" & CveCon & "'"
 		    // Sql = Sql & " " & IIf(Numper > 0, " AND PERIODO=" & Numper, "")
@@ -169,23 +146,24 @@ class XActsController extends Controller
 			$deleted1 = Movtos::where('TIPONO',$selProceso)->where('CONCEPTO',$data->Concepto)->where('PERIODO',$data->Periodo)->delete();
 			$deleted2 = Imss::where('TIPONO',$selProceso)->where('CONCEPTO',$data->Concepto)->where('PERIODO',$data->Periodo)->delete();
 			//$sumRes = substr($data->Metodo, 1, 1) == "3"? "2" : "0";
+
 		    foreach ($data->emp as $key => $emp) {
-		    	$empleado = Empleado::where('TIPONO',$selProceso)->where('EMP',$emp)->select('cuenta')->get()->first();
+		    	$empleado = Empleado::where('TIPONO',$selProceso)->where('EMP',$emp)->select('CUENTA','SUELDO','INTEG','INTIV')->get()->first();
 		    	$imss = New Imss();
-		    	$imss->EMP = $emp;
-		    	$imss->SUELDO = $data->Sueldo;
-		    	$imss->SUELDONUE = $data->Sueldo;
-		    	$imss->INTEG = $data->Integ;
-		    	$imss->INTIV = $data->IntIv;
-		    	$imss->INTEGNUE = $data->Integ;
-		    	$imss->INTIVNUE = $data->IntIv;
-		    	$imss->REFIMSS = $data->RefIMSS;
-		    	$imss->FECHA = $data->Fecha;
-		    	$imss->DIAS = $data->dias;
 		    	$imss->TIPONO = $selProceso;
+		    	$imss->EMP = $emp;
+		    	$imss->SUELDO = $empleado->SUELDO;
+		    	$imss->SUELDONUE = $empleado->SUELDO;
+		    	$imss->INTEG = $empleado->INTEG;
+		    	$imss->INTIV = $empleado->INTIV;
+		    	$imss->INTEGNUE = $empleado->INTEG;
+		    	$imss->INTIVNUE = $empleado->INTIV;
+		    	$imss->REFIMSS = $data->refIMSS[$key] . "";
+		    	$imss->FECHA = $data->fecha[$key];
+		    	$imss->DIAS = $data->dias[$key];
 		    	$imss->CONCEPTO = $data->Concepto;
 		    	$imss->PERIODO = $data->Periodo;
-		    	$imss->CLAVE = $varClave;
+		    	$imss->CLAVE = $data->Clave;
 		    	$imss->save();
 
             	// If rstgrid!Refimss <> "" Then
@@ -205,21 +183,23 @@ class XActsController extends Controller
 	            //     End If
 	            // End If
 
-				if ($data->RefIMSS != '') {
+				if ($data->RefIMSS != null) {
 					try {
-						$incapa = Incapa::where('EMP',$emp)->where('REFIMSS',$data->RefIMSS)->where('FECHA',$data->Fecha)->firstOrFail();
-						$incapa->DIAS = $data->dias;
-						$incapa->TIPO = $data->tipo;
+						$incapa = Incapa::where('EMP',$emp)
+									->where('REFIMSS',$data->refIMSS[$key])
+									->where('FECHA',$data->fecha[$key])->firstOrFail();
+						$incapa->DIAS = $data->dias[$key];
+						$incapa->TIPO = $data->tipo[$key];
 						$incapa->save();
 					} catch (ModelNotFoundException $ex) {
 						// Error handling code
 					  	// No se encontró el registro. Crea uno nuevo...
 					  	$incapa = New Incapa();
 					  	$incapa->EMP = $emp;
-					  	$incapa->REFIMSS = $data->RefIMSS;
-					  	$incapa->Fecha = $data->Fecha;
-					  	$incapa->DIAS = $data->dias;
-					  	$incapa->TIPO = $data->tipo;
+					  	$incapa->REFIMSS = $data->refIMSS[$key] . '';
+					  	$incapa->Fecha = $data->fecha[$key];
+					  	$incapa->DIAS = $data->dias[$key];
+					  	$incapa->TIPO = $data->tipo[$key];
 					  	$incapa->REGPAT = "";
 					  	$incapa->save();
 					}
@@ -231,17 +211,21 @@ class XActsController extends Controller
 		    	$mov->CONCEPTO = $data->Concepto;
 		    	$mov->PERIODO = $data->Periodo;
 		    	$mov->METODO = $data->Metodo;
-		    	$mov->UNIDADES = $data->unidades[$key];
+		    	$mov->UNIDADES = $data->dias[$key];
 		    	$mov->SALDO = 0;
 		    	$mov->SUMRES = $sumRes;
-		    	$mov->CALCULO = $data->calculo[$key];		// Para que guardar????
+		    	// La instruccion que sigue tiene problema: No existe esa variable. Aqui nos quedamos!!!!!!!!!!!!!!!!!!!!!!!!
+		    	//$mov->CALCULO = $data->calculo[$key];		// Para que guardar????
+		    	$mov->CALCULO = 0;
 		    	$mov->METODOISP = $data->MetodoISP;			// Para que grabar esto en Movtos si está en CONCEPTOS ???????
 		    	$mov->FLAGCIEN = '';						// Investigar para que sirve esto??????
 		    	$mov->ACTIVO = 1;
 		    	$mov->OTROS = 0;
 		    	$mov->ESPECIAL = 1;
 		    	$mov->PLAZO = 0;
-		    	$mov->cuenta = $empleado->cuenta;			// para que grabar la cuenta si esta asociada a un solo empleado?????
+		    	// La instruccion que sigue tiene problema: No existe esa variable. Aqui nos quedamos!!!!!!!!!!!!!!!!!!!!!!!!
+		    	//$mov->cuenta = $emp->cuenta[$key];			// para que grabar la cuenta si esta asociada a un solo empleado?????
+		    	$mov->cuenta = '';
 		    	//dd($mov);
 		    	$mov->save();
 		    }

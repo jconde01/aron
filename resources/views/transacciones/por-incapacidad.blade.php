@@ -21,6 +21,7 @@
 				<input type="hidden" name="_token" value="{{ csrf_token() }}">
 				<input type="hidden" id="Metodo"  name="Metodo" value="">
 				<input type="hidden" id="MetodoISP"  name="MetodoISP" value="">
+				<input type="hidden" id="Clave" name="Clave" value="">
                 <!-- <p class="text-center" style="color:Azure; text-align: center;">Ingresa tus datos</p> -->
                 <div class="row" style="margin-bottom: 0px;">
                     <div class="col-md-6">
@@ -40,10 +41,8 @@
                             <select class="form-control pdo" id="periodo" name="Periodo">
                                 <!-- option value="0">Seleccione el período...</option -->
                                 @foreach ($periodos as $pdo)
-                                	@if (!isset($iniPer)) 
-                                	  	{ $iniPer = date('Y-m-d', strtotime($pdo->FECINI)); }
-                                	@endif
-                                    <option value="{{ $pdo->PERIODO }}" {{ ($pdo->PERIODO == $periCalc)? 'selected':'' }}>
+                                    <option value="{{ $pdo->PERIODO }}" data-fi="{{ date('Y-m-d',strtotime($pdo->FECINI)) }}" 
+                                    	{{ ($pdo->PERIODO == $periCalc)? 'selected':'' }} >
                                     	{{ $pdo->PERIODO . ' - Inicia: ' . date('d-m-Y',strtotime($pdo->FECINI)) . ' - Finaliza: ' . date('d-m-Y',strtotime($pdo->FECFIN)) }}</option>
                                 @endforeach
                             </select>
@@ -168,44 +167,21 @@
 	var sueldo;
 	var tipConcep;
 	var varClave;
-	//var conceptParam = [];
-
-	// var fechaFld = '<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;"> ' +
- //            			'	<label class="label-left" style="font-size: 14px;">Fecha</label>' +
- //            			'	<input type="text" id="fecha" name="Fecha" value="">' +
- //        				'</div>';
-	// var diasFld =  '<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;"> ' +
- //            			'	<label class="label-left" style="font-size: 14px;">Dias</label>' +
- //            			'	<input type="text" id="dias" name="Dias" value="">' +
- //        				'</div>';
-	// var refIMSSFld =  '<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;"> ' +
- //            			'	<label class="label-left" style="font-size: 14px;">Importe</label>' +
- //            			'	<input type="text" id="refIMSS" name="RefIMSS" value="">' +
- //        				'</div>';
-	// var tipoIncapFld =  '<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;"> ' +
- //            			'	<label class="label-left" style="font-size: 14px;">Integrado</label>' +
- //            			'	<input type="text" id="tipo" name="Tipo" value="">' +
- //        				'</div>';
 
 	$(document).ready(function() {
 		token = $('input[name=_token]').val();
     	tabla = this.getElementById("captura");
 		console.log('here we are. The token is: ' + token);
 	    creaPantalla();
-
-		// $("#nuevo").on('show.bs.modal', function() {
-		// 	// Agrega al MODAL, el array de los campos que se deben capturar (inputFields)
-		// 	var inputFields = $(".input-data");	
-		//     inputFields[0].innerHTML = fechaFld;
-		// 	inputFields[1].innerHTML = diasFld;
-		// 	inputFields[2].innerHTML = refIMSSFld;
-		// 	inputFields[3].innerHTML = tipoIncapFld;
-		// });
 	});
 
     $("#btnNuevo").click(function(){
-		var concepto  =  $('.cpto').val();
+		concepto  = $('.cpto').val();
+		periodo   = $('.pdo').val(); 
     	if ( concepto != 0 && periodo != 0 ) {
+			var fechaIni = $('.pdo>option:selected').data('fi');
+			alert(periodo + ' - ' + fechaIni);
+			$("#fecha").value = fechaIni;
         	$("#nuevo").modal();
         } else {
            alert('No ha seleccionado un concepto o período!');
@@ -213,6 +189,8 @@
     });
 
 
+    // Toma los valores de la pantalla modal (recien capturada) y 
+    // los inserta en la tabla
     $("#Add").click(function(event) {
 		var nombre = $('#empleado>option:selected').text();
 		var importe;
@@ -263,6 +241,7 @@
         }
     });
 
+
 	$('.cpto').change(function() {
 		var conceptData;
 		var tipoCaptura;
@@ -301,12 +280,13 @@
 					varClave = 11;
 					break;
 	    	}
+	    	document.getElementById("Clave").value = varClave;
         });
 	});
 
 	// período change
 	$('.pdo').change(function() {
-		var concepto  =  $('.cpto').val();
+		concepto  =  $('.cpto').val();
 		periodo = $('.pdo').val();
     	// checa si hay movimientos capturados del período en cuyo caso los despliega
         $.post("get-movtos", { concepto: concepto, periodo: periodo, _token: token }, function( data ) {
@@ -315,31 +295,6 @@
 		    while (tabla.rows.length > 1) {
 		        tabla.deleteRow(tabla.rows.length-1);
     		}
-    	 //    for (var i = 0; i < movtos.length; i++) {
-    	 //    	switch (pantalla) {
-    	 //    		case 1:
-    	 //    			break;
-    	 //    		case 2:
-    	 //    			break;
-    	 //    		case 3:
-		    //         	var row = tabla.insertRow(tabla.rows.length);
-		    //         	var col1 = row.insertCell(0);
-		    //         	var col2 = row.insertCell(1);
-		    //         	var col3 = row.insertCell(2);
-			   //      	var col4 = row.insertCell(3);
-			   //      	var col5 = row.insertCell(4);
-						// col1.innerHTML = '<td style="text-align:right;"><input type="text" name="emp[]" value="'+movtos[i]["EMP"]+'" /></td>';
-						// col2.innerHTML = movtos[i]["NOMBRE"];
-						// col3.innerHTML = periodo;
-						// col4.innerHTML = '<td style="text-align:right;"><input type="text" name="unidades[]" value="'+movtos[i]["UNIDADES"]+'" /></td>';
-						// col5.innerHTML = '<td style="text-align:right;"><input type="text" name="calculo[]" value="'+movtos[i]["CALCULO"]+'" /></td>';
-						// break;
-    	 //    		case 4:
-    	 //    		case 5:
-    	 //    			break;
-    	 //    	}
-
-         //   }
         });		
 	});
 
