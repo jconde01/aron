@@ -91,7 +91,7 @@
             <div class="input-data">
 				<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;">
         			<label class="label-left" style="font-size: 14px;">Fecha</label>
-        			<input type="date" id="fecha" name="Fecha" value="">
+        			<input type="date" id="fecha" name="Fecha" value="{{ date("Y-m-d") }}">
         		</div>
 				<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;">
     				<label class="label-left" style="font-size: 14px;">Dias</label>
@@ -167,12 +167,14 @@
 	var sueldo;
 	var tipConcep;
 	var varClave;
+	var fechaIncidencia;
 
 	$(document).ready(function() {
 		token = $('input[name=_token]').val();
     	tabla = this.getElementById("captura");
 		console.log('here we are. The token is: ' + token);
 	    creaPantalla();
+	    fechaIncidencia = document.getElementById("fecha");
 	});
 
     $("#btnNuevo").click(function(){
@@ -180,8 +182,8 @@
 		periodo   = $('.pdo').val(); 
     	if ( concepto != 0 && periodo != 0 ) {
 			var fechaIni = $('.pdo>option:selected').data('fi');
-			alert(periodo + ' - ' + fechaIni);
-			$("#fecha").value = fechaIni;
+			// alert(periodo + ' - ' + fechaIni + fechaIncidencia.value);
+			fechaIncidencia.value = fechaIni;
         	$("#nuevo").modal();
         } else {
            alert('No ha seleccionado un concepto o período!');
@@ -229,12 +231,12 @@
 	        	var col5 = row.insertCell(4);
 	        	var col6 = row.insertCell(5);
 
-				col1.innerHTML = '<td><input type="text" name="emp[]" value="'+empleado+'"/></td>'; col1.style.display = 'none'; col1.style.width = "0%";
-				col2.innerHTML = '<td>' + nombre + '</td>'; col2.style.width = "60%";
-				col3.innerHTML = '<td><input type="text" name="fecha[]" value="'+fecha+'"/></td>'; col3.style.width = "10%";
-				col4.innerHTML = '<td style="text-align:right;"><input type="text" name="dias[]" value="'+dias+'"/></td>'; col4.style.width = "10%";
-				col5.innerHTML = '<td><input type="text" name="refIMSS[]" value="'+refIMSS+'"/></td>'; col5.style.width = "10%";
-				col6.innerHTML = '<td><input type="text" name="tipo[]" value="'+tipo+'"/></td>'; col6.style.width = "10%";
+				col1.innerHTML = '<td><input type="text" name="emp[]" value="'+empleado+'"/></td>'; col1.style.display = 'none'; //col1.style.width = "0%";
+				col2.innerHTML = '<td>' + nombre + '</td>'; //col2.style.width = "60%";
+				col3.innerHTML = '<td><input type="text" name="fecha[]" style="border:0px;width:150px!important;" value="'+fecha+'"/></td>'; // col3.style.width = "10%";
+				col4.innerHTML = '<td style="text-align:right;"><input type="text" name="dias[]" style="border:0px;width:150px!important;" value="'+dias+'"/></td>'; //col4.style.width = "10%";
+				col5.innerHTML = '<td><input type="text" name="refIMSS[]" style="border:0px;width:150px!important;" value="'+refIMSS+'"/></td>'; // col5.style.width = "10%";
+				col6.innerHTML = '<td><input type="text" name="tipo[]" style="border:0px;width:150px!important;" value="'+tipo+'"/></td>'; // col6.style.width = "10%";
 	        } else {
 	           alert('No ha capturado las unidades!');
 	        }			    

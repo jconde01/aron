@@ -42,7 +42,7 @@ class XActsController extends Controller
         $navbar = ProfileController::getNavBar('',0,$perfil);
 		$selProceso = Session::get('selProceso');
 		$conceptos = Concepto::where('TIPONO',$selProceso)->where('TIPCAPT','<>','0')->whereIn('CONCEPTO',$this::conIncap)->orderBy('NOMBRE')->get();
-		$periCalc = Nomina::where('TIPONO',$selProceso)->select('PERICALC')->first();
+		$periCalc = Nomina::where('TIPONO',$selProceso)->first()->PERICALC;
 		$periodos = Periodo::where('TIPONO',$selProceso)->where('SWCIERRE','0')->get();
 		$empleados = Empleado::where('TIPONO',$selProceso)->where('ESTATUS','A')->get();
 		return view('transacciones.por-incapacidad')->with(compact('navbar','conceptos','periCalc','periodos','empleados'));
@@ -93,7 +93,7 @@ class XActsController extends Controller
 			$sumRes = substr($data->Metodo, 1, 1) == "3"? "2" : "0";
 			$deleted = Movtos::where('TIPONO',$selProceso)->where('CONCEPTO',$data->Concepto)->where('PERIODO',$data->Periodo)->delete();
 		    foreach ($data->emp as $key => $emp) {
-		    	$empleado = Empleado::where('TIPONO',$selProceso)->where('EMP',$emp)->select('cuenta')->get()->first();
+		    	$cuenta = Empleado::where('TIPONO',$selProceso)->where('EMP',$emp)->select('cuenta')->get()->first();
 		    	$mov = New Movtos();
 		    	$mov->TIPONO = $selProceso;
 		    	$mov->EMP = $emp;
@@ -110,7 +110,7 @@ class XActsController extends Controller
 		    	$mov->OTROS = 0;
 		    	$mov->ESPECIAL = 1;
 		    	$mov->PLAZO = 0;
-		    	$mov->cuenta = $empleado->cuenta;			// para que grabar la cuenta si esta asociada a un solo empleado?????
+		    	$mov->cuenta = $cuenta;						// para que grabar la cuenta si esta asociada a un solo empleado?????
 		    	//dd($mov);
 		    	$mov->save();
 		    }
@@ -145,7 +145,6 @@ class XActsController extends Controller
 			$selProceso = Session::get('selProceso');
 			$deleted1 = Movtos::where('TIPONO',$selProceso)->where('CONCEPTO',$data->Concepto)->where('PERIODO',$data->Periodo)->delete();
 			$deleted2 = Imss::where('TIPONO',$selProceso)->where('CONCEPTO',$data->Concepto)->where('PERIODO',$data->Periodo)->delete();
-			//$sumRes = substr($data->Metodo, 1, 1) == "3"? "2" : "0";
 
 		    foreach ($data->emp as $key => $emp) {
 		    	$empleado = Empleado::where('TIPONO',$selProceso)->where('EMP',$emp)->select('CUENTA','SUELDO','INTEG','INTIV')->get()->first();
@@ -213,7 +212,7 @@ class XActsController extends Controller
 		    	$mov->METODO = $data->Metodo;
 		    	$mov->UNIDADES = $data->dias[$key];
 		    	$mov->SALDO = 0;
-		    	$mov->SUMRES = $sumRes;
+		    	$mov->SUMRES = 0;
 		    	// La instruccion que sigue tiene problema: No existe esa variable. Aqui nos quedamos!!!!!!!!!!!!!!!!!!!!!!!!
 		    	//$mov->CALCULO = $data->calculo[$key];		// Para que guardar????
 		    	$mov->CALCULO = 0;
