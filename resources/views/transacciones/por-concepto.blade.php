@@ -138,11 +138,10 @@
 
 		console.log('here we are. The token is: ' + token);
 
-		$( "#nuevo" ).on('show.bs.modal', function() {
+		$("#nuevo").on('show.bs.modal', function() {
 			// Agrega al MODAL, los campos que se deben capturar de acuerdo al valor de 'pantalla'
 			var inputfields = $(".input-data");	
-    		//console.log('concepto: ' + concepto + ' - ' + 'pantalla: ' + pantalla);
-    		//console.log(inputfields[0].innerHTML);
+
     		switch (pantalla) {
     			case 1:
     			case 2:
