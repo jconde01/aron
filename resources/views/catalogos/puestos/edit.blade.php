@@ -34,7 +34,7 @@
                         </div> 
                     </div>
 
-                <div class="col-md-2 no-pad" style="; margin-right: 60px; margin-left:22px;">
+                <div class="col-md-2 no-pad" style="; margin-right: 60px; margin-left:22px; margin-top: 12px;">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em; ">
                             <div class="label-left"><p>Abreviación</p></div>
                             <input type="text" name="NPUESTO" style=" width: 240px; text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" value="{{$job->NPUESTO}}">

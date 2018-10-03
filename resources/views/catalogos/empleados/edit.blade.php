@@ -59,7 +59,7 @@
                     <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Puesto</p></div>
-                            <select style="width: 340px; height: 40px; border-radius: 10px; text-align: right; padding-right: 20px;" name="PUESTO" value="{{$empl->PUESTO}}" class="inderecha">                             
+                            <select style="width: 340px; height: 40px; border-radius: 10px; text-align: right; padding-right:0px; margin-left: 75px;" name="PUESTO" value="{{$empl->PUESTO}}" class="inderecha">                             
                                 @foreach ($jobs as $job)
                                 <option value="{{$job->PUESTO}}" <?php if ($job->PUESTO==$empl->PUESTO) {
                                   echo 'selected="selected"';
@@ -79,7 +79,7 @@
                     <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Departamento</p></div>
-                            <select style="width: 340px; height: 40px; border-radius: 10px; text-align: right; padding-right: 20px;" name="DEPTO" required value="{{$empl->DEPTO}}" class="inderecha">
+                            <select style="width: 340px; height: 40px; border-radius: 10px; text-align: right; padding-right: 0px; margin-left: 75px;font-size: 13px;" name="DEPTO" required value="{{$empl->DEPTO}}" class="inderecha">
                                
                                 @foreach ($deps as $dep)
                                 <option value="{{$dep->DEPTO}}" <?php if ($dep->DEPTO==$empl->DEPTO) {
@@ -377,7 +377,7 @@
                      <div class="col-md-4 no-pad" style="">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Tipo de Contrato</p></div>
-                            <select style="width: 340px; height: 40px; border-radius: 10px; text-align: right; padding-right: 20px;" name="c_TipoContrato" value="{{$empl->c_TipoContrato}}" class="inderecha">
+                            <select style="width: 340px; height: 40px; border-radius: 10px; text-align: right; padding-right: 0px; margin-left: 75px;font-size: 12px;" name="c_TipoContrato" value="{{$empl->c_TipoContrato}}" class="inderecha">
                                 <option value="01 Contrato de trabajo por tiempo indeterminado" <?php if ($empl->c_TipoContrato=="01 Contrato de trabajo por tiempo indeterminado"):{
                                     echo 'selected="selected"';
                                 } ?> <?php endif ?>>01 Contrato de trabajo por tiempo indeterminado</option>
@@ -630,7 +630,7 @@
                     <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Reporta al:</p></div>
-                            <select style="width: 340px; height: 40px; border-radius: 10px; text-align: right; padding-right: 20px;" name="REPORTA" value="{{$empl1->REPORTA}}" class="inderecha">                         
+                            <select style="width: 340px; height: 40px; border-radius: 10px; text-align: right; padding-right: 0px; margin-left: 75px;" name="REPORTA" value="{{$empl1->REPORTA}}" class="inderecha">                         
                                 @foreach ($jobs as $job)
                                 <option value="{{$job->PUESTO}}" <?php if ($job->PUESTO==$empl1->REPORTA) {
                                   echo 'selected="selected"';
@@ -758,7 +758,7 @@
                     <div class="col-md-4 no-pad" style="">
                             <div class="input-group" style="margin-left: 45px;">
                                 <h5>Sexo: </h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <h5>Femenimo: </h5> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <h5>Femenino: </h5> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <span class="">
                                     <input type="radio" name="SEXO" aria-label="..." value="F" <?php if ($empl1->SEXO=='F'):{
                                     echo 'checked';
@@ -992,7 +992,7 @@
 
                     <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
-                            <div class="label-left"><p>Clave Unica de Reg. Patronal(CURP): </p></div>
+                            <div class="label-left"><p>CURP: </p></div>
                             <input type="text" name="CURP" value="{{$empl11->CURP}}">
                         </div> 
                     </div>

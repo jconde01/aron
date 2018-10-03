@@ -36,7 +36,8 @@
 	                    <div class="row">
                         <div class="form-group label-floating col col-md-8 col-md-offset-2" id="mostrar" style="display: none;">
                             <label class="control-label" style="color: white;">Proceso:</label><br>
-							<select id="procesos" name="proceso" class="form-control tipo"></select>
+							<select id="procesos" name="proceso" class="form-control tipo">                    
+                            </select>
 						</div>
                     </div>
                 </div>

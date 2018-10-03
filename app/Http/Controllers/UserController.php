@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Client;
 use App\Profile;
+use App\Graph;
 
 class UserController extends Controller
 {
@@ -62,6 +63,21 @@ class UserController extends Controller
         $usuario->profile_id = $request->profile_id;
         $usuario->client_id = $request->client_id;
     	$usuario->save();
+        $user = User::all()->last();
+        $grafica = new Graph();
+        $grafica->usuario_id = $user->id;
+        $grafica->mensaje = 1;
+        $grafica->grafica1 = 0;
+        $grafica->grafica2 = 0;
+        $grafica->grafica3 = 0;
+        $grafica->grafica4 = 0;
+        $grafica->grafica5 = 0;
+        $grafica->grafica6 = 0;
+        $grafica->grafica7 = 0;
+        $grafica->grafica8 = 0;
+        $grafica->grafica9 = 0;
+        $grafica->grafica10 = 0;
+        $grafica->save();
     	return redirect('/admin/usuarios'); 
     }
 

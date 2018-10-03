@@ -27,7 +27,10 @@ class DeptosController extends Controller
     public function create()
     {
         $deps = Depto::all();
-    	return view('catalogos.deptos.create')->with(compact('deps'));
+        $depto = Depto::all()->last();
+        $ultimo = $depto->DEPTO + 1;
+        
+    	return view('catalogos.deptos.create')->with(compact('deps', 'ultimo'));
     }
 
 

@@ -10,7 +10,7 @@ class GirosController extends Controller
     public function index()
     {
     	$giros = Giro::paginate(5);
-        $perfil = auth()->user()->profile->id;        
+        $perfil = auth()->user()->profile_id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
     	return view('admin.giros.index')->with(compact('giros', 'navbar'));		// listado de giros
     }
@@ -18,7 +18,7 @@ class GirosController extends Controller
 
     public function create() 
     {
-        $perfil = auth()->user()->profile->id;        
+        $perfil = auth()->user()->profile_id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
         return view('admin.giros.create')->with(compact('navbar'));    // forma para insertar nuevo giro
     }
@@ -27,7 +27,7 @@ class GirosController extends Controller
     public function edit($id) 
     {
         $giro = Giro::find($id);
-        $perfil = auth()->user()->profile->id;        
+        $perfil = auth()->user()->profile_id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
         return view('admin.giros.edit')->with(compact('giro', 'navbar'));    // forma para editar giro
     }

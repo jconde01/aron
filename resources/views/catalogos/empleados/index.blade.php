@@ -85,51 +85,54 @@
                                   <div class="modal-header">
                                     <h4 class="modal-title" id="myModalLabel">Datos del empleado</h4>
                                   </div>
-                                  <div class="modal-body" style=" width: 1000px; text-align: center;" >
-
-                                    <img src="" id="ima" style="width: 210px; border-radius: 5px;">
-                                    <br><br><br>
-                                        <div class="col-md-1 no-pad" >
-                                            <div class="" style="margin-bottom: 2em;">
-                                                
-                                               
-                                            </div> 
-                                        </div>
-
-                                       <div class="col-md-6 no-pad">
-                                            <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
-                                                <div class="label-left"><p>Nombre: </p></div>
-                                                <input type="text" name="NOMBRES" value="" id="numbre" readonly>
-                                            </div> 
-                                        </div>
-
+                                  <div class="modal-body" style=" width: 1000px; text-align: center; height: 250px;" >
+                                    <div style="float: left;">
+                                    <img src="" id="ima" style="width: 210px; border-radius: 5px; border: 1px rgb(179, 215, 243) solid;">
+                                   </div>
                                         
+                                      <div style="float: right; width: 70%;">
+                                       
+                                            <div class="" style="border-bottom: 1px rgb(179, 215, 243) solid; margin-bottom: 7px;">
+                                                <span>Nombre: &nbsp;&nbsp;</span>
+                                                <input type="text" name="NOMBRES" style="width: 350px; border: 0px;" value="" id="numbre" readonly>
+                                            </div> 
+                                       
+                                        
+                                            <div class="" style="border-bottom: 1px rgb(179, 215, 243) solid; margin-bottom: 7px;">
+                                                <span>Puesto:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>        
+                                                <input type="text" name="MATERNO" style="width: 350px; border: 0px;" id="pue" value="" readonly>
+                                            </div> 
+                                       
+                                        
+                                            <div class="" style="border-bottom: 1px rgb(179, 215, 243) solid; margin-bottom: 7px;">
+                                                <span>Localidad:&nbsp; &nbsp;</span>    
+                                                <input type="text" name="MATERNO" style="width: 350px; border: 0px;margin-right: 10px;" id="loca" value="" readonly>
+                                            </div> 
+                                        
+                                        
+                                            <div class="" style="border-bottom: 1px rgb(179, 215, 243) solid; margin-bottom: 7px;">
+                                                <span> Departamento:&nbsp;&nbsp;</span>
+                                                <input type="text" name="MATERNO" style="width: 350px; border: 0px; margin-right: 40px; margin-left: 5px;" id="depa" value="" readonly>
+                                            </div> 
+                                        
+                                        
+                                            <div class="" style="border-bottom: 1px rgb(179, 215, 243) solid; margin-bottom: 7px;">
+                                                <span> Teléfono: &nbsp;&nbsp;</span>    
+                                                <input type="text" name="MATERNO" style="width: 350px; border: 0px;" id="tele" value="" readonly>
+                                            </div> 
+                                            
+                                            <div class="" style="border-bottom: 1px rgb(179, 215, 243) solid; margin-bottom: 7px;">
+                                                <span> Tipo Sangre:&nbsp;&nbsp;</span>    
+                                                <input type="text" name="MATERNO" style="width: 350px; border: 0px; margin-right: 20px;" id="san" value="" readonly>
+                                            </div> 
 
-                                        <div class="col-md-4 no-pad">
-                                            <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
-                                                <div class="label-left"><p>Puesto: </p></div>
-                                                <input type="text" name="MATERNO" id="pue" value="" readonly>
+                                            <div class="" style="border-bottom: 1px rgb(179, 215, 243) solid; margin-bottom: 7px;">
+                                                <span style="margin-left: 25px;">Imss:&nbsp;&nbsp;&nbsp;</span>        
+                                                <input type="text" name="MATERNO" style="width: 350px; border: 0px;" id="imss" value="" readonly>
                                             </div> 
+
                                         </div>
-                                        <div class="col-md-4 no-pad">
-                                            <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
-                                                <div class="label-left"><p>Localidad: </p></div>
-                                                <input type="text" name="MATERNO" id="loca" value="" readonly>
-                                            </div> 
-                                        </div>
-                                        <div class="col-md-4 no-pad">
-                                            <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
-                                                <div class="label-left"><p>Departamento: </p></div>
-                                                <input type="text" name="MATERNO" id="depa" value="" readonly>
-                                            </div> 
-                                        </div>
-                                        <div class="col-md-4 no-pad">
-                                            <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
-                                                <div class="label-left"><p>Teléfono: </p></div>
-                                                <input type="text" name="MATERNO" id="tele" value="" readonly>
-                                            </div> 
-                                        </div>
-                                        <br><br><br><br><br><br>
+                                        
                                         
 
                                   </div>
@@ -165,7 +168,9 @@
         var depa = document.getElementById("depa");
         var loca = document.getElementById("loca");
         var tele = document.getElementById("tele");
-        var ima = document.getElementById("ima");    
+        var ima = document.getElementById("ima");
+        var sangre = document.getElementById("san"); 
+        var imss = document.getElementById("imss");     
         //alert('Empleado: ' + id);        
         $.post("empleados/getDatosEmpleado", {fldide: id, _token: token}, function( data ) {
             
@@ -174,6 +179,8 @@
             depa.value = data['depto'];
             loca.value = data['localidad'];
             tele.value = data['telefono'];
+            sangre.value = data['sangre'];
+            imss.value = data['imss'];
             var foto = data['foto'];
             var img = '/admon/empleados/empresas/'+id+'/'+foto;
             if (data['foto']) {

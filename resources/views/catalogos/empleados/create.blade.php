@@ -37,7 +37,7 @@
                     <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Empleado</p></div>
-                            <input type="number" name="EMP" id="EMP" onkeyup="fAgrega2();" max="9999999" required>
+                            <input type="number" name="EMP" id="EMP" onkeyup="fAgrega2();" max="9999999" value="{{ $ultimo2}}" required>
                         </div> 
                     </div>
 
@@ -65,7 +65,7 @@
                     <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Puesto</p></div>
-                            <select style="width: 340px; height: 40px; border-radius: 10px; text-align: right !important; padding-right: 20px;" name="PUESTO" class="inderecha">
+                            <select style="width: 340px; height: 40px; border-radius: 10px; text-align: right !important; padding-right: 20px; font-size: 12px;" name="PUESTO" class="inderecha">
                                 @foreach ($jobs as $job)
                                 <option value="{{$job->PUESTO}}">{{$job->NOMBRE}}</option>
                    
@@ -84,7 +84,7 @@
                     <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Departamento</p></div>
-                            <select style="width: 340px; height: 40px; border-radius: 10px; text-align: right; padding-right: 20px;" name="DEPTO" required class="inderecha">
+                            <select style="width: 340px; height: 40px; border-radius: 10px; text-align: right; padding-right: 0px; margin-left: 75px; font-size: 13px;" name="DEPTO" required class="inderecha">
                                 @foreach ($deps as $dep)
                                 <option value="{{$dep->DEPTO}}">{{$dep->DESCRIP}}</option>
                                 @endforeach
@@ -235,7 +235,7 @@
                      <div class="col-md-4 no-pad" style="">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Tipo de Contrato</p></div>
-                            <select style="width: 340px; height: 40px; border-radius: 10px; text-align: right; padding-right: 20px;" name="c_TipoContrato" required class="inderecha">
+                            <select style="width: 340px; height: 40px; border-radius: 10px; text-align: right; padding-right:0px; font-size: 11px; margin-left: 75px;" name="c_TipoContrato" required class="inderecha">
                                 <option value="01 Contrato de trabajo por tiempo indeterminado">01 Contrato de trabajo por tiempo indeterminado</option>
                                 <option value="02 Contrato de trabajo para obra determinada">02 Contrato de trabajo para obra determinada</option>
                                 <option value="03 Contrato de trabajo por tiempo determinado">03 Contrato de trabajo por tiempo determinado</option>
@@ -434,7 +434,7 @@
                     <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Clave</p></div>
-                            <input type="number" name="EMP2" id="EMP2" readonly="readonly" class="bloqueado">
+                            <input type="number" name="EMP2" id="EMP2" readonly="readonly" value="{{$ultimo2}}" class="bloqueado">
                         </div> 
                     </div>
 
@@ -448,7 +448,7 @@
                     <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Reporta al:</p></div>
-                            <select style="width: 340px; height: 40px; border-radius: 10px; text-align: right; padding-right: 20px;" name="REPORTA" class="inderecha">
+                            <select style="width: 340px; height: 40px; border-radius: 10px; text-align: right; padding-right: 0px; margin-left: 75px;" name="REPORTA" class="inderecha">
                                 
                                 @foreach ($jobs as $job)
                                 <option value="{{$job->PUESTO}}">{{$job->NOMBRE}}</option>                  
@@ -561,7 +561,7 @@
                     <div class="col-md-4 no-pad" style="">
                             <div class="input-group" style="margin-left: 45px;">
                                 <h5>Sexo: </h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <h5>Femenimo: </h5> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <h5>Femenino: </h5> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <span class="">
                                     <input type="radio" name="SEXO" aria-label="..." value="F" required="">
                                 </span>
@@ -728,7 +728,7 @@
 
                     <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
-                            <div class="label-left"><p>Clave Unica de Reg. Patronal(CURP): </p></div>
+                            <div class="label-left"><p>CURP: </p></div>
                             <input type="text" name="CURP" maxlength="25" onkeyup="Curp(event, this)">
                         </div> 
                     </div>

@@ -38,7 +38,7 @@ class HomeController extends Controller
         $perfil = auth()->user()->profile_id;
         $id_usuario = auth()->user()->id;
         $graficas = Graph::where('usuario_id', $id_usuario)->first();
-
+        
         if ($perfil == env('APP_ADMIN_PROFILE')) {
             return view('home')->with(compact('graficas'));
         } else {
@@ -92,6 +92,7 @@ class HomeController extends Controller
     {
         $id_usuario = auth()->user()->id;
         $graficas = Graph::where('usuario_id', $id_usuario)->first();
+
         $perfil = auth()->user()->profile->id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
         return view('sistema.graficas')->with(compact('graficas', 'navbar'));

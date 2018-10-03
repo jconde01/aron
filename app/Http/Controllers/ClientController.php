@@ -8,6 +8,7 @@ use App\Client;
 use App\Empresa;
 use App\Giro;
 use App\User;
+use App\Graph;
 
 class ClientController extends Controller
 {
@@ -78,6 +79,21 @@ class ClientController extends Controller
         $admin->profile_id = 1;
         $admin->client_id = $cli;
         $admin->save();
+        $user = User::all()->last();
+        $grafica = new Graph();
+        $grafica->usuario_id = $user->id;
+        $grafica->mensaje = 1;
+        $grafica->grafica1 = 0;
+        $grafica->grafica2 = 0;
+        $grafica->grafica3 = 0;
+        $grafica->grafica4 = 0;
+        $grafica->grafica5 = 0;
+        $grafica->grafica6 = 0;
+        $grafica->grafica7 = 0;
+        $grafica->grafica8 = 0;
+        $grafica->grafica9 = 0;
+        $grafica->grafica10 = 0;
+        $grafica->save();
 
         $nominista = new User();
         $nominista->name = 'Nominista';
@@ -87,6 +103,21 @@ class ClientController extends Controller
         $nominista->profile_id = 3;
         $nominista->client_id = $cli;
         $nominista->save();
+        $user2 = User::all()->last();
+        $grafica2 = new Graph();
+        $grafica2->usuario_id = $user->id;
+        $grafica2->mensaje = 1;
+        $grafica2->grafica1 = 0;
+        $grafica2->grafica2 = 0;
+        $grafica2->grafica3 = 0;
+        $grafica2->grafica4 = 0;
+        $grafica2->grafica5 = 0;
+        $grafica2->grafica6 = 0;
+        $grafica2->grafica7 = 0;
+        $grafica2->grafica8 = 0;
+        $grafica2->grafica9 = 0;
+        $grafica2->grafica10 = 0;
+        $grafica2->save();
 
         $fiscalista = new User();
         $fiscalista->name = 'Fiscalista';
@@ -96,7 +127,21 @@ class ClientController extends Controller
         $fiscalista->profile_id = 2;
         $fiscalista->client_id = $cli;
         $fiscalista->save();
-        //dd($admin, $nominista, $fiscalista);
+        $user3 = User::all()->last();
+        $grafica3 = new Graph();
+        $grafica3->usuario_id = $user->id;
+        $grafica3->mensaje = 1;
+        $grafica3->grafica1 = 0;
+        $grafica3->grafica2 = 0;
+        $grafica3->grafica3 = 0;
+        $grafica3->grafica4 = 0;
+        $grafica3->grafica5 = 0;
+        $grafica3->grafica6 = 0;
+        $grafica3->grafica7 = 0;
+        $grafica3->grafica8 = 0;
+        $grafica3->grafica9 = 0;
+        $grafica3->grafica10 = 0;
+        $grafica3->save();
     	return redirect('/admin/clientes'); 
     }
 

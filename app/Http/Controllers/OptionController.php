@@ -84,7 +84,7 @@ class OptionController extends Controller
     	// $xRef = new OptionXRef();
     	// $opciones = $xRef->options($nivel);
      //    return view('admin.opciones.index')->with(compact('opciones'));
-        $perfil = auth()->user()->profile->id;        
+        $perfil = auth()->user()->profile_id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
         $opcionesHTML = '<div class="panel-group" id="accordion">' . $this->getAccordion('',0) . '</div>';
         return view('admin.opciones.index')->with(compact('opcionesHTML', 'navbar'));    // forma para editar Opciones
@@ -95,7 +95,7 @@ class OptionController extends Controller
     public function create($parent = 0) 
     {
     	$option = new Option();
-        $perfil = auth()->user()->profile->id;        
+        $perfil = auth()->user()->profile_id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
     	if (!$parent == 0) $option = Option::find($parent);
         return view('admin.opciones.create')->with(compact('option','parent', 'navbar'));    // forma para insertar nueva opción     
@@ -112,7 +112,7 @@ class OptionController extends Controller
     {
         //$opcionesHTML = '<div class="panel-group" id="accordion">' . $this->getAccordion('',0,$id) . '</div>';
         $option = Option::find($id);
-        $perfil = auth()->user()->profile->id;        
+        $perfil = auth()->user()->profile_id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
         return view('admin.opciones.edit')->with(compact('option', 'navbar'));    // forma para editar Opcion
     }

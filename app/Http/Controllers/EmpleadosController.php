@@ -34,12 +34,14 @@ class EmpleadosController extends Controller
     }
 
      public function getDatosEmpleado(Request $data) {
-       
+        
         $emp= $data->fldide;
         $empleado = Empleado::where('EMP', $emp)->get()->first();
         $empleado2 = DatosGe::where('EMP', $emp)->get()->first();
         $foto = $empleado2->FOTO;
+        $sangre = $empleado2->SANGRE;
         $nombre = $empleado->NOMBRE;
+        $imss = $empleado->IMSS;
         $puesto = $empleado->PUESTO;
         $puesto1 = Job::where('PUESTO', $puesto)->get()->first();
         $puesto2 = $puesto1->NOMBRE;
@@ -54,7 +56,9 @@ class EmpleadosController extends Controller
             "depto" => $depto2,
             "localidad" => $localidad,
             "telefono" => $telefono,
-            "foto" => $foto
+            "foto" => $foto,
+            "sangre" => $sangre,
+            "imss" => $imss
 
         );
          
@@ -67,6 +71,9 @@ class EmpleadosController extends Controller
     public function create() 
     {
         $selProceso = Session::get('selProceso');
+        $emps = Empleado::all()->last();
+        $ultimo = $emps->EMP + 1;
+        $ultimo2 = str_pad($ultimo,7, "0", STR_PAD_LEFT);
         $jobs = Job::all();
         $deps = Depto::all();
         $ests = Estados::all();
@@ -74,7 +81,7 @@ class EmpleadosController extends Controller
         $navbar = ProfileController::getNavBar('',0,$perfil);
         $emp = new Empleado();
         $emp->TIPONO = $selProceso;
-    	return view('catalogos.empleados.create')->with(compact('jobs','deps', 'ests', 'selProceso', 'navbar','emp'));
+    	return view('catalogos.empleados.create')->with(compact('jobs','deps', 'ests', 'selProceso', 'navbar','emp', 'ultimo2'));
     }
 
 

@@ -1,0 +1,1 @@
+2018-10-02 17:45:32: imagepng(./firma/qr.png): failed to open stream: No such file or directory

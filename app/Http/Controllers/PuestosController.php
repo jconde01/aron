@@ -25,7 +25,9 @@ class PuestosController extends Controller
     {
         $perfil = auth()->user()->profile->id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
-    	return view('catalogos.puestos.create')->with(compact('navbar'));
+        $puesto = Job::all()->last();
+        $ultimo = $puesto->PUESTO + 1;
+    	return view('catalogos.puestos.create')->with(compact('navbar', 'ultimo'));
     }
     public function store(Request $request) 
     {
@@ -39,7 +41,7 @@ class PuestosController extends Controller
     	$job->SUELDO = $request->input('SUELDO');
     	$job->CATEGP = $request->input('CATEGP');
     	$job->save();
-    	return redirect('/catalogos/products');
+    	return redirect('/catalogos/puestos');
     }
 
     public function edit($puesto)
