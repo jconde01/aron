@@ -261,7 +261,7 @@
 			document.getElementById("MetodoISP").value = metodoIsp;
             tipoCaptura = conceptData[0]["TIPCAPT"];
     		//console.log(conceptData[0]["CONCEPTO"] + ' - ' + tipoCaptura);	
-    		console.log(metodo);
+    		//console.log(metodo);
 			switch (concepto) {
 				case CONINCAP12:
 					varClave = 5;
@@ -283,6 +283,7 @@
 					break;
 	    	}
 	    	document.getElementById("Clave").value = varClave;
+	    	console.log('Clave' + varClave);
         });
 	});
 
