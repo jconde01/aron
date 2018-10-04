@@ -242,7 +242,7 @@ class EmpleadosController extends Controller
         
         if ($file !== null) {
             
-            $path = public_path() . '/admon/empleados/empresas/'. $dage->EMP .'/';
+            $path = public_path() . Empleado::Rutas['Imagenes'] . $dage->EMP .'/';
             $fileName = uniqid() . $file->getClientOriginalName();
             $moved =  $file->move($path, $fileName);
             
@@ -426,7 +426,7 @@ class EmpleadosController extends Controller
         //dd($file);
         if ($file !== null) {
             
-            $path = public_path() . '/admon/empleados/empresas/'. $emple1->EMP .'/';
+            $path = public_path() . Empleado::Rutas['Imagenes'] . $emple1->EMP .'/';
             $fileName = uniqid() . $file->getClientOriginalName();
             $moved =  $file->move($path, $fileName);
             

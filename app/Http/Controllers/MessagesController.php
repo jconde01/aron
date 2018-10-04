@@ -24,7 +24,7 @@ class MessagesController extends Controller
     public function create($value='')
     {
     	$users = User::where('id','!=',auth()->id())->get();
-        $perfil = auth()->user()->profile->id;        
+        $perfil = auth()->user()->profile_id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
 		return view('messages.create')->with(compact('users', 'navbar'));    // forma para insertar nuevo mensaje
     }
@@ -62,7 +62,7 @@ class MessagesController extends Controller
     public function show($id)
     {
         $message = Message::findOrFail($id);
-        $perfil = auth()->user()->profile->id;        
+        $perfil = auth()->user()->profile_id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
         return view('messages.show')->with(compact('message', 'navbar'));
     }

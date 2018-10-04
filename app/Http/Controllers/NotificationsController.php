@@ -16,19 +16,13 @@ class NotificationsController extends Controller
 
     public function index()
     {
-    	// $unreadNotifications = auth()->user()->unreadNotifications;
-    	// $readNotifications = auth()->user()->readNotifications;
-        $perfil = auth()->user()->profile->id;        
+
+        $perfil = auth()->user()->profile_id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
     	return view('notifications.index',[
     		'unreadNotifications' => auth()->user()->unreadNotifications,
     		'readNotifications' => auth()->user()->readNotifications
     	])->with(compact('navbar'));
-    	// dd(auth()->user()->unreadNotifications[0]['data']['body']);
-    	 // foreach ($unreadNotifications as $unreadNotification) {
-    	 // 	var_dump($unreadNotification->data['body']);
-    	 // }
-    	//dd($unreadNotifications->first()->data['body']);
     }
 
     public function read($id)

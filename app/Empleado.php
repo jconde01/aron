@@ -7,6 +7,7 @@ use App\Nomina;
 
 class Empleado extends Model
 {
+	public const Rutas = Array('Imagenes' => '/admon/empleados/empresas/','Documentos'=>'/admon/empleados/docs/','Timbres'=>'/admon/empleados/timbres/');
     protected $connection = 'sqlsrv2';
     protected $table = 'dbo.EMPLEADO';
     public $timestamps = false;
