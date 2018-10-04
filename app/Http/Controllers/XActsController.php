@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Calculo;
 use App\Concepto;
 use App\Empleado;
 use App\Periodo;
@@ -117,7 +118,6 @@ class XActsController extends Controller
 		});
   		session()->flash('message', 'Movimientos guardados exitósamente!');
     	return redirect()->back();
-		// redirect('/transacciones/porConcepto');
 	}
 
 	public function storeIncapacidad(Request $data)
@@ -145,9 +145,12 @@ class XActsController extends Controller
 			$selProceso = Session::get('selProceso');
 			$deleted1 = Movtos::where('TIPONO',$selProceso)->where('CONCEPTO',$data->Concepto)->where('PERIODO',$data->Periodo)->delete();
 			$deleted2 = Imss::where('TIPONO',$selProceso)->where('CONCEPTO',$data->Concepto)->where('PERIODO',$data->Periodo)->delete();
+		    $concepto = Concepto::where('TIPONO',$selProceso)->where('CONCEPTO',$data->Concepto)
+		    				->select('METODO','PARAM1','PARAM2')->get()->first();
 
 		    foreach ($data->emp as $key => $emp) {
-		    	$empleado = Empleado::where('TIPONO',$selProceso)->where('EMP',$emp)->select('CUENTA','SUELDO','INTEG','INTIV')->get()->first();
+		    	$empleado = Empleado::where('TIPONO',$selProceso)->where('EMP',$emp)
+		    					->select('CUENTA','SUELDO','PROMED','INTEG','INTIV')->get()->first();
 		    	$imss = New Imss();
 		    	$imss->TIPONO = $selProceso;
 		    	$imss->EMP = $emp;
@@ -213,9 +216,7 @@ class XActsController extends Controller
 		    	$mov->UNIDADES = $data->dias[$key];
 		    	$mov->SALDO = 0;
 		    	$mov->SUMRES = 0;
-		    	// La instruccion que sigue tiene problema: No existe esa variable. Aqui nos quedamos!!!!!!!!!!!!!!!!!!!!!!!!
-		    	//$mov->CALCULO = $data->calculo[$key];		// Para que guardar????
-		    	$mov->CALCULO = 0;
+		    	$mov->CALCULO = Calculo::perPrim($empleado, $mov, $concepto);
 		    	$mov->METODOISP = $data->MetodoISP;			// Para que grabar esto en Movtos si está en CONCEPTOS ???????
 		    	$mov->FLAGCIEN = '';						// Investigar para que sirve esto??????
 		    	$mov->ACTIVO = 1;

@@ -283,7 +283,7 @@
 					break;
 	    	}
 	    	document.getElementById("Clave").value = varClave;
-	    	console.log('Clave' + varClave);
+	    	console.log('Clave: ' + varClave);
         });
 	});
 
