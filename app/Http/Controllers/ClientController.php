@@ -9,6 +9,7 @@ use App\Empresa;
 use App\Giro;
 use App\User;
 use App\Graph;
+use App\CellClient;
 
 class ClientController extends Controller
 {
@@ -185,6 +186,12 @@ class ClientController extends Controller
             $cliente->asimilado_BDA = $request->Asimilado_BDA;
         }
         $cliente->save();   // Update
+        $cellClient = CellClient::where('client_id',$id)->find();
+        if ($cellClient == null) {
+            $cellClient = new CellClient();
+        }
+        $cellClient->cell_id = $request->cell_id;
+        $cellClient->save(); 
         return redirect('/admin/clientes'); 
     }    
 
