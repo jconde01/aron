@@ -21,14 +21,22 @@
             <div class="tab-content">
               <div id="nomina1" class="tab-pane fade in active" style="">
             <div class="row">
-                    <div class="col-md-4 no-pad">
+
+                    <div class="col-md-1 no-pad">
+                        <div class="content-descripcion-left-input" style="margin-bottom: 2em; display: none;">
+                            <div class="label-left"><p></p></div>
+                            <input type="text"   readonly="readonly" hidden="hidden">
+                        </div> 
+                    </div>
+
+                    <div class="col-md-5 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Tipo Nomina</p></div>
                             <input type="text" name="TIPONO" value="{{ $empl->tipoNo->NOMBRE }}" readonly="readonly" class="bloqueado">
                         </div> 
                     </div>
 
-                    <div class="col-md-4 no-pad">
+                    <div class="col-md-5 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Empleado</p></div>
                             <input type="number" name="EMP" id="EMP" onkeyup="fAgrega2();" value="{{$empl->EMP}}" readonly="readonly" class="bloqueado">
@@ -234,6 +242,7 @@
                                 } ?> <?php endif ?>>
                                 </span> 
                             </div>
+                            <br><br><br>
                     </div>
 
                      <div class="col-md-4 no-pad">
@@ -435,7 +444,12 @@
                             <input type="date" name="PLANTA" value="<?php echo date('Y-m-d', strtotime($empl->PLANTA)) ?>">
                         </div> 
                     </div>
-
+                    <div class="col-md-2 no-pad">
+                        <div class="content-descripcion-left-input" style="margin-bottom: 2em; display: none;">
+                            <div class="label-left"><p></p></div>
+                            <input type="text"   readonly="readonly" hidden="hidden">
+                        </div> 
+                    </div>
                     <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Vencimiento de Contrato</p></div>

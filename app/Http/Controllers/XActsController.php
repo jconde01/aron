@@ -223,8 +223,7 @@ class XActsController extends Controller
 		    	$mov->OTROS = 0;
 		    	$mov->ESPECIAL = 1;
 		    	$mov->PLAZO = 0;
-		    	// La instruccion que sigue tiene problema: No existe esa variable. Aqui nos quedamos!!!!!!!!!!!!!!!!!!!!!!!!
-		    	//$mov->cuenta = $emp->cuenta[$key];			// para que grabar la cuenta si esta asociada a un solo empleado?????
+		    	//$mov->cuenta = $emp->cuenta[$key];		// para que grabar la cuenta si esta asociada a un solo empleado?????
 		    	$mov->cuenta = '';
 		    	//dd($mov);
 		    	$mov->save();

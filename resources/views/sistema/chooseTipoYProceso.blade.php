@@ -36,13 +36,14 @@
 	                    <div class="row">
                         <div class="form-group label-floating col col-md-8 col-md-offset-2" id="mostrar" style="display: none;">
                             <label class="control-label" style="color: white;">Proceso:</label><br>
-							<select id="procesos" name="proceso" class="form-control tipo">                    
+							<select id="procesos" name="proceso" class="form-control" onChange="activa_boton(this,this.form.boton)">         
+                             <option selected="true">Seleccione un Proceso</option>          
                             </select>
 						</div>
                     </div>
                 </div>
                 <div class="row text-center">
-                    <button type="submit" class="primario">Ingresar</button>
+                    <button type="submit" class="primario" name="boton" id="boton" value="Enviar" disabled=true>Ingresar</button>
                 </div>
             </form>
         </div>

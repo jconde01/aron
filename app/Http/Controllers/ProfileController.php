@@ -28,9 +28,6 @@ class ProfileController extends Controller
     {
 
         $perfil = Profile::find($id);
-        //$opciones = new Collection();
-        //$xRef = new OptionXRef();
-        //$opciones = $xRef->getOptionsTree($opciones,0);
         $opcionesHTML = '<div class="panel-group" id="accordion">' . $this->getAccordion('',0) . '</div>';
         return view('admin.perfiles.edit')->with(compact(['perfil','opcionesHTML']));    // forma para editar Perfil
     }

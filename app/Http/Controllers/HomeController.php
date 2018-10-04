@@ -67,24 +67,15 @@ class HomeController extends Controller
 
     public function setSessionData(Request $request)
     {
-        //$selCliente = $request->Tisanom_cia;
-        $selProceso = $request->proceso;
-        //dd(Config::get("database.connections.sqlsrv2"));
-        //$selProcessObj = DB::connection('sqlsrv2')->table('NOMINA')->where('TIPONO',$selProceso)->first();
-        //Config::set("database.connections.sqlsrv2", Session::get('sqlsrv2'));
-        $selProcessObj = Nomina::select('NOMBRE','MINIMODF')->where('TIPONO',$selProceso)->first();
 
+        $selProceso = $request->proceso;
+        $selProcessObj = Nomina::select('NOMBRE','MINIMODF')->where('TIPONO',$selProceso)->first();
         $clienteYProceso = auth()->user()->client->Nombre . " - " . $selProcessObj->NOMBRE;
-        // Config::set('tisanom.selCliente',$selCliente);
-        // Config::set('tisanom.selProceso',$selProceso);
 
         session(['selProceso' => $selProceso]);
-        //\Cache::put('selProceso',$selProceso,1440);
         session(['minimoDF' => $selProcessObj->MINIMODF]);
-        //\Cache::put('minimoDF',$selprocessObj->MINIMODF,1440);
         session(['clienteYProceso' => $clienteYProceso]);
-        //\Cache::put('clienteYProceso',$clienteYProceso,1440);
-        //dd(Config::get('tisanom.selCliente') . ' - ' . Config::get('tisanom.selProceso'));
+
         return redirect('home');
     }    
 
@@ -93,7 +84,7 @@ class HomeController extends Controller
         $id_usuario = auth()->user()->id;
         $graficas = Graph::where('usuario_id', $id_usuario)->first();
 
-        $perfil = auth()->user()->profile->id;        
+        $perfil = auth()->user()->profile_id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
         return view('sistema.graficas')->with(compact('graficas', 'navbar'));
     }
@@ -118,7 +109,7 @@ class HomeController extends Controller
         $grafica->save();
         $graficas = Graph::where('usuario_id', $id_usuario)->first();
 
-        $perfil = auth()->user()->profile->id;        
+        $perfil = auth()->user()->profile_id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
         return view('home')->with(compact('graficas', 'navbar'));
     }
