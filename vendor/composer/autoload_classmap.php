@@ -9,8 +9,6 @@ return array(
     'App\\Calculo' => $baseDir . '/app/Calculo.php',
     'App\\Cell' => $baseDir . '/app/Cell.php',
     'App\\Client' => $baseDir . '/app/Client.php',
-    'App\\ClientCell' => $baseDir . '/app/ClientCell.php',
-    'App\\Clientes' => $baseDir . '/app/Tisanom/Connection.php',
     'App\\Company' => $baseDir . '/app/Company.php',
     'App\\CompanyFile' => $baseDir . '/app/CompanyFile.php',
     'App\\CompanyGiro' => $baseDir . '/app/CompanyGiro.php',

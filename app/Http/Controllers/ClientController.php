@@ -176,6 +176,7 @@ class ClientController extends Controller
         $cliente->giro_id = $request->Giro;
         $cliente->Activo = ($request->Activo == 'on')? 1 : 0;
         $cliente->fiscal = ($request->Fiscal == 'on')? 1 : 0;
+        $cliente->cell_id = $request->cell_id;
         $cliente->asimilado = ($request->Asimilado == 'on')? 1 : 0;
         if ($request->Fiscal == 'on') {
             $cliente->fiscal_company_id = $request->Fiscal_Company_id;
@@ -186,12 +187,6 @@ class ClientController extends Controller
             $cliente->asimilado_BDA = $request->Asimilado_BDA;
         }
         $cliente->save();   // Update
-        $cellClient = CellClient::where('client_id',$id)->find();
-        if ($cellClient == null) {
-            $cellClient = new CellClient();
-        }
-        $cellClient->cell_id = $request->cell_id;
-        $cellClient->save(); 
         return redirect('/admin/clientes'); 
     }    
 

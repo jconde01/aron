@@ -353,8 +353,6 @@ class ComposerStaticInit4e96183b92f70ee61e7879e35ae7b39f
         'App\\Calculo' => __DIR__ . '/../..' . '/app/Calculo.php',
         'App\\Cell' => __DIR__ . '/../..' . '/app/Cell.php',
         'App\\Client' => __DIR__ . '/../..' . '/app/Client.php',
-        'App\\ClientCell' => __DIR__ . '/../..' . '/app/ClientCell.php',
-        'App\\Clientes' => __DIR__ . '/../..' . '/app/Tisanom/Connection.php',
         'App\\Company' => __DIR__ . '/../..' . '/app/Company.php',
         'App\\CompanyFile' => __DIR__ . '/../..' . '/app/CompanyFile.php',
         'App\\CompanyGiro' => __DIR__ . '/../..' . '/app/CompanyGiro.php',
