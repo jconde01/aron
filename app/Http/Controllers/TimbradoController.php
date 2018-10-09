@@ -12,11 +12,10 @@ class TimbradoController extends Controller
     
     public function index()
     {
-    	//dd('aqui esta');
-		$perfil = auth()->user()->profile->id;        
+
+		$perfil = auth()->user()->profile_id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
        
-		
     	return view('consultas.timbrado.index')->with(compact('navbar'));
     }
 

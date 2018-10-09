@@ -12,7 +12,7 @@ class CompanyFileController extends Controller
     public function index($id) {
     	$empresa = Company::find($id);
     	$files = $empresa->files;
-        $perfil = auth()->user()->profile->id;        
+        $perfil = auth()->user()->profile_id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
     	return view('admin.empresas.images.index')->with(compact('empresa','files', 'navbar'));
     	//return view('admin.empresas.images.index')->with(compact('empresa'));

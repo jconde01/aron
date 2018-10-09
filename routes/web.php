@@ -95,8 +95,9 @@ Route::middleware(['auth'])->prefix('transacciones')->group(function () {
 	Route::get('/porIncapacidad','XActsController@porIncapacidad')->name('porIncapacidad');
 	Route::post('/porIncapacidad','XActsController@storeIncapacidad');	
 	//Route::get('/get-movtos','XActsController@buscaMovtos');
-	Route::post('/get-movtos','XActsController@getMovtosCapturados');					// Ajax call
+	Route::post('/get-movtos','XActsController@getMovtosCapturados');			// Ajax call
 	Route::post('/get-concepto','XActsController@getConcepto');					// Ajax call
+	Route::get('/horasExtra','XActsController@horasExtra');
 });
 
 // Rutas para opciones del menú del Administrador 
@@ -151,6 +152,7 @@ Route::middleware(['auth','admin'])->prefix('admin')->group(function () {
 	Route::get('/perfiles/{id}/edit','ProfileController@edit');					// forma para editar perfil
 	Route::post('/perfiles/{id}/edit','ProfileController@update');				// guardar cambios del perfil
 });
+
 
 // Rutas para consultas
 Route::middleware(['auth'])->prefix('consultas')->group(function () {

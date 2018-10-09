@@ -25,6 +25,7 @@ class XActsController extends Controller
     }
 
 	const conIncap = ['400','401','402','403','404','405','406','407','408','360','361','100'];
+	const horasExtra = '200';
 
 	public function porConcepto()
 	{
@@ -37,6 +38,7 @@ class XActsController extends Controller
 		return view('transacciones.por-concepto')->with(compact('navbar','conceptos','periodos','empleados'));
 	}
 
+
 	public function porIncapacidad()
 	{
 		$perfil = auth()->user()->profile_id; 
@@ -47,6 +49,19 @@ class XActsController extends Controller
 		$periodos = Periodo::where('TIPONO',$selProceso)->where('SWCIERRE','0')->get();
 		$empleados = Empleado::where('TIPONO',$selProceso)->where('ESTATUS','A')->get();
 		return view('transacciones.por-incapacidad')->with(compact('navbar','conceptos','periCalc','periodos','empleados'));
+	}
+
+
+	public function horasExtra()
+	{
+		$perfil = auth()->user()->profile_id; 
+        $navbar = ProfileController::getNavBar('',0,$perfil);
+		$selProceso = Session::get('selProceso');
+		$concepto = Concepto::where('TIPONO',$selProceso)->where('CONCEPTO',$this::horasExtra)->get();
+		$periCalc = Nomina::where('TIPONO',$selProceso)->first()->PERICALC;
+		$periodos = Periodo::where('TIPONO',$selProceso)->where('SWCIERRE','0')->get();
+		$empleados = Empleado::where('TIPONO',$selProceso)->where('ESTATUS','A')->get();
+		return view('transacciones.horas-extra')->with(compact('navbar','concepto','periCalc','periodos','empleados'));
 	}
 
 	public function getMovtosCapturados(Request $data)
