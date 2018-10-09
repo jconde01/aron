@@ -1,0 +1,6 @@
+﻿Ha ocurrido el siguiente error para el empleado :BAHC7512205NY:BALAM HUCHIN CINTIA YANIRE:Error al guardar en enviados: Se generó un error al validar el xml contra el esquema.
+
+Línea 1 (778): [Error] - El atributo 'Rfc' no es válido. El valor 'BAHC7512205NY' no es válido según su tipo de datos 'http://www.sat.gob.mx/sitio_internet/cfd/tipoDatos/tdCFDI:t_RFC' - Error de restricción de patrón.
+
+
+Ha ocurrido el siguiente error para el empleado :CAMM960108BD4:CANUL MAY MIRIAM NOEMI:Error al Timbrar Recibo: Este RFC del receptor no existe en la lista de RFC inscritos no cancelados del SAT

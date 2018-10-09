@@ -1,0 +1,3 @@
+﻿Ha ocurrido el siguiente error para el empleado :GUPN811001427:GUADALUPE PECH NORMA:Error al Timbrar Recibo: null: El número de operaciones/transacciones ha terminado.
+Ha ocurrido el siguiente error para el empleado :MAMD810701GS2:MANRIQUE MAZUN DANIEL:Error al Timbrar Recibo: null: El número de operaciones/transacciones ha terminado.
+Ha ocurrido el siguiente error para el empleado :CAMM960108C80:MIRIAM NOEMI CANUL MAY:Error al Timbrar Recibo: null: El número de operaciones/transacciones ha terminado.

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cfdi:Comprobante xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd http://www.sat.gob.mx/nomina12 http://www.sat.gob.mx/sitio_internet/cfd/nomina/nomina12.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3.3" Serie="NOM" Folio="47" Fecha="2018-10-03T18:44:49" Sello="fK5G09lZDoL5c2LGSrQ1EnmMpIJzaPgkV7lty9kX1pJQaQvjYirwMwKCPI3YJvCjIsYZj7eByAdAZ/aFvIuoi7JgkJjoosw2XWnTJEnJWZ25kop220328FqkdEx1GaRP5ZgNSZLfG4ays5lbLBvDP4Bj2fd+YTs7kWqaOVrR6Iv0AsWku9e6ui36559Wd/ovbMiBMr2v6rz/rhdiil04b2s2nnu5RNrg42SguLan09ivqRGrIpc7IKD0QpfCzAfqdhHg7NPX7qr/1KMBjy1pRbX+pzM1+q/bUPSM2hjnuLn8up8Gw6Uw1NRImLIzN3rlyJpEkNRyMmu8McEwfpT06Q==" FormaPago="99" NoCertificado="00001000000411584234" Certificado="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" SubTotal="1345.17" Descuento="23.03" Moneda="MXN" Total="1322.14" TipoDeComprobante="N" MetodoPago="PUE" LugarExpedicion="97070" xmlns:nomina12="http://www.sat.gob.mx/nomina12" xmlns:cfdi="http://www.sat.gob.mx/cfd/3">
+  <cfdi:Emisor Rfc="ACE180306BF5" Nombre="ASESORES CORPORATIVOS ESSELL SA DE CV" RegimenFiscal="601" />
+  <cfdi:Receptor Rfc="MUGK890702NM1" Nombre="MUKUL GONZALEZ KARIME HERMELINDA" UsoCFDI="P01" />
+  <cfdi:Conceptos>
+    <cfdi:Concepto ClaveProdServ="84111505" Cantidad="1" ClaveUnidad="ACT" Descripcion="Pago de nómina" ValorUnitario="1345.17" Importe="1345.17" Descuento="23.03" />
+  </cfdi:Conceptos>
+  <cfdi:Complemento>
+    <nomina12:Nomina Version="1.2" TipoNomina="O" FechaPago="2018-09-21" FechaInicialPago="2018-09-10" FechaFinalPago="2018-09-23" NumDiasPagados="7.000" TotalPercepciones="1310.51" TotalDeducciones="23.03" TotalOtrosPagos="34.66">
+      <nomina12:Emisor RegistroPatronal="G6288900102" RfcPatronOrigen="ACE180306BF5" />
+      <nomina12:Receptor Curp="MUGK890702MYNKNR02" NumSeguridadSocial="84098911567" FechaInicioRelLaboral="2018-07-30" Antigüedad="P8W" TipoContrato="03" TipoJornada="01" TipoRegimen="02" NumEmpleado="0100001" Departamento="CAJA" Puesto="CAJERA" RiesgoPuesto="1" PeriodicidadPago="03" SalarioBaseCotApor="138.53" SalarioDiarioIntegrado="0.00" ClaveEntFed="YUC" />
+      <nomina12:Percepciones TotalSueldos="1310.51" TotalGravado="927.78" TotalExento="382.73">
+        <nomina12:Percepcion TipoPercepcion="001" Clave="100" Concepto="PERCEPCION NORMAL" ImporteExento="0.00" ImporteGravado="927.78" />
+        <nomina12:Percepcion TipoPercepcion="014" Clave="361" Concepto="SUB INCAPACIDAD" ImporteExento="382.73" ImporteGravado="0.00" />
+      </nomina12:Percepciones>
+      <nomina12:Deducciones TotalOtrasDeducciones="23.03">
+        <nomina12:Deduccion TipoDeduccion="021" Clave="550" Concepto="CUOTA IMSS PLANTA" Importe="23.03" />
+      </nomina12:Deducciones>
+      <nomina12:OtrosPagos>
+        <nomina12:OtroPago TipoOtroPago="002" Clave="150" Concepto="SUBSIDIO PARA EL EMPLEO" Importe="34.66">
+          <nomina12:SubsidioAlEmpleo SubsidioCausado="88.07" />
+        </nomina12:OtroPago>
+      </nomina12:OtrosPagos>
+      <nomina12:Incapacidades>
+        <nomina12:Incapacidad DiasIncapacidad="1" TipoIncapacidad="02" ImporteMonetario="0.00" />
+      </nomina12:Incapacidades>
+    </nomina12:Nomina>
+  </cfdi:Complemento>
+</cfdi:Comprobante>

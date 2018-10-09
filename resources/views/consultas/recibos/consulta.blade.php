@@ -8,10 +8,10 @@
     <div class="container">   
       <div class="section text-center">
         <h2 class="titulo">Recibos del Empleado</h2>
+        <br>
         
-        <br> <br>
         <?php
-            $directorio = opendir("./archivos"); //ruta actual
+            $directorio = opendir($ruta); 
             while ($archivo = readdir($directorio)) //obtenemos un archivo y luego otro sucesivamente
             {
                 if (is_dir($archivo))//verificamos si es o no un directorio
@@ -20,15 +20,35 @@
                 }
                 else
                 {
-                    echo '<a href="/archivos/'.$archivo.'">'.$archivo.'</a>' . "<br />";
+                    $rfc='SACM630816CS2';
+                    $ext = '.pdf';
+                    $xml = '.xml';
+                    //echo '<a href="/archivos/'.$archivo.'">'.$archivo.'</a>' . "<br />";
+                    $restar=substr ($archivo, 7,-15 );
+                    $pdf=substr ($archivo, -4);
+                    if ($rfc==$restar && $ext== $pdf){
+                       echo '<div class="col-lg-5" style="border:1px blue solid; border-radius:10px;"><br><i class="fas fa-file-alt" style="font-size: 50px;"></i><br><br><a href="/archivos/'.$archivo.'">'.$archivo.'</a>' . "<br/><br></div>"; 
+                       echo '<div class="col-lg-2"></div>';
+                    }
+                    
+                    if ($rfc==$restar && $xml== $pdf){
+                       echo '<div class="col-lg-5" style="border:1px blue solid; border-radius:10px;"><br><i class="fas fa-file-alt" style="font-size: 50px;"></i><br><br><a href="/archivos/'.$archivo.'" download="".$archivo."">'.$archivo.'</a>' . "<br /><br></div>"; 
+                    }
+                    
+                    //echo $restar;
+                   
                 }
             }
          ?>                           
          
+         
+             
+        
       </div>
 
     </div>
   </div>
+   <br><br><br><br>
 
 @include('includes.footer')
 @endsection

@@ -1,0 +1,50 @@
+﻿Ha ocurrido el siguiente error para el empleado :MUGK890702NM1:MUKUL GONZALEZ KARIME HERMELINDA:Error al guardar en enviados: Se generó un error al validar el xml contra el esquema.
+
+Línea 1 (1314): [Error] - El atributo 'RegistroPatronal' no es válido. El valor 'No Capturado' no es válido según su tipo de datos 'String' - Error de restricción de patrón.
+
+
+Ha ocurrido el siguiente error para el empleado :RICY961021FD4:RIVERO CABRERA YLEANA MARGARITA:Error al guardar en enviados: Se generó un error al validar el xml contra el esquema.
+
+Línea 1 (1310): [Error] - El atributo 'RegistroPatronal' no es válido. El valor 'No Capturado' no es válido según su tipo de datos 'String' - Error de restricción de patrón.
+
+
+Ha ocurrido el siguiente error para el empleado :CABR900702PS2:CHALE BALBOA RAUL ALFREDO:Error al guardar en enviados: Se generó un error al validar el xml contra el esquema.
+
+Línea 1 (1304): [Error] - El atributo 'RegistroPatronal' no es válido. El valor 'No Capturado' no es válido según su tipo de datos 'String' - Error de restricción de patrón.
+
+
+Ha ocurrido el siguiente error para el empleado :PANF980613GR3:PATRON NAVARRO MARIA FLAVIA:Error al guardar en enviados: Se generó un error al validar el xml contra el esquema.
+
+Línea 1 (1309): [Error] - El atributo 'RegistroPatronal' no es válido. El valor 'No Capturado' no es válido según su tipo de datos 'String' - Error de restricción de patrón.
+
+
+Ha ocurrido el siguiente error para el empleado :DISC9608292S0:DIAZ SOSA CARLOS FRANCISCO:Error al guardar en enviados: Se generó un error al validar el xml contra el esquema.
+
+Línea 1 (1305): [Error] - El atributo 'RegistroPatronal' no es válido. El valor 'No Capturado' no es válido según su tipo de datos 'String' - Error de restricción de patrón.
+
+
+Ha ocurrido el siguiente error para el empleado :ROSF920824KW0:ROMERO SOLIS JOSE FERNANDO:Error al guardar en enviados: Se generó un error al validar el xml contra el esquema.
+
+Línea 1 (1305): [Error] - El atributo 'RegistroPatronal' no es válido. El valor 'No Capturado' no es válido según su tipo de datos 'String' - Error de restricción de patrón.
+
+
+Ha ocurrido el siguiente error para el empleado :MATC930602562:MAAS TUN CARLOS ALBERTO:Error al guardar en enviados: Se generó un error al validar el xml contra el esquema.
+
+Línea 1 (1302): [Error] - El atributo 'RegistroPatronal' no es válido. El valor 'No Capturado' no es válido según su tipo de datos 'String' - Error de restricción de patrón.
+
+
+Ha ocurrido el siguiente error para el empleado :CECF690529NE8:CETINA CALDERON FERNANDO LEONEL:Error al guardar en enviados: Se generó un error al validar el xml contra el esquema.
+
+Línea 1 (1313): [Error] - El atributo 'RegistroPatronal' no es válido. El valor 'No Capturado' no es válido según su tipo de datos 'String' - Error de restricción de patrón.
+
+
+Ha ocurrido el siguiente error para el empleado :SAAE701127LS8:SANTANA ARISTA ESTEBAN:Error al guardar en enviados: Se generó un error al validar el xml contra el esquema.
+
+Línea 1 (1304): [Error] - El atributo 'RegistroPatronal' no es válido. El valor 'No Capturado' no es válido según su tipo de datos 'String' - Error de restricción de patrón.
+
+
+Ha ocurrido el siguiente error para el empleado :MAMM9104188DA:MARTINEZ MENA  MARICARMEN:Error al guardar en enviados: Se generó un error al validar el xml contra el esquema.
+
+Línea 1 (1303): [Error] - El atributo 'RegistroPatronal' no es válido. El valor 'No Capturado' no es válido según su tipo de datos 'String' - Error de restricción de patrón.
+
+

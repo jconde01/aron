@@ -1,0 +1,1 @@
+Ha ocurrido el siguiente error para el empleado :MUGK890702NM1:MUKUL GONZALEZ KARIME HERMELINDA:Error al Timbrar Recibo: Debe existir el elemento Incapacidades, ya que la clave expresada en Nomina.Deducciones.Deduccion.TipoDeduccion es 006.

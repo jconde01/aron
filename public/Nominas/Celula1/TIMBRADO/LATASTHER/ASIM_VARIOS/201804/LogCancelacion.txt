@@ -1,0 +1,20 @@
+El recibo con el UUID: CAFE6ABF-25C1-48DC-AAE1-E0F0A8FA7C58 se ha cancelado CORRECTAMENTE
+El recibo con el UUID: 56F303C2-BC1A-4C4E-9EAC-148907B80FA0 se ha cancelado CORRECTAMENTE
+El recibo con el UUID: 8386B0FD-FDC5-4493-8838-E9921C5EB659 se ha cancelado CORRECTAMENTE
+El recibo con el UUID: 9CF3AF2A-FD9E-409C-B83E-52AD1AD4CF65 se ha cancelado CORRECTAMENTE
+El recibo con el UUID: 05FA84D0-768D-4DE1-8F4A-D3EE70F61E66 se ha cancelado CORRECTAMENTE
+El recibo con el UUID: 83A8D6F6-061C-473C-AA0F-E85CA3600ACF se ha cancelado CORRECTAMENTE
+El recibo con el UUID: 8F3FCB06-A563-47CD-A520-19D415F06CF7 se ha cancelado CORRECTAMENTE
+El recibo 7E9C6478-3104-4079-8FE5-2BB39CDCCC2A no se cancelo por el siguiente error: Referencia a objeto no establecida como instancia de un objeto.
+El recibo con el UUID: 73D0FCF2-EC27-42B0-B483-18AAE0EF63A9 se ha cancelado CORRECTAMENTE
+El recibo con el UUID: B06AB2A3-0110-4BA6-8B68-73B099DBA2CE se ha cancelado CORRECTAMENTE
+El recibo con el UUID: 34B56749-338D-4022-BEB2-5467E91E9C7C se ha cancelado CORRECTAMENTE
+El recibo con el UUID: 0F07E3D2-0DF4-4230-9AD3-EEF11F2491C6 se ha cancelado CORRECTAMENTE
+El recibo con el UUID: CC93944A-53D7-4BA4-89EE-9FD1BF5183FD se ha cancelado CORRECTAMENTE
+El recibo con el UUID: F0CC1A48-84D2-466E-82CB-53534D51CEC5 se ha cancelado CORRECTAMENTE
+El recibo con el UUID: 9DA3631F-77A1-4BFF-9C11-D95209C543DF se ha cancelado CORRECTAMENTE
+El recibo con el UUID: 14506FF3-31B0-4CD6-83A9-884A6269991A se ha cancelado CORRECTAMENTE
+El recibo con el UUID: 13751C02-7DAC-4527-A305-891DD960CD2A se ha cancelado CORRECTAMENTE
+El recibo con el UUID: D4E3AF73-6A7A-49E5-A423-3BB570D08CCD se ha cancelado CORRECTAMENTE
+El recibo DCD31838-90C5-4E6B-B7C7-8740507E676D no se cancelo por el siguiente error: Referencia a objeto no establecida como instancia de un objeto.
+El recibo con el UUID: 7C6551F3-B2D7-4D54-9563-9D8885BE9C62 se ha cancelado CORRECTAMENTE

@@ -1,0 +1,1 @@
+﻿Ha ocurrido el siguiente error para el empleado :EELS850228LN9:SANDRA ESPERON LOPEZ:Método no encontrado: 'HyperSoft.Base.FieldString HyperSoft.ElectronicDocumentLibrary.Complemento.Nomina.Data.get_TipoNomina()'.

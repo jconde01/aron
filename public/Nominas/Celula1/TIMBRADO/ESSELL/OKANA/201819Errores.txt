@@ -1,0 +1,1 @@
+Ha ocurrido el siguiente error para el empleado :MUGK890702NM1:MUKUL GONZALEZ KARIME HERMELINDA:Error al Timbrar Recibo: La suma de los campos ImporteMonetario no es igual a la suma de los valores ImporteGravado e ImporteExento de la percepción, Ya que la clave expresada en el atributo TipoPercepcion es 014.

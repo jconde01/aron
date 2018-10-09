@@ -1,0 +1,3 @@
+Ha ocurrido el siguiente error para el empleado :MACI890725UI5:MARTINEZ CARDENAS ISMAEL:Error al Timbrar Recibo: Este RFC del receptor no existe en la lista de RFC inscritos no cancelados del SAT
+Ha ocurrido el siguiente error para el empleado :UXCS900612KR9:UC CANCHE SANDY:Error al Timbrar Recibo: Este RFC del receptor no existe en la lista de RFC inscritos no cancelados del SAT
+Ha ocurrido el siguiente error para el empleado :AECM661129CZ4:ARELLANO CHAVEZ MIGUEL:Error al Timbrar Recibo: Este RFC del receptor no existe en la lista de RFC inscritos no cancelados del SAT

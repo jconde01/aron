@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cfdi:Comprobante xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd http://www.sat.gob.mx/nomina12 http://www.sat.gob.mx/sitio_internet/cfd/nomina/nomina12.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3.3" Serie="NOM" Folio="8" Fecha="2018-08-14T09:54:46" Sello="MI3y2oRIGMCHkgI9dhig6OOjvM4K/WkzmJeWdMAcJfyC6Rklm+AS1qwGc7rJ1lH3o95KNJ8kCXywFmxUBDquLSLA8Se9BAp5zXS7BOYxagNfrO+k8Marft2y0SwkKb1THu1IkvEKIAxq6Mv4q42IwXpyONQmUFhk4+gD3TGgEgc2a+qL574/FnuACo4ItPyeeXLTg9j0LUe/BiAggMoJUVai2W4AqKkdfnxhHJ2ZMHdNSX7f970AHNDtZg9BFGM65fT39MsXOtnIw7j/fLsBLCJ/MXRjl5DGonhRbeE4G09G90IZf2NR3K5/z0ZedNCJL2LKluix/7tNfgMgCJyyjQ==" FormaPago="99" NoCertificado="00001000000411584234" Certificado="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" SubTotal="962.44" Descuento="23.03" Moneda="MXN" Total="939.41" TipoDeComprobante="N" MetodoPago="PUE" LugarExpedicion="97070" xmlns:nomina12="http://www.sat.gob.mx/nomina12" xmlns:cfdi="http://www.sat.gob.mx/cfd/3">
+  <cfdi:Emisor Rfc="ACE180306BF5" Nombre="ASESORES CORPORATIVOS ESSELL SA DE CV" RegimenFiscal="601" />
+  <cfdi:Receptor Rfc="CECF690529NE8" Nombre="CETINA CALDERON FERNANDO LEONEL" UsoCFDI="P01" />
+  <cfdi:Conceptos>
+    <cfdi:Concepto ClaveProdServ="84111505" Cantidad="1" ClaveUnidad="ACT" Descripcion="Pago de nómina" ValorUnitario="962.44" Importe="962.44" Descuento="23.03" />
+  </cfdi:Conceptos>
+  <cfdi:Complemento>
+    <nomina12:Nomina Version="1.2" TipoNomina="O" FechaPago="2018-08-12" FechaInicialPago="2018-07-30" FechaFinalPago="2018-08-12" NumDiasPagados="7.000" TotalPercepciones="927.78" TotalDeducciones="23.03" TotalOtrosPagos="34.66">
+      <nomina12:Emisor RegistroPatronal="G6288900102" RfcPatronOrigen="ACE180306BF5" />
+      <nomina12:Receptor Curp="CECF690529HYNTLR05" NumSeguridadSocial="84886923840" FechaInicioRelLaboral="2018-08-06" Antigüedad="P1W" TipoContrato="03" TipoJornada="01" TipoRegimen="02" NumEmpleado="0100009" Departamento="CHOFER" Puesto="CHOFER" RiesgoPuesto="1" PeriodicidadPago="03" SalarioBaseCotApor="138.53" SalarioDiarioIntegrado="0.00" ClaveEntFed="YUC" />
+      <nomina12:Percepciones TotalSueldos="927.78" TotalGravado="927.78" TotalExento="0.00">
+        <nomina12:Percepcion TipoPercepcion="001" Clave="100" Concepto="PERCEPCION NORMAL" ImporteExento="0.00" ImporteGravado="927.78" />
+      </nomina12:Percepciones>
+      <nomina12:Deducciones TotalOtrasDeducciones="23.03">
+        <nomina12:Deduccion TipoDeduccion="021" Clave="550" Concepto="CUOTA IMSS PLANTA" Importe="23.03" />
+      </nomina12:Deducciones>
+      <nomina12:OtrosPagos>
+        <nomina12:OtroPago TipoOtroPago="002" Clave="150" Concepto="SUBSIDIO PARA EL EMPLEO" Importe="34.66">
+          <nomina12:SubsidioAlEmpleo SubsidioCausado="88.07" />
+        </nomina12:OtroPago>
+      </nomina12:OtrosPagos>
+    </nomina12:Nomina>
+  </cfdi:Complemento>
+</cfdi:Comprobante>

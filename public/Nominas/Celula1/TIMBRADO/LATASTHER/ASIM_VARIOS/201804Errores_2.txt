@@ -1,0 +1,2 @@
+﻿Ha ocurrido el siguiente error para el empleado :LOFR681223179:LORIA FERNANDEZ ROSA MARIA:Error al Timbrar Recibo: Este RFC del receptor no existe en la lista de RFC inscritos no cancelados del SAT
+Ha ocurrido el siguiente error para el empleado :ROKB880124QQ1:ROSADO KUYOK BEATRIZ:Error al Timbrar Recibo: Este RFC del receptor no existe en la lista de RFC inscritos no cancelados del SAT
