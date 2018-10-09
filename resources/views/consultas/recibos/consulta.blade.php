@@ -27,12 +27,12 @@
                     $restar=substr ($archivo, 7,-15 );
                     $pdf=substr ($archivo, -4);
                     if ($rfc==$restar && $ext== $pdf){
-                       echo '<div class="col-lg-5" style="border:1px blue solid; border-radius:10px;"><br><i class="fas fa-file-alt" style="font-size: 50px;"></i><br><br><a href="/archivos/'.$archivo.'">'.$archivo.'</a>' . "<br/><br></div>"; 
+                       echo '<div class="col-lg-5" style="border:1px blue solid; border-radius:10px;"><br><i class="fas fa-file-alt" style="font-size: 50px;"></i><br><br><a href="/Nominas/Celula1/TIMBRADO/VALLY_MERIDA/201816/'.$archivo.'">'.$archivo.'</a>' . "<br/><br></div>"; 
                        echo '<div class="col-lg-2"></div>';
                     }
                     
                     if ($rfc==$restar && $xml== $pdf){
-                       echo '<div class="col-lg-5" style="border:1px blue solid; border-radius:10px;"><br><i class="fas fa-file-alt" style="font-size: 50px;"></i><br><br><a href="/archivos/'.$archivo.'" download="".$archivo."">'.$archivo.'</a>' . "<br /><br></div>"; 
+                       echo '<div class="col-lg-5" style="border:1px blue solid; border-radius:10px;"><br><i class="fas fa-file-alt" style="font-size: 50px;"></i><br><br><a href="/Nominas/Celula1/TIMBRADO/VALLY_MERIDA/201816/'.$archivo.'" download="".$archivo."">'.$archivo.'</a>' . "<br /><br></div>"; 
                     }
                     
                     //echo $restar;
