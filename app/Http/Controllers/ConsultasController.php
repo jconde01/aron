@@ -48,10 +48,10 @@ class ConsultasController extends Controller
 
      public function consulta($id)
     {
-        
+        $ruta = Empleado::Rutas['Documentos'] .'/';
        $perfil = auth()->user()->profile->id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
-    	return view('consultas.recibos.consulta')->with(compact('navbar')); 
+    	return view('consultas.recibos.consulta')->with(compact('navbar', 'ruta')); 
     }
 
     public function indexContrato()

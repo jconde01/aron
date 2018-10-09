@@ -27,15 +27,15 @@
                 <div class="col-md-4 no-pad" style="">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em; ">
                             <div class="label-left"><p>Nombre Corto</p></div>
-                            <input type="text" name="NDEPTO" value="{{$depto->NDEPTO}}" style="width: 300px;" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                            <input type="text" name="NDEPTO" value="{{$depto->NDEPTO}}" id="nomCor" style="width: 300px;" onkeyup="javascript:this.value=this.value.toUpperCase();">
                         </div> 
                     </div>
 
               <div class="col-md-4 no-pad"></div>
-                <div class="col-md-5 no-pad" style="">
-                        <div class="content-descripcion-left-input" style="margin-bottom: 2em; ">
+                <div class="col-md-5 no-pad col-lg-3" id="border" style="">
+                        <div class="content-descripcion-left-input"  style="margin-bottom: 2em; ">
                             <div class="label-left"><p>Depto. al que Reporta</p></div>
-                            <select style="width: 280px; height: 40px; border-radius: 10px; text-align: right; padding-right: 20px; margin-left: 30px;" name="NAREA">
+                            <select id="sele" style="width: 280px; height: 40px; border-radius: 10px; text-align-last: right; padding-right: 20px; margin-left: 30px;" name="NAREA">
                                 <option value="">Categoria</option>
                                 @foreach ($deps as $dep)
                                 <option value="{{$dep->DEPTO}}" <?php if ($dep->DEPTO==$depto->NAREA) {

@@ -98,6 +98,7 @@ Route::middleware(['auth'])->prefix('transacciones')->group(function () {
 	Route::post('/get-movtos','XActsController@getMovtosCapturados');			// Ajax call
 	Route::post('/get-concepto','XActsController@getConcepto');					// Ajax call
 	Route::get('/horasExtra','XActsController@horasExtra');
+	Route::post('/horasExtra','XActsController@storeHorasExtra');
 });
 
 // Rutas para opciones del menú del Administrador 
@@ -111,7 +112,9 @@ Route::middleware(['auth','admin'])->prefix('admin')->group(function () {
 
 	Route::get('/celulas','CellController@index');								
 	Route::get('/celulas/create','CellController@create');						
-	Route::post('/celulas','CellController@store');										
+	Route::post('/celulas','CellController@store');
+	Route::get('/celulas/{id}/edit','CellController@edit');
+	Route::post('/celulas/{id}/edit','CellController@update');		
 
 	Route::get('/empresas','CompanyController@index');							// listado de Empresas
 	Route::get('/empresas/create','CompanyController@create');					// forma para crear nueva empresa

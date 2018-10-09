@@ -50,11 +50,32 @@ table {
         max-width: 800px !important;
     }
     .border{
-        
+        border: 1px blue solid!important;
     }
     .navvar{
         margin: auto !important;
     }
+}
+
+@media only screen and (min-width: 1300px){
+  
+    #border{
+        
+        margin-left: 55px;
+    }
+    #nomCor{
+      
+      width: 150px!important;
+      padding-left: 10px!important;
+      margin-right: 168px;
+    }
+    #sele{
+      margin-left: 117px!important;
+    }
+    .deptip{
+      margin-right: 50px!important;
+    }
+   
 }
 
 @media only screen and (min-width: 1206px) and (max-width: 1500px){

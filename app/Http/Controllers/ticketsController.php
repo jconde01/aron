@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\tickets;
 use session;
 use Auth;
@@ -32,7 +33,7 @@ class ticketsController extends Controller
 
     public function store(Request $request)
     {
-		
+		DB::transaction(function () use($request) {
 		$f= getdate();
 		//dd($f);
 		$fecha = $f['mday'].'-'.$f['mon'].'-'.$f['year'].' '.$f['hours'].':'.$f['minutes'].'Hrs';
@@ -61,14 +62,14 @@ class ticketsController extends Controller
 		$historial->emisor = $a;
 		$historial->fechale = $fecha;
 		$historial->save();
-		//dd($historial);
-
+		
+        });
     	return back()->with('flash','Ticket Generado con éxito');
     }
 
     public function cancel(Request $folio)
     {
-    	
+    	DB::transaction(function () use($folio) {
     	$ticket = tickets::where('folio', $folio->folio)->get()->first();
     	$f= getdate();
     	$fecha = $f['mday'].'-'.$f['mon'].'-'.$f['year'].' '.$f['hours'].':'.$f['minutes'].'Hrs';
@@ -89,7 +90,7 @@ class ticketsController extends Controller
 		$historial->fechafina = $fecha;
 		$historial->solucion = 'Cancelado por el usuario';
 		$historial->save();
-		//dd($historial);
+		});
 		return back()->with('flash','Ticket Cancelado con éxito');
     }
 
@@ -104,6 +105,7 @@ class ticketsController extends Controller
 
      public function atender(Request $folio)
     {
+        DB::transaction(function () use($folio) {
     	$f= getdate();
     	$fecha = $f['mday'].'-'.$f['mon'].'-'.$f['year'].' '.$f['hours'].':'.$f['minutes'].'Hrs';
     	$ticket = tickets::where('folio', $folio->folio)->get()->first();
@@ -125,7 +127,7 @@ class ticketsController extends Controller
 		$historial->fechale = $ticket->fechale;
 		$historial->fechaacep = $fecha;
 		$historial->save();
-		//dd($historial);
+		});
 		return back()->with('flash','Ticket asignado con éxito');
     }
 
@@ -152,7 +154,7 @@ class ticketsController extends Controller
 
     public function update(Request $folio)
     {
-
+        DB::transaction(function () use($folio) {
     	$ticket = tickets::where('folio', $folio->folio)->get()->first();
     	//dd($ticket->fechaacep);
     	$ticket->clasificacion = $folio->input('clasificacion');
@@ -212,7 +214,7 @@ class ticketsController extends Controller
 		$perfil = auth()->user()->profile->id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
         
-		
+		});
     	return redirect('tickets/sistema/aceptado');
     }
 

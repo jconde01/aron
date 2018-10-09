@@ -67,7 +67,7 @@
                     <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Puesto</p></div>
-                            <select style="width: 340px; height: 40px; border-radius: 10px; text-align: right; padding-right:0px; margin-left: 75px;" name="PUESTO" value="{{$empl->PUESTO}}" class="inderecha">                             
+                            <select style="width: 340px; height: 40px; border-radius: 10px; text-align: right; padding-right:0px; margin-left: 75px;" name="PUESTO" value="{{$empl->PUESTO}}" class="inderecha deptip">                             
                                 @foreach ($jobs as $job)
                                 <option value="{{$job->PUESTO}}" <?php if ($job->PUESTO==$empl->PUESTO) {
                                   echo 'selected="selected"';
@@ -87,7 +87,7 @@
                     <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Departamento</p></div>
-                            <select style="width: 340px; height: 40px; border-radius: 10px; text-align: right; padding-right: 0px; margin-left: 75px;font-size: 13px;" name="DEPTO" required value="{{$empl->DEPTO}}" class="inderecha">
+                            <select style="width: 340px; height: 40px; border-radius: 10px; text-align: right; padding-right: 0px; margin-left: 75px;font-size: 13px;" name="DEPTO" required value="{{$empl->DEPTO}}" class="inderecha deptip">
                                
                                 @foreach ($deps as $dep)
                                 <option value="{{$dep->DEPTO}}" <?php if ($dep->DEPTO==$empl->DEPTO) {
@@ -386,7 +386,7 @@
                      <div class="col-md-4 no-pad" style="">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Tipo de Contrato</p></div>
-                            <select style="width: 340px; height: 40px; border-radius: 10px; text-align: right; padding-right: 0px; margin-left: 75px;font-size: 12px;" name="c_TipoContrato" value="{{$empl->c_TipoContrato}}" class="inderecha">
+                            <select style="width: 340px; height: 40px; border-radius: 10px; text-align: right; padding-right: 0px; margin-left: 75px;font-size: 12px;" name="c_TipoContrato" value="{{$empl->c_TipoContrato}}" class="inderecha deptip">
                                 <option value="01 Contrato de trabajo por tiempo indeterminado" <?php if ($empl->c_TipoContrato=="01 Contrato de trabajo por tiempo indeterminado"):{
                                     echo 'selected="selected"';
                                 } ?> <?php endif ?>>01 Contrato de trabajo por tiempo indeterminado</option>
@@ -644,7 +644,7 @@
                     <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Reporta al:</p></div>
-                            <select style="width: 340px; height: 40px; border-radius: 10px; text-align: right; padding-right: 0px; margin-left: 75px;" name="REPORTA" value="{{$empl1->REPORTA}}" class="inderecha">                         
+                            <select style="width: 340px; height: 40px; border-radius: 10px; text-align: right; padding-right: 0px; margin-left: 75px;" name="REPORTA" value="{{$empl1->REPORTA}}" class="inderecha deptip">                         
                                 @foreach ($jobs as $job)
                                 <option value="{{$job->PUESTO}}" <?php if ($job->PUESTO==$empl1->REPORTA) {
                                   echo 'selected="selected"';

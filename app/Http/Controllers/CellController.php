@@ -152,4 +152,22 @@ class CellController extends Controller
         return redirect('/admin/celulas');
     }
 
+    public function edit($id)
+    {
+        
+        $celula = Cell::where('id', $id)->get()->first();
+        $perfil = auth()->user()->profile_id;        
+        $navbar = ProfileController::getNavBar('',0,$perfil);
+        return view('admin.celulas.edit')->with(compact('celula', 'navbar')); 
+    }
+
+
+    public function update(Request $request)
+    {
+
+        $celula = Cell::where('id', $request->id)->get()->first();
+        $celula->nombre = $request->input('nombre');
+        $celula->save();
+        return redirect('/admin/celulas');
+    }
 }

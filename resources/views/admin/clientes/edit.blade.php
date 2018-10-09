@@ -43,15 +43,8 @@
                 </div>
 
                 <div class="row" style="margin-bottom: 5px;">
-                    <div class="col-md-4 col-md-offset-4">
-<!--                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
-                            <div class="label-left"><p>Giro</p></div>                        
-                            <select class="giros_list" style="width: 440px; height: 40px; border-radius: 10px; text-align-last: right; padding-right: 10px;" name="Giro" disabled>
-                                @foreach ($giros as $giro)
-                                    <option value="{{ $giro->id }}" {{ ($cliente->giro_id == $giro->id)? 'selected':'' }}>{{ $giro->nombre }}</option>
-                                @endforeach
-                            </select>
-                        </div> -->
+                    <div class="col-md-2"></div>
+                    <div class="col-md-4 ">
                         <div class="form-group"  style=" width: 350px;">
                             <label class="control-label" style="float: left; padding-top: 5px;">Giro</label>                        
                             <select class="form-control giros_list" name="Giro" style="float: right; width: 300px;">
@@ -61,7 +54,21 @@
                             </select>
                         </div>                        
                     </div>
+
+                    <div class="col-md-4 ">
+
+                        <div class="form-group"  style=" width: 350px;">
+                            <label class="control-label" style="float: left; padding-top: 5px;">Celulas</label>                        
+                            <select class="form-control giros_list" name="celula" style="float: right; width: 300px;">
+                                @foreach ($celulas as $celula)
+                                    <option value="{{ $celula->id }}" {{ ($cliente->cell_id == $celula->id)? 'selected':'' }}>{{ $celula->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>                        
+                    </div>
                 </div>
+
+
     
                 <label class="etiqueta">Servicios contratados</label>
                 <div style="border:1px red solid;">

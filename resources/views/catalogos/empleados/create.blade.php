@@ -92,7 +92,7 @@
                     <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Departamento</p></div>
-                            <select style="width: 340px; height: 40px; border-radius: 10px; text-align: right; padding-right: 0px; margin-left: 75px; font-size: 13px;" name="DEPTO" required class="inderecha">
+                            <select style="width: 340px; height: 40px; border-radius: 10px; text-align: right; padding-right: 0px; margin-left: 75px; font-size: 13px;" name="DEPTO" required class="inderecha deptip">
                                 @foreach ($deps as $dep)
                                 <option value="{{$dep->DEPTO}}">{{$dep->DESCRIP}}</option>
                                 @endforeach
@@ -107,7 +107,7 @@
                                 <option value="1">1-Planta Confianza</option>
                                 <option value="2">2-Eventual Confianza</option>
                                 <option value="3">3-Obrero Planta</option>
-                                <option value="4">4-Obrero Eventaul</option>
+                                <option value="4">4-Obrero Eventual</option>
                             </select>
                         </div> 
                     </div>
@@ -245,7 +245,7 @@
                      <div class="col-md-4 no-pad" style="">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Tipo de Contrato</p></div>
-                            <select style="width: 340px; height: 40px; border-radius: 10px; text-align: right; padding-right:0px; font-size: 11px; margin-left: 75px;" name="c_TipoContrato" required class="inderecha">
+                            <select style="width: 340px; height: 40px; border-radius: 10px; text-align: right; padding-right:0px; font-size: 11px; margin-left: 75px;" name="c_TipoContrato" required class="inderecha deptip">
                                 <option value="01 Contrato de trabajo por tiempo indeterminado">01 Contrato de trabajo por tiempo indeterminado</option>
                                 <option value="02 Contrato de trabajo para obra determinada">02 Contrato de trabajo para obra determinada</option>
                                 <option value="03 Contrato de trabajo por tiempo determinado">03 Contrato de trabajo por tiempo determinado</option>
@@ -463,7 +463,7 @@
                     <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Reporta al:</p></div>
-                            <select style="width: 340px; height: 40px; border-radius: 10px; text-align: right; padding-right: 0px; margin-left: 75px;" name="REPORTA" class="inderecha">
+                            <select style="width: 340px; height: 40px; border-radius: 10px; text-align: right; padding-right: 0px; margin-left: 75px;" name="REPORTA" class="inderecha deptip">
                                 
                                 @foreach ($jobs as $job)
                                 <option value="{{$job->PUESTO}}">{{$job->NOMBRE}}</option>                  

@@ -28,9 +28,11 @@ class DeptosController extends Controller
     {
         $deps = Depto::all();
         $depto = Depto::all()->last();
+        $perfil = auth()->user()->profile->id;        
+        $navbar = ProfileController::getNavBar('',0,$perfil);
         $ultimo = $depto->DEPTO + 1;
         
-    	return view('catalogos.deptos.create')->with(compact('deps', 'ultimo'));
+    	return view('catalogos.deptos.create')->with(compact('deps', 'ultimo', 'navbar'));
     }
 
 

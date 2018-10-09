@@ -249,4 +249,72 @@ class XActsController extends Controller
 		// redirect('/transacciones/porConcepto');
 	}
 
+	public function storeHorasExtra(Request $data)
+	{
+
+        $messages = [
+            'emp.required' => 'No se ha ingresado ningún empleado'
+        ];
+
+        $rules = [
+            'emp' => 'required|array|min:1'
+        ];
+        // validar
+        $this->validate($data,$rules,$messages);
+
+		DB::transaction(function () use($data) {
+
+			$selProceso = Session::get('selProceso');
+			$deleted1 = Movtos::where('TIPONO',$selProceso)->where('CONCEPTO',$data->Concepto)->where('PERIODO',$data->Periodo)->delete();
+			$deleted2 = Imss::where('TIPONO',$selProceso)->where('CONCEPTO',$data->Concepto)->where('PERIODO',$data->Periodo)->delete();
+		    $concepto = Concepto::where('TIPONO',$selProceso)->where('CONCEPTO',$data->Concepto)
+		    				->select('METODO','PARAM1','PARAM2')->get()->first();
+
+		    foreach ($data->emp as $key => $emp) {
+		    	$empleado = Empleado::where('TIPONO',$selProceso)->where('EMP',$emp)
+		    					->select('CUENTA','SUELDO','PROMED','INTEG','INTIV')->get()->first();
+		    	$imss = New Imss();
+		    	$imss->TIPONO = $selProceso;
+		    	$imss->EMP = $emp;
+		    	$imss->SUELDO = $empleado->SUELDO;
+		    	$imss->SUELDONUE = $empleado->SUELDO;
+		    	$imss->INTEG = $empleado->INTEG;
+		    	$imss->INTIV = $empleado->INTIV;
+		    	$imss->INTEGNUE = $empleado->INTEG;
+		    	$imss->INTIVNUE = $empleado->INTIV;
+		    	$imss->REFIMSS = $data->refIMSS[$key] . "";
+		    	$imss->FECHA = date('Y-m-d', strtotime($data->fecha[$key]));
+		    	$imss->DIAS = $data->dias[$key];
+		    	$imss->CONCEPTO = $data->Concepto;
+		    	$imss->PERIODO = $data->Periodo;
+		    	$imss->CLAVE = $data->Clave;
+		    	$imss->save();
+
+		    	$mov = New Movtos();
+		    	$mov->TIPONO = $selProceso;
+		    	$mov->EMP = $emp;
+		    	$mov->CONCEPTO = $data->Concepto;
+		    	$mov->PERIODO = $data->Periodo;
+		    	$mov->METODO = $data->Metodo;
+		    	$mov->UNIDADES = $data->dias[$key];
+		    	$mov->SALDO = 0;
+		    	$mov->SUMRES = 0;
+		    	$mov->CALCULO = Calculo::perPrim($empleado, $mov, $concepto);
+		    	$mov->METODOISP = $data->MetodoISP;			// Para que grabar esto en Movtos si está en CONCEPTOS ???????
+		    	$mov->FLAGCIEN = '';						// Investigar para que sirve esto??????
+		    	$mov->ACTIVO = 1;
+		    	$mov->OTROS = 0;
+		    	$mov->ESPECIAL = 1;
+		    	$mov->PLAZO = 0;
+		    	//$mov->cuenta = $emp->cuenta[$key];		// para que grabar la cuenta si esta asociada a un solo empleado?????
+		    	$mov->cuenta = '';
+		    	//dd($mov);
+		    	$mov->save();
+		    }
+		});
+  		session()->flash('message', 'Movimientos guardados exitósamente!');
+    	return redirect()->back();
+		// redirect('/transacciones/porConcepto');
+	}
+
 }

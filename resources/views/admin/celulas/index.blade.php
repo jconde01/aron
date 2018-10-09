@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+ 
 @section('title','Listado de Células')
 @section('body-class','')
 
@@ -12,12 +12,12 @@
                 <a href="{{ url('/admin/celulas/create')}}" class="btn btn-primary btn-round" role="button">Nueva Célula</a>
                 <br>
                 <br>
-                <table class="table">
+                <table id="table_id">
                     <thead>
                         <tr>
                             <th>id</th>
-                            <th style="width: 450px;">Nombre</th>
-                            
+                            <th style="width: 570px;">Nombre</th>
+                            <th>Editar</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -27,7 +27,7 @@
 
                             <td class="text-left">{{$celula->id}}</td>
                             <td class="text-left"style="width: 450px;">{{$celula->nombre}}</td>
-                           
+                            <td><a href="{{url('/admin/celulas/'.$celula->id.'/edit')}}" rel="tooltip" title="Editar" class="btn btn-success btn-simple btn-xs"><i class="fa fa-edit"></i></a></td>
                         </tr>
                          @endforeach
                     </tbody>

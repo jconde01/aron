@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Company;
 use App\Client;
 use App\Empresa;
@@ -10,6 +11,7 @@ use App\Giro;
 use App\User;
 use App\Graph;
 use App\CellClient;
+use App\Cell;
 
 class ClientController extends Controller
 {
@@ -29,11 +31,13 @@ class ClientController extends Controller
     	$empresas = Company::all();
         $tisanom_cias = Empresa::all();
         $giros = Giro::all();
-    	return view('admin.clientes.create')->with(compact('tisanom_cias','empresas','giros'));	// insertar nuevo cliente
+        $celulas = Cell::all();
+    	return view('admin.clientes.create')->with(compact('tisanom_cias','empresas','giros', 'celulas'));	// insertar nuevo cliente
     }
 
     public function store(Request $request) 
     {
+
         $messages = [
             'Nombre.required' => 'El campo "Nombre del cliente" es requerido',
             'Nombre.min'    => 'El campo "Nombre del cliente" debe contener al menos 5 caracteres',
@@ -46,6 +50,7 @@ class ClientController extends Controller
         ];
         // validar
         $this->validate($request,$rules,$messages);
+        DB::transaction(function () use($request) {
         $cliente1 = Client::all()->last();
         //dd($cliente1->id);
         $cli=$cliente1->id + 1;
@@ -56,6 +61,7 @@ class ClientController extends Controller
     	$cliente = new Client();
     	$cliente->Nombre = $request->Nombre;
     	$cliente->Representante = $request->Representante;
+        $cliente->cell_id = $request->celula;
     	$cliente->Email = $request->Email;
         $cliente->giro_id = $request->Giro;
     	$cliente->Activo = ($request->Activo == 'on')? 1 : 0;
@@ -143,6 +149,8 @@ class ClientController extends Controller
         $grafica3->grafica9 = 0;
         $grafica3->grafica10 = 0;
         $grafica3->save();
+
+        });
     	return redirect('/admin/clientes'); 
     }
 
@@ -152,7 +160,8 @@ class ClientController extends Controller
         $giros = Giro::all();
     	$empresas = Company::all();
         $tisanom_cias = Empresa::all();
-        return view('admin.clientes.edit')->with(compact(['cliente','giros','empresas','tisanom_cias']));
+        $celulas = Cell::all();
+        return view('admin.clientes.edit')->with(compact(['cliente','giros','empresas','tisanom_cias', 'celulas']));
     }
 
     public function update(Request $request, $id) 
@@ -172,11 +181,11 @@ class ClientController extends Controller
         $cliente = Client::find($id);
         $cliente->Nombre = $request->Nombre;
         $cliente->Representante = $request->Representante;
+        $cliente->cell_id = $request->celula;
         $cliente->Email = $request->Email;
         $cliente->giro_id = $request->Giro;
         $cliente->Activo = ($request->Activo == 'on')? 1 : 0;
         $cliente->fiscal = ($request->Fiscal == 'on')? 1 : 0;
-        $cliente->cell_id = $request->cell_id;
         $cliente->asimilado = ($request->Asimilado == 'on')? 1 : 0;
         if ($request->Fiscal == 'on') {
             $cliente->fiscal_company_id = $request->Fiscal_Company_id;

@@ -14,7 +14,8 @@ use App\DatosGe;
 use App\DatosAfo;
 use App\Imss;
 use Session;
-
+// DB::transaction(function () use($data) {
+// });
 class EmpleadosController extends Controller
 {
     public function __construct()
@@ -157,6 +158,7 @@ class EmpleadosController extends Controller
 
     public function store(Request $request)
     {
+        DB::transaction(function () use($request) {
         $selProceso = Session::get('selProceso');
 
     	$emp = new Empleado();
@@ -283,7 +285,7 @@ class EmpleadosController extends Controller
         $imss->INTIVNUE = $request->input('INTIV');
         $imss->save();
 
-       
+       });
         return redirect('/catalogos/empleados');
     }
 
@@ -304,6 +306,7 @@ class EmpleadosController extends Controller
 
      public function update(Request $request, $EMP)
     {
+        DB::transaction(function () use($request) {
         $selProceso = Session::get('selProceso');
         $EMP = $request->input('EMP');
         $BajaImss = $request->input('BajaImss');
@@ -450,6 +453,8 @@ class EmpleadosController extends Controller
         $emple11->PADRE = $request->input('PADRE') . "";
         $emple11->MADRE = $request->input('MADRE') . "";
         $emple11->save();
+
+        });
         return redirect('/catalogos/empleados');
     }
     

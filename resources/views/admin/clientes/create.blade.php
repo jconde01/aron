@@ -49,12 +49,23 @@
                     </div>
                 </div>
 
-                <div class="col-sm-6" style="">
+                <div class="col-sm-3" style="">
                     <div class="col-sm-12 col-sm-offset-" style="">
                         <label class="label-left" style="float: left; margin-top: 7px;">Giro &nbsp;&nbsp;</label>
                         <select class="form-control giros_list" style="width: 80%;" name="Giro" style="float: right!important;">
                             @foreach ($giros as $giro)
                                 <option value="{{ $giro->id }}">{{ $giro->nombre }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-sm-3" style="">
+                    <div class="col-sm-12 col-sm-offset-" style="">
+                        <label class="label-left" style="float: left; margin-top: 7px;">Celula &nbsp;&nbsp;</label>
+                        <select class="form-control giros_list" style="width: 70%;" name="celula" style="float: right!important;">
+                            @foreach ($celulas as $celula)
+                                <option value="{{ $celula->id }}">{{ $celula->nombre }}</option>
                             @endforeach
                         </select>
                     </div>
