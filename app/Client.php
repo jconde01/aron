@@ -7,7 +7,7 @@ use App\User;
 
 class Client extends Model
 {
-	public const rutas = Array('PorAutorizar' => '/ruta/a/los/archivos/','Empleados'=>'Empleados','Timbres'=>'Timbres');
+	public const Rutas = Array('PorTimbrar' => '../utilerias/Nominas','Timbrados'=>'../utilerias/Nominas','Contratos'=>'../utilerias/Nominas');
 
     public function users()
     {

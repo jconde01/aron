@@ -49,7 +49,7 @@
                             }
                             ?></td>
                             <td class="parrafo">{{$emp->TIPOPAGO}}</td>                         
-                            <td class="parrafo"><a href="{{url('/consultas/contratos/'.$emp->EMP.'/consulta')}}" rel="tooltip" title="Consultar" class="btn btn-success btn-simple btn-xs"><i class="far fa-file-pdf"></i></a></td>             
+                            <td class="parrafo"><a href="{{url('/consultas/contratos/'.$emp->RFC.'/consulta')}}" rel="tooltip" title="Consultar" class="btn btn-success btn-simple btn-xs"><i class="far fa-file-pdf"></i></a></td>             
                         </tr>  @endforeach 
                     </tbody>
                              

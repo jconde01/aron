@@ -1008,9 +1008,11 @@ function MenuEditor(idSelector, options) {
    
     this.add = function(){
         var data = {};
+        alert($form.find('.item-menu').length);
         $form.find('.item-menu').each(function(){
             data[$(this).attr('name')] = $(this).val();
         });
+
         var btnGroup = TButtonGroup();
         var textItem = $('<span>').addClass('txt').text(data.text);
         var iconItem = $('<i>').addClass(data.icon);

@@ -74,7 +74,7 @@
 </div>
 @endsection
 @section('jscript')
-    <script src="{{ asset('/js/jquery-menu-editor.min.js') }}"></script>
+    <script src="{{ asset('/js/jquery-menu-editor.js') }}"></script>
     <script src="{{ asset('/css/bs-iconpicker/js/iconset/iconset-fontawesome-4.7.0.min.js') }}"></script>
     <script src="{{ asset('/css/bs-iconpicker/js/bootstrap-iconpicker.js') }}"></script>
     <script type="text/javascript">

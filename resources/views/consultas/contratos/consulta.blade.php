@@ -11,7 +11,9 @@
         
         <br> <br>
         <?php
-            $directorio = opendir("./contratos"); //ruta actual
+        $ru = $ruta.$celula_empresa.'/'.$rfc_cliente.'/empleados/'.$rfc_empleado.'/contratos';
+            
+            $directorio = opendir($ru); //ruta actual
             while ($archivo = readdir($directorio)) //obtenemos un archivo y luego otro sucesivamente
             {
                 if (is_dir($archivo))//verificamos si es o no un directorio
@@ -20,7 +22,8 @@
                 }
                 else
                 {
-                    echo '<a href="/contratos/'.$archivo.'">'.$archivo.'</a>' . "<br />";
+                     echo '<div class="col-lg-5" style="border:1px blue solid; border-radius:10px; margin-right: 80px; margin-top: 20px;"><br><i class="fas fa-file-alt" style="font-size: 50px;"></i><br><br><a href="/descargaContratos/'.$archivo.'">'.$archivo.'</a>' . "<br/><br></div>";
+
                 }
             }
          ?>                           
@@ -29,6 +32,6 @@
 
     </div>
   </div>
-
+<br><br><br>
 @include('includes.footer')
 @endsection

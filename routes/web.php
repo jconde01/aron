@@ -27,6 +27,9 @@ Route::middleware(['auth'])->group(function () {
 	Route::get('/messages/{id}', 'MessagesController@show')->name('messages.show');
 	Route::get('/notificaciones','NotificationsController@index');
 	Route::patch('/notificaciones/leida/{id}','NotificationsController@read');
+	Route::get('/descarga/{ru}','ConsultasController@descarga');
+	Route::get('/descargaContratos/{ru}','ConsultasController@descargaCon');
+	Route::get('/descargaTimbres/{archivo}','TimbradoController@descargaNo');
 });
 
 
@@ -168,8 +171,8 @@ Route::middleware(['auth'])->prefix('consultas')->group(function () {
 	Route::get('/contratos','ConsultasController@indexContrato');
 	Route::get('/contratos/{id}/consulta','ConsultasController@consultaContrato');
 	Route::get('/timbrado','TimbradoController@index');
-	Route::get('/timbrado/firmar','TimbradoController@firmar');
-
+	Route::get('/timbrado/firmar/{archivo}','TimbradoController@firmar');	
+	Route::get('/utilerias/Nominas/Celula1/TIMBRADO/VALLY_MERIDA/201816/{archivo}','ConsultasController@consulta');
 });
 
 
