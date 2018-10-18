@@ -4,53 +4,59 @@
 @section('body-class','')
 
 @section('content')
-@if ($graficas->mensaje==1)<h1 align="center" style="color: rgb(0, 190, 239);">Bienvenido a la plataforma en línea ARON!</h1>@endif
-@if ($graficas->grafica1==1 || $graficas->grafica2==1 || $graficas->grafica3==1 || $graficas->grafica4==1)
+
+@if (isset($wmaster))
+	<h1 style="text-align: center;">Bienvenido Web Master!!!</h1>
+@endif
+
+@if (isset($graficas))
+	@if ($graficas->mensaje==1)
+		<h1 align="center" style="color: rgb(0, 190, 239);">Bienvenido a la plataforma en línea ARON!</h1>
+	@endif
+
+	@if ($graficas->grafica1==1 || $graficas->grafica2==1 || $graficas->grafica3==1 || $graficas->grafica4==1)
 
 
-<h1 align="center" style="color: rgb(0, 190, 239);">INDICADORES</h1>
-<br>
+		<h1 align="center" style="color: rgb(0, 190, 239);">INDICADORES</h1>
+		<br>
 
-	<div style="max-width: 1300px; margin: auto;">
-		<div style="max-width: 900px; margin: auto;">
-			@if ($graficas->grafica1==1)
-			<div style="width: 100%;">
-				<div id="graficaLineal" style="margin: 0 auto">
+			<div style="max-width: 1300px; margin: auto;">
+				<div style="max-width: 900px; margin: auto;">
+					@if ($graficas->grafica1==1)
+					<div style="width: 100%;">
+						<div id="graficaLineal" style="margin: 0 auto">
+						</div>
+					</div>
+					<br>
+					@endif
+
+					@if ($graficas->grafica2==1)
+					<div style="width:100%;">
+						<div id="graficaCircular" style="margin: 0 auto">
+						</div>		
+					</div>
+					<br>
+					@endif
+
+					@if ($graficas->grafica3==1)
+					<div style="width: 100%;">
+						<div id="container" style="margin: 0 auto">
+						</div>
+					</div>
+					<br>
+					@endif
+
+					@if ($graficas->grafica4==1)
+					<div style="width: 100%;">
+						<div id="container2" style="margin: 0 auto">
+						</div>		
+					</div>
+					<br>
+					@endif
+
 				</div>
-			</div>
-			<br>
-			@endif
-
-			@if ($graficas->grafica2==1)
-			<div style="width:100%;">
-				<div id="graficaCircular" style="margin: 0 auto">
-				</div>		
-			</div>
-			<br>
-			@endif
-
-			@if ($graficas->grafica3==1)
-			<div style="width: 100%;">
-				<div id="container" style="margin: 0 auto">
-				</div>
-			</div>
-			<br>
-			@endif
-
-			@if ($graficas->grafica4==1)
-			<div style="width: 100%;">
-				<div id="container2" style="margin: 0 auto">
-				</div>		
-			</div>
-			<br>
-			@endif
-
 		</div>
-</div>
-
-
-@else
-<h1 style="text-align: center;">Bienvenido Web Master!!!</h1>
+	@endif
 @endif
 @include('includes.footer');
 </html>
