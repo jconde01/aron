@@ -11,6 +11,7 @@
         "laravel/tinker": "~1.0",
         "lavary/laravel-menu": "^1.7",
         "maatwebsite/excel": "^3.0",
+        "nwidart/laravel-menus": "^1",
         "setasign/fpdf": "1.8.1",
         "setasign/fpdi-fpdf": "2.0",
         "webcoder31/ezxmldsig": "v0.1.1-beta"

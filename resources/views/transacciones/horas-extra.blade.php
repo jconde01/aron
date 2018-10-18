@@ -6,61 +6,57 @@
 @section('content')
 {!! Session::get("message", '') !!}
 <div class="container" style="border:1px red solid;">
-<!--     <div class="row"> -->
-<!--         <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2" style="border:1px red solid;"> -->
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach($errors->all() as $error)
-                            <li>{{ $error }}</li>
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>                    
+        </div>
+    @endif   	
+    <form class="form" method="POST" action="{{ url('transacciones/horasExtra') }}">
+		<input type="hidden" name="_token" value="{{ csrf_token() }}">
+		<input type="hidden" id="Concepto"  name="Concepto" value="{{ $concepto }}">
+		<input type="hidden" id="Metodo"  name="Metodo" value="">
+		<input type="hidden" id="MetodoISP"  name="MetodoISP" value="">
+
+        <!-- <p class="text-center" style="color:Azure; text-align: center;">Ingresa tus datos</p> -->
+        <div class="row" style="margin-bottom: 0px;">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="form-group label-floating">
+                    <label class="control-label">Período:</label>
+                    <select class="form-control pdo" id="periodo" name="Periodo">
+                        <!-- option value="0">Seleccione el período...</option -->
+                        @foreach ($periodos as $pdo)
+                            <option value="{{ $pdo->PERIODO }}" data-fi="{{ date('Y-m-d',strtotime($pdo->FECINI)) }}" 
+                            	{{ ($pdo->PERIODO == $periCalc)? 'selected':'' }} >
+                            	{{ $pdo->PERIODO . ' - Inicia: ' . date('d-m-Y',strtotime($pdo->FECINI)) . ' - Finaliza: ' . date('d-m-Y',strtotime($pdo->FECFIN)) }}</option>
                         @endforeach
-                    </ul>                    
+                    </select>
                 </div>
-            @endif   	
-            <form class="form" method="POST" action="{{ url('transacciones/horasExtra') }}">
-				<input type="hidden" name="_token" value="{{ csrf_token() }}">
-				<input type="hidden" id="Concepto"  name="Concepto" value="{{ $concepto }}">
-				<input type="hidden" id="Metodo"  name="Metodo" value="">
-				<input type="hidden" id="MetodoISP"  name="MetodoISP" value="">
+            </div>
+        </div>
 
-                <!-- <p class="text-center" style="color:Azure; text-align: center;">Ingresa tus datos</p> -->
-                <div class="row" style="margin-bottom: 0px;">
-	                <div class="col-md-6 col-md-offset-3">
-                        <div class="form-group label-floating">
-                            <label class="control-label">Período:</label>
-                            <select class="form-control pdo" id="periodo" name="Periodo">
-                                <!-- option value="0">Seleccione el período...</option -->
-                                @foreach ($periodos as $pdo)
-                                    <option value="{{ $pdo->PERIODO }}" data-fi="{{ date('Y-m-d',strtotime($pdo->FECINI)) }}" 
-                                    	{{ ($pdo->PERIODO == $periCalc)? 'selected':'' }} >
-                                    	{{ $pdo->PERIODO . ' - Inicia: ' . date('d-m-Y',strtotime($pdo->FECINI)) . ' - Finaliza: ' . date('d-m-Y',strtotime($pdo->FECFIN)) }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row text-center">
-                	<button type="button" class="btn btn-info btn-sm" id="btnNuevo">Agregar empleado</button>
-                </div>
-                <table class="row table" name="Movtos" id="captura">
-                	<thead>                    	
-                		<tr>
-                			<th style="width:0%; display: none;">Empleado</th>
-                			<th style="width:40%;">Nombre</th>
-                			<th style="width:15%;text-align: center;">Suplencia</th>
-                			<th style="width:15%;">Fecha</th>
-                			<th style="width:15%;">Unidades</th>
-                			<th style="width:15%;">Cuenta</th>
-                		</tr>
-                	</thead>
-                </table>
-                <div class="row text-center">
-                    <button type="submit" class="primario">Guardar</button>
-                </div>
-            </form>
-<!--         </div> -->
-<!--     </div> -->
+        <div class="row text-center">
+        	<button type="button" class="btn btn-info btn-sm" id="btnNuevo">Agregar empleado</button>
+        </div>
+        <table class="row table" name="Movtos" id="captura">
+        	<thead>                    	
+        		<tr>
+        			<th style="width:0%; display: none;">Empleado</th>
+        			<th style="width:40%;">Nombre</th>
+        			<th style="width:15%;text-align: center;">Suplencia</th>
+        			<th style="width:15%;">Fecha</th>
+        			<th style="width:15%;">Unidades</th>
+        			<th style="width:15%;">Cuenta</th>
+        		</tr>
+        	</thead>
+        </table>
+        <div class="row text-center">
+            <button type="submit" class="primario">Guardar</button>
+        </div>
+    </form>
 </div>
 <!-- Modal -->
 <div class="modal fade" id="nuevo" role="dialog">

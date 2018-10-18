@@ -11,9 +11,6 @@
 <h1 align="center" style="color: rgb(0, 190, 239);">INDICADORES</h1>
 <br>
 
-
-
-		
 	<div style="max-width: 1300px; margin: auto;">
 		<div style="max-width: 900px; margin: auto;">
 			@if ($graficas->grafica1==1)
@@ -51,11 +48,14 @@
 		</div>
 </div>
 
-@include('includes.footer');
+
 @else
 <h1 style="text-align: center;">Bienvenido Web Master!!!</h1>
 @endif
+@include('includes.footer');
 </html>
+@endsection
+@section('jscript')
 <script type="text/javascript">
 	var chart;
 	$(document).ready(function() {

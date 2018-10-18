@@ -836,6 +836,76 @@
         ]
     },
     {
+        "name": "laravelcollective/html",
+        "version": "v5.5.4",
+        "version_normalized": "5.5.4.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/LaravelCollective/html.git",
+            "reference": "04c596a69975b901f2223eb6eb4adf55354121c2"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/LaravelCollective/html/zipball/04c596a69975b901f2223eb6eb4adf55354121c2",
+            "reference": "04c596a69975b901f2223eb6eb4adf55354121c2",
+            "shasum": ""
+        },
+        "require": {
+            "illuminate/http": "5.5.*",
+            "illuminate/routing": "5.5.*",
+            "illuminate/session": "5.5.*",
+            "illuminate/support": "5.5.*",
+            "illuminate/view": "5.5.*",
+            "php": ">=7.0.0"
+        },
+        "require-dev": {
+            "illuminate/database": "5.5.*",
+            "mockery/mockery": "~0.9.4",
+            "phpunit/phpunit": "~5.4"
+        },
+        "time": "2018-03-24T00:39:21+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "5.5-dev"
+            },
+            "laravel": {
+                "providers": [
+                    "Collective\\Html\\HtmlServiceProvider"
+                ],
+                "aliases": {
+                    "Form": "Collective\\Html\\FormFacade",
+                    "Html": "Collective\\Html\\HtmlFacade"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Collective\\Html\\": "src/"
+            },
+            "files": [
+                "src/helpers.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Taylor Otwell",
+                "email": "taylorotwell@gmail.com"
+            },
+            {
+                "name": "Adam Engebretson",
+                "email": "adam@laravelcollective.com"
+            }
+        ],
+        "description": "HTML and Form Builders for the Laravel Framework",
+        "homepage": "https://laravelcollective.com"
+    },
+    {
         "name": "lavary/laravel-menu",
         "version": "v1.7.2",
         "version_normalized": "1.7.2.0",
@@ -1385,6 +1455,76 @@
         "keywords": [
             "parser",
             "php"
+        ]
+    },
+    {
+        "name": "nwidart/laravel-menus",
+        "version": "1.0.0",
+        "version_normalized": "1.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/nWidart/laravel-menus.git",
+            "reference": "ffebe35a127d37790395a09283e7083a13b2f444"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/nWidart/laravel-menus/zipball/ffebe35a127d37790395a09283e7083a13b2f444",
+            "reference": "ffebe35a127d37790395a09283e7083a13b2f444",
+            "shasum": ""
+        },
+        "require": {
+            "illuminate/config": "5.5.*",
+            "illuminate/support": "5.5.*",
+            "illuminate/view": "5.5.*",
+            "laravelcollective/html": "5.5.*",
+            "php": ">=5.6.4"
+        },
+        "require-dev": {
+            "friendsofphp/php-cs-fixer": "^2.4",
+            "mockery/mockery": "~0.9",
+            "orchestra/testbench": "3.5.*",
+            "phpro/grumphp": "^0.11",
+            "phpunit/phpunit": "~6.0"
+        },
+        "time": "2017-09-01T11:38:49+00:00",
+        "type": "library",
+        "extra": {
+            "laravel": {
+                "providers": [
+                    "Nwidart\\Menus\\MenusServiceProvider"
+                ],
+                "aliases": {
+                    "Menu": "Nwidart\\Menus\\Facades\\Menu"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Nwidart\\Menus\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Pingpong Labs",
+                "email": "pingpong.labs@gmail.com"
+            },
+            {
+                "name": "Nicolas Widart",
+                "email": "n.widart@gmail.com"
+            }
+        ],
+        "description": "Laravel Menu management",
+        "keywords": [
+            "bootstrap",
+            "laravel",
+            "menus",
+            "nav",
+            "navigation"
         ]
     },
     {

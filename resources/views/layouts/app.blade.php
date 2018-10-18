@@ -39,6 +39,10 @@
         <script src="https://code.highcharts.com/modules/export-data.js"></script>
         <script src="https://code.highcharts.com/modules/drilldown.js"></script>     
         <!-- fin de graficas -->
+
+        <!-- sidebar Menu -->
+        <link rel="stylesheet" href="{{ asset('css/hc-offcanvas-nav.css') }}" />
+        <!-- <link rel="stylesheet" href="{{ asset('css/demo.css') }}" /> -->
     </head>
 
     <body class="@yield('body-class')">
@@ -62,12 +66,29 @@
     <script type="text/javascript" src="{{ asset('/js/XHR.js') }}"></script>
 
     <!--  Plugin for the Datepicker, full documentation here: http://www.eyecon.ro/bootstrap-datepicker/ -->
-    <script src="{{ asset('/js/bootstrap-datepicker.js') }}" type="text/javascript"></script>
-    <script>
-$(document).ready( function () {
-    $('#table_id').DataTable();
+    <script type="text/javascript" src="{{ asset('/js/bootstrap-datepicker.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/js/hc-offcanvas-nav.js') }}"></script>
+<script type="text/javascript">
+    $(document).ready( function () {
+        $('#table_id').DataTable();
+    });
 
-} );
+    (function($) {
+        var $main_nav = $('#main-nav');
+        var $toggle = $('.toggle');
+
+        var defaultData = {
+            maxWidth: false,
+            customToggle: $toggle,
+            levelTitles: true,
+            levelOpen:'expand', 
+            levelSpacing:10,
+            pushContent: '#container'
+        };
+
+        // call plugin
+        var Nav = $main_nav.hcOffcanvasNav(defaultData);
+      })(jQuery);    
 
 </script> 
     @yield('jscript')    

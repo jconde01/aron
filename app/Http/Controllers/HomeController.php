@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 //use Symfony\Component\Console\Output as Output;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
+use Nwidart\Menus\Facades\Menu;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AppController;
 use App\Profilew;
@@ -37,18 +38,31 @@ class HomeController extends Controller
     {
         $perfil = auth()->user()->profile_id;
         $id_usuario = auth()->user()->id;
-        $graficas = Graph::where('usuario_id', $id_usuario)->first();
         
         if ($perfil == env('APP_ADMIN_PROFILE')) {
-            return view('home')->with(compact('graficas'));
+            // Menu::create('navbar', function($menu) {
+            //     //$menu->url('/', 'Home');
+            //     $menu->dropdown('Account', function ($sub) {
+            //         $sub->url('profile', 'Visit My Profile');
+            //         $sub->dropdown('Settings', function ($sub) {
+            //             $sub->url('settings/account', 'Account');
+            //             $sub->url('settings/password', 'Password');
+            //             $sub->url('settings/design', 'Design');
+            //         });
+            //         $sub->url('logout', 'Logout');
+            //     });
+            // });            
+            return view('home');
         } else {
             // Es un usuario de una célula ?
             if (auth()->user()->client == null) {
                 $navbar = ProfileController::getNavBar('',0,$perfil);
-                return view('home')->with(compact('navbar', 'graficas'));
+                return view('home')->with(compact('navbar'));
             } else {
                 // Usuario normal de un cliente
                 $cliente = auth()->user()->client;
+                $graficas = Graph::where('usuario_id', $id_usuario)->first();
+
                 if (Auth::check()){
                     session(['selCliente' => $cliente]);
                 }

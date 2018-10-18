@@ -149,6 +149,10 @@ Route::middleware(['auth','admin'])->prefix('admin')->group(function () {
 	Route::get('/opciones/{id}/edit','OptionController@edit');					// forma para editar opcion
 	Route::post('/opciones/{id}/edit','OptionController@update');				// guardar cambios de opción
 
+	Route::get('/options','OptController@index');
+	Route::post('/get-menu-items','OptController@getMenuItems');				// Ajax call
+	Route::post('/options','OptController@store');								// guarda las opciones del Menú	
+	
 	Route::get('/perfiles','ProfileController@index');							// listado de perfiles	
 	Route::get('/perfiles/create','ProfileController@create');					// forma para crear nuevo perfil
 	Route::post('/perfiles','ProfileController@store');							// guardar nuevo perfil

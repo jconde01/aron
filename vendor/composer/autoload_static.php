@@ -14,6 +14,7 @@ class ComposerStaticInit4e96183b92f70ee61e7879e35ae7b39f
         '1d1b89d124cc9cb8219922c9d5569199' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest.php',
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
+        'f18cc91337d49233e5754e93f3ed9ec3' => __DIR__ . '/..' . '/laravelcollective/html/src/helpers.php',
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         '801c31d8ed748cfa537fa45402288c95' => __DIR__ . '/..' . '/psy/psysh/src/functions.php',
         'f0906e6318348a765ffb6eb24e0d0938' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Foundation/helpers.php',
@@ -78,6 +79,10 @@ class ComposerStaticInit4e96183b92f70ee61e7879e35ae7b39f
             'PhpParser\\' => 10,
             'PhpOffice\\PhpSpreadsheet\\' => 25,
         ),
+        'N' => 
+        array (
+            'Nwidart\\Menus\\' => 14,
+        ),
         'M' => 
         array (
             'Monolog\\' => 8,
@@ -111,6 +116,7 @@ class ComposerStaticInit4e96183b92f70ee61e7879e35ae7b39f
         'C' => 
         array (
             'Cron\\' => 5,
+            'Collective\\Html\\' => 16,
         ),
         'A' => 
         array (
@@ -241,6 +247,10 @@ class ComposerStaticInit4e96183b92f70ee61e7879e35ae7b39f
         array (
             0 => __DIR__ . '/..' . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet',
         ),
+        'Nwidart\\Menus\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/nwidart/laravel-menus/src',
+        ),
         'Monolog\\' => 
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
@@ -292,6 +302,10 @@ class ComposerStaticInit4e96183b92f70ee61e7879e35ae7b39f
         'Cron\\' => 
         array (
             0 => __DIR__ . '/..' . '/mtdowling/cron-expression/src/Cron',
+        ),
+        'Collective\\Html\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/laravelcollective/html/src',
         ),
         'App\\' => 
         array (
@@ -352,7 +366,9 @@ class ComposerStaticInit4e96183b92f70ee61e7879e35ae7b39f
     public static $classMap = array (
         'App\\Calculo' => __DIR__ . '/../..' . '/app/Calculo.php',
         'App\\Cell' => __DIR__ . '/../..' . '/app/Cell.php',
+        'App\\CellClient' => __DIR__ . '/../..' . '/app/CellClient.php',
         'App\\Client' => __DIR__ . '/../..' . '/app/Client.php',
+        'App\\Clientes' => __DIR__ . '/../..' . '/app/Tisanom/Connection.php',
         'App\\Company' => __DIR__ . '/../..' . '/app/Company.php',
         'App\\CompanyFile' => __DIR__ . '/../..' . '/app/CompanyFile.php',
         'App\\CompanyGiro' => __DIR__ . '/../..' . '/app/CompanyGiro.php',
@@ -388,6 +404,7 @@ class ComposerStaticInit4e96183b92f70ee61e7879e35ae7b39f
         'App\\Http\\Controllers\\HomeController' => __DIR__ . '/../..' . '/app/Http/Controllers/HomeController.php',
         'App\\Http\\Controllers\\MessagesController' => __DIR__ . '/../..' . '/app/Http/Controllers/MessagesController.php',
         'App\\Http\\Controllers\\NotificationsController' => __DIR__ . '/../..' . '/app/Http/Controllers/NotificationsController.php',
+        'App\\Http\\Controllers\\OptController' => __DIR__ . '/../..' . '/app/Http/Controllers/OptController.php',
         'App\\Http\\Controllers\\OptionController' => __DIR__ . '/../..' . '/app/Http/Controllers/OptionController.php',
         'App\\Http\\Controllers\\ProcessController' => __DIR__ . '/../..' . '/app/Http/Controllers/ProcessController.php',
         'App\\Http\\Controllers\\ProfileController' => __DIR__ . '/../..' . '/app/Http/Controllers/ProfileController.php',
@@ -436,6 +453,13 @@ class ComposerStaticInit4e96183b92f70ee61e7879e35ae7b39f
         'Carbon\\CarbonPeriod' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/CarbonPeriod.php',
         'Carbon\\Exceptions\\InvalidDateException' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Exceptions/InvalidDateException.php',
         'Carbon\\Translator' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Translator.php',
+        'Collective\\Html\\Componentable' => __DIR__ . '/..' . '/laravelcollective/html/src/Componentable.php',
+        'Collective\\Html\\Eloquent\\FormAccessible' => __DIR__ . '/..' . '/laravelcollective/html/src/Eloquent/FormAccessible.php',
+        'Collective\\Html\\FormBuilder' => __DIR__ . '/..' . '/laravelcollective/html/src/FormBuilder.php',
+        'Collective\\Html\\FormFacade' => __DIR__ . '/..' . '/laravelcollective/html/src/FormFacade.php',
+        'Collective\\Html\\HtmlBuilder' => __DIR__ . '/..' . '/laravelcollective/html/src/HtmlBuilder.php',
+        'Collective\\Html\\HtmlFacade' => __DIR__ . '/..' . '/laravelcollective/html/src/HtmlFacade.php',
+        'Collective\\Html\\HtmlServiceProvider' => __DIR__ . '/..' . '/laravelcollective/html/src/HtmlServiceProvider.php',
         'Cron\\AbstractField' => __DIR__ . '/..' . '/mtdowling/cron-expression/src/Cron/AbstractField.php',
         'Cron\\CronExpression' => __DIR__ . '/..' . '/mtdowling/cron-expression/src/Cron/CronExpression.php',
         'Cron\\DayOfMonthField' => __DIR__ . '/..' . '/mtdowling/cron-expression/src/Cron/DayOfMonthField.php',
@@ -2083,6 +2107,21 @@ class ComposerStaticInit4e96183b92f70ee61e7879e35ae7b39f
         'Monolog\\Processor\\UidProcessor' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/Processor/UidProcessor.php',
         'Monolog\\Processor\\WebProcessor' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/Processor/WebProcessor.php',
         'Monolog\\Registry' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/Registry.php',
+        'Nwidart\\Menus\\Facades\\Menu' => __DIR__ . '/..' . '/nwidart/laravel-menus/src/Facades/Menu.php',
+        'Nwidart\\Menus\\Menu' => __DIR__ . '/..' . '/nwidart/laravel-menus/src/Menu.php',
+        'Nwidart\\Menus\\MenuBuilder' => __DIR__ . '/..' . '/nwidart/laravel-menus/src/MenuBuilder.php',
+        'Nwidart\\Menus\\MenuItem' => __DIR__ . '/..' . '/nwidart/laravel-menus/src/MenuItem.php',
+        'Nwidart\\Menus\\MenusServiceProvider' => __DIR__ . '/..' . '/nwidart/laravel-menus/src/MenusServiceProvider.php',
+        'Nwidart\\Menus\\Presenters\\Admin\\AdminltePresenter' => __DIR__ . '/..' . '/nwidart/laravel-menus/src/Presenters/Admin/AdminltePresenter.php',
+        'Nwidart\\Menus\\Presenters\\Bootstrap\\NavMenuPresenter' => __DIR__ . '/..' . '/nwidart/laravel-menus/src/Presenters/Bootstrap/NavMenuPresenter.php',
+        'Nwidart\\Menus\\Presenters\\Bootstrap\\NavPillsPresenter' => __DIR__ . '/..' . '/nwidart/laravel-menus/src/Presenters/Bootstrap/NavPillsPresenter.php',
+        'Nwidart\\Menus\\Presenters\\Bootstrap\\NavTabPresenter' => __DIR__ . '/..' . '/nwidart/laravel-menus/src/Presenters/Bootstrap/NavTabPresenter.php',
+        'Nwidart\\Menus\\Presenters\\Bootstrap\\NavbarPresenter' => __DIR__ . '/..' . '/nwidart/laravel-menus/src/Presenters/Bootstrap/NavbarPresenter.php',
+        'Nwidart\\Menus\\Presenters\\Bootstrap\\NavbarRightPresenter' => __DIR__ . '/..' . '/nwidart/laravel-menus/src/Presenters/Bootstrap/NavbarRightPresenter.php',
+        'Nwidart\\Menus\\Presenters\\Bootstrap\\SidebarMenuPresenter' => __DIR__ . '/..' . '/nwidart/laravel-menus/src/Presenters/Bootstrap/SidebarMenuPresenter.php',
+        'Nwidart\\Menus\\Presenters\\Foundation\\ZurbMenuPresenter' => __DIR__ . '/..' . '/nwidart/laravel-menus/src/Presenters/Foundation/ZurbMenuPresenter.php',
+        'Nwidart\\Menus\\Presenters\\Presenter' => __DIR__ . '/..' . '/nwidart/laravel-menus/src/Presenters/Presenter.php',
+        'Nwidart\\Menus\\Presenters\\PresenterInterface' => __DIR__ . '/..' . '/nwidart/laravel-menus/src/Presenters/PresenterInterface.php',
         'OptionsTableSeeder' => __DIR__ . '/../..' . '/database/seeds/OptionsTableSeeder.php',
         'PHPUnit\\Exception' => __DIR__ . '/..' . '/phpunit/phpunit/src/Exception.php',
         'PHPUnit\\Framework\\Assert' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert.php',

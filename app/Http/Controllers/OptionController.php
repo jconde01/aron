@@ -22,7 +22,7 @@ class OptionController extends Controller
     public static function getAccordion($HTML,$parent)
     {
         static $menuId = 0;
-        $xRefs = OptionXRef::where('parent_id','=',$parent)->get();
+        $xRefs = OptionXRef::where('parent_id','=',$parent)->orderBy('id')->get();
         foreach ($xRefs as $x) {
             $opcion = $x->option();
             $checked = $opcion->activo? 'checked':'';

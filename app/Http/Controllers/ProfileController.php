@@ -15,7 +15,7 @@ class ProfileController extends Controller
     {
     	$perfiles = Profile::paginate(5);
         $perfil = auth()->user()->profile_id;        
-        $navbar = ProfileController::getNavBar('',0,$perfil);
+        $navbar = $this::getNavBar('',0,$perfil);
         return view('admin.perfiles.index')->with(compact('perfiles', 'navbar'));
     }
 
@@ -35,7 +35,7 @@ class ProfileController extends Controller
     public static function getAccordion($HTML,$parent)
     {
         static $menuId = 0;
-        $xRefs = OptionXRef::where('parent_id','=',$parent)->get();
+        $xRefs = OptionXRef::where('parent_id','=',$parent)->orderBy('id')->get();
         foreach ($xRefs as $x) {
             $opcion = $x->option();
             $checked = $opcion->profileEnabled(0)? 'checked':'';
@@ -72,8 +72,43 @@ class ProfileController extends Controller
         return $HTML;
     }
 
-
     public static function getNavBar($nav,$parent,$profile)
+    {
+        return '<nav id="main-nav">' . self::getMenu($nav,$parent,$profile) . '</nav>'; 
+    }
+
+    public static function getMenu($nav,$parent,$profile)
+    {
+        $xRefs = OptionXRef::where('parent_id',$parent)->orderBy('id')->get();
+        if ($xRefs->count() != 0) {
+            foreach ($xRefs as $x) {
+                $opcion = $x->option();
+                if ($opcion != null) {
+                    if ($opcion->activo == 1) {
+                        //if ($opcion->profileEnabled($profile)) {
+                            if ($opcion->padre == 1) {
+                                $nav .= '<ul class="dropdown"> <li>';
+                                $nav .= '  <a>'.$opcion->nombre.'</a>';
+                                $nav .= '    <ul>';
+                                $nav = self::getMenu($nav, $x->id,$profile);
+                                $nav .= '    </ul>';
+                                $nav .= '</li></ul>';
+                            } else {
+                                $nav .= '       <li><a href="'.$opcion->ruta.'">'.$opcion->nombre.'</a></li>';
+                            }
+                        //}
+                    }
+                } else  {
+                    $msg = "No existe una OPCION en la tabla de 'options' para el registro en 'option_x_refs':".$x->option_id;
+                    dd($msg);                    
+                }
+
+            }            
+        }
+        return $nav;
+    }
+
+    public static function getNavBarOld($nav,$parent,$profile)
     {
         $xRefs = OptionXRef::where('parent_id',$parent)->get();
         if ($xRefs->count() != 0) {
@@ -86,7 +121,7 @@ class ProfileController extends Controller
                                 $nav .= '<li class="dropdown">';
                                 $nav .= '  <a class="dropdown-toggle" data-toggle="dropdown" href="#">'.$opcion->nombre.'<span class="caret"></span></a>';
                                 $nav .= '    <ul class="dropdown-menu">';
-                                $nav = self::getNavBar($nav, $x->id,$profile);
+                                $nav = self::getNavBarOld($nav, $x->id,$profile);
                                 $nav .= '    </ul>';
                                 $nav .= '</li>';
                             } else {

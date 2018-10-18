@@ -1,7 +1,6 @@
 <!-- <div class="container"> -->
 <div class="row" style="margin-bottom: 0px;">
   <div class="col-md-12" style="margin-bottom: 0px; margin: auto!important;">
-<!--    <nav class="navbar navbar-transparent navbar-absolute" style="margin-top: 10px;">  -->
     <nav class="navbar navbar-transparent navbar-default border" style="margin-top: 10px; margin: auto; margin-bottom: 10px;">
       <div class="container" id="cabecera">
           <div class="navbar-header">
@@ -13,15 +12,6 @@
               </button>
               <a class="navbar-brand" href="{{ url('/home') }}"><img src="{{ asset('img/Aron-pegado2.png') }}" style="width:127px;height:30px;"></a>
           </div>
-
-
-          @auth
-          <ul class="nav navbar-nav">
-          @if (isset($navbar))
-            {!! $navbar !!}
-          @endif          
-        </ul>
-        @endauth
 
           <div class="collapse navbar-collapse border navvar cabecera" id="navigation-main">            
               <ul class="nav navbar-nav navbar-right">
@@ -49,7 +39,8 @@
                                   <a style="text-decoration: none;" href="{{ url('/admin/celulas') }}">Células</a>
                                   <a style="text-decoration: none;" href="{{ url('/admin/usuarios') }}">Usuarios</a>
                                   <a style="text-decoration: none;" href="{{ url('/admin/perfiles') }}">Perfiles</a>
-                                  <a style="text-decoration: none;" href="{{ url('/admin/opciones/0') }}">Opciones</a>
+                                  <!-- <a style="text-decoration: none;" href="{{ url('/admin/opciones/0') }}">Opciones</a> -->
+                                  <a style="text-decoration: none;" href="{{ url('/admin/options') }}">Menú</a>
                                   <a style="text-decoration: none;" href="{{ url('/admin/giros') }}">{{ __('Giros') }}</a><br>
                               @endif
                               @if (auth()->user()->profile_id != env('APP_ADMIN_PROFILE'))
@@ -70,6 +61,18 @@
         </div>
     </nav>
 
+
+    @auth
+      <!-- <ul class="nav navbar-nav"> -->
+      @if (isset($navbar))
+          <a class="toggle">
+            <span></span>
+          </a>
+        {!! $navbar !!}
+      @endif          
+      <!-- </ul> -->
+    @endauth
+
     <?php $cli = session('selCliente'); $proc = session('selProceso'); $conn2 = \Config::get('database.connections.sqlsrv2'); ?>
     @if ($cli)
       @if ($proc)
@@ -86,4 +89,4 @@
     @endif
   </div>
 </div>
-<!-- </div> -->
+
