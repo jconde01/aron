@@ -24,14 +24,20 @@ class ProcessController extends Controller
 	{
 		$selProceso = Session::get('selProceso');
 		$periodo = Periodo::where('TIPONO',$selProceso)->where('SWCIERRE','0')->first();
-		return view('procesos.nomina')->with(compact('periodo'));
+		$perfil = auth()->user()->profile_id;
+		$navbar = ProfileController::getNavBar('',0,$perfil);
+		return view('procesos.nomina')->with(compact('periodo','navbar'));
 	}
 
 	public function requestNomina(Request $data)
 	{
 		
-    	$recipient = User::find(1);		// Por ahora, lo manda al usuario 1
+   	
     	$selCliente = Session::get('selCliente');
+    	$celula = $selCliente->cell_id;
+    	// poner este numero (6) como una constante en el .env
+  		$recipient = User::where('profile_id',6)->where('cell_id',$celula)->first();  
+
         // crea el mensaje
     	$message = Message::create([
     		'sender_id' => auth()->id(),
@@ -44,7 +50,7 @@ class ProcessController extends Controller
 	}
 
 
-	public function generaFirma()
+	public function generaFirma($cadena)
 	{
 		// Load required classes manualy.
 		require(dirname(__DIR__) .'/../../vendor/robrichards/xmlseclibs/xmlseclibs.php');
@@ -59,11 +65,17 @@ class ProcessController extends Controller
 		$signKeyPassword = '12345678'; // Use null if it is not needed.
 
 		// User data.
-		$data = [
-		    'name' => 'Jorge Conde B.',
-		    'role' => 'Admin',
-		    'location' => 'Vally'
-		];
+		// $data = [
+		//     'name' => 'Jorge Conde B.',
+		//     'role' => 'Admin',
+		//     'location' => 'Vally'
+		// ];
+		
+		//$values = $this->getPDFText();
+		$values = explode("|",$cadena);
+		foreach ($values as $key => $value) {
+			$data['valor'.$key] = $value;
+		}
 
 		// Create token for user data.
 		$token = XMLDSigToken::createXMLToken($data, $signKey, $signCert, $signKeyPassword);
@@ -73,7 +85,8 @@ class ProcessController extends Controller
 
 		// Display the XML Digital Signature.
 		//return htmlentities($sig);		# code...
-		var_dump($sig);
+
+		//var_dump($sig);
 
 		// Now, verify the token
 
@@ -157,15 +170,18 @@ class ProcessController extends Controller
 		}
 
 		// All is fine ! We can trust user data.
-		echo "Token data:";
-		var_dump($token->getData());
-		var_dump($token);
-		die();		
+		//echo "\nToken data: \n";
+		//var_dump($token->getData());
+		//echo "\n";	
+		//echo "\nsello: \n";
+		//var_dump($sig); 
+		//die();
+		return $sig;		
 	}
 
 
 
-	public function getPDFText()
+	public function getPDFText($file)
 	{
 
     	function output( $message ) { 
@@ -177,13 +193,13 @@ class ProcessController extends Controller
 
 	    function getLastLine($text) {
 	    	$line = ''; $pos = strrpos($text,'|'); $veces =0;
-	    	while ( $pos != 0 && $veces <= 3) {
+	    	while ( $pos != 0 && $veces <= 4) {
 	    		$line = substr($text,$pos);
 	    		$npos = (strlen($text) - $pos) * -1;
 	    		$pos = strrpos($text,'|',--$npos);
 	    		$veces++;
 	    	}
-	    	echo $line;
+	    	return $line;
 	    }
 
 		require_once('./phpclasses/PdfToText.phpclass');
@@ -191,15 +207,18 @@ class ProcessController extends Controller
 		// Autoload required classes.
 		//require dirname(__DIR__) . '/../../vendor/autoload.php';
 
-    $file = public_path() . '/files/Reporte_servicio_vally' ; 
-    $pdf = new PdfToText ( "$file.pdf" ) ; 
+    //$file = public_path() . '/files/Reporte_servicio_vally' ; 
+    $pdf = new PdfToText ( $file ) ; 
 
     //output( "Original file contents :\n" ) ; 
     //output( file_get_contents( "$file.pdf" ) ) ; 
-    output( "-----------------------------------------------------------\n" ) ; 
+    //output( "-----------------------------------------------------------\n" ) ; 
 
-    output( "Extracted file contents :\n" ) ; 
-    output( getLastLine($pdf -> Text) );
-
+    //output( "Contenido a sellar:\n" ) ;
+    $cadena = getLastLine($pdf -> Text); 
+    //output( $cadena . "\n" );
+    $cadena = substr($cadena,1);
+    //return explode("|",$cadena);
+    return $cadena;
 	}
 }

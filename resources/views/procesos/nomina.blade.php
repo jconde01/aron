@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title','Procesar de Nomina')
+@section('title','Solicitud de Proceso')
 @section('body-class','')
 
 @section('content')

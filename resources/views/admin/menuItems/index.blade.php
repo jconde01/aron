@@ -6,9 +6,6 @@
 @section('content')
 <div class="container">
     <div class="row">
-        <form id="main-form" method="POST" action="{{ url('admin/options') }}">
-       		<input type="hidden" name="_token" value="{{ csrf_token() }}">
-       		<input type="hidden" id="txtOptions" name="txtOptions" value="">
 	        <div class="col-md-6">
 	            <div class="panel panel-default">
 	                <div class="panel-heading clearfix"><h5 class="pull-left">Opciones de Menú</h5></div>
@@ -64,11 +61,15 @@
 	                    <button type="button" id="btnAdd" class="btn btn-success"><i class="fa fa-plus"></i>Agregar</button>
 	                </div>
 	            </div>
-	            <div class="text-center">
-	            	<button type="submit" id="saveAll" class="btn btn-success"><i class="fa fa-plus"></i> Guardar todo</button>
-	            </div>
+		        <form id="main-form" method="POST" action="{{ url('admin/options') }}">
+		       		<input type="hidden" name="_token" value="{{ csrf_token() }}">
+		       		<input type="hidden" id="txtOptions" name="txtOptions" value="">	            
+	            	<div class="text-center">
+	            		<button type="submit" id="saveAll" class="btn btn-primary"><i class="fa fa-plus"></i> Guardar todo</button>
+						<a type="button" class="btn btn-success" href="{{ url('/home') }}"><i class="fa fa-minus"></i> Salir</a>	
+	            	</div>
+    			</form>
 	        </div>
-    	</form>
     </div>
     <hr>
 </div>

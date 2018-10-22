@@ -12,6 +12,7 @@ use Session;
 use App\Cell;
 use Response;
 use File;
+use App\Http\Controllers\ProcessController;
  
 class TimbradoController extends Controller
 {
@@ -51,9 +52,17 @@ class TimbradoController extends Controller
         //dd($fecha['mday'], $fecha['mon']);
         $archivo_autorizado = 'autorizado'.$archivo;
         $ruta_qr = $ruta.$celula_empresa.'/'.$rfc_cliente.'/qr/qr.png';
-        
-        QRcode::png("VTS180306SV9|NOMINA CATORCENAL|33867.83|41251.02|".$fecha['mday'] . $fecha['mon']. $fecha['year'] . $perfil."","$ruta_qr",'H',5,3);
-        
+
+        $sellado = New ProcessController();
+        $cadena = $sellado->getPDFText("$ruta$celula_empresa/$rfc_cliente/porautorizar/$archivo");
+
+        QRcode::png($cadena . $fecha['mday'] . $fecha['mon']. $fecha['year'] . $perfil."","$ruta_qr",'H',5,3);
+        $sello = $sellado->generaFirma($cadena);
+
+        $xml = new \SimpleXMLElement($sello);
+
+        $sello = $xml->xpath('//ds:SignatureValue');
+
         require_once('../utilerias/fpdf/fpdf.php'); 
 		require_once('../utilerias/fpdi/Fpdi.php');
 		require_once('../utilerias/fpdi/src/autoload.php');
@@ -61,10 +70,15 @@ class TimbradoController extends Controller
 		$pdf = new FPDI();
 		$pdf->AddPage();
 		$pdf->setSourceFile("$ruta$celula_empresa/$rfc_cliente/porautorizar/$archivo");
+        $pdf->SetFont('courier','',10);
 		
 		$template = $pdf->importPage(1);
 		$pdf->useTemplate($template);
-		$pdf->Image("$ruta_qr", 170, 265, 30, 30);
+		$pdf->Image("$ruta_qr", 170, 232, 30, 30);
+        $pdf->SetXY(7,230);
+        $pdf->Multicell(50,5,'Firma digital');
+        $pdf->SetXY(5, 235);
+        $pdf->Multicell(160,5,$sello[0],1);
         $archivo_autorizado = 'autorizado'.$archivo;
         $ruta_pdf = $ruta.$celula_empresa.'/'.$rfc_cliente.'/porautorizar/'.$archivo_autorizado;
 

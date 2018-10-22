@@ -209,6 +209,7 @@
         }
 
 		if (bOK) {
+			alert(pantalla);
 	    	switch (pantalla) {
 	    		case 1:
 	    		case 2:
@@ -246,13 +247,34 @@
 						col1.innerHTML = '<td style="text-align:right;"><input type="text" name="emp[]" value="'+empleado+'" /></td>';
 						col2.innerHTML = nombre;
 						col3.innerHTML = periodo;
-						col4.innerHTML = '<td style="text-align:right;"><input type="text" name="unidades[]" value="'+unidades+'" /></td>';
-						col5.innerHTML = '<td style="text-align:right;"><input type="text" name="calculo[]" value="'+importe+'" /></td>';
+						col4.innerHTML = '<td style="text-align:right;border:0px;width:150px!important;"><input type="text" name="unidades[]" value="'+unidades+'" /></td>';
+						col5.innerHTML = '<td style="text-align:right;border:0px;width:150px!important;"><input type="text" name="calculo[]" value="'+importe+'" /></td>';
 			        } else {
 			           alert('No ha capturado las unidades!');
 			        }			    
 			    	break;
 			    case 4:
+			    	var unidades = $('#unidades').val();
+		            //VAR1 = -1 * Abs(rsmov!Unidades)
+		            //VAR2 = rsEmp!Sueldo * rscon!Param1 / 100
+		            //Result = VAR1 * VAR2
+		            //rsmov!Unidades = VAR1	
+		            var VAR1 = -1 * Math.abs(unidades);
+		            var VAR2 = sueldo * conceptParam[1] / 100
+		            Result = VAR1 * VAR2;
+		            unidades = VAR1;
+
+		        	var row = tabla.insertRow(tabla.rows.length);
+		        	var col1 = row.insertCell(0);
+		        	var col2 = row.insertCell(1);
+		        	var col3 = row.insertCell(2);
+		        	var col4 = row.insertCell(3);
+		        	var col5 = row.insertCell(4);
+					col1.innerHTML = '<td style="text-align:right;"><input type="text" name="emp[]" value="'+empleado+'" /></td>';
+					col2.innerHTML = nombre;
+					col3.innerHTML = periodo;
+					col4.innerHTML = '<td style="text-align:right;border:0px;width:150px!important;"><input type="text" name="unidades[]" value="'+unidades+'" /></td>';
+					col5.innerHTML = '<td style="text-align:right;"><input type="text" name="calculo[]" value="'+Result+'" /></td>';		            		    	
 			    	break;
 			    case 5:
 			    	break;

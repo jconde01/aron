@@ -61,7 +61,7 @@ class MessageSent extends Notification
     {
             return [
                 'link' => route('messages.show',$this->message->id),
-                'text' => 'Has recibido un mensaje de ' . $this->message->sender->name
+                'text' => 'Has recibido un mensaje de ' . $this->message->sender->name . ' del cliente ' . $this->message->client->Nombre
             ];
     }
 }

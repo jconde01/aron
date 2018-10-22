@@ -80,6 +80,7 @@
         var defaultData = {
             maxWidth: false,
             customToggle: $toggle,
+            labelClose: 'Salir',
             levelTitles: true,
             levelOpen:'expand', 
             levelSpacing:10,

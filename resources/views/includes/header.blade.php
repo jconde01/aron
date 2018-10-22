@@ -65,7 +65,7 @@
     @auth
       <!-- <ul class="nav navbar-nav"> -->
       @if (isset($navbar))
-          <a class="toggle">
+          <a class="toggle" style="left: 25px;">
             <span></span>
           </a>
         {!! $navbar !!}
@@ -73,13 +73,14 @@
       <!-- </ul> -->
     @endauth
 
-    <?php $cli = session('selCliente'); $proc = session('selProceso'); $conn2 = \Config::get('database.connections.sqlsrv2'); ?>
+    <?php $cli = session('selCliente'); $proc = session('selProceso'); ?> 
+    <!-- <?php $conn2 = \Config::get('database.connections.sqlsrv2'); ?> -->
     @if ($cli)
       @if ($proc)
-        <span><p class="etiqueta" style="background-color: rgb(179, 215, 243); color: blue; height: 22px !important; font-size: 8px;">{{ session('clienteYProceso') }}</p></span>
-        <span><p class="etiqueta" style="background-color: rgb(179, 215, 243); color: blue; height: 22px !important; float: right; font-size: 8px;">{{ $conn2["host"] . ' - ' . $conn2["database"] }}</p></span>        
+        <span><p class="etiqueta" style="background-color: rgb(179, 215, 243); color: blue; height: 22px !important; float: right;font-size: 8px;">{{ session('clienteYProceso') }}</p></span>
+        <!-- <span><p class="etiqueta" style="background-color: rgb(179, 215, 243); color: blue; height: 22px !important; float: right; font-size: 8px;">{{ $conn2["host"] . ' - ' . $conn2["database"] }}</p></span>  -->
       @else
-        <span><p class="etiqueta" style="background-color: rgb(179, 215, 243); color: blue; height: 22px !important; font-size: 8px;">{{ $cli->Nombre }}</p></span>   
+        <span><p class="etiqueta" style="background-color: rgb(179, 215, 243); color: blue; height: 22px !important; float: right;font-size: 8px;">{{ $cli->Nombre }}</p></span>   
       @endif
     @endif
     @if (session()->has('flash'))
@@ -89,4 +90,3 @@
     @endif
   </div>
 </div>
-

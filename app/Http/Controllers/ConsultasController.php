@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Session;
-use App\Empleado;
 use FPDF;
 use setasign\Fpdi\Fpdi;
 use QRcode;
 use Response;
+use App\Empleado;
+use App\Client;
 use App\Ciasno;
 use App\Cell;
 
@@ -118,4 +119,31 @@ class ConsultasController extends Controller
         return Response()->file($file);
         //return Response::download($file);
     }
+
+    public function documentos() //aqui se agrego
+    {
+        $rfc_cliente = Ciasno::first()->RFCCIA;
+        session(['rfc_cliente' => $rfc_cliente]);
+        $ruta = Client::Rutas['PorTimbrar'] .'/';
+        $cliente = Session::get('selCliente');
+        $celula_empresa = Cell::where('id', $cliente->cell_id)->first()->nombre;
+
+        $perfil = auth()->user()->profile->id;        
+        $navbar = ProfileController::getNavBar('',0,$perfil);
+       
+        
+        return view('consultas.documentos.index')->with(compact('navbar', 'ruta', 'rfc_cliente', 'celula_empresa'));
+    }
+
+     public function descargaDoc($archivo) //aqui se agrego
+    {
+        
+        $cliente = Session::get('selCliente');
+        $celula_empresa = Cell::where('id', $cliente->cell_id)->first()->nombre;
+        $rfc_cliente = Session::get('rfc_cliente');
+        $ruta = Empleado::Rutas['Contratos'] .'/';
+        $file="$ruta$celula_empresa/$rfc_cliente/documentos/$archivo";
+        return Response()->file($file);
+        //return Response::download($file);
+    }    
 }

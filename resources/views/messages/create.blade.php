@@ -25,7 +25,7 @@
 		    				<select name="recipient_id" class="form-control">
 		    					<option value="">Selecciona el usuario</option>
 		    					@foreach($users as $user)
-		    						<option value="{{ $user->id }}">{{ $user->name }}</option>
+		    						<option value="{{ $user->id }}">{{ $user->name . ' - ' . $user->client->Nombre }}</option>
 		    					@endforeach
 		    				</select>
 			    			{!! $errors->first('recipient_id',"<span class=help-block>:message</span>"); !!} 

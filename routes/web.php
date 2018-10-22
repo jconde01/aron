@@ -170,9 +170,11 @@ Route::middleware(['auth'])->prefix('consultas')->group(function () {
 	Route::get('/recibos/{id}/consulta','ConsultasController@consulta');
 	Route::get('/contratos','ConsultasController@indexContrato');
 	Route::get('/contratos/{id}/consulta','ConsultasController@consultaContrato');
+	Route::get('/documentos','ConsultasController@documentos');
 	Route::get('/timbrado','TimbradoController@index');
 	Route::get('/timbrado/firmar/{archivo}','TimbradoController@firmar');	
 	Route::get('/utilerias/Nominas/Celula1/TIMBRADO/VALLY_MERIDA/201816/{archivo}','ConsultasController@consulta');
+	Route::get('/descargaDocumentos/{archivo}','ConsultasController@descargaDoc'); 	
 });
 
 
