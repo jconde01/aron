@@ -99,6 +99,16 @@ return [
             'charset' => 'utf8',
             'prefix' => '',
         ],
+        'sqlsrv3' => [
+            'driver' => 'sqlsrv',
+            'host' => '',
+            'port' => '',
+            'database' => '',
+            'username' => '',
+            'password' => '',
+            'charset' => 'utf8',
+            'prefix' => '',
+        ],        
 
     ],
 

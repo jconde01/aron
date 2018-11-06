@@ -231,12 +231,12 @@
 	        	var col5 = row.insertCell(4);
 	        	var col6 = row.insertCell(5);
 
-				col1.innerHTML = '<td><input type="text" name="emp[]" value="'+empleado+'"/></td>'; col1.style.display = 'none'; //col1.style.width = "0%";
-				col2.innerHTML = '<td>' + nombre + '</td>'; //col2.style.width = "60%";
-				col3.innerHTML = '<td><input type="text" name="fecha[]" style="border:0px;width:150px!important;" value="'+fecha+'"/></td>'; // col3.style.width = "10%";
+				col1.innerHTML = '<td><input type="text" name="emp[]" value="'+empleado+'"/></td>'; col1.style.display = 'none';
+				col2.innerHTML = '<td>' + nombre + '</td>';
+				col3.innerHTML = '<td><input type="text" name="fecha[]" style="border:0px;width:150px!important;" value="'+fecha+'"/></td>'; 
 				col4.innerHTML = '<td style="text-align:right;"><input type="text" name="dias[]" style="border:0px;width:150px!important;" value="'+dias+'"/></td>'; //col4.style.width = "10%";
-				col5.innerHTML = '<td><input type="text" name="refIMSS[]" style="border:0px;width:150px!important;" value="'+refIMSS+'"/></td>'; // col5.style.width = "10%";
-				col6.innerHTML = '<td><input type="text" name="tipo[]" style="border:0px;width:150px!important;" value="'+tipo+'"/></td>'; // col6.style.width = "10%";
+				col5.innerHTML = '<td><input type="text" name="refIMSS[]" style="border:0px;width:150px!important;" value="'+refIMSS+'"/></td>'; 
+				col6.innerHTML = '<td><input type="text" name="tipo[]" style="border:0px;width:150px!important;" value="'+tipo+'"/></td>'; 
 	        } else {
 	           alert('No ha capturado las unidades!');
 	        }			    

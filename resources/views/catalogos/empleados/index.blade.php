@@ -28,7 +28,6 @@
                     <tbody>@foreach ($emps as $emp)
                         <tr>
                             <td class="parrafo">{{$emp->EMP}}</td>
-                            <!-- <td class="parrafo" > <input type="" name="" id="nombre" value="{{$emp->NOMBRE}}" readonly style="border: 0px;" href=""data-toggle="modal" data-target="#GSCCModal"> <a></a></td> -->
                             <td class="parrafo" ><a href=""data-toggle="modal" data-target="#GSCCModal" id="{{$emp->EMP}}" rel="tooltip" title="Consulta rapida" name="nom">{{$emp->NOMBRE}} <input type="hidden" name="{{$emp->EMP}}" value="{{$emp->EMP}}"> </a></td>
                             <td class="parrafo"> @foreach ($jobs as $job)
                                 <?php if ($emp->PUESTO==$job->PUESTO) {
@@ -190,11 +189,8 @@
              $('#ima').removeAttr('scr');
              $('#ima').attr('src',"{{ asset('/img/Ideatisa.ico')}}");
         }
-            //iv.value = data['integrado2'];
-            //alert('regreso con: ' + data['puesto']);
         });
-        // $('#ima').removeAttr('scr');
-        // $('#ima').attr('src',"{{ asset ('/img/avatar.jpg')}}"); 
+        
             
     });
   </script>

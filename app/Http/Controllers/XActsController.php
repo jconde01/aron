@@ -32,7 +32,7 @@ class XActsController extends Controller
 		$perfil = auth()->user()->profile_id; 
         $navbar = ProfileController::getNavBar('',0,$perfil);
 		$selProceso = Session::get('selProceso');
-		$conceptos = Concepto::where('TIPONO',$selProceso)->where('TIPCAPT','<>','0')->orderBy('NOMBRE')->get();
+		$conceptos = Concepto::where('TIPONO',$selProceso)->where('TIPCAPT','<>','0')->whereNotIn('CONCEPTO',$this::conIncap)->orderBy('NOMBRE')->get();
 		$periodos = Periodo::where('TIPONO',$selProceso)->where('SWCIERRE','0')->get();
 		$empleados = Empleado::where('TIPONO',$selProceso)->where('ESTATUS','A')->get();
 		return view('transacciones.por-concepto')->with(compact('navbar','conceptos','periodos','empleados'));
@@ -67,7 +67,14 @@ class XActsController extends Controller
 	public function getMovtosCapturados(Request $data)
 	{
 		$selProceso = Session::get('selProceso');
-		$capturado = DB::connection('sqlsrv2')->table('Movtos')->join('Empleado','MOVTOS.EMP', '=', 'EMPLEADO.EMP')
+		// $capturado = DB::connection('sqlsrv2')->table('Movtos')->join('Empleado','MOVTOS.EMP', '=', 'EMPLEADO.EMP')
+		// 		->where('MOVTOS.TIPONO', $selProceso)
+		// 		->where('MOVTOS.CONCEPTO', $data->concepto)
+		// 		->where('MOVTOS.PERIODO', $data->periodo)
+		// 		->select('EMPLEADO.EMP','EMPLEADO.NOMBRE','MOVTOS.*')
+		// 		->orderBy('EMPLEADO.EMP')
+		// 		->get();
+		$capturado = Movtos::join('Empleado','MOVTOS.EMP', '=', 'EMPLEADO.EMP')
 				->where('MOVTOS.TIPONO', $selProceso)
 				->where('MOVTOS.CONCEPTO', $data->concepto)
 				->where('MOVTOS.PERIODO', $data->periodo)
@@ -109,7 +116,7 @@ class XActsController extends Controller
 			$sumRes = substr($data->Metodo, 1, 1) == "3"? "2" : "0";
 			$deleted = Movtos::where('TIPONO',$selProceso)->where('CONCEPTO',$data->Concepto)->where('PERIODO',$data->Periodo)->delete();
 		    foreach ($data->emp as $key => $emp) {
-		    	$cuenta = Empleado::where('TIPONO',$selProceso)->where('EMP',$emp)->select('cuenta')->get()->first();
+		    	$cuenta = Empleado::where('TIPONO',$selProceso)->where('EMP',$emp)->value('cuenta');
 		    	$mov = New Movtos();
 		    	$mov->TIPONO = $selProceso;
 		    	$mov->EMP = $emp;
@@ -119,14 +126,14 @@ class XActsController extends Controller
 		    	$mov->UNIDADES = $data->unidades[$key];
 		    	$mov->SALDO = 0;
 		    	$mov->SUMRES = $sumRes;
-		    	$mov->CALCULO = $data->calculo[$key];		// Para que guardar????
-		    	$mov->METODOISP = $data->MetodoISP;			// Para que grabar esto en Movtos si está en CONCEPTOS ???????
-		    	$mov->FLAGCIEN = '';						// Investigar para que sirve esto??????
+		    	$mov->CALCULO = $data->calculo[$key];	// Para que guardar????
+		    	$mov->METODOISP = $data->MetodoISP;		// Para que grabar esto en Movtos si está en CONCEPTOS ???????
+		    	$mov->FLAGCIEN = $data->FlagCien;		// Investigar para que sirve esto??????
 		    	$mov->ACTIVO = 1;
 		    	$mov->OTROS = 0;
 		    	$mov->ESPECIAL = 1;
 		    	$mov->PLAZO = 0;
-		    	$mov->cuenta = $cuenta;						// para que grabar la cuenta si esta asociada a un solo empleado?????
+		    	$mov->cuenta = $cuenta;					// para que grabar la cuenta si esta asociada a un solo empleado?????
 		    	//dd($mov);
 		    	$mov->save();
 		    }

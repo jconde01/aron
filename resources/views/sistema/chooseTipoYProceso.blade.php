@@ -87,11 +87,14 @@
 		var token = $('input[name=_token]').val();				
 		var tipo  =  $('.tipo').val();
     	var selProcesos = document.getElementById("procesos");
+        var boton = document.getElementById("boton");
         $.post("/sistema/get-procesos", { tipo: tipo, _token: token }, function( data ) {
             var procesos = Object.values(data);
-            //alert(procesos[0]["NOMBRE"]);
+            //alert('removiendo');
 		    while (selProcesos.options.length > 1) {
-		        selProcesos.remove(selProcesos.options.length);
+		        selProcesos.remove(selProcesos.options.length-1);
+                 boton.disabled=true;
+                //alert('removiendo');
     		}
     	    for (var i = 0; i < procesos.length; i++) {
             	var proceso = new Option(procesos[i]["NOMBRE"], procesos[i]["TIPONO"]);

@@ -224,25 +224,5 @@
         });		
 	});
 
-	// function creaPantalla() {
- //    	//console.log(numPantalla);
-	//     while (tabla.rows.length > 0) {
-	//         tabla.deleteRow(tabla.rows.length-1);
-	// 	}
- //    	var row = tabla.insertRow(tabla.rows.length);
- //    	var col1 = row.insertCell(0);
- //    	var col2 = row.insertCell(1);
- //    	var col3 = row.insertCell(2);
-	// 	var col4 = row.insertCell(3);
-	// 	var col5 = row.insertCell(4);
-	// 	var col6 = row.insertCell(5);
-
-	// 	col1.innerHTML = '<th>Empleado</th>'; 	col1.style.display = 'none';
-	// 	col2.innerHTML = '<th>Nombre</th>'; 	col2.style.width = "60%";
-	// 	col3.innerHTML = '<th>Fecha</th>'; 		col3.style.width = "10%";
-	// 	col4.innerHTML = '<th>Dias</th>'; 		col4.style.width = "10%";
-	// 	col5.innerHTML = '<th>Ref. IMSS</th>'; 	col5.style.width = "10%";
-	// 	col6.innerHTML = '<th>Tipo</th>'; 		col6.style.width = "10%";
-	// }
 </script>            
 @endsection 

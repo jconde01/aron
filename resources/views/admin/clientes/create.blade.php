@@ -1,4 +1,4 @@
-    @extends('layouts.app')
+@extends('layouts.app')
 
 @section('title','Registrar nuevo Cliente')
 @section('body-class','')
@@ -21,10 +21,20 @@
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
                 <div class="row" style="margin-bottom: 5px;">
+                    <div class="col-sm-10">
                         <div class="form-group content-descripcion-left-input">
                             <label class="label-left" style="font-size: 14px;">Nombre del cliente</label>
                             <input type="text" name="Nombre" value="{{ old('Nombre') }}">
                         </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="Activo" checked>
+                                Activo
+                            </label>
+                        </div>
+                    </div>                    
                 </div>
 
                 <div class="row" style="margin-bottom: 5px;">
@@ -45,7 +55,7 @@
                 <div class="col-sm-6" style="">
                     <div class="form-group content-descripcion-left-input">
                         <label class="label-left">Dominio</label>
-                        <input type="text" name="dominio" id="DOMINIO" placeholder="@ejemplo.com"  onkeyup="fAgrega2(); fAgrega1(); fAgrega3();" required>
+                        <input type="text" name="dominio" id="DOMINIO" placeholder="@ejemplo.com" value="{{ old('dominio') }}" onkeyup="fAgrega1();" required>
                     </div>
                 </div>
 
@@ -70,7 +80,7 @@
                         </select>
                     </div>
                 </div>
-    <br><br><br><br>
+        <br><br><br>
                 <label class="etiqueta">Servicios contratados</label>
                 <div style="border:1px red solid;">
                     <div class="row" style="margin-bottom: 2px;">
@@ -138,33 +148,24 @@
                         </div>
                     </div>                
                 </div>
-                <div class="row text-center">
-                    <div class="col-sm-4 col-sm-offset-4">
-                        <div class="checkbox text-center">
-                            <label>
-                                <input type="checkbox" name="Activo" checked>
-                                Activo
-                            </label>
-                        </div>
-                    </div>                    
-                </div> 
+
                 <h3><label class="etiqueta">Usuarios y Perfiles</label></h3>
                 <div class="col-sm-4" style="">
                     <div class="form-group content-descripcion-left-input">
                         <label class="label-left">Nominista</label>
-                        <input type="text" name="nominista" id="CORREO" placeholder="@ejemplo.com" readonly="readonly" class="bloqueado">
+                        <input type="text" name="Nominista" id="CORREO" placeholder="@ejemplo.com" readonly="readonly" class="bloqueado">
                     </div>
                 </div>
                 <div class="col-sm-4" style="">
                     <div class="form-group content-descripcion-left-input">
                         <label class="label-left">Fiscalista</label>
-                        <input type="text" name="fiscalista" id="CORREO1" placeholder="@ejemplo.com" readonly="readonly" class="bloqueado">
+                        <input type="text" name="Fiscalista" id="CORREO1" placeholder="@ejemplo.com" readonly="readonly" class="bloqueado">
                     </div>
                 </div>
                 <div class="col-sm-4" style="">
                     <div class="form-group content-descripcion-left-input">
                         <label class="label-left">Administrador</label>
-                        <input type="text" name="administrador" id="CORREO2" placeholder="@ejemplo.com" readonly="readonly" class="bloqueado">
+                        <input type="text" name="Administrador" id="CORREO2" placeholder="@ejemplo.com" readonly="readonly" class="bloqueado">
                     </div>
                 </div>
 
@@ -192,7 +193,7 @@ $(document).ready(function() {
     }); 
 
     var token = $('input[name=_token]').val();      
-    console.log('here we are. The token is: ' + token);
+    //console.log('here we are. The token is: ' + token);
 
     $('.giros_list').change(function() {
         var giro  =  $('.giros_list').val();
@@ -216,23 +217,11 @@ $(document).ready(function() {
         });     
     });
 });
-</script>
-<script language="javascript">
-function fAgrega1()
-{
-document.getElementById("CORREO").value = document.getElementById("DOMINIO").value;
-}
-</script>
-<script language="javascript">
-function fAgrega2()
-{
-document.getElementById("CORREO1").value = document.getElementById("DOMINIO").value;
-}
-</script> 
-<script language="javascript">
-function fAgrega3()
-{
-document.getElementById("CORREO2").value = document.getElementById("DOMINIO").value;
+
+function fAgrega1() {
+    document.getElementById("CORREO").value = document.getElementById("DOMINIO").value;
+    document.getElementById("CORREO1").value = document.getElementById("DOMINIO").value;
+    document.getElementById("CORREO2").value = document.getElementById("DOMINIO").value;
 }
 </script>           
 @endsection

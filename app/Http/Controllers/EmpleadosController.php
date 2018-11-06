@@ -1,5 +1,5 @@
 <?php
- 
+ //inicio del codigo escrito por Ricardo Cordero.2018
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -14,6 +14,13 @@ use App\DatosGe;
 use App\DatosAfo;
 use App\Imss;
 use Session;
+use App\Empresa;
+use App\EmpleadoAsimi;
+use App\DatosGeAsimi;
+use App\DatosAfoAsimi;
+use App\ImssAsimi;
+use Illuminate\Validation\Rule;
+
 // DB::transaction(function () use($data) {
 // });
 class EmpleadosController extends Controller
@@ -21,16 +28,20 @@ class EmpleadosController extends Controller
     public function __construct()
     {
         $this->middleware('database');
+        $this->middleware('databaseAsimi');
+
     }
 
     public function index()
     {  
+
         $selProceso = Session::get('selProceso');
     	$emps = Empleado::where('TIPONO', $selProceso)->get();
         $jobs = Job::all();
         $deps = Depto::all();
         $perfil = auth()->user()->profile_id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
+        //mkdir("../utilerias/creado", 0700);
     	return view('catalogos.empleados.index')->with(compact('navbar','emps', 'jobs', 'deps'));
     }
 
@@ -72,9 +83,24 @@ class EmpleadosController extends Controller
     public function create() 
     {
         $selProceso = Session::get('selProceso');
-        $emps = Empleado::all()->last();
-        $ultimo = $emps->EMP + 1;
-        $ultimo2 = str_pad($ultimo,7, "0", STR_PAD_LEFT);
+        $cliente = auth()->user()->client;
+        if ($cliente->fiscal==1 && $cliente->asimilado==1){
+            $AsimiFiscal = 1;
+        }else{
+            $AsimiFiscal = 0;
+        }
+        $emps = Empleado::where('TIPONO', $selProceso)->get()->last();
+        if ($emps==null){
+            $ultimo = 1;
+            $add = str_pad($selProceso,2, "0", STR_PAD_LEFT);
+        $ultimo2 = str_pad($ultimo,5, "0", STR_PAD_LEFT);
+        $ultimo3 =  $add.$ultimo2;
+        }else{
+             $ultimo = $emps->EMP + 1;
+             $ultimo3 = str_pad($ultimo,7, "0", STR_PAD_LEFT);
+        }
+        
+        
         $jobs = Job::all();
         $deps = Depto::all();
         $ests = Estados::all();
@@ -82,29 +108,11 @@ class EmpleadosController extends Controller
         $navbar = ProfileController::getNavBar('',0,$perfil);
         $emp = new Empleado();
         $emp->TIPONO = $selProceso;
-    	return view('catalogos.empleados.create')->with(compact('jobs','deps', 'ests', 'selProceso', 'navbar','emp', 'ultimo2'));
+    	return view('catalogos.empleados.create')->with(compact('jobs','deps', 'ests', 'selProceso', 'navbar','emp', 'ultimo3','AsimiFiscal'));
     }
 
 
     public function getSalarioIntegrado(Request $data) {
-        //$integrado = calculaIntegrado;
-        // Calcula Salario Integrado
-        // anios = CInt(Date - CDate(dingreso.value))
-        // If anios <> 0 Then
-        //   anios = anios / 365
-        // End If
-        // Set rsinteg = Integ.GetBatchOptimistic(Empresa.NominaCnStr, "TABINTEG", "TIPONO= '" & Empresa.Tiponom & "' AND  NUMANO= " & anios)
-        // If rsinteg.RecordCount > 0 Then
-        //    FACT = rsinteg!Factor
-        // Else
-        //    FACT = 0
-        // End If
-        // BUSTOPE CDate(dingreso.value), wkte, wkti
-        // If Round(tntsueldo.value * FACT, 2) > wkte Then
-        //    tntinteg.value = wkte
-        // Else
-        //    tntinteg.value = Round(tntsueldo.value * FACT, 2)
-        // End If
 
         $selProceso = Session::get('selProceso');
         $minimoDF = Session::get('minimoDF');               
@@ -114,15 +122,7 @@ class EmpleadosController extends Controller
         $anios = date_diff($hoy, $ingreso)->y;
         $factor = DB::connection("sqlsrv2")->table('TABINTEG')->where('TIPONO',$selProceso)->where('NUMANO',$anios)->first()->FACTOR;
         $topes = DB::connection("sqlsrv2")->table('PARIMSS')->where('FECHAI','<=',$ingreso2)->where('FECHAF','>=', $ingreso2)->first();
-        //   // salmin = ParamCia.minimodf
-        //   // If RSPAR.RecordCount > 0 Then
-            
-        //   //    wkte = RSPAR!Topeims * salmin
-        //   //    wkti = RSPAR!TopeIV * salmin
-        //   // Else
-        //   //    wkte = 25 * salmin
-        //   //    wkti = 10 * salmin
-        //   // End If 
+  
         if ($topes->TOPEIMS) {
             $wkte =  $topes->TOPEIMS * $minimoDF;
             $wkti = $topes->TOPEIV * $minimoDF;
@@ -147,145 +147,586 @@ class EmpleadosController extends Controller
             
         );
          
-        // echo json_encode($data);
-        // exit();
-        //$integrado = $topes->TOPEIMS;
+      
         return response($data);
-        // $data2 = $data->fldSueldo . " - " . $data->fldIngreso . " - " . $anios . " - " . $factor . " - " . $topes;
-        // return response($data2);
+        
     }
 
 
     public function store(Request $request)
     {
-        DB::transaction(function () use($request) {
-        $selProceso = Session::get('selProceso');
-
-    	$emp = new Empleado();
-        $emp->TIPONO = $selProceso;
-        $emp->EMP = $request->input('EMP');
-        $emp->NOMBRE = $request->input('NOMBRES') . ' ' . $request->input('PATERNO') . ' ' . $request->input('MATERNO');
-        $emp->PUESTO = $request->input('PUESTO');
-        $emp->cuenta = $request->input('cuenta');
-        $emp->DEPTO = $request->input('DEPTO');
-        $emp->TIPOTRA = $request->input('TIPOTRA');
-        $emp->c_Estado = $request->input('c_Estado');
-        $emp->DIRIND = $request->input('DIRIND');
-        $emp->TIPOJORNADA = $request->input('TIPOJORNADA');
-        $emp->TIPOREGIMEN = $request->input('TIPOREGIMEN');
-        $emp->CHECA = $request->input('CHECA');
-        $emp->SINDIC = $request->input('SINDIC');
-        $emp->TURNO = $request->input('TURNO');
-        $emp->ZONAECO = $request->input('ZONAECO') . "";
-        $emp->ESTATUS = $request->input('ESTATUS');
-        $emp->CLIMSS = $request->input('CLIMSS') . "";
-        $emp->TIPOPAGO = $request->input('TIPOPAGO');
-        $emp->c_TipoContrato = $request->input('c_TipoContrato');
-        $emp->INGRESO = date('d-m-Y', strtotime($request->input('INGRESO')));
-        $emp->VACACION = date('d-m-Y', strtotime($request->input('VACACION')));
-        $emp->PLANTA = date('d-m-Y', strtotime($request->input('PLANTA')));
-        $emp->VENCIM = date('d-m-Y', strtotime($request->input('VENCIM')));
-        $emp->BAJA = date('d-m-Y', strtotime($request->input('BAJA')));
-        $emp->REGPAT = $request->input('REGPAT');
-        $emp->RFC = $request->input('RFC');
-        $emp->IMSS = $request->input('IMSS');
-        $emp->GRUIMS = $request->input('GRUIMS');
-        $emp->FONACOT = $request->input('FONACOT') . "";
-        $emp->INFONAVIT = $request->input('INFONAVIT') . "";
-        $emp->OTRACIA = $request->input('OTRACIA');
-        $emp->TAXOTRA = $request->input('TAXOTRA');
-        $emp->CASOTRA = $request->input('CASOTRA');
-        $emp->SAROTR = $request->input('SAROTR') . "";
-        $emp->DESINFO = $request->input('DESINFO');
-        $emp->SUELDO = $request->input('SUELDO');
-        $emp->VARIMSS = $request->input('VARIMSS');
-        $emp->INTEG = $request->input('INTEG');
-        $emp->INTIV = $request->input('INTIV');
-        $emp->PRESDEC = $request->input('PRESDEC');
-        $emp->NOCRED = $request->input('NOCRED');
         
-        $emp->save();
+        $messages = [
+            'EMP.required' => 'el numero de empleado es requerido',
+            'EMP.min' => 'el numero de empleado no cumple con los 7 digitos',
+            'EMP.unique' => 'el numero de empleado ya esta registrado',
+            'RFC.regex' => 'El RFC no tiene el formato correcto',
+            'RFC.required' =>'El RFC es requerido',
+            'RFC.unique' => 'El RFC del empleado ya se encuentra registrado en otro proceso.'
+            
+        ];
 
-        $dage = new DatosGe();
-        $dage->EMP = $request->input('EMP2');
-        $dage->NIVEL = $request->input('NIVEL') . "";
-        $dage->DEPTO = $request->input('DEPTO') . "";
-        $dage->REPORTA = $request->input('REPORTA') . "";
-        $dage->DIRECCION = $request->input('DIRECCION') . "";
-        $dage->PUESTO = $request->input('PUESTO');
-        $dage->Referencia = $request->input('Referencia') . "";
-        $dage->noExterior = $request->input('noExterior') . "";
-        $dage->noInterior = $request->input('noInterior') . "";
-        $dage->Municipio = $request->input('Municipio') . "";
-        $dage->COLONIA = $request->input('COLONIA') . "";
-        $dage->CIUDAD = $request->input('CIUDAD') . "";
-        $dage->ESTADO = $request->input('ESTADO') . "";
-        $dage->TELEFONO = $request->input('TELEFONO') . "";
-        $dage->ZIP = $request->input('ZIP') . "";
-        $dage->CELULAR = $request->input('CELULAR') . "";
-        $dage->EXPERI = $request->input('EXPERI') . "";
-        $dage->SEXO = $request->input('SEXO') . "";
-        $dage->CIVIL = $request->input('CIVIL');
-        $dage->BODA = date('d-m-Y', strtotime($request->input('BODA')));
-        $dage->LICENCIA = $request->input('LICENCIA');
-        $dage->SANGRE = $request->input('SANGRE');
-        $dage->ESCOLAR = $request->input('ESCOLAR');
-        $dage->CAMB_RESID = $request->input('CAMB_RESID');
-        $dage->DISP_VIAJE = $request->input('DISP_VIAJE');
-        $dage->BORN = date('d-m-Y', strtotime($request->input('BORN')));
-        $dage->NACIM = $request->input('NACIM') . "";
-        $dage->TIPONO = $selProceso;
-        $dage->NACIONAL = $request->input('NACIONAL');
-        $dage->DEPENDIENT = $request->input('DEPENDIENT') . "";
-        $dage->MEDIO = $request->input('MEDIO');
-        $dage->FUENTE = $request->input('FUENTE') . "";
-        $dage->Email = $request->input('Email') . "";
-        $file = $request->file('archivo');
+        $rules = [
+            'EMP' => 'required|min:7|unique:sqlsrv2.EMPLEADO,EMP',
+            'RFC' => ['unique:sqlsrv2.EMPLEADO,RFC','required','regex:/^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/']
+            
+            
+        ];
+        // validar
+        $this->validate($request,$rules,$messages);
+        $cliente = auth()->user()->client;
+        $AsimiFiscal = Session::get('tinom');
+        if ($AsimiFiscal == 'fiscal') {
+            //inicio de las inserciones de fiscal--------------------------------------------------------------------------
+
+           //inicio fiscal?
+                                if ($cliente->fiscal==1 && $cliente->asimilado==1)
+                                {
+                                        
+                                        DB::transaction(function () use($request) {
+                                        $selProceso = Session::get('selProceso');
+                                        $emp = new Empleado();
+                                        $emp->TIPONO = $selProceso;
+                                        $emp->EMP = $request->input('EMP');
+                                        $emp->NOMBRE = $request->input('NOMBRES') . ' ' . $request->input('PATERNO') . ' ' . $request->input('MATERNO');
+                                        $emp->PUESTO = $request->input('PUESTO');
+                                        $emp->cuenta = $request->input('cuenta');
+                                        $emp->DEPTO = $request->input('DEPTO');
+                                        $emp->TIPOTRA = $request->input('TIPOTRA');
+                                        $emp->c_Estado = $request->input('c_Estado');
+                                        $emp->DIRIND = $request->input('DIRIND');
+                                        $emp->TIPOJORNADA = $request->input('TIPOJORNADA');
+                                        $emp->TIPOREGIMEN = $request->input('TIPOREGIMEN');
+                                        $emp->CHECA = $request->input('CHECA');
+                                        $emp->SINDIC = $request->input('SINDIC');
+                                        $emp->TURNO = $request->input('TURNO');
+                                        $emp->ZONAECO = $request->input('ZONAECO') . "";
+                                        $emp->ESTATUS = $request->input('ESTATUS');
+                                        $emp->CLIMSS = $request->input('CLIMSS') . "";
+                                        $emp->TIPOPAGO = $request->input('TIPOPAGO');
+                                        $emp->c_TipoContrato = $request->input('c_TipoContrato');
+                                        $emp->INGRESO = date('d-m-Y', strtotime($request->input('INGRESO')));
+                                        $emp->VACACION = date('d-m-Y', strtotime($request->input('VACACION')));
+                                        $emp->PLANTA = date('d-m-Y', strtotime($request->input('PLANTA')));
+                                        $emp->VENCIM = date('d-m-Y', strtotime($request->input('VENCIM')));
+                                        $emp->BAJA = date('d-m-Y', strtotime($request->input('BAJA')));
+                                        $emp->REGPAT = $request->input('REGPAT');
+                                        $emp->RFC = $request->input('RFC');
+                                        $emp->IMSS = $request->input('IMSS');
+                                        $emp->GRUIMS = $request->input('GRUIMS');
+                                        $emp->FONACOT = $request->input('FONACOT') . "";
+                                        $emp->INFONAVIT = $request->input('INFONAVIT') . "";
+                                        $emp->OTRACIA = $request->input('OTRACIA');
+                                        $emp->TAXOTRA = $request->input('TAXOTRA');
+                                        $emp->CASOTRA = $request->input('CASOTRA');
+                                        $emp->SAROTR = $request->input('SAROTR') . "";
+                                        $emp->DESINFO = $request->input('DESINFO');
+                                        $emp->SUELDO = $request->input('SUELDO');
+                                        $emp->VARIMSS = $request->input('VARIMSS');
+                                        $emp->INTEG = $request->input('INTEG');
+                                        $emp->INTIV = $request->input('INTIV');
+                                        $emp->PRESDEC = $request->input('PRESDEC');
+                                        $emp->NOCRED = $request->input('NOCRED');
+                                        $emp->save();
+
+                                        $dage = new DatosGe();
+                                        $dage->EMP = $request->input('EMP2');
+                                        $dage->NIVEL = $request->input('NIVEL') . "";
+                                        $dage->DEPTO = $request->input('DEPTO') . "";
+                                        $dage->REPORTA = $request->input('REPORTA') . "";
+                                        $dage->DIRECCION = $request->input('DIRECCION') . "";
+                                        $dage->PUESTO = $request->input('PUESTO');
+                                        $dage->Referencia = $request->input('Referencia') . "";
+                                        $dage->noExterior = $request->input('noExterior') . "";
+                                        $dage->noInterior = $request->input('noInterior') . "";
+                                        $dage->Municipio = $request->input('Municipio') . "";
+                                        $dage->COLONIA = $request->input('COLONIA') . "";
+                                        $dage->CIUDAD = $request->input('CIUDAD') . "";
+                                        $dage->ESTADO = $request->input('ESTADO') . "";
+                                        $dage->TELEFONO = $request->input('TELEFONO') . "";
+                                        $dage->ZIP = $request->input('ZIP') . "";
+                                        $dage->CELULAR = $request->input('CELULAR') . "";
+                                        $dage->EXPERI = $request->input('EXPERI') . "";
+                                        $dage->SEXO = $request->input('SEXO') . "";
+                                        $dage->CIVIL = $request->input('CIVIL');
+                                        $dage->BODA = date('d-m-Y', strtotime($request->input('BODA')));
+                                        $dage->LICENCIA = $request->input('LICENCIA');
+                                        $dage->SANGRE = $request->input('SANGRE');
+                                        $dage->ESCOLAR = $request->input('ESCOLAR');
+                                        $dage->CAMB_RESID = $request->input('CAMB_RESID');
+                                        $dage->DISP_VIAJE = $request->input('DISP_VIAJE');
+                                        $dage->BORN = date('d-m-Y', strtotime($request->input('BORN')));
+                                        $dage->NACIM = $request->input('NACIM') . "";
+                                        $dage->TIPONO = $selProceso;
+                                        $dage->NACIONAL = $request->input('NACIONAL');
+                                        $dage->DEPENDIENT = $request->input('DEPENDIENT') . "";
+                                        $dage->MEDIO = $request->input('MEDIO');
+                                        $dage->FUENTE = $request->input('FUENTE') . "";
+                                        $dage->Email = $request->input('Email') . "";
+                                        $file = $request->file('archivo');
+                                        
+                                        if ($file !== null) {
+                                            
+                                            $path = public_path() . Empleado::Rutas['Imagenes'] . $dage->EMP .'/';
+                                            $fileName = uniqid() . $file->getClientOriginalName();
+                                            $moved =  $file->move($path, $fileName);
+                                            
+                                            if ($moved) {
+                                            //     // guarda la liga en la BD
+                                             $dage->FOTO = $fileName;
+                                                
+                                             }
+                                             
+                                        }
+                                        else{
+                                            
+                                        }  
+                                        $dage->save();
+
+                                        $daafo = new DatosAfo();
+                                        $daafo->EMP = $request->input('EMP');
+                                        $daafo->TIPONO = $selProceso;
+                                        $daafo->CURP = $request->input('CURP');
+                                        $daafo->IMSS = $request->input('IMSS2');
+                                        $daafo->NOMBRES = $request->input('NOMBRES');
+                                        $daafo->PATERNO = $request->input('PATERNO') . "";
+                                        $daafo->MATERNO = $request->input('MATERNO') . "";
+                                        $daafo->PADRE = $request->input('PADRE') . "";
+                                        $daafo->MADRE = $request->input('MADRE') . "";
+                                        $daafo->save();
+                                       
+                                        $imss = new Imss();
+                                        $imss->TIPONO = $selProceso;
+                                        $imss->EMP = $request->input('EMP');
+                                        $imss->FECHA = date('d-m-Y', strtotime($request->input('INGRESO')));
+                                        $imss->CLAVE = 15;
+                                        $imss->SUELDO = $request->input('SUELDO');
+                                        $imss->INTEG = $request->input('INTEG');
+                                        $imss->INTIV = $request->input('INTIV');
+                                        $imss->SUELDONUE = $request->input('SUELDO');
+                                        $imss->INTEGNUE = $request->input('INTEG');
+                                        $imss->INTIVNUE = $request->input('INTIV');
+                                        $imss->save();
+                                        //dd('listo fiscal');
+                                       });
+
+                                        
+
+                                        DB::transaction(function () use($request) {
+                                        $selProceso = Session::get('selProceso');
+                                        $rfcempleado = EmpleadoAsimi::where('RFC', $request->input('RFC'))->first();
+                                        if ($rfcempleado!=null) {
+                                            return back()->with('advertencia','Se ha dado de alta correctamente el empleado en la nomina fiscal, pero no se ha dado de alta en la nomina de asimilados ya que el RFC del empleado ya existe.');
+                                        }
+                                        
+                                        
+                                        $emps = EmpleadoAsimi::where('TIPONO', $selProceso)->get()->last();
+                                                if ($emps==null){
+                                                    $ultimo = 1;
+                                                    $add = str_pad($selProceso,2, "0", STR_PAD_LEFT);
+                                                $ultimo2 = str_pad($ultimo,5, "0", STR_PAD_LEFT);
+                                                $ultimo3 =  $add.$ultimo2;
+                                                }else{
+                                                     $ultimo = $emps->EMP + 1;
+                                                     $ultimo3 = str_pad($ultimo,7, "0", STR_PAD_LEFT);
+                                                }
+                                        $empAsimi = new EmpleadoAsimi();
+                                        $empAsimi->TIPONO = $selProceso;
+                                        $empAsimi->EMP = $ultimo3;
+                                        $empAsimi->NOMBRE = $request->input('NOMBRES') . ' ' . $request->input('PATERNO') . ' ' . $request->input('MATERNO');
+                                        $empAsimi->PUESTO = $request->input('PUESTO');
+                                        $empAsimi->cuenta = $request->input('cuenta');
+                                        $empAsimi->DEPTO = $request->input('DEPTO');
+                                        $empAsimi->TIPOTRA = $request->input('TIPOTRA');
+                                        $empAsimi->c_Estado = $request->input('c_Estado');
+                                        $empAsimi->DIRIND = $request->input('DIRIND');
+                                        $empAsimi->TIPOJORNADA = $request->input('TIPOJORNADA');
+                                        $empAsimi->TIPOREGIMEN = $request->input('TIPOREGIMEN');
+                                        $empAsimi->CHECA = $request->input('CHECA');
+                                        $empAsimi->SINDIC = $request->input('SINDIC');
+                                        $empAsimi->TURNO = $request->input('TURNO');
+                                        $empAsimi->ZONAECO = $request->input('ZONAECO') . "";
+                                        $empAsimi->ESTATUS = $request->input('ESTATUS');
+                                        $empAsimi->CLIMSS = $request->input('CLIMSS') . "";
+                                        $empAsimi->TIPOPAGO = $request->input('TIPOPAGO');
+                                        $empAsimi->c_TipoContrato = $request->input('c_TipoContrato');
+                                        $empAsimi->INGRESO = date('d-m-Y', strtotime($request->input('INGRESO')));
+                                        $empAsimi->VACACION = date('d-m-Y', strtotime($request->input('VACACION')));
+                                        $empAsimi->PLANTA = date('d-m-Y', strtotime($request->input('PLANTA')));
+                                        $empAsimi->VENCIM = date('d-m-Y', strtotime($request->input('VENCIM')));
+                                        $empAsimi->BAJA = date('d-m-Y', strtotime($request->input('BAJA')));
+                                        $empAsimi->REGPAT = $request->input('REGPAT');
+                                        $empAsimi->RFC = $request->input('RFC');
+                                        $empAsimi->IMSS = $request->input('IMSS');
+                                        $empAsimi->GRUIMS = $request->input('GRUIMS');
+                                        $empAsimi->FONACOT = $request->input('FONACOT') . "";
+                                        $empAsimi->INFONAVIT = $request->input('INFONAVIT') . "";
+                                        $empAsimi->OTRACIA = $request->input('OTRACIA');
+                                        $empAsimi->TAXOTRA = $request->input('TAXOTRA');
+                                        $empAsimi->CASOTRA = $request->input('CASOTRA');
+                                        $empAsimi->SAROTR = $request->input('SAROTR') . "";
+                                        $empAsimi->DESINFO = $request->input('DESINFO');
+                                        $empAsimi->SUELDO = $request->input('SUELDO');
+                                        $empAsimi->NetoMensual = $request->input('NetoMensual');
+                                        $empAsimi->VARIMSS = $request->input('VARIMSS');
+                                        $empAsimi->INTEG = $request->input('INTEG');
+                                        $empAsimi->INTIV = $request->input('INTIV');
+                                        $empAsimi->PRESDEC = $request->input('PRESDEC');
+                                        $empAsimi->NOCRED = $request->input('NOCRED'); 
+                                        $empAsimi->save();
+
+                                        $dage = new DatosGeAsimi();
+                                        $dage->EMP = $request->input('EMP2');
+                                        $dage->NIVEL = $request->input('NIVEL') . "";
+                                        $dage->DEPTO = $request->input('DEPTO') . "";
+                                        $dage->REPORTA = $request->input('REPORTA') . "";
+                                        $dage->DIRECCION = $request->input('DIRECCION') . "";
+                                        $dage->PUESTO = $request->input('PUESTO');
+                                        $dage->Referencia = $request->input('Referencia') . "";
+                                        $dage->noExterior = $request->input('noExterior') . "";
+                                        $dage->noInterior = $request->input('noInterior') . "";
+                                        $dage->Municipio = $request->input('Municipio') . "";
+                                        $dage->COLONIA = $request->input('COLONIA') . "";
+                                        $dage->CIUDAD = $request->input('CIUDAD') . "";
+                                        $dage->ESTADO = $request->input('ESTADO') . "";
+                                        $dage->TELEFONO = $request->input('TELEFONO') . "";
+                                        $dage->ZIP = $request->input('ZIP') . "";
+                                        $dage->CELULAR = $request->input('CELULAR') . "";
+                                        $dage->EXPERI = $request->input('EXPERI') . "";
+                                        $dage->SEXO = $request->input('SEXO') . "";
+                                        $dage->CIVIL = $request->input('CIVIL');
+                                        $dage->BODA = date('d-m-Y', strtotime($request->input('BODA')));
+                                        $dage->LICENCIA = $request->input('LICENCIA');
+                                        $dage->SANGRE = $request->input('SANGRE');
+                                        $dage->ESCOLAR = $request->input('ESCOLAR');
+                                        $dage->CAMB_RESID = $request->input('CAMB_RESID');
+                                        $dage->DISP_VIAJE = $request->input('DISP_VIAJE');
+                                        $dage->BORN = date('d-m-Y', strtotime($request->input('BORN')));
+                                        $dage->NACIM = $request->input('NACIM') . "";
+                                        $dage->TIPONO = $selProceso;
+                                        $dage->NACIONAL = $request->input('NACIONAL');
+                                        $dage->DEPENDIENT = $request->input('DEPENDIENT') . "";
+                                        $dage->MEDIO = $request->input('MEDIO');
+                                        $dage->FUENTE = $request->input('FUENTE') . "";
+                                        $dage->Email = $request->input('Email') . "";
+                                        $file = $request->file('archivo');
+                                        
+                                        if ($file !== null) {
+                                            
+                                            $path = public_path() . Empleado::Rutas['Imagenes'] . $dage->EMP .'/';
+                                            $fileName = uniqid() . $file->getClientOriginalName();
+                                            $moved =  $file->move($path, $fileName);
+                                            
+                                            if ($moved) {
+                                            //     // guarda la liga en la BD
+                                             $dage->FOTO = $fileName;
+                                                
+                                             }
+                                             
+                                        }
+                                        else{
+                                            
+                                        }  
+                                        $dage->save();
+
+                                        $daafo = new DatosAfoAsimi();
+                                        $daafo->EMP = $ultimo3;
+                                        $daafo->TIPONO = $selProceso;
+                                        $daafo->CURP = $request->input('CURP');
+                                        $daafo->IMSS = $request->input('IMSS2');
+                                        $daafo->NOMBRES = $request->input('NOMBRES');
+                                        $daafo->PATERNO = $request->input('PATERNO') . "";
+                                        $daafo->MATERNO = $request->input('MATERNO') . "";
+                                        $daafo->PADRE = $request->input('PADRE') . "";
+                                        $daafo->MADRE = $request->input('MADRE') . "";
+                                        $daafo->save();
+                                       
+                                        $imss = new ImssAsimi();
+                                        $imss->TIPONO = $selProceso;
+                                        $imss->EMP = $ultimo3;
+                                        $imss->FECHA = date('d-m-Y', strtotime($request->input('INGRESO')));
+                                        $imss->CLAVE = 15;
+                                        $imss->SUELDO = $request->input('SUELDO');
+                                        $imss->INTEG = $request->input('INTEG');
+                                        $imss->INTIV = $request->input('INTIV');
+                                        $imss->SUELDONUE = $request->input('SUELDO');
+                                        $imss->INTEGNUE = $request->input('INTEG');
+                                        $imss->INTIVNUE = $request->input('INTIV');
+                                        $imss->save();
+                                        //dd('listo fiscal y asimilados');
+                                       });
+                                        
+                                }else{
+
+                    
+                    DB::transaction(function () use($request) {
+                    $selProceso = Session::get('selProceso');
+
+                    $emp = new Empleado();
+                    $emp->TIPONO = $selProceso;
+                    $emp->EMP = $request->input('EMP');
+                    $emp->NOMBRE = $request->input('NOMBRES') . ' ' . $request->input('PATERNO') . ' ' . $request->input('MATERNO');
+                    $emp->PUESTO = $request->input('PUESTO');
+                    $emp->cuenta = $request->input('cuenta');
+                    $emp->DEPTO = $request->input('DEPTO');
+                    $emp->TIPOTRA = $request->input('TIPOTRA');
+                    $emp->c_Estado = $request->input('c_Estado');
+                    $emp->DIRIND = $request->input('DIRIND');
+                    $emp->TIPOJORNADA = $request->input('TIPOJORNADA');
+                    $emp->TIPOREGIMEN = $request->input('TIPOREGIMEN');
+                    $emp->CHECA = $request->input('CHECA');
+                    $emp->SINDIC = $request->input('SINDIC');
+                    $emp->TURNO = $request->input('TURNO');
+                    $emp->ZONAECO = $request->input('ZONAECO') . "";
+                    $emp->ESTATUS = $request->input('ESTATUS');
+                    $emp->CLIMSS = $request->input('CLIMSS') . "";
+                    $emp->TIPOPAGO = $request->input('TIPOPAGO');
+                    $emp->c_TipoContrato = $request->input('c_TipoContrato');
+                    $emp->INGRESO = date('d-m-Y', strtotime($request->input('INGRESO')));
+                    $emp->VACACION = date('d-m-Y', strtotime($request->input('VACACION')));
+                    $emp->PLANTA = date('d-m-Y', strtotime($request->input('PLANTA')));
+                    $emp->VENCIM = date('d-m-Y', strtotime($request->input('VENCIM')));
+                    $emp->BAJA = date('d-m-Y', strtotime($request->input('BAJA')));
+                    $emp->REGPAT = $request->input('REGPAT');
+                    $emp->RFC = $request->input('RFC');
+                    $emp->IMSS = $request->input('IMSS');
+                    $emp->GRUIMS = $request->input('GRUIMS');
+                    $emp->FONACOT = $request->input('FONACOT') . "";
+                    $emp->INFONAVIT = $request->input('INFONAVIT') . "";
+                    $emp->OTRACIA = $request->input('OTRACIA');
+                    $emp->TAXOTRA = $request->input('TAXOTRA');
+                    $emp->CASOTRA = $request->input('CASOTRA');
+                    $emp->SAROTR = $request->input('SAROTR') . "";
+                    $emp->DESINFO = $request->input('DESINFO');
+                    $emp->SUELDO = $request->input('SUELDO');
+                    $emp->VARIMSS = $request->input('VARIMSS');
+                    $emp->INTEG = $request->input('INTEG');
+                    $emp->INTIV = $request->input('INTIV');
+                    $emp->PRESDEC = $request->input('PRESDEC');
+                    $emp->NOCRED = $request->input('NOCRED');
+                    $emp->save();
+
+                    $dage = new DatosGe();
+                    $dage->EMP = $request->input('EMP2');
+                    $dage->NIVEL = $request->input('NIVEL') . "";
+                    $dage->DEPTO = $request->input('DEPTO') . "";
+                    $dage->REPORTA = $request->input('REPORTA') . "";
+                    $dage->DIRECCION = $request->input('DIRECCION') . "";
+                    $dage->PUESTO = $request->input('PUESTO');
+                    $dage->Referencia = $request->input('Referencia') . "";
+                    $dage->noExterior = $request->input('noExterior') . "";
+                    $dage->noInterior = $request->input('noInterior') . "";
+                    $dage->Municipio = $request->input('Municipio') . "";
+                    $dage->COLONIA = $request->input('COLONIA') . "";
+                    $dage->CIUDAD = $request->input('CIUDAD') . "";
+                    $dage->ESTADO = $request->input('ESTADO') . "";
+                    $dage->TELEFONO = $request->input('TELEFONO') . "";
+                    $dage->ZIP = $request->input('ZIP') . "";
+                    $dage->CELULAR = $request->input('CELULAR') . "";
+                    $dage->EXPERI = $request->input('EXPERI') . "";
+                    $dage->SEXO = $request->input('SEXO') . "";
+                    $dage->CIVIL = $request->input('CIVIL');
+                    $dage->BODA = date('d-m-Y', strtotime($request->input('BODA')));
+                    $dage->LICENCIA = $request->input('LICENCIA');
+                    $dage->SANGRE = $request->input('SANGRE');
+                    $dage->ESCOLAR = $request->input('ESCOLAR');
+                    $dage->CAMB_RESID = $request->input('CAMB_RESID');
+                    $dage->DISP_VIAJE = $request->input('DISP_VIAJE');
+                    $dage->BORN = date('d-m-Y', strtotime($request->input('BORN')));
+                    $dage->NACIM = $request->input('NACIM') . "";
+                    $dage->TIPONO = $selProceso;
+                    $dage->NACIONAL = $request->input('NACIONAL');
+                    $dage->DEPENDIENT = $request->input('DEPENDIENT') . "";
+                    $dage->MEDIO = $request->input('MEDIO');
+                    $dage->FUENTE = $request->input('FUENTE') . "";
+                    $dage->Email = $request->input('Email') . "";
+                    $file = $request->file('archivo');
+                    
+                    if ($file !== null) {
+                        
+                        $path = public_path() . Empleado::Rutas['Imagenes'] . $dage->EMP .'/';
+                        $fileName = uniqid() . $file->getClientOriginalName();
+                        $moved =  $file->move($path, $fileName);
+                        
+                        if ($moved) {
+                        //     // guarda la liga en la BD
+                         $dage->FOTO = $fileName;
+                            
+                         }
+                         
+                    }
+                    else{
+                        
+                    }  
+                    $dage->save();
+
+                    $daafo = new DatosAfo();
+                    $daafo->EMP = $request->input('EMP');
+                    $daafo->TIPONO = $selProceso;
+                    $daafo->CURP = $request->input('CURP');
+                    $daafo->IMSS = $request->input('IMSS2');
+                    $daafo->NOMBRES = $request->input('NOMBRES');
+                    $daafo->PATERNO = $request->input('PATERNO') . "";
+                    $daafo->MATERNO = $request->input('MATERNO') . "";
+                    $daafo->PADRE = $request->input('PADRE') . "";
+                    $daafo->MADRE = $request->input('MADRE') . "";
+                    $daafo->save();
+                   
+                    $imss = new Imss();
+                    $imss->TIPONO = $selProceso;
+                    $imss->EMP = $request->input('EMP');
+                    $imss->FECHA = date('d-m-Y', strtotime($request->input('INGRESO')));
+                    $imss->CLAVE = 15;
+                    $imss->SUELDO = $request->input('SUELDO');
+                    $imss->INTEG = $request->input('INTEG');
+                    $imss->INTIV = $request->input('INTIV');
+                    $imss->SUELDONUE = $request->input('SUELDO');
+                    $imss->INTEGNUE = $request->input('INTEG');
+                    $imss->INTIVNUE = $request->input('INTIV');
+                    $imss->save();
+
+                   }); 
+                    //dd('solo fiscal');
+
+            }
+            //fin fiscal?
         
-        if ($file !== null) {
+
+            //fin de las inserciones de fiscal-----------------------------------------------------------------------------
+        }else{
+            //inicio de las inserciones de asimilados----------------------------------------------------------------------
+            DB::transaction(function () use($request) {
+            $selProceso = Session::get('selProceso');
+
+            $emp = new Empleado();
+            $emp->TIPONO = $selProceso;
+            $emp->EMP = $request->input('EMP');
+            $emp->NOMBRE = $request->input('NOMBRES') . ' ' . $request->input('PATERNO') . ' ' . $request->input('MATERNO');
+            $emp->PUESTO = $request->input('PUESTO');
+            $emp->cuenta = $request->input('cuenta');
+            $emp->DEPTO = $request->input('DEPTO');
+            $emp->TIPOTRA = $request->input('TIPOTRA');
+            $emp->c_Estado = $request->input('c_Estado');
+            $emp->DIRIND = $request->input('DIRIND');
+            $emp->TIPOJORNADA = $request->input('TIPOJORNADA');
+            $emp->TIPOREGIMEN = $request->input('TIPOREGIMEN');
+            $emp->CHECA = $request->input('CHECA');
+            $emp->SINDIC = $request->input('SINDIC');
+            $emp->TURNO = $request->input('TURNO');
+            $emp->ZONAECO = $request->input('ZONAECO') . "";
+            $emp->ESTATUS = $request->input('ESTATUS');
+            $emp->CLIMSS = $request->input('CLIMSS') . "";
+            $emp->TIPOPAGO = $request->input('TIPOPAGO');
+            $emp->c_TipoContrato = $request->input('c_TipoContrato');
+            $emp->INGRESO = date('d-m-Y', strtotime($request->input('INGRESO')));
+            $emp->VACACION = date('d-m-Y', strtotime($request->input('VACACION')));
+            $emp->PLANTA = date('d-m-Y', strtotime($request->input('PLANTA')));
+            $emp->VENCIM = date('d-m-Y', strtotime($request->input('VENCIM')));
+            $emp->BAJA = date('d-m-Y', strtotime($request->input('BAJA')));
+            $emp->REGPAT = $request->input('REGPAT');
+            $emp->RFC = $request->input('RFC');
+            $emp->IMSS = $request->input('IMSS');
+            $emp->GRUIMS = $request->input('GRUIMS');
+            $emp->FONACOT = $request->input('FONACOT') . "";
+            $emp->INFONAVIT = $request->input('INFONAVIT') . "";
+            $emp->OTRACIA = $request->input('OTRACIA');
+            $emp->TAXOTRA = $request->input('TAXOTRA');
+            $emp->CASOTRA = $request->input('CASOTRA');
+            $emp->SAROTR = $request->input('SAROTR') . "";
+            $emp->DESINFO = $request->input('DESINFO');
+            $emp->SUELDO = $request->input('SUELDO');
+            $emp->VARIMSS = $request->input('VARIMSS');
+            $emp->INTEG = $request->input('INTEG');
+            $emp->INTIV = $request->input('INTIV');
+            $emp->PRESDEC = $request->input('PRESDEC');
+            $emp->NOCRED = $request->input('NOCRED');
+            $emp->save();
+
+            $dage = new DatosGe();
+            $dage->EMP = $request->input('EMP2');
+            $dage->NIVEL = $request->input('NIVEL') . "";
+            $dage->DEPTO = $request->input('DEPTO') . "";
+            $dage->REPORTA = $request->input('REPORTA') . "";
+            $dage->DIRECCION = $request->input('DIRECCION') . "";
+            $dage->PUESTO = $request->input('PUESTO');
+            $dage->Referencia = $request->input('Referencia') . "";
+            $dage->noExterior = $request->input('noExterior') . "";
+            $dage->noInterior = $request->input('noInterior') . "";
+            $dage->Municipio = $request->input('Municipio') . "";
+            $dage->COLONIA = $request->input('COLONIA') . "";
+            $dage->CIUDAD = $request->input('CIUDAD') . "";
+            $dage->ESTADO = $request->input('ESTADO') . "";
+            $dage->TELEFONO = $request->input('TELEFONO') . "";
+            $dage->ZIP = $request->input('ZIP') . "";
+            $dage->CELULAR = $request->input('CELULAR') . "";
+            $dage->EXPERI = $request->input('EXPERI') . "";
+            $dage->SEXO = $request->input('SEXO') . "";
+            $dage->CIVIL = $request->input('CIVIL');
+            $dage->BODA = date('d-m-Y', strtotime($request->input('BODA')));
+            $dage->LICENCIA = $request->input('LICENCIA');
+            $dage->SANGRE = $request->input('SANGRE');
+            $dage->ESCOLAR = $request->input('ESCOLAR');
+            $dage->CAMB_RESID = $request->input('CAMB_RESID');
+            $dage->DISP_VIAJE = $request->input('DISP_VIAJE');
+            $dage->BORN = date('d-m-Y', strtotime($request->input('BORN')));
+            $dage->NACIM = $request->input('NACIM') . "";
+            $dage->TIPONO = $selProceso;
+            $dage->NACIONAL = $request->input('NACIONAL');
+            $dage->DEPENDIENT = $request->input('DEPENDIENT') . "";
+            $dage->MEDIO = $request->input('MEDIO');
+            $dage->FUENTE = $request->input('FUENTE') . "";
+            $dage->Email = $request->input('Email') . "";
+            $file = $request->file('archivo');
             
-            $path = public_path() . Empleado::Rutas['Imagenes'] . $dage->EMP .'/';
-            $fileName = uniqid() . $file->getClientOriginalName();
-            $moved =  $file->move($path, $fileName);
-            
-            if ($moved) {
-            //     // guarda la liga en la BD
-             $dage->FOTO = $fileName;
+            if ($file !== null) {
                 
-             }
-             
+                $path = public_path() . Empleado::Rutas['Imagenes'] . $dage->EMP .'/';
+                $fileName = uniqid() . $file->getClientOriginalName();
+                $moved =  $file->move($path, $fileName);
+                
+                if ($moved) {
+                //     // guarda la liga en la BD
+                 $dage->FOTO = $fileName;
+                    
+                 }
+                 
+            }
+            else{
+                
+            }  
+            $dage->save();
+
+            $daafo = new DatosAfo();
+            $daafo->EMP = $request->input('EMP');
+            $daafo->TIPONO = $selProceso;
+            $daafo->CURP = $request->input('CURP');
+            $daafo->IMSS = $request->input('IMSS2');
+            $daafo->NOMBRES = $request->input('NOMBRES');
+            $daafo->PATERNO = $request->input('PATERNO') . "";
+            $daafo->MATERNO = $request->input('MATERNO') . "";
+            $daafo->PADRE = $request->input('PADRE') . "";
+            $daafo->MADRE = $request->input('MADRE') . "";
+            $daafo->save();
+           
+            $imss = new Imss();
+            $imss->TIPONO = $selProceso;
+            $imss->EMP = $request->input('EMP');
+            $imss->FECHA = date('d-m-Y', strtotime($request->input('INGRESO')));
+            $imss->CLAVE = 15;
+            $imss->SUELDO = $request->input('SUELDO');
+            $imss->INTEG = $request->input('INTEG');
+            $imss->INTIV = $request->input('INTIV');
+            $imss->SUELDONUE = $request->input('SUELDO');
+            $imss->INTEGNUE = $request->input('INTEG');
+            $imss->INTIVNUE = $request->input('INTIV');
+            $imss->save();
+
+           });
+            //dd('es asimilado');
+
+            //fin de las inserciones de asimilados-------------------------------------------------------------------------
         }
-        else{
-            
-        }  
-        $dage->save();
-
-        $daafo = new DatosAfo();
-        $daafo->EMP = $request->input('EMP');
-        $daafo->TIPONO = $selProceso;
-        $daafo->CURP = $request->input('CURP');
-        $daafo->IMSS = $request->input('IMSS2');
-        $daafo->NOMBRES = $request->input('NOMBRES');
-        $daafo->PATERNO = $request->input('PATERNO') . "";
-        $daafo->MATERNO = $request->input('MATERNO') . "";
-        $daafo->PADRE = $request->input('PADRE') . "";
-        $daafo->MADRE = $request->input('MADRE') . "";
-        $daafo->save();
-       
-        $imss = new Imss();
-        $imss->TIPONO = $selProceso;
-        $imss->EMP = $request->input('EMP');
-        $imss->FECHA = date('d-m-Y', strtotime($request->input('INGRESO')));
-        $imss->CLAVE = 15;
-        $imss->SUELDO = $request->input('SUELDO');
-        $imss->INTEG = $request->input('INTEG');
-        $imss->INTIV = $request->input('INTIV');
-        $imss->SUELDONUE = $request->input('SUELDO');
-        $imss->INTEGNUE = $request->input('INTEG');
-        $imss->INTIVNUE = $request->input('INTIV');
-        $imss->save();
-
-       });
+        
         return redirect('/catalogos/empleados');
     }
 
@@ -457,5 +898,7 @@ class EmpleadosController extends Controller
         });
         return redirect('/catalogos/empleados');
     }
+
     
 }
+//fin del codigo escrito por Ricardo Cordero.

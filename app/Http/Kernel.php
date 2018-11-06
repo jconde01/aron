@@ -60,6 +60,7 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'basic' => \App\Http\Middleware\BasicMiddleware::class,
-        'database' => \App\Http\Middleware\SetProcessDatabase::class                 
+        'database' => \App\Http\Middleware\SetProcessDatabase::class,
+        'databaseAsimi' => \App\Http\Middleware\SetAsimilados::class                 
     ];
 }

@@ -36,6 +36,10 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $exception)
     {
+
+        if ($exception instanceof \PDOException) { 
+            throw new Exception("Error de acceso a la base de datos. Por favor verifique la conexión", 1);
+        }
         parent::report($exception);
     }
 
@@ -48,6 +52,11 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        //Log::error($exception->getMessage());
+        //if($exception instanceof \Illuminate\Validation\ValidationException)
+        //   return parent::render($request, $exception);
+
+        //return redirect(URL::previous())->withErrors(['Error', 'Unknown Error']);
         return parent::render($request, $exception);
     }
 }

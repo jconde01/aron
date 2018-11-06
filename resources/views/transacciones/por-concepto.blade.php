@@ -21,6 +21,7 @@
 				<input type="hidden" name="_token" value="{{ csrf_token() }}">
 				<input type="hidden" id="Metodo"  name="Metodo" value="">
 				<input type="hidden" id="MetodoISP"  name="MetodoISP" value="">
+				<input type="hidden" id="FlagCien"  name="FlagCien" value="">
                 <!-- <p class="text-center" style="color:Azure; text-align: center;">Ingresa tus datos</p> -->
                 <div class="row" style="margin-bottom: 0px;">
                     <div class="col-md-6">
@@ -104,6 +105,7 @@
 @section('jscript')
 <script type="text/javascript">
 	var token;
+	var flagCien;
 	var metodo;	
 	var metodoIsp;
 	var pantalla;
@@ -112,7 +114,17 @@
 	var tabla;
 	var empleado;
 	var sueldo;
+	var totUnidades;
+	var totImporte;
 	var conceptParam = [];
+
+	var activoFld 	= 	'<div class="form-group checkbox text-center"> ' +
+						'	<label><input type="checkbox" id="activo" name="Activo">Activo</label> ' +
+                    	'</div>'; 
+	var periodoFld 	= '<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;"> ' +
+            			'	<label class="label-left" style="font-size: 14px;">Período</label>' +
+            			'	<input type="text" id="periodo" name="Periodo" value="">' +
+        				'</div>';
 	var descuentoFld = '<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;"> ' +
             			'	<label class="label-left" style="font-size: 14px;">Descuento</label>' +
             			'	<input type="text" id="descuento" name="Descuento" value="">' +
@@ -124,6 +136,14 @@
 	var importeFld =  '<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;"> ' +
             			'	<label class="label-left" style="font-size: 14px;">Importe</label>' +
             			'	<input type="text" id="importe" name="Importe" value="">' +
+        				'</div>';
+    var fechaFld	= '<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;"> ' +
+            			'	<label class="label-left" style="font-size: 14px;">Fecha</label>' +
+            			'	<input type="date" id="fecha" name="Fecha" value="">' +
+        				'</div>';
+	var saldoFld =  '<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;"> ' +
+            			'	<label class="label-left" style="font-size: 14px;">Saldo</label>' +
+            			'	<input type="text" id="saldo" name="Saldo" value="">' +
         				'</div>';
 
 	$.ajaxSetup({
@@ -145,7 +165,13 @@
     		switch (pantalla) {
     			case 1:
     			case 2:
-    			    inputfields[0].innerHTML = descuentoFld;
+    				inputfields[0].innerHTML = periodoFld;
+    			    inputfields[0].innerHTML += descuentoFld;
+    			    inputfields[0].innerHTML += saldoFld;
+    			    inputfields[0].innerHTML += activoFld;
+    			    if (pantalla == 1) {
+    			    	inputfields[0].innerHTML += fechaFld;
+    			    }
     				break;
     			case 3:
     			    inputfields[0].innerHTML = unidadesFld;
@@ -204,12 +230,11 @@
 				// });
 			}
 		} else {
-           alert('No ha capturado el empleado!');
+           alert('No se capturó el empleado!');
            event.preventDefault();
         }
 
 		if (bOK) {
-			alert(pantalla);
 	    	switch (pantalla) {
 	    		case 1:
 	    		case 2:
@@ -219,9 +244,11 @@
 			        	var col1 = row.insertCell(0);
 			        	var col2 = row.insertCell(1);
 			        	var col3 = row.insertCell(2);
-						col1.innerHTML = '<td><input type="text" name="emp[]" />empleado</td>';
+			        	var col4 = row.insertCell(3);
+						col1.innerHTML = '<td><input type="text" name="emp[]" value="'+empleado+'" /></td>';
 						col2.innerHTML = nombre;
-						col3.innerHTML = amount;
+						col3.innerHTML = periodo;
+						col4.innerHTML = '<td style="text-align:right;border:0px;width:150px!important;"><input type="text" name="unidades[]" value="'+unidades+'" /></td>';
 			        } else {
 			           alert('No ha capturado el importe del descuento!');
 			        }
@@ -254,27 +281,35 @@
 			        }			    
 			    	break;
 			    case 4:
-			    	var unidades = $('#unidades').val();
-		            //VAR1 = -1 * Abs(rsmov!Unidades)
-		            //VAR2 = rsEmp!Sueldo * rscon!Param1 / 100
-		            //Result = VAR1 * VAR2
-		            //rsmov!Unidades = VAR1	
-		            var VAR1 = -1 * Math.abs(unidades);
-		            var VAR2 = sueldo * conceptParam[1] / 100
-		            Result = VAR1 * VAR2;
-		            unidades = VAR1;
-
-		        	var row = tabla.insertRow(tabla.rows.length);
-		        	var col1 = row.insertCell(0);
-		        	var col2 = row.insertCell(1);
-		        	var col3 = row.insertCell(2);
-		        	var col4 = row.insertCell(3);
-		        	var col5 = row.insertCell(4);
-					col1.innerHTML = '<td style="text-align:right;"><input type="text" name="emp[]" value="'+empleado+'" /></td>';
-					col2.innerHTML = nombre;
-					col3.innerHTML = periodo;
-					col4.innerHTML = '<td style="text-align:right;border:0px;width:150px!important;"><input type="text" name="unidades[]" value="'+unidades+'" /></td>';
-					col5.innerHTML = '<td style="text-align:right;"><input type="text" name="calculo[]" value="'+Result+'" /></td>';		            		    	
+			    	var unidades = $('#importe').val();
+		            switch (metodo.substr(2, 2)) {
+		                case "05":
+ 				            Result = unidades;
+		                    break;
+		                case "11":
+				            var VAR1 = -1 * Math.abs(unidades);
+				            var VAR2 = sueldo * conceptParam[1] / 100;
+				            Result = VAR1 * VAR2;
+				            unidades = VAR1;
+		                    break;
+						default:
+							alert('Metodo NO definido!');
+							Result = 0;
+							break;
+		            }
+		            if (Result != 0) {
+			        	var row = tabla.insertRow(tabla.rows.length);
+			        	var col1 = row.insertCell(0);
+			        	var col2 = row.insertCell(1);
+			        	var col3 = row.insertCell(2);
+			        	var col4 = row.insertCell(3);
+			        	var col5 = row.insertCell(4);
+						col1.innerHTML = '<td style="text-align:right;"><input type="text" name="emp[]" value="'+empleado+'" /></td>';
+						col2.innerHTML = nombre;
+						col3.innerHTML = periodo;
+						col4.innerHTML = '<td style="text-align:right;border:0px;width:150px!important;"><input type="text" name="unidades[]" value="'+unidades+'" /></td>';
+						col5.innerHTML = '<td style="text-align:right;"><input type="text" name="calculo[]" value="'+Result+'" /></td>';
+					}
 			    	break;
 			    case 5:
 			    	break;
@@ -286,6 +321,25 @@
 		var conceptData;
 		var tipoCaptura;
 
+		function getFlagValue(metodo, tipoCaptura) {
+			var flagValue = 0;
+			switch (metodo) {
+				case "08":
+				case "19":
+				case "20": flagValue = "1"; break;
+				case "09":
+				case "13":
+				case "23": flagValue = "3"; break;
+				case "10": if (tipoCaptura == 4 || tipoCaptura == 5) {
+						flagValue = "1";
+					} else {
+						flagValue = "3";
+					}
+					break;
+			}
+			return flagValue;
+		}
+
 		concepto = $('.cpto').val();
         $.post("get-concepto", { concepto: concepto, _token: token }, function( data ) {
             conceptData = Object.values(data);
@@ -296,8 +350,9 @@
 			document.getElementById("Metodo").value = metodo;
 			document.getElementById("MetodoISP").value = metodoIsp;
             tipoCaptura = conceptData[0]["TIPCAPT"];
-    		//console.log(conceptData[0]["CONCEPTO"] + ' - ' + tipoCaptura);	
-    		console.log(metodo);
+            flagCien = getFlagValue(conceptData[0]["METODO"],tipoCaptura);
+    		console.log('metodo: ' + metodo + ', flagCien:' + flagCien );
+    		document.getElementById("FlagCien").value = flagCien;
 			switch (concepto) {
 				case "652": 	// CONINFONAVIT0
 					pantalla = 1;
@@ -338,19 +393,27 @@
 		periodo = $('.pdo').val();
     	//console.log(concepto + ' - ' + periodo);
     	// checa si hay movimientos capturados del período en cuyo caso los despliega
+		totUnidades = 0;
+		totImporte = 0;    	
         $.post("get-movtos", { concepto: concepto, periodo: periodo, _token: token }, function( data ) {
             var movtos = Object.values(data);
-    		//console.log(movtos);	
+      //       alert('Back');
+    		// console.log(movtos);	
 		    while (tabla.rows.length > 1) {
 		        tabla.deleteRow(tabla.rows.length-1);
     		}
     	    for (var i = 0; i < movtos.length; i++) {
     	    	switch (pantalla) {
     	    		case 1:
-    	    			break;
     	    		case 2:
+    	    		case 5:
+						totUnidades = totUnidades + movtos[i]["UNIDADES"];
+						totImporte = totImporte + movtos[i]["SALDO"];
     	    			break;
     	    		case 3:
+    	    		case 4:
+						totUnidades = totUnidades + movtos[i]["UNIDADES"];
+						totImporte = totImporte + movtos[i]["CALCULO"];    	    		
 		            	var row = tabla.insertRow(tabla.rows.length);
 		            	var col1 = row.insertCell(0);
 		            	var col2 = row.insertCell(1);
@@ -360,12 +423,10 @@
 						col1.innerHTML = '<td style="text-align:right;"><input type="text" name="emp[]" value="'+movtos[i]["EMP"]+'" /></td>';
 						col2.innerHTML = movtos[i]["NOMBRE"];
 						col3.innerHTML = periodo;
-						col4.innerHTML = '<td style="text-align:right;"><input type="text" name="unidades[]" value="'+movtos[i]["UNIDADES"]+'" /></td>';
-						col5.innerHTML = '<td style="text-align:right;"><input type="text" name="calculo[]" value="'+movtos[i]["CALCULO"]+'" /></td>';
+						col4.innerHTML = '<td style="text-align:right;border:0px;width:150px!important;"><input type="text" name="unidades[]" value="'+movtos[i]["UNIDADES"]+'" /></td>';
+						col5.innerHTML = '<td style="text-align:right;border:0px;width:150px!important;"><input type="text" name="calculo[]" value="'+movtos[i]["CALCULO"]+'" /></td>';
 						break;
-    	    		case 4:
-    	    		case 5:
-    	    			break;
+
     	    	}
 
             }
@@ -395,7 +456,7 @@
 				col4.innerHTML = "Descuento";
 				col5.innerHTML = "Saldo";
 				col6.innerHTML = "Activo";
-				col7.innerHTML = "Cálculo";
+				col7.innerHTML = "Cálculo"; col7.style.display = 'none';
 				col8.innerHTML = "Fecha";
 				break;
 			case 2:

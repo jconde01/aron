@@ -1008,7 +1008,6 @@ function MenuEditor(idSelector, options) {
    
     this.add = function(){
         var data = {};
-        console.log($form);
         $form.find('.item-menu').each(function(){
             data[$(this).attr('name')] = $(this).val();
         });
