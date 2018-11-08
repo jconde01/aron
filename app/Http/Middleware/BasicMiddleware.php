@@ -16,10 +16,10 @@ class BasicMiddleware
      */
     public function handle($request, Closure $next)
     {
-        //$selCliente = \Cache::get('selCliente'); 
-        $selCliente = Session::get('selCliente');       
-        if ($selCliente == "") {
-            return redirect('/sistema/chooseClienteYNomina');
+        $cliente = auth()->user()->client;
+        $database = Session::get('sqlsrv2');
+        if (!$database) {
+            return redirect('/sistema/chooseTipoYProceso')->with(compact('cliente'));
         }
         return $next($request);
     }

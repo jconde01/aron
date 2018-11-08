@@ -30,7 +30,11 @@ class AppController extends Controller
         } else {
             $cia = $selCliente->asimilado_bda;
         }
-        $empresaTisanom = Empresa::where('CIA',$cia)->first();
+        try {
+            $empresaTisanom = Empresa::where('CIA',$cia)->first();
+        } catch (\Exception $e) {
+            return response('Error');
+        }
         Config::set("database.connections.sqlsrv2", [
             "driver" => 'sqlsrv',
             "host" => Config::get("database.connections.sqlsrv")["host"],

@@ -23,10 +23,10 @@
                             <label class="control-label" style="color: white;">Tipo de Nómina:</label>
                             <select class="form-control tipo" id="Tipo" name="TipoNom">
                                 <option value="0" selected>Seleccione el Tipo de nómina...</option>
-                                @if ($cliente->fiscal != NULL)
+                                @if ($cliente->fiscal)
                                     <option value="fiscal">Fiscal</option>
                                 @endif
-                                @if ($cliente->asimilado != NULL)
+                                @if ($cliente->asimilado)
                                     <option value="asimilado">Asimilados</option>
                                 @endif
                             </select>
@@ -88,19 +88,26 @@
 		var tipo  =  $('.tipo').val();
     	var selProcesos = document.getElementById("procesos");
         var boton = document.getElementById("boton");
+        $("body").css("cursor", "wait");
         $.post("/sistema/get-procesos", { tipo: tipo, _token: token }, function( data ) {
             var procesos = Object.values(data);
-            //alert('removiendo');
-		    while (selProcesos.options.length > 1) {
-		        selProcesos.remove(selProcesos.options.length-1);
-                 boton.disabled=true;
-                //alert('removiendo');
-    		}
-    	    for (var i = 0; i < procesos.length; i++) {
-            	var proceso = new Option(procesos[i]["NOMBRE"], procesos[i]["TIPONO"]);
-            	selProcesos.options.add(proceso);
+            $("body").css("cursor", "default");
+            if (data != 'Error') {
+                while (selProcesos.options.length > 1) {
+                    selProcesos.remove(selProcesos.options.length-1);
+                     boton.disabled=true;
+                    //alert('removiendo');
+                }
+                for (var i = 0; i < procesos.length; i++) {
+                    var proceso = new Option(procesos[i]["NOMBRE"], procesos[i]["TIPONO"]);
+                    selProcesos.options.add(proceso);
+                }
+
+                $('#mostrar').show();
+            } else {
+                alert('Error de acceso a la base de datos. Verifique la conexión...')
             }
-            $('#mostrar').show();
+
         });		
 	});
 

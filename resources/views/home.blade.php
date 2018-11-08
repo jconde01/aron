@@ -4,64 +4,65 @@
 @section('body-class','')
 
 @section('content')
-
-@if (isset($wmaster))
-	<h1 style="text-align: center;">Bienvenido Web Master!!!</h1>
+@if (isset($graficas->mensaje))
+@if ($graficas->mensaje==1)<h1 align="center" style="color: rgb(0, 190, 239);">Bienvenido a la plataforma en línea ARON!</h1>@endif
+@endif
+@if (isset($graficas->grafica1))
+@if ($graficas->grafica1==1 || $graficas->grafica2==1 || $graficas->grafica3==1 || $graficas->grafica4==1)
 @endif
 
-@if (isset($graficas))
-	@if ($graficas->mensaje==1)
-		<h1 align="center" style="color: rgb(0, 190, 239);">Bienvenido a la plataforma en línea ARON!</h1>
-	@endif
 
-	@if ($graficas->grafica1==1 || $graficas->grafica2==1 || $graficas->grafica3==1 || $graficas->grafica4==1)
+<h1 align="center" style="color: rgb(0, 190, 239);">INDICADORES</h1>
+<br>
 
 
-		<h1 align="center" style="color: rgb(0, 190, 239);">INDICADORES</h1>
-		<br>
 
-			<div style="max-width: 1300px; margin: auto;">
-				<div style="max-width: 900px; margin: auto;">
-					@if ($graficas->grafica1==1)
-					<div style="width: 100%;">
-						<div id="graficaLineal" style="margin: 0 auto">
-						</div>
-					</div>
-					<br>
-					@endif
-
-					@if ($graficas->grafica2==1)
-					<div style="width:100%;">
-						<div id="graficaCircular" style="margin: 0 auto">
-						</div>		
-					</div>
-					<br>
-					@endif
-
-					@if ($graficas->grafica3==1)
-					<div style="width: 100%;">
-						<div id="container" style="margin: 0 auto">
-						</div>
-					</div>
-					<br>
-					@endif
-
-					@if ($graficas->grafica4==1)
-					<div style="width: 100%;">
-						<div id="container2" style="margin: 0 auto">
-						</div>		
-					</div>
-					<br>
-					@endif
-
+		
+	<div style="max-width:85%; margin: auto;">
+		<div style="max-width: 99%; margin: auto; display: flex;
+  flex-wrap: wrap;">
+			@if ($graficas->grafica1==1)
+			<div style="width: 49%; border:3px rgb(0, 190, 239) solid; border-radius: 5px;margin-right: 12px; margin-bottom: 10px; padding-right: 10px;">
+				<div id="graficaLineal" style="margin: 0 auto">
 				</div>
+			</div>
+			<br>
+			@endif
+
+			@if ($graficas->grafica2==1)
+			<div style="width:49%;border:3px rgb(0, 190, 239) solid; border-radius: 5px;margin-right: 12px; margin-bottom: 10px;">
+				<div id="graficaCircular" style="margin: 0 auto">
+				</div>		
+			</div>
+			<br>
+			@endif
+
+			@if ($graficas->grafica3==1)
+			<div style="width: 49%;border:3px rgb(0, 190, 239) solid; border-radius: 5px;margin-right: 12px; margin-bottom: 10px;">
+				<div id="container" style="margin: 0 auto">
+				</div>
+			</div>
+			<br>
+			@endif
+
+			@if ($graficas->grafica4==1)
+			<div style="width: 49%;border:3px rgb(0, 190, 239) solid; border-radius: 5px;margin-right: 12px; margin-bottom: 10px; padding-right: 10px;">
+				<div id="container2" style="margin: 0 auto">
+				</div>		
+			</div>
+			<br>
+			@endif
+
 		</div>
-	@endif
-@endif
+</div>
+
+
+<br>
 @include('includes.footer');
+@else
+<h1 style="text-align: center;">Bienvenido Web Master!!!</h1>
+@endif
 </html>
-@endsection
-@section('jscript')
 <script type="text/javascript">
 	var chart;
 	$(document).ready(function() {
@@ -72,15 +73,15 @@
 				defaultSeriesType: 'line'	// Pongo que tipo de gráfica es
 			},
 			title: {
-				text: 'Datos de las Visitas'	// Titulo (Opcional)
+				text: 'Indicadores'	// Titulo (Opcional)
 			},
 			subtitle: {
 				text: 'Vally.com'		// Subtitulo (Opcional)
 			},
 			// Pongo los datos en el eje de las 'X'
 			xAxis: {
-				categories: ['Feb12','Mar12','Abr12','May12','Jun12','Jul12','Ago12','Sep12','Oct12','Nov12',
-	'Dic12','Ene13','Feb13','Mar13','Abr13','May13','Jun13'],
+				categories: ['Ene18','Feb18','Mar18','Abr18','May18','Jun18','Jul18','Ago18','Sep18','Oct18',
+	'Nov18','Dic18'],
 					// Pongo el título para el eje de las 'X'
 					title: {
 						text: 'Meses'
@@ -89,7 +90,7 @@
 				yAxis: {
 					// Pongo el título para el eje de las 'Y'
 					title: {
-						text: 'Nº Visitas'
+						text: 'Rango'
 					}
 				},
 				// Doy formato al la "cajita" que sale al pasar el ratón por encima de la gráfica
@@ -111,16 +112,15 @@
 				},
 				// Doy los datos de la gráfica para dibujarlas
 				series: [{
-			                name: 'Visitas',
-			                data: [103,474,402,536,1041,270,0,160,2462,3797,3527,4505,8090,7493,7048]
+			                name: 'Faltas Injustificadas',
+			                data: [<?php if (isset($data)) { print_r($data[0])?>,<?php print_r($data[1])?>,<?php print_r($data[2])?>,<?php print_r($data[3])?>,<?php print_r($data[4])?>,<?php print_r($data[5])?>,<?php print_r($data[6])?>,<?php print_r($data[7])?>,<?php print_r($data[8])?>,<?php print_r($data[9])?>,<?php print_r($data[10])?>,<?php print_r($data[11]);
+			                }?>]
 			            },
 			            {
-			                name: 'Visitantes Únicos',
-			                data: [21,278,203,370,810,213,0,134,1991,3122,2870,3655,6400,5818,5581]
-			            },
-			            {
-			                name: 'Páginas Vistas',
-			                data: [1064,1648,1040,1076,2012,397,0,325,3732,6067,5226,6482,11503,11937,9751]
+			                name: 'Horas extras',
+			                data: [<?php if (isset($data2)) { 
+			                	print_r($data2[0])?>,<?php print_r($data2[1])?>,<?php print_r($data2[2])?>,<?php print_r($data2[3])?>,<?php print_r($data2[4])?>,<?php print_r($data2[5])?>,<?php print_r($data2[6])?>,<?php print_r($data2[7])?>,<?php print_r($data2[8])?>,<?php print_r($data2[9])?>,<?php print_r($data2[10])?>,<?php print_r($data2[11]);
+			                }?>]
 			            }],
 			});	
 		});				
@@ -134,7 +134,7 @@
 				renderTo: 'graficaCircular'
 			},
 			title: {
-				text: 'Porcentaje de Visitas por Paises'
+				text: 'Distribución de plazas'
 			},
 			subtitle: {
 				text: 'Vally.com'
@@ -146,7 +146,7 @@
 			},
 			tooltip: {
 				formatter: function() {
-					return '<b>'+ this.point.name +'</b>: '+ this.y +' %';
+					return '<b>'+ this.point.name +'</b>: '+ this.y +' ocupadas';
 				}
 			},
 			plotOptions: {
@@ -158,7 +158,7 @@
 						color: '#000000',
 						connectorColor: '#000000',
 						formatter: function() {
-							return '<b>'+ this.point.name +'</b>: '+ this.y +' %';
+							return '<b>'+ this.point.name +'</b>: '+ this.y +' ocupadas';
 						}
 					}
 				}
@@ -166,84 +166,54 @@
 		    series: [{
 				type: 'pie',
 				name: 'Browser share',
-				data: [
-						['España',35.38],
-						['México',24.0],
-						['Colombia',9.45],
-						['Perú',5.74],
-						['Argentina',5.14],
-						['Chile',4.89],
-						['Venezuela',3.04],
-						['Ecuador',2.53],
-						['Costa Rica',1.07]
-					]
+				data: [<?php 
+						  if (isset($data3)) {
+						  $a= count($data3);
+                    	  for ($i=1; $i <$a ; $i++) { 
+                          echo "[";echo "'"; print_r($data3[$i]); echo "'"; echo ","; print_r($data3[$i+1]); echo "],";
+                          $i++;
+                    	   } 
+                    	  }
+                    	 ?>
+					  ]
 			}]
 		});
 	});			
 </script>
 
 <script type="text/javascript">
-	$.getJSON(
-    'https://cdn.rawgit.com/highcharts/highcharts/057b672172ccc6c08fe7dbb27fc17ebca3f5b770/samples/data/usdeur.json',
-    function (data) {
-
-        Highcharts.chart('container', {
-            chart: {
-                zoomType: 'x'
-            },
-            title: {
-                text: 'USD a EUR cambio a lo largo del tiempo'
-            },
-            subtitle: {
-                text: document.ontouchstart === undefined ?
-                        'Click y arrastra en el area para zoom' : 'Pinch the chart to zoom in'
-            },
-            xAxis: {
-                type: 'datetime'
-            },
-            yAxis: {
-                title: {
-                    text: 'Rango de cambio'
-                }
-            },
-            legend: {
-                enabled: false
-            },
-            plotOptions: {
-                area: {
-                    fillColor: {
-                        linearGradient: {
-                            x1: 0,
-                            y1: 0,
-                            x2: 0,
-                            y2: 1
-                        },
-                        stops: [
-                            [0, Highcharts.getOptions().colors[0]],
-                            [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
-                        ]
-                    },
-                    marker: {
-                        radius: 2
-                    },
-                    lineWidth: 1,
-                    states: {
-                        hover: {
-                            lineWidth: 1
-                        }
-                    },
-                    threshold: null
-                }
-            },
-
-            series: [{
-                type: 'area',
-                name: 'USD a EUR',
-                data: data
-            }]
-        });
-    }
-	);
+	Highcharts.chart('container', {
+    chart: {
+        type: 'area'
+    },
+    title: {
+        text: 'COSTO DE NÓMINA'
+    },
+    xAxis: {
+        categories: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
+    },
+    yAxis: {
+					// Pongo el título para el eje de las 'Y'
+					title: {
+						text: 'Valor en pesos'
+					}
+				},
+    credits: {
+        enabled: false
+    },
+    series: [{
+        name: '2018',
+        data: [<?php if (isset($data4)) {
+        	print_r($data4[0]);echo ",";print_r($data4[1]);echo ",";print_r($data4[2]);echo ",";print_r($data4[3]);echo ",";print_r($data4[4]);echo ",";print_r($data4[5]);echo ",";print_r($data4[6]);echo ",";print_r($data4[7]);echo ",";print_r($data4[8]);echo ",";print_r($data4[9]);echo ",";print_r($data4[10]);echo ",";print_r($data4[11]);
+        } ?>]
+    }, {
+        name: '2019',
+        data: [0,0 ,0 ,0 ,0, 0,0 ,0 ,0 ,0,0,0]
+    }, {
+        name: '2020',
+        data: [0,0 ,0 ,0 ,0, 0,0 ,0 ,0 ,0,0,0]
+    }]
+});
 </script>
 
 <script type="text/javascript">
@@ -254,17 +224,17 @@
 	        type: 'column'
 	    },
 	    title: {
-	        text: 'Exploradores mas usados. Enero, 2018'
+	        text: 'Edades'
 	    },
 	    subtitle: {
-	        text: 'Click en las columnas para ver versión. Fuente: <a href="http://statcounter.com" target="_blank">statcounter.com</a>'
+	        text: 'Click en las columnas para ver edades. Fuente: <a href="#" target="_blank">Aron</a>'
 	    },
 	    xAxis: {
 	        type: 'categoria'
 	    },
 	    yAxis: {
 	        title: {
-	            text: 'Porcentaje total'
+	            text: 'No. de empleados'
 	        }
 
 	    },
@@ -276,54 +246,54 @@
 	            borderWidth: 0,
 	            dataLabels: {
 	                enabled: true,
-	                format: '{point.y:.1f}%'
+	                format: '{point.y:.1f} en total'
 	            }
 	        }
 	    },
 
 	    tooltip: {
 	        headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-	        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> del total<br/>'
+	        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}</b> del total<br/>'
 	    },
 
 	    "series": [
 	        {
-	            "name": "Explorador",
+	            "name": "Edades",
 	            "colorByPoint": true,
 	            "data": [
 	                {
-	                    "name": "Chrome",
-	                    "y": 62.74,
-	                    "drilldown": "Chrome"
+	                    "name": "20-25",
+	                    "y": <?php if (isset($cont20)) { echo $cont20;} ?>,
+	                    "drilldown": ""
 	                },
 	                {
-	                    "name": "Firefox",
-	                    "y": 10.57,
-	                    "drilldown": "Firefox"
+	                    "name": "26-30",
+	                    "y": <?php if (isset($cont26)) { echo $cont26;} ?>,
+	                    "drilldown": ""
 	                },
 	                {
-	                    "name": "Internet Explorer",
-	                    "y": 7.23,
-	                    "drilldown": "Internet Explorer"
+	                    "name": "31-35",
+	                    "y":<?php if (isset($cont31)) { echo $cont31;} ?>,
+	                    "drilldown": ""
 	                },
 	                {
-	                    "name": "Safari",
-	                    "y": 5.58,
-	                    "drilldown": "Safari"
+	                    "name": "36-40",
+	                    "y": <?php if (isset($cont36)) { echo $cont36;} ?>,
+	                    "drilldown": ""
 	                },
 	                {
-	                    "name": "Edge",
-	                    "y": 4.02,
-	                    "drilldown": "Edge"
+	                    "name": "41-45",
+	                    "y": <?php if (isset($cont41)) { echo $cont41;} ?>,
+	                    "drilldown": ""
 	                },
 	                {
-	                    "name": "Opera",
-	                    "y": 1.92,
-	                    "drilldown": "Opera"
+	                    "name": "46-60",
+	                    "y": <?php if (isset($cont46)) { echo $cont46;} ?>,
+	                    "drilldown": ""
 	                },
 	                {
-	                    "name": "Other",
-	                    "y": 7.62,
+	                    "name": "Mayores",
+	                    "y": <?php if (isset($cont60)) { echo $cont60;} ?>,
 	                    "drilldown": null
 	                }
 	            ]

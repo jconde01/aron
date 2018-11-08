@@ -211,29 +211,24 @@
     	if ( empleado != 0 ) {
 			// Checa si ya existe el empleado en la tabla
 			if ($("table#captura tr").length > 1) {
-				// $("table#captura tr").each(function(index) {
-				// 	if (index > 0) {
-						//var tableData = $(this).find('td');
-						$.each($("table#captura tr td"), function(index, cell) {
-							if (index > 1) {
-								var celda = $(cell);
-								// alert($(cell).innerHTML);
-								console.log(celda.val());
-							}
-						});
-						// alert(tableData[0]);
-						// if (tableData[0][0] == empleado) {
-					 //    	alert('ya capturaste a este pelaná');
-					 //    	bOK = false;
-						// }
-				// 	}
-				// });
+				$.each($("table#captura tr td"), function(index, cell) {
+					if (index > 1) {
+						var celda = $(cell);
+						console.log(celda.val());
+						alert('Ese empleado ya existe en la lista!');
+						return false;
+					}
+				});
 			}
 		} else {
            alert('No se capturó el empleado!');
-           event.preventDefault();
+           //event.preventDefault();
+           return false;
         }
 
+		var unidades = $('#unidades').val();
+	    console.log('pantalla: ' + pantalla + ', unidades: ' + unidades);
+	    bOK = validaPantalla(pantalla);
 		if (bOK) {
 	    	switch (pantalla) {
 	    		case 1:
@@ -241,44 +236,42 @@
 					var descuento = $('#descuento').val();
 			    	if ( descuento != 0 ) {
 			        	var row = tabla.insertRow(tabla.rows.length);
-			        	var col1 = row.insertCell(0);
-			        	var col2 = row.insertCell(1);
-			        	var col3 = row.insertCell(2);
-			        	var col4 = row.insertCell(3);
-						col1.innerHTML = '<td><input type="text" name="emp[]" value="'+empleado+'" /></td>';
-						col2.innerHTML = nombre;
-						col3.innerHTML = periodo;
-						col4.innerHTML = '<td style="text-align:right;border:0px;width:150px!important;"><input type="text" name="unidades[]" value="'+unidades+'" /></td>';
+			        	var col0 = row.insertCell(0);
+			        	var col1 = row.insertCell(1);
+			        	var col2 = row.insertCell(2);
+			        	var col3 = row.insertCell(3);
+						col0.innerHTML = '<td><input type="text" name="emp[]" value="'+empleado+'" /></td>';
+						col1.innerHTML = nombre;
+						col2.innerHTML = periodo;
+						col3.innerHTML = '<td style="text-align:right;border:0px;width:150px!important;"><input type="text" name="unidades[]" value="'+unidades+'" /></td>';
 			        } else {
 			           alert('No ha capturado el importe del descuento!');
 			        }
 			        break;
 			    case 3:
-					var unidades = $('#unidades').val();
-			    	if ( unidades != 0 ) {
-			            switch (metodo.substr(2, 2)) {
-			                case "06":
-			                    // Sal.Base * param1 * uni.dias  
-					            importe = (sueldo + promed)  * conceptParam[1] / 100 * unidades;
-			                    break;
-			                case "21":
-			                    //ObjCal.DedPrim rs, RsAux, rstinteg, RstCon, rstnom, Afe100con, Result, sr, tipn
-			                    break;
-			            }
-			        	var row = tabla.insertRow(tabla.rows.length);
-			        	var col1 = row.insertCell(0);
-			        	var col2 = row.insertCell(1);
-			        	var col3 = row.insertCell(2);
-			        	var col4 = row.insertCell(3);
-			        	var col5 = row.insertCell(4);
-						col1.innerHTML = '<td style="text-align:right;"><input type="text" name="emp[]" value="'+empleado+'" /></td>';
-						col2.innerHTML = nombre;
-						col3.innerHTML = periodo;
-						col4.innerHTML = '<td style="text-align:right;border:0px;width:150px!important;"><input type="text" name="unidades[]" value="'+unidades+'" /></td>';
-						col5.innerHTML = '<td style="text-align:right;border:0px;width:150px!important;"><input type="text" name="calculo[]" value="'+importe+'" /></td>';
-			        } else {
-			           alert('No ha capturado las unidades!');
-			        }			    
+		            switch (metodo.substr(2, 2)) {
+		            	case "05":
+		            		importe = unidades;
+		            		break;
+		                case "06":
+		                    // Sal.Base * param1 * uni.dias  
+				            importe = (sueldo + promed)  * conceptParam[1] / 100 * unidades;
+		                    break;
+		                case "21":
+		                    //ObjCal.DedPrim rs, RsAux, rstinteg, RstCon, rstnom, Afe100con, Result, sr, tipn
+		                    break;
+		            }
+		        	var row = tabla.insertRow(tabla.rows.length);
+		        	var col0 = row.insertCell(0);
+		        	var col1 = row.insertCell(1);
+		        	var col2 = row.insertCell(2);
+		        	var col3 = row.insertCell(3);
+		        	var col4 = row.insertCell(4);
+					col0.innerHTML = '<td><input type="text" name="emp[]" value="'+empleado+'"/></td>'; col0.style.display = 'none'; 
+					col1.innerHTML = '<td>' + nombre + '</td>';
+					col2.innerHTML = '<td style="text-align:right;"><input type="text" name="periodo[]" style="border:0px;width:150px!important;" value="'+periodo+'"/></td>';
+					col3.innerHTML = '<td style="text-align:right;border:0px;width:150px!important;"><input type="text" name="unidades[]" value="'+unidades+'" /></td>';
+					col4.innerHTML = '<td style="text-align:right;border:0px;width:150px!important;"><input type="text" name="calculo[]" value="'+importe+'" /></td>';
 			    	break;
 			    case 4:
 			    	var unidades = $('#importe').val();
@@ -299,16 +292,16 @@
 		            }
 		            if (Result != 0) {
 			        	var row = tabla.insertRow(tabla.rows.length);
-			        	var col1 = row.insertCell(0);
-			        	var col2 = row.insertCell(1);
-			        	var col3 = row.insertCell(2);
-			        	var col4 = row.insertCell(3);
-			        	var col5 = row.insertCell(4);
-						col1.innerHTML = '<td style="text-align:right;"><input type="text" name="emp[]" value="'+empleado+'" /></td>';
-						col2.innerHTML = nombre;
-						col3.innerHTML = periodo;
-						col4.innerHTML = '<td style="text-align:right;border:0px;width:150px!important;"><input type="text" name="unidades[]" value="'+unidades+'" /></td>';
-						col5.innerHTML = '<td style="text-align:right;"><input type="text" name="calculo[]" value="'+Result+'" /></td>';
+			        	//var col0 = row.insertCell(0);
+			        	var col1 = row.insertCell(1);
+			        	var col2 = row.insertCell(2);
+			        	var col3 = row.insertCell(3);
+			        	var col4 = row.insertCell(4);
+						//col0.innerHTML = '<td style="text-align:right;"><input type="text" name="emp[]" value="'+empleado+'" /></td>';
+						col1.innerHTML = nombre;
+						col2.innerHTML = periodo;
+						col3.innerHTML = '<td style="text-align:right;border:0px;width:150px!important;"><input type="text" name="unidades[]" value="'+unidades+'" /></td>';
+						col4.innerHTML = '<td style="text-align:right;"><input type="text" name="calculo[]" value="'+Result+'" /></td>';
 					}
 			    	break;
 			    case 5:
@@ -351,7 +344,6 @@
 			document.getElementById("MetodoISP").value = metodoIsp;
             tipoCaptura = conceptData[0]["TIPCAPT"];
             flagCien = getFlagValue(conceptData[0]["METODO"],tipoCaptura);
-    		console.log('metodo: ' + metodo + ', flagCien:' + flagCien );
     		document.getElementById("FlagCien").value = flagCien;
 			switch (concepto) {
 				case "652": 	// CONINFONAVIT0
@@ -384,6 +376,7 @@
 			    	}
 			    	break;
 	    	}
+    		console.log('metodo: ' + metodo + ', flagCien:' + flagCien + ', pantalla:' + pantalla);
 	    	creaPantalla(pantalla);
         });
 	});
@@ -440,67 +433,85 @@
 	        tabla.deleteRow(tabla.rows.length-1);
 		}
     	var row = tabla.insertRow(tabla.rows.length);
-    	var col1 = row.insertCell(0);
-    	var col2 = row.insertCell(1);
-    	var col3 = row.insertCell(2);
-		col1.innerHTML = "Empleado";
-		col2.innerHTML = "Nombre";
-		col3.innerHTML = "Período";
+    	var col0 = row.insertCell(0);
+    	var col1 = row.insertCell(1);
+    	var col2 = row.insertCell(2);
+		col0.innerHTML = '<th>Empleado</th>'; 	col1.style.display = 'none'; 
+		col1.innerHTML = '<th>Nombre</th>'; 	col1.style.width = "50%";
+		col2.innerHTML = '<th>Período</th>';	col2.style.width = "10%";
 		switch (numPantalla) {
 			case 1:
-    			var col4 = row.insertCell(3);
-    			var col5 = row.insertCell(4);
-    			var col6 = row.insertCell(5);
-    			var col7 = row.insertCell(6);
-    			var col8 = row.insertCell(7);
-				col4.innerHTML = "Descuento";
-				col5.innerHTML = "Saldo";
-				col6.innerHTML = "Activo";
-				col7.innerHTML = "Cálculo"; col7.style.display = 'none';
-				col8.innerHTML = "Fecha";
+    			var col3 = row.insertCell(3);
+    			var col4 = row.insertCell(4);
+    			var col5 = row.insertCell(5);
+    			var col6 = row.insertCell(6);
+    			var col7 = row.insertCell(7);
+				col3.innerHTML = "<th>Descuento</th>";	col3.style.width = "10%";
+				col4.innerHTML = "<th>Saldo</th>";		col4.style.width = "10%";
+				col5.innerHTML = "<th>Activo</th>";		col5.style.width = "10%";
+				col6.innerHTML = '<th style="width:0%; display: none;">Cálculo</th>'; 
+				col7.innerHTML = "<th>Fecha</th>";		col7.style.width = "10%";
 				break;
 			case 2:
-    			var col4 = row.insertCell(3);
-    			var col5 = row.insertCell(4);
-    			var col6 = row.insertCell(5);
-    			var col7 = row.insertCell(6);
-    			var col8 = row.insertCell(7);
-    			var col9 = row.insertCell(8);
-				col4.innerHTML = "Descuento";
-				col5.innerHTML = "Saldo";
-				col6.innerHTML = "Desc. mes";
-				col7.innerHTML = "Plazo";
-				col8.innerHTML = "Activo";
-				col9.innerHTML = "Cálculo";
+    			var col3 = row.insertCell(3);
+    			var col4 = row.insertCell(4);
+    			var col5 = row.insertCell(5);
+    			var col6 = row.insertCell(6);
+    			var col7 = row.insertCell(7);
+    			var col8 = row.insertCell(8);
+				col3.innerHTML = "<th>Descuento</th>";	col3.style.width = "8%";
+				col4.innerHTML = "<th>Saldo</th>";		col4.style.width = "8%";
+				col5.innerHTML = "<th>Desc. mes</th>";	col5.style.width = "8%";
+				col6.innerHTML = "<th>Plazo</th>";		col6.style.width = "8%";
+				col7.innerHTML = "<th>Activo</th>";		col7.style.width = "8%";
+				col8.innerHTML = '<th style="width:0%; display: none;">Cálculo</th>'; 
 				break;
 			case 3:
-    			var col4 = row.insertCell(3);
-    			var col5 = row.insertCell(4);
-				col4.innerHTML = "Unidades";
-				col5.innerHTML = "Importe";
+    			var col3 = row.insertCell(3);
+    			var col4 = row.insertCell(4);
+				col3.innerHTML = "<th>Unidades</th>";	col3.style.width = "20%";
+				col4.innerHTML = "<th>Importe</th>";	col4.style.width = "20%";
 				break;
 			case 4:
-    			var col4 = row.insertCell(3);
-    			var col5 = row.insertCell(4);
-				col4.innerHTML = "Importe"; // Debe ser Unidades el titulo???
-				col5.innerHTML = "Cálculo";			
+    			var col3 = row.insertCell(3);
+    			var col4 = row.insertCell(4);
+				col3.innerHTML = "<th>Importe</th>";	col4.style.width = "20%"; // Debe ser Unidades el titulo???
+				col4.innerHTML = '<th style="width:0%; display: none;">Cálculo</th>';			
 				break;
 			case 5:
-    			var col4 = row.insertCell(3);
-    			var col5 = row.insertCell(4);
-    			var col6 = row.insertCell(5);
-    			var col7 = row.insertCell(6);
+    			var col3 = row.insertCell(3);
+    			var col4 = row.insertCell(4);
+    			var col5 = row.insertCell(5);
+    			var col6 = row.insertCell(6);
 				if (concepto == "500") {
-					col4.innerHTML = "Descuento";
+					col3.innerHTML = "<th>Descuento</th>";	col3.style.width = "10%";
 				} else {
-					col4.innerHTML = "Importe";
+					col3.innerHTML = "<th>Importe</th>";	col3.style.width = "10%";
 
 				}
-				col5.innerHTML = "Saldo";
-				col6.innerHTML = "Activo";
-				col7.innerHTML = "Cálculo";
+				col4.innerHTML = "<th>Saldo</th>";		col4.style.width = "10%";
+				col5.innerHTML = "<th>Activo</th>";		col7.style.width = "10%";
+				col6.innerHTML = '<th style="width:0%; display: none;">Cálculo</th>';
 				break;
 		}
+
 	}
+
+	function validaPantalla(numPantalla) {
+		var bOK = true;
+		switch (numPantalla) {
+			case 1:
+				break;
+			case 2:
+				break;
+			case 3:
+				//alert($.isNumeric(unidades));
+				//alert(isNaN(unidades));
+				bOK =  (unidades != 0);
+				break;
+		}
+		return bOK;
+
+	}	
 </script>            
 @endsection 

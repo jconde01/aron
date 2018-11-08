@@ -44,12 +44,12 @@
         <table class="row table" name="Movtos" id="captura">
         	<thead>                    	
         		<tr>
-        			<th style="width:0%; display: none;">Empleado</th>
-        			<th style="width:40%;">Nombre</th>
-        			<th style="width:15%;text-align: center;">Suplencia</th>
-        			<th style="width:15%;">Fecha</th>
-        			<th style="width:15%;">Unidades</th>
-        			<th style="width:15%;">Cuenta</th>
+        			<th style="width:0%; display:none;">Empleado</th>
+        			<th style="width:50%;text-align: center;">Nombre</th>
+        			<th style="width:12%;text-align: center;">Suplencia</th>
+        			<th style="width:12%;">Fecha</th>
+        			<th style="width:12%;text-align: center;">Unidades</th>
+        			<th style="width:14%;">Cuenta</th>
         		</tr>
         	</thead>
         </table>
@@ -163,22 +163,7 @@
 		empleado  =  $('.emp').val();
 		sueldo =  Number($('.emp').find(':selected').data('sueldo'));
 
-    	if ( empleado != 0 ) {
-			// Checa si ya existe el empleado en la tabla
-			if ($("table#captura tr").length > 1) {
-				$.each($("table#captura tr td"), function(index, cell) {
-					if (index > 0) {
-						var celda = $(cell);
-						// alert($(cell).innerHTML);
-						console.log(celda.val());
-					}
-				});
-			}
-		} else {
-           alert('No ha capturado el empleado!');
-           event.preventDefault();
-           bOK = false;
-        }
+        bOK = validaPantalla();
 
 		if (bOK) {
 			var qty = $('#unidades').val();
@@ -186,7 +171,7 @@
 			var cuenta = $('#cuenta').val();
 			var suplencia = $('#suplencia').val();
 			_checked = (suplencia == 'on')? 'checked':'';
-			alert(suplencia + ' - ' + _checked);
+			//alert(suplencia + ' - ' + _checked);
 	    	if ( qty != 0 ) {
 	        	var row = tabla.insertRow(tabla.rows.length);
 	        	var col1 = row.insertCell(0);
@@ -198,9 +183,9 @@
 
 				col1.innerHTML = '<td><input type="text" name="emp[]" value="'+empleado+'"/></td>'; col1.style.display = 'none'; 
 				col2.innerHTML = '<td>' + nombre + '</td>';
-				col3.innerHTML = '<td><input type="checkbox" name="suplencia[]" checked="' + _checked + '" style="border:0px;width:150px!important;" value="'+suplencia+'"/></td>'; 
+				col3.innerHTML = '<td><input type="checkbox" name="suplencia[]" '+_checked+' style="border:0px;width:150px!important;" value="'+suplencia+'"/></td>'; 
 				col4.innerHTML = '<td><input type="text" name="fecha[]" style="border:0px;width:150px!important;" value="'+fecha+'"/></td>'; 
-				col5.innerHTML = '<td style="text-align:right;"><input type="text" name="unidades[]" style="border:0px;width:150px!important;" value="'+qty+'"/></td>'; 
+				col5.innerHTML = '<td><input type="text" name="unidades[]" style="text-align:center;border:0px;width:150px!important;" value="'+qty+'"/></td>'; 
 				col6.innerHTML = '<td><input type="text" name="cuenta[]" style="border:0px;width:150px!important;" value="'+cuenta+'"/></td>'; 
 
 	        } else {
@@ -223,6 +208,28 @@
     		}
         });		
 	});
+
+    function validaPantalla() {
+        var bOK = true;
+        if ( empleado != 0 ) {
+            // Checa si ya existe el empleado en la tabla
+            if ($("table#captura tr").length > 1) {
+                $.each($("table#captura tr td"), function(index, cell) {
+                    if (index > 0) {
+                        var celda = $(cell);
+                        // alert($(cell).innerHTML);
+                        console.log(celda.val());
+                        alert('El empleado ya existe en la lista!');
+                        bOK = false;
+                    }
+                });
+            }
+        } else {
+           alert('No ha capturado el empleado!');
+           bOK = false;
+        }
+        return bOK;        
+    }
 
 </script>            
 @endsection 
