@@ -38,7 +38,7 @@ class Handler extends ExceptionHandler
     {
 
         if ($exception instanceof \PDOException) { 
-            throw new Exception("Error de acceso a la base de datos. Por favor verifique la conexión", 1);
+            throw new Exception("Error de acceso a la base de datos. Por favor verifique la conexión".$exception, 1);
         }
         parent::report($exception);
     }

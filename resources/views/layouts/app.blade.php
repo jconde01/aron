@@ -15,7 +15,13 @@
         <!--     Fonts and icons     -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
         <!-- <link rel="stylesheet" type="text/css" media="screen" href="plugins/noUiSlider.11.1.0/nouislider.min.css" /> -->
+        <!-- Bootstrap core CSS -->
+        <!-- link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" -->
 
+
+        <!-- Documentation extras -->
+        <!--link href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" rel="stylesheet">
+        <link href="https://getbootstrap.com/docs/4.0/assets/css/docs.min.css" rel="stylesheet" -->
         <!-- Estilos de documento -->
         <link rel="stylesheet" type="text/css" media="screen" href="{{ asset('css/stick.css') }}" /> 
         <link rel="stylesheet" type="text/css" media="screen" href="{{ asset('css/docs.min.css') }}" />  

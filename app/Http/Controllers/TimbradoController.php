@@ -6,12 +6,15 @@ use Illuminate\Http\Request;
 use FPDF;
 use setasign\Fpdi\Fpdi;
 use QRcode;
+use App\User;
 use App\Client;
 use App\Ciasno;
 use Session;
 use App\Cell;
 use Response;
 use File;
+use App\Message;
+use App\Notifications\MessageSent;
 use App\Http\Controllers\ProcessController;
  
 class TimbradoController extends Controller
@@ -41,7 +44,8 @@ class TimbradoController extends Controller
     {
     	
         $cliente = Session::get('selCliente');
-        $celula_empresa = Cell::where('id', $cliente->cell_id)->first()->nombre;
+        $celula = $cliente->cell_id;
+        $celula_empresa = Cell::where('id', $celula)->first()->nombre;
         $rfc_cliente = Session::get('rfc_cliente');
         $ruta = Client::Rutas['PorTimbrar'] .'/';
 
@@ -85,8 +89,17 @@ class TimbradoController extends Controller
 		$pdf->Output("$ruta_pdf", "F");
         File::delete("$ruta$celula_empresa/$rfc_cliente/porautorizar/$archivo");
        
-		
-    	return back()->with('flash','Confirmacion exitosa');
+        $recipient = User::where('profile_id',User::PERFILES_CELULA['FISCALISTA'])->where('cell_id',$celula)->first();  
+
+        // crea el mensaje
+        $message = Message::create([
+            'sender_id' => auth()->id(),
+            'recipient_id' => $recipient->id,
+            'body' => "El usuario " . auth()->user()->name . " ha autorizado el proceso de la nómina dell cliente " . $cliente->Nombre
+        ]);
+        $recipient->notify(new MessageSent($message));
+
+    	return back()->with('flash','Confirmacion exitosa. Se ha enviado una notificacion a la célula para su proceso... gracias.');
     }
 
 

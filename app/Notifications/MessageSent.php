@@ -59,9 +59,14 @@ class MessageSent extends Notification
      */
     public function toArray($notifiable)
     {
+            // return [
+            //     'link' => route('messages.show',$this->message->id),
+            //     'text' => 'Has recibido un mensaje de ' . $this->message->sender->name . ' del cliente ' . $this->message->client->Nombre
+            // ];
             return [
                 'link' => route('messages.show',$this->message->id),
-                'text' => 'Has recibido un mensaje de ' . $this->message->sender->name . ' del cliente ' . $this->message->client->Nombre
+                'text' => 'Has recibido un mensaje de ' . $this->message->sender->name
             ];
+
     }
 }

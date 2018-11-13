@@ -183,7 +183,7 @@ class XActsController extends Controller
 		    	$imss->INTEGNUE = $empleado->INTEG;
 		    	$imss->INTIVNUE = $empleado->INTIV;
 		    	$imss->REFIMSS = $data->refIMSS[$key] . "";
-		    	$imss->FECHA = date('Y-m-d', strtotime($data->fecha[$key]));
+		    	$imss->FECHA = date('d-m-Y', strtotime($data->fecha[$key]));
 		    	$imss->DIAS = $data->dias[$key];
 		    	$imss->CONCEPTO = $data->Concepto;
 		    	$imss->PERIODO = $data->Periodo;
@@ -290,7 +290,7 @@ class XActsController extends Controller
 		    	$imss->INTEGNUE = $empleado->INTEG;
 		    	$imss->INTIVNUE = $empleado->INTIV;
 		    	$imss->REFIMSS = $data->refIMSS[$key] . "";
-		    	$imss->FECHA = date('Y-m-d', strtotime($data->fecha[$key]));
+		    	$imss->FECHA = date('d-m-Y', strtotime($data->fecha[$key]));
 		    	$imss->DIAS = $data->dias[$key];
 		    	$imss->CONCEPTO = $data->Concepto;
 		    	$imss->PERIODO = $data->Periodo;

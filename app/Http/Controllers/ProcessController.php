@@ -35,8 +35,7 @@ class ProcessController extends Controller
    	
     	$selCliente = Session::get('selCliente');
     	$celula = $selCliente->cell_id;
-    	// poner este numero (6) como una constante en el .env
-  		$recipient = User::where('profile_id',6)->where('cell_id',$celula)->first();  
+  		$recipient = User::where('profile_id',User::PERFILES_CELULA['NOMINISTA'])->where('cell_id',$celula)->first();  
 
         // crea el mensaje
     	$message = Message::create([

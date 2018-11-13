@@ -1,7 +1,8 @@
 <!-- <div class="container"> -->
 <div class="row" style="margin-bottom: 0px;">
   <div class="col-md-12" style="margin-bottom: 0px; margin: auto!important;">
-    <nav class="navbar navbar-transparent navbar-default border" style="margin-top: 10px; margin: auto; margin-bottom: 10px;">
+    <!-- nav class="navbar navbar-transparent navbar-default" style="margin-top: 10px; margin: auto; margin-bottom: 10px;" -->
+    <nav class="navbar navbar-expand navbar-dark flex-column flex-md-row bd-navbar" style="margin-top: 10px; margin: auto; margin-bottom: 10px;">  
       <div class="container" id="cabecera">
           <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-main">
