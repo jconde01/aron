@@ -89,17 +89,21 @@ class ProfileController extends Controller
                             if ($opcion->padre == 1) {
                                 if ($parent != 0) {
                                     $nav .= '<li><a>'.$opcion->nombre.'</a>';
+                                } else {
+                                    $nav .= '<ul class="dropdown"><li>';                                    
                                 }
-                                $nav .= '<ul class="dropdown"><li>';
+
                                 if ($parent == 0) {
                                     $nav .= '  <a>'.$opcion->nombre.'</a>';
                                 }
                                 $nav .= '    <ul>';
                                 $nav = self::getMenu($nav, $x->id,$profile);
                                 $nav .= '    </ul>';
-                                $nav .= '</li></ul>';
+
                                 if ($parent != 0) {
                                     $nav .= '</li>';
+                                } else {
+                                    $nav .= '</li></ul>';                                    
                                 }
                             } else {
                                 $nav .= '       <li><a href="'.$opcion->ruta.'">'.$opcion->nombre.'</a></li>';
