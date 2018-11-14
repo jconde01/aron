@@ -60,7 +60,7 @@ class TimbradoController extends Controller
         $sellado = New ProcessController();
         $cadena = $sellado->getPDFText("$ruta$celula_empresa/$rfc_cliente/porautorizar/$archivo");
 
-        QRcode::png($cadena . $fecha['mday'] . $fecha['mon']. $fecha['year'] . $perfil."","$ruta_qr",'H',5,3);
+        QRcode::png($cadena . '|' . $fecha['mday'] . $fecha['mon']. $fecha['year'] . '|' . $perfil,"$ruta_qr",'H',5,3);
         $sello = $sellado->generaFirma($cadena);
 
         // guarda el XML que contiene los datos de la cadena y la firma generada
