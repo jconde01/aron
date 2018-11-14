@@ -63,8 +63,16 @@ class TimbradoController extends Controller
         QRcode::png($cadena . $fecha['mday'] . $fecha['mon']. $fecha['year'] . $perfil."","$ruta_qr",'H',5,3);
         $sello = $sellado->generaFirma($cadena);
 
-        $xml = new \SimpleXMLElement($sello);
+        // guarda el XML que contiene los datos de la cadena y la firma generada
+        // este es el archivo que podrá ser utilizado para verificar la firma
+        $fileName  = pathinfo($archivo);
+        $XMLfile = $ruta.$celula_empresa.'/'.$rfc_cliente.'/autorizados/'.$fileName["filename"].'.xml';
+        $myfile = fopen($XMLfile, "w") or die("Unable to open xml file for writing!");
+        fwrite($myfile, $sello);
+        fclose($myfile);
 
+        // Obtiene del XML, solamente el sello para adjuntarlo al PDF
+        $xml = new \SimpleXMLElement($sello);
         $sello = $xml->xpath('//ds:SignatureValue');
 
         require_once('../utilerias/fpdf/fpdf.php'); 
@@ -95,7 +103,7 @@ class TimbradoController extends Controller
         $message = Message::create([
             'sender_id' => auth()->id(),
             'recipient_id' => $recipient->id,
-            'body' => "El usuario " . auth()->user()->name . " ha autorizado el proceso de la nómina dell cliente " . $cliente->Nombre
+            'body' => "El usuario " . auth()->user()->name . " ha autorizado el proceso de la nómina del cliente " . $cliente->Nombre
         ]);
         $recipient->notify(new MessageSent($message));
 
