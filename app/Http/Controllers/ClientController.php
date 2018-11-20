@@ -2,9 +2,7 @@
  
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rule;
+use App\CiasNo;
 use App\Company;
 use App\Client;
 use App\Empresa;
@@ -13,6 +11,10 @@ use App\User;
 use App\Graph;
 use App\CellClient;
 use App\Cell;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class ClientController extends Controller
 {
@@ -61,6 +63,7 @@ class ClientController extends Controller
         ];
         // validar
         $this->validate($request,$rules,$messages);
+
         DB::transaction(function () use($request) {
             $cliente1 = Client::all()->last();
             if (!$cliente1) {
@@ -69,6 +72,45 @@ class ClientController extends Controller
                 $cli = $cliente1->id + 1;
             }
             
+            if ($request->Fiscal_BDA > 0) {
+                $empresaTISANOM = Empresa::where('CIA',$request->Fiscal_BDA)->first();
+                Config::set("database.connections.sqlsrv2", [
+                    "driver" => 'sqlsrv',
+                    "host" => Config::get("database.connections.sqlsrv")["host"],
+                    "port" => Config::get("database.connections.sqlsrv")["port"],                       
+                    "database" => $empresaTISANOM->DBNAME,
+                    "username" => $empresaTISANOM->USERID,
+                    "password" => $empresaTISANOM->PASS
+                    ]);
+                session(['sqlsrv2' => Config::get("database.connections.sqlsrv2")]);
+                $ciasNo = CiasNo::first();
+
+                try {
+                    mkdir('../utilerias/Nominas/celula'.$request->celula.'/'.$ciasNo->RFCCIA, 0777, true);
+                } catch (\Exception $e) {
+                    echo "no pude crear el directorio para el nuevo cliente... verifique  -  " . $e->getMessage();
+                }
+            }
+
+            if ($request->Asimilado_BDA > 0) {
+                $empresaTISANOM = Empresa::where('CIA',$request->Asimilado_BDA)->first();
+                Config::set("database.connections.sqlsrv2", [
+                    "driver" => 'sqlsrv',
+                    "host" => Config::get("database.connections.sqlsrv")["host"],
+                    "port" => Config::get("database.connections.sqlsrv")["port"],                       
+                    "database" => $empresaTISANOM->DBNAME,
+                    "username" => $empresaTISANOM->USERID,
+                    "password" => $empresaTISANOM->PASS
+                    ]);
+                session(['sqlsrv2' => Config::get("database.connections.sqlsrv2")]);
+                $ciasNo = CiasNo::first();
+
+                try {
+                    mkdir('../utilerias/Nominas/celula'.$request->celula.'/'.$ciasNo->RFCCIA, 0777, true);
+                } catch (\Exception $e) {
+                    echo "no pude crear el directorio para el nuevo cliente... verifique  -  " . $e->getMessage();
+                }
+            }
    	        // registra el nuevo cliente en la BD
         	//dd($request->all());
     	    $cliente = new Client();

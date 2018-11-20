@@ -959,7 +959,7 @@ $("#checkbox1").on('change', function() {
         var ingreso = $('#Ingreso').val();
         var eym = document.getElementById("Integ");
         var iv = document.getElementById("Intiv");      
-        //alert('F.Ingreso: ' + ingreso + ' - Sueldo : ' + sueldo);        
+        alert('F.Ingreso: ' + ingreso + ' - Sueldo : ' + sueldo);        
         $.post("getSalarioIntegrado", { fldSueldo: sueldo, fldIngreso: ingreso, _token: token }, function( data ) {
             
             eym.value = data['integrado'];

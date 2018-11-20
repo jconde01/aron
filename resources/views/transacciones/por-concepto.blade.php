@@ -402,10 +402,12 @@
 		totImporte = 0;    	
         $.post("get-movtos", { concepto: concepto, periodo: periodo, _token: token }, function( data ) {
             var movtos = Object.values(data);
-    		// console.log(movtos);	
+    		// console.log(movtos);
+    		// limpia la tabla para desplegar los movtos leidos
 		    while (tabla.rows.length > 1) {
 		        tabla.deleteRow(tabla.rows.length-1);
     		}
+    		// Aqui los despliega
     	    for (var i = 0; i < movtos.length; i++) {
     	    	switch (pantalla) {
     	    		case 1:
@@ -413,6 +415,7 @@
     	    		case 5:
 						totUnidades = totUnidades + movtos[i]["UNIDADES"];
 						totImporte = totImporte + movtos[i]["SALDO"];
+						// Falta desplegar estos valores!!!
     	    			break;
     	    		case 3:
     	    		case 4:

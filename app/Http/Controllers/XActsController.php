@@ -280,22 +280,22 @@ class XActsController extends Controller
 		    foreach ($data->emp as $key => $emp) {
 		    	$empleado = Empleado::where('TIPONO',$selProceso)->where('EMP',$emp)
 		    					->select('CUENTA','SUELDO','PROMED','INTEG','INTIV')->get()->first();
-		    	$imss = New Imss();
-		    	$imss->TIPONO = $selProceso;
-		    	$imss->EMP = $emp;
-		    	$imss->SUELDO = $empleado->SUELDO;
-		    	$imss->SUELDONUE = $empleado->SUELDO;
-		    	$imss->INTEG = $empleado->INTEG;
-		    	$imss->INTIV = $empleado->INTIV;
-		    	$imss->INTEGNUE = $empleado->INTEG;
-		    	$imss->INTIVNUE = $empleado->INTIV;
-		    	$imss->REFIMSS = $data->refIMSS[$key] . "";
-		    	$imss->FECHA = date('d-m-Y', strtotime($data->fecha[$key]));
-		    	$imss->DIAS = $data->dias[$key];
-		    	$imss->CONCEPTO = $data->Concepto;
-		    	$imss->PERIODO = $data->Periodo;
-		    	$imss->CLAVE = $data->Clave;
-		    	$imss->save();
+		    	// $imss = New Imss();
+		    	// $imss->TIPONO = $selProceso;
+		    	// $imss->EMP = $emp;
+		    	// $imss->SUELDO = $empleado->SUELDO;
+		    	// $imss->SUELDONUE = $empleado->SUELDO;
+		    	// $imss->INTEG = $empleado->INTEG;
+		    	// $imss->INTIV = $empleado->INTIV;
+		    	// $imss->INTEGNUE = $empleado->INTEG;
+		    	// $imss->INTIVNUE = $empleado->INTIV;
+		    	// $imss->REFIMSS = $data->refIMSS[$key] . "";
+		    	// $imss->FECHA = date('d-m-Y', strtotime($data->fecha[$key]));
+		    	// $imss->DIAS = $data->dias[$key];
+		    	// $imss->CONCEPTO = $data->Concepto;
+		    	// $imss->PERIODO = $data->Periodo;
+		    	// $imss->CLAVE = $data->Clave;
+		    	// $imss->save();
 
 		    	$mov = New Movtos();
 		    	$mov->TIPONO = $selProceso;
