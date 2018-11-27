@@ -11,9 +11,8 @@
         
         <br> <br>
         <?php
-        $ru = $ruta.$celula_empresa.'/'.$rfc_cliente.'/empleados/'.$rfc_empleado.'/contratos';
-            
-            $directorio = opendir($ru); //ruta actual
+           
+            $directorio = opendir($ruta); //ruta actual
             while ($archivo = readdir($directorio)) //obtenemos un archivo y luego otro sucesivamente
             {
                 if (is_dir($archivo))//verificamos si es o no un directorio

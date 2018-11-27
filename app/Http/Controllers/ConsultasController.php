@@ -88,10 +88,10 @@ class ConsultasController extends Controller
         session(['rfc_empleado' => $rfc_empleado]);
         $cliente = Session::get('selCliente');
         $celula_empresa = Cell::where('id', $cliente->cell_id)->first()->nombre;
-
+        $ruta = Client::getRutaEmpleados($cliente->cell_id,$rfc_cliente). '/' . $rfc_empleado . '/contratos';
         $perfil = auth()->user()->profile->id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
-    	return view('consultas.contratos.consulta')->with(compact('navbar','ruta', 'rfc_empleado','rfc_cliente', 'celula_empresa')); 
+    	return view('consultas.contratos.consulta')->with(compact('navbar','ruta')); 
     }
 
      public function descarga($archivo)
