@@ -42,21 +42,27 @@ class ClientController extends Controller
     	return view('admin.clientes.create')->with(compact('tisanom_cias','empresas','giros', 'celulas'));	// insertar nuevo cliente
     }
 
+    // registra el nuevo cliente y sus usuarios en la BD.
+    // crea su directorio de trabajo y genera los certificados correspondientes 
     public function store(Request $request) 
     {
 
         $messages = [
             'Nombre.required' => 'El campo "Nombre del cliente" es requerido',
             'Nombre.min'    => 'El campo "Nombre del cliente" debe contener al menos 5 caracteres',
+            'Nombre.unique' => 'YA EXISTE un cliente con ese mismo Nombre. Verifique...',
             'Giro.required' => 'Debe seleccionar el GIRO de la empresa',
+            'key_pwd.required' => 'El campo "Contraseña" es requerido',
+            'key_pwd.min'    => 'El campo "Contraseña" debe contener al menos 6 caracteres',            
             'Nominista.unique' => 'El correo del Nominista YA EXISTE en la base de datos',
             'Fiscalista.unique' => 'El correo del Fiscalista YA EXISTE en la base de datos',
             'Administrador.unique' => 'El correo del Administrador YA EXISTE en la base de datos'
         ];
 
         $rules = [
-            'Nombre' => 'required|min:5',
+            'Nombre' => 'required|min:5|unique:clients,Nombre',
             'Giro' => 'required',
+            'key_pwd' => 'required|min:6',
             'Nominista' => 'unique:users,email',
             'Fiscalista' => 'unique:users,email',
             'Administrador' => 'unique:users,email'
@@ -72,46 +78,6 @@ class ClientController extends Controller
                 $cli = $cliente1->id + 1;
             }
             
-            if ($request->Fiscal_BDA > 0) {
-                $empresaTISANOM = Empresa::where('CIA',$request->Fiscal_BDA)->first();
-                Config::set("database.connections.sqlsrv2", [
-                    "driver" => 'sqlsrv',
-                    "host" => Config::get("database.connections.sqlsrv")["host"],
-                    "port" => Config::get("database.connections.sqlsrv")["port"],                       
-                    "database" => $empresaTISANOM->DBNAME,
-                    "username" => $empresaTISANOM->USERID,
-                    "password" => $empresaTISANOM->PASS
-                    ]);
-                session(['sqlsrv2' => Config::get("database.connections.sqlsrv2")]);
-                $ciasNo = CiasNo::first();
-
-                try {
-                    mkdir('../utilerias/Nominas/celula'.$request->celula.'/'.$ciasNo->RFCCIA, 0777, true);
-                } catch (\Exception $e) {
-                    echo "no pude crear el directorio para el nuevo cliente... verifique  -  " . $e->getMessage();
-                }
-            }
-
-            if ($request->Asimilado_BDA > 0) {
-                $empresaTISANOM = Empresa::where('CIA',$request->Asimilado_BDA)->first();
-                Config::set("database.connections.sqlsrv2", [
-                    "driver" => 'sqlsrv',
-                    "host" => Config::get("database.connections.sqlsrv")["host"],
-                    "port" => Config::get("database.connections.sqlsrv")["port"],                       
-                    "database" => $empresaTISANOM->DBNAME,
-                    "username" => $empresaTISANOM->USERID,
-                    "password" => $empresaTISANOM->PASS
-                    ]);
-                session(['sqlsrv2' => Config::get("database.connections.sqlsrv2")]);
-                $ciasNo = CiasNo::first();
-
-                try {
-                    mkdir('../utilerias/Nominas/celula'.$request->celula.'/'.$ciasNo->RFCCIA, 0777, true);
-                } catch (\Exception $e) {
-                    echo "no pude crear el directorio para el nuevo cliente... verifique  -  " . $e->getMessage();
-                }
-            }
-   	        // registra el nuevo cliente en la BD
         	//dd($request->all());
     	    $cliente = new Client();
     	    $cliente->Nombre = $request->Nombre;
@@ -130,9 +96,9 @@ class ClientController extends Controller
                 $cliente->asimilado_company_id = $request->Asimilado_Company_id;
                 $cliente->asimilado_BDA = $request->Asimilado_BDA;
             }
+            $cliente->pkey_passwd = bcrypt($request->key_pwd);
             $cliente->save();
 
-        
             $admin = new User();
             $admin->name = 'Administrador';
             $admin->email = 'administrador' . $request->Administrador;
@@ -184,7 +150,7 @@ class ClientController extends Controller
 
             $fiscalista = new User();
             $fiscalista->name = 'Fiscalista';
-            $fiscalista->email = 'fiscalista' . $request->fiscalista;
+            $fiscalista->email = 'fiscalista' . $request->Fiscalista;
             $fiscalista->password =  bcrypt('12345');
             $fiscalista->activo = 1;
             $fiscalista->profile_id = 2;
@@ -207,6 +173,70 @@ class ClientController extends Controller
             $grafica3->save();
 
         });
+
+        // Crea los directorios para cada una de las empresas asociadas (FISCAL y ASIMILADOS)
+        if ($request->Fiscal_BDA > 0) {
+            $empresaTISANOM = Empresa::where('CIA',$request->Fiscal_BDA)->first();
+            Config::set("database.connections.sqlsrv2", [
+                "driver" => 'sqlsrv',
+                "host" => Config::get("database.connections.sqlsrv")["host"],
+                "port" => Config::get("database.connections.sqlsrv")["port"],                       
+                "database" => $empresaTISANOM->DBNAME,
+                "username" => $empresaTISANOM->USERID,
+                "password" => $empresaTISANOM->PASS
+                ]);
+            session(['sqlsrv2' => Config::get("database.connections.sqlsrv2")]);
+            $ciaFiscal = CiasNo::first();
+            $rutaCertFiscal = Client::getRutaCertificado($request->celula, $ciaFiscal->RFCCIA);
+            $rutaPorAutorizar = Client::getRutaPorAutorizar($request->celula, $ciaFiscal->RFCCIA);
+            $rutaAutorizados = Client::getRutaAutorizados($request->celula, $ciaFiscal->RFCCIA);
+            $rutaEmpleados = Client::getRutaEmpleados($request->celula, $ciaFiscal->RFCCIA);
+            $rutaDocumentos = Client::getRutaDocumentos($request->celula, $ciaFiscal->RFCCIA);
+
+            try {
+                mkdir($rutaCertFiscal,0755,true);
+                mkdir($rutaPorAutorizar,0755,true);
+                mkdir($rutaAutorizados,0755,true);
+                mkdir($rutaEmpleados,0755,true);
+                mkdir($rutaDocumentos,0755,true);
+            } catch (\Exception $e) {
+                \Session::flash('error', "No pude crear los directorios de FISCAL para el nuevo cliente... verifique  -  ".$e->getMessage());
+            }
+        }
+
+        if ($request->Asimilado_BDA > 0) {
+            $empresaTISANOM = Empresa::where('CIA',$request->Asimilado_BDA)->first();
+            DB::disconnect('sqlsrv2');            
+            Config::set("database.connections.sqlsrv2", [
+                "driver" => 'sqlsrv',
+                "host" => Config::get("database.connections.sqlsrv")["host"],
+                "port" => Config::get("database.connections.sqlsrv")["port"],                       
+                "database" => $empresaTISANOM->DBNAME,
+                "username" => $empresaTISANOM->USERID,
+                "password" => $empresaTISANOM->PASS
+                ]);
+            session(['sqlsrv2' => Config::get("database.connections.sqlsrv2")]);
+            $ciaAsim = CiasNo::first();
+            $rutaCertAsim = Client::getRutaCertificado($request->celula, $ciaAsim->RFCCIA);
+            $rutaPorAutorizar = Client::getRutaPorAutorizar($request->celula, $ciaAsim->RFCCIA);
+            $rutaAutorizados = Client::getRutaAutorizados($request->celula, $ciaAsim->RFCCIA);
+            $rutaEmpleados = Client::getRutaEmpleados($request->celula, $ciaAsim->RFCCIA);        
+            $rutaDocumentos = Client::getRutaDocumentos($request->celula, $ciaAsim->RFCCIA);
+            try {
+                mkdir($rutaCertAsim, 0755, true);
+                mkdir($rutaPorAutorizar,0755,true);
+                mkdir($rutaAutorizados,0755,true);
+                mkdir($rutaEmpleados,0755,true);
+                mkdir($rutaDocumentos,0755,true);
+            } catch (\Exception $e) {
+                \Session::flash('error', "No pude crear los directorios de ASIMILADOS para el nuevo cliente... verifique  -  ".$e->getMessage());
+            }
+        }
+
+        // Crea y almacena las llaves y certificado
+        $this::makeCert($request->Nombre, $ciaFiscal->RFCCIA, $rutaCertFiscal, $request->passwd);
+        $this::makeCert($request->Nombre, $ciaAsim->RFCCIA, $rutaCertAsim, $request->passwd);
+
     	return redirect('/admin/clientes'); 
     }
 
@@ -250,8 +280,61 @@ class ClientController extends Controller
             $cliente->asimilado_company_id = $request->Asimilado_Company_id;
             $cliente->asimilado_BDA = $request->Asimilado_BDA;
         }
+        $cliente->pkey_passwd = bcrypt($request->key_pwd);
         $cliente->save();   // Update
         return redirect('/admin/clientes'); 
     }    
+
+    public static function makeCert($nomCia, $rfcCia, $rutaCert, $passphrase)
+    {
+        // for SSL server certificates the commonName is the domain name to be secured
+        // for S/MIME email certificates the commonName is the owner of the email address
+        // location and identification fields refer to the owner of domain or email subject to be secured
+        // $dn = array(
+        //     "countryName" => "MX",
+        //     "stateOrProvinceName" => "Somerset",
+        //     "localityName" => "Glastonbury",
+        //     "organizationName" => "The Brain Room Limited",
+        //     "organizationalUnitName" => "PHP Documentation Team",
+        //     "commonName" => "Wez Furlong",
+        //     "emailAddress" => "wez@example.com"
+        // );
+
+        $dn = array(
+            "countryName" => "MX",
+            "organizationName" => $nomCia,
+            "commonName" => $rfcCia
+        );
+
+        // Generate a new private (and public) key pair
+        $privkey = openssl_pkey_new(array(
+            "private_key_bits" => 2048,
+            "private_key_type" => OPENSSL_KEYTYPE_RSA,
+        ));
+
+        // Generate a certificate signing request
+        $csr = openssl_csr_new($dn, $privkey, array('digest_alg' => 'sha256'));
+
+        // Generate a self-signed cert, valid for 3 years
+        $x509 = openssl_csr_sign($csr, null, $privkey, $days=365*3, array('digest_alg' => 'sha256'));
+
+        // Save your private key, CSR and self-signed cert for later use
+        //openssl_csr_export($csr, $csrout) and var_dump($csrout);
+        //openssl_x509_export($x509, $certout) and var_dump($certout);
+        // openssl_pkey_export($privkey, $pkeyout, "mypassword") and var_dump($pkeyout);
+        //openssl_pkey_export($privkey, $pkeyout) and var_dump($pkeyout);        
+        //echo "</br>Errores</br>";
+        // Show any errors that occurred here
+        // while (($e = openssl_error_string()) !== false) {
+        //     echo $e . "<br />\n";
+        // }
+
+        // save files
+        openssl_pkey_export_to_file($privkey, $rutaCert.'/'.$rfcCia.'-priv.key', $passphrase);
+        // Along with the subject, the CSR contains the public key corresponding to the private key
+        openssl_csr_export_to_file($csr, $rutaCert.'/'.$rfcCia.'-csr.pem');
+        openssl_x509_export_to_file ($x509 , $rutaCert.'/'.$rfcCia.'-cert.pem');       
+
+    }
 
 }

@@ -1,0 +1,14 @@
+{
+  "name": "vladzur/cacert",
+  "description": "Simple CACERT",
+  "license": "GPL",
+  "authors": [
+    {
+      "name": "vladzur",
+      "email": "vladzur@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.3.0"
+  }
+}

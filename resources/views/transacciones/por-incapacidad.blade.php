@@ -91,7 +91,7 @@
             <div class="input-data">
 				<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;">
         			<label class="label-left" style="font-size: 14px;">Fecha</label>
-        			<input type="date" id="fecha" name="Fecha" value="{{ date("Y-m-d") }}">
+        			<input type="date" id="fecha" name="Fecha" value="">
         		</div>
 				<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;">
     				<label class="label-left" style="font-size: 14px;">Dias</label>
@@ -182,7 +182,7 @@
 		periodo   = $('.pdo').val(); 
     	if ( concepto != 0 && periodo != 0 ) {
 			var fechaIni = $('.pdo>option:selected').data('fi');
-			// alert(periodo + ' - ' + fechaIni + fechaIncidencia.value);
+			//alert(periodo + ' - ' + fechaIni + fechaIncidencia.value);
 			fechaIncidencia.value = fechaIni;
         	$("#nuevo").modal();
         } else {
@@ -255,13 +255,10 @@
             metodoIsp = conceptData[0]["METODOISP"];
             tipConcep = conceptData[0]["TIPCONCEP"];
             tipCalcul = conceptData[0]["TIPCALCUL"]
-            //conceptParam[1] = Number(conceptData[0]["PARAM1"]);
-            //conceptParam[2] = Number(conceptData[0]["PARAM2"]);
 			document.getElementById("Metodo").value = metodo;
 			document.getElementById("MetodoISP").value = metodoIsp;
             tipoCaptura = conceptData[0]["TIPCAPT"];
-    		//console.log(conceptData[0]["CONCEPTO"] + ' - ' + tipoCaptura);	
-    		//console.log(metodo);
+
 			switch (concepto) {
 				case CONINCAP12:
 					varClave = 5;
@@ -284,6 +281,7 @@
 	    	}
 	    	document.getElementById("Clave").value = varClave;
 	    	console.log('Clave: ' + varClave);
+	    	$('.pdo').change();
         });
 	});
 
@@ -294,12 +292,70 @@
     	// checa si hay movimientos capturados del período en cuyo caso los despliega
         $.post("get-movtos", { concepto: concepto, periodo: periodo, _token: token }, function( data ) {
             var movtos = Object.values(data);
-    		//console.log(movtos);	
+    		console.log(movtos);	
 		    while (tabla.rows.length > 1) {
 		        tabla.deleteRow(tabla.rows.length-1);
     		}
+    		// Aqui los despliega
+    	    for (var i = 0; i < movtos.length; i++) {
+				totUnidades = totUnidades + movtos[i]["UNIDADES"];
+				totImporte = totImporte + movtos[i]["CALCULO"];    	    		
+	        	var row = tabla.insertRow(tabla.rows.length);
+	        	var col1 = row.insertCell(0);
+	        	var col2 = row.insertCell(1);
+	        	var col3 = row.insertCell(2);
+	        	var col4 = row.insertCell(3);
+	        	var col5 = row.insertCell(4);
+	        	var col6 = row.insertCell(5);
+
+				col1.innerHTML = '<td><input type="text" name="emp[]" value="'+movtos[i]["EMP"]+'"/></td>'; col1.style.display = 'none';
+				col2.innerHTML = '<td>' + movtos[i]["NOMBRE"] + '</td>';
+				col3.innerHTML = '<td><input type="text" name="fecha[]" style="border:0px;width:150px!important;" value="'+movtos[i]["fecha"]+'"/></td>'; 
+				col4.innerHTML = '<td style="text-align:right;"><input type="text" name="dias[]" style="border:0px;width:150px!important;" value="'+movtos[i]["UNIDADES"]+'"/></td>'; //col4.style.width = "10%";
+				col5.innerHTML = '<td><input type="text" name="refIMSS[]" style="border:0px;width:150px!important;" value="'+refIMSS+'"/></td>'; 
+				col6.innerHTML = '<td><input type="text" name="tipo[]" style="border:0px;width:150px!important;" value="'+tipo+'"/></td>';
+
+
+            }
+
         });		
 	});
+
+
+	// Public Function ValidaDias(ByVal Fecha As Date, dias As Integer) As Boolean
+	// Dim BimActual As Integer, DiasPasados As Integer
+	// Dim FinBim As Date
+	// ValidaDias = True
+	// BimActual = Int((Month(Fecha) - 1) / 2) + 1
+	// DiasPasados = Fecha - IniBim(BimActual)
+	// FinBim = IniBim(BimActual) + DiasBim(BimActual) - 1
+	// If dias + DiasPasados > DiasBim(BimActual) Then
+	//     MsgBox "El total de dias capturado, excede el total de dias disponibles del bimestre " & BimActual & vbCrLf & "a partir de la fecha indicada, debe desglosar los dias" & vbCrLf & " " & vbCrLf & "Inicio de Bimestre=" & Format(IniBim(BimActual), "dd/mm/yyyy") & "; Fin del Bimestre=" & Format(FinBim, "dd/mm/yyyy") & vbCrLf & "Fecha Capturada=" & Format(Fecha, "dd/mm/yyyy") & vbCrLf & "Dias Trancurridos=" & DiasPasados & ";  Dias Disponobles=" & DiasBim(BimActual) - DiasPasados, vbInformation, Me.Caption
+	//     ValidaDias = False
+	// End If
+
+	// End Function
+
+	// Valida dias
+	// $('#dias').change(function() {
+	// 	fecha  =  $('#fecha').val();
+	// 	var parts =fecha.split('/');
+	// 	// Please pay attention to the month (parts[1]); JavaScript counts months from 0:
+	// 	// January - 0, February - 1, etc.
+	// 	var mydate = new Date(parts[0], parts[1] - 1, parts[2]); 
+	// 	alert(fecha + ' - ' + mydate);
+	// 	//bimActual = Int((fecha.getMonth() -1) / 2) + 1;
+
+	// 	//periodo = $('.pdo').val();
+ //    	// checa si hay movimientos capturados del período en cuyo caso los despliega
+ //      //   $.post("get-movtos", { concepto: concepto, periodo: periodo, _token: token }, function( data ) {
+ //      //       var movtos = Object.values(data);
+ //    		// //console.log(movtos);	
+	// 	    // while (tabla.rows.length > 1) {
+	// 	    //     tabla.deleteRow(tabla.rows.length-1);
+ //    		// }
+ //      //   });		
+	// });
 
 
 	function creaPantalla() {

@@ -47,5 +47,4 @@ class UtileriasController extends Controller
         }     	 
     }
 
-
 }

@@ -18,8 +18,8 @@
     <form class="form" method="POST" action="{{ url('transacciones/horasExtra') }}">
 		<input type="hidden" name="_token" value="{{ csrf_token() }}">
 		<input type="hidden" id="Concepto"  name="Concepto" value="{{ $concepto }}">
-		<input type="hidden" id="Metodo"  name="Metodo" value="">
-		<input type="hidden" id="MetodoISP"  name="MetodoISP" value="">
+		<!-- input type="hidden" id="Metodo"  name="Metodo" value="">
+		<input type="hidden" id="MetodoISP"  name="MetodoISP" value="" -->
 
         <!-- <p class="text-center" style="color:Azure; text-align: center;">Ingresa tus datos</p> -->
         <div class="row" style="margin-bottom: 0px;">

@@ -174,7 +174,10 @@ Route::middleware(['auth'])->prefix('consultas')->group(function () {
 	Route::get('/timbrado','TimbradoController@index');
 	Route::get('/timbrado/firmar/{archivo}','TimbradoController@firmar');	
 	Route::get('/utilerias/Nominas/Celula1/TIMBRADO/VALLY_MERIDA/201816/{archivo}','ConsultasController@consulta');
-	Route::get('/descargaDocumentos/{archivo}','ConsultasController@descargaDoc'); 	
+	Route::get('/descargaDocumentos/{archivo}','ConsultasController@descargaDoc');
+	Route::get('/checklist','ConsultasController@checklist');
+	Route::post('/checklist','ConsultasController@getDatosChecklist');
+	Route::post('/checklist/actualizar','ConsultasController@checklistUpdate');	 	
 });
 
 

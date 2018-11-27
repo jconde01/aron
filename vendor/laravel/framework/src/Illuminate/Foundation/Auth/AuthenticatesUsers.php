@@ -153,7 +153,7 @@ trait AuthenticatesUsers
         $this->guard()->logout();
 
         $request->session()->invalidate();
-        \Cache::flush();
+
         return redirect('/');
     }
 

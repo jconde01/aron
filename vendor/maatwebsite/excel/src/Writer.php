@@ -2,18 +2,25 @@
 
 namespace Maatwebsite\Excel;
 
+use PhpOffice\PhpSpreadsheet\Cell\Cell;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Writer\Csv;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use Maatwebsite\Excel\Concerns\WithCharts;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\BeforeExport;
 use Maatwebsite\Excel\Events\BeforeWriting;
+use Maatwebsite\Excel\Concerns\MapsCsvSettings;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
+use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
+use Maatwebsite\Excel\Concerns\WithCustomValueBinder;
+use PhpOffice\PhpSpreadsheet\Cell\DefaultValueBinder;
+use Maatwebsite\Excel\Concerns\WithPreCalculateFormulas;
 
 class Writer
 {
-    use DelegatedMacroable, HasEventBus;
+    use DelegatedMacroable, HasEventBus, MapsCsvSettings;
 
     /**
      * @var Spreadsheet
@@ -23,42 +30,12 @@ class Writer
     /**
      * @var object
      */
-    protected $export;
+    protected $exportable;
 
     /**
      * @var string
      */
     protected $tmpPath;
-
-    /**
-     * @var string
-     */
-    protected $delimiter;
-
-    /**
-     * @var string
-     */
-    protected $enclosure;
-
-    /**
-     * @var string
-     */
-    protected $lineEnding;
-
-    /**
-     * @var bool
-     */
-    protected $useBom;
-
-    /**
-     * @var bool
-     */
-    protected $includeSeparatorLine;
-
-    /**
-     * @var bool
-     */
-    protected $excelCompatibility;
 
     /**
      * @var string
@@ -70,21 +47,16 @@ class Writer
      */
     public function __construct()
     {
-        $this->tmpPath              = config('excel.exports.temp_path', sys_get_temp_dir());
-        $this->delimiter            = config('excel.exports.csv.delimiter', ',');
-        $this->enclosure            = config('excel.exports.csv.enclosure', '"');
-        $this->lineEnding           = config('excel.exports.csv.line_ending', PHP_EOL);
-        $this->useBom               = config('excel.exports.csv.use_bom', false);
-        $this->includeSeparatorLine = config('excel.exports.csv.include_separator_line', false);
-        $this->excelCompatibility   = config('excel.exports.csv.excel_compatibility', false);
+        $this->tmpPath = config('excel.exports.temp_path', sys_get_temp_dir());
+        $this->applyCsvSettings(config('excel.exports.csv', []));
+
+        $this->setDefaultValueBinder();
     }
 
     /**
      * @param object $export
      * @param string $writerType
      *
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
-     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @return string
      */
     public function export($export, string $writerType): string
@@ -100,9 +72,7 @@ class Writer
             $this->addNewSheet()->export($sheetExport);
         }
 
-        $this->raise(new BeforeWriting($this));
-
-        return $this->write($this->tempFile(), $writerType);
+        return $this->write($export, $this->tempFile(), $writerType);
     }
 
     /**
@@ -112,14 +82,21 @@ class Writer
      */
     public function open($export)
     {
+        $this->exportable = $export;
+
         if ($export instanceof WithEvents) {
             $this->registerListeners($export->registerEvents());
         }
 
+        $this->exportable  = $export;
         $this->spreadsheet = new Spreadsheet;
         $this->spreadsheet->disconnectWorksheets();
 
-        $this->raise(new BeforeExport($this));
+        if ($export instanceof WithCustomValueBinder) {
+            Cell::setValueBinder($export);
+        }
+
+        $this->raise(new BeforeExport($this, $this->exportable));
 
         if ($export instanceof WithTitle) {
             $this->spreadsheet->getProperties()->setTitle($export->title());
@@ -144,15 +121,27 @@ class Writer
     }
 
     /**
+     * @param object $export
      * @param string $fileName
      * @param string $writerType
      *
-     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     * @return string: string
+     * @return string
      */
-    public function write(string $fileName, string $writerType)
+    public function write($export, string $fileName, string $writerType)
     {
+        $this->exportable = $export;
+
+        $this->raise(new BeforeWriting($this, $this->exportable));
+
+        if ($export instanceof WithCustomCsvSettings) {
+            $this->applyCsvSettings($export->getCsvSettings());
+        }
+
         $writer = IOFactory::createWriter($this->spreadsheet, $writerType);
+
+        if ($export instanceof WithCharts) {
+            $writer->setIncludeCharts(true);
+        }
 
         if ($writer instanceof Csv) {
             $writer->setDelimiter($this->delimiter);
@@ -162,6 +151,13 @@ class Writer
             $writer->setIncludeSeparatorLine($this->includeSeparatorLine);
             $writer->setExcelCompatibility($this->excelCompatibility);
         }
+
+        // Calculation settings
+        $writer->setPreCalculateFormulas(
+            $this->exportable instanceof WithPreCalculateFormulas
+                ? true
+                : config('excel.exports.pre_calculate_formulas', false)
+        );
 
         $writer->save($fileName);
 
@@ -251,11 +247,21 @@ class Writer
     }
 
     /**
+     * @return $this
+     */
+    public function setDefaultValueBinder()
+    {
+        Cell::setValueBinder(new DefaultValueBinder);
+
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function tempFile(): string
     {
-        return tempnam($this->tmpPath, 'laravel-excel');
+        return $this->tmpPath . DIRECTORY_SEPARATOR . 'laravel-excel-' . str_random(16);
     }
 
     /**
@@ -267,5 +273,15 @@ class Writer
     public function getSheetByIndex(int $sheetIndex)
     {
         return new Sheet($this->getDelegate()->getSheet($sheetIndex));
+    }
+
+    /**
+     * @param string $concern
+     *
+     * @return bool
+     */
+    public function hasConcern($concern): bool
+    {
+        return $this->exportable instanceof $concern;
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Maatwebsite\Excel\Concerns;
 
-use Maatwebsite\Excel\Excel;
+use Maatwebsite\Excel\Exporter;
 use Illuminate\Foundation\Bus\PendingDispatch;
 use Maatwebsite\Excel\Exceptions\NoFilenameGivenException;
 use Maatwebsite\Excel\Exceptions\NoFilePathGivenException;
@@ -24,7 +24,7 @@ trait Exportable
             throw new NoFilenameGivenException();
         }
 
-        return resolve(Excel::class)->download($this, $fileName, $writerType ?? $this->writerType ?? null);
+        return $this->getExporter()->download($this, $fileName, $writerType ?? $this->writerType ?? null);
     }
 
     /**
@@ -43,7 +43,7 @@ trait Exportable
             throw new NoFilePathGivenException();
         }
 
-        return resolve(Excel::class)->store(
+        return $this->getExporter()->store(
             $this,
             $filePath,
             $disk ?? $this->disk ?? null,
@@ -67,7 +67,7 @@ trait Exportable
             throw new NoFilePathGivenException();
         }
 
-        return resolve(Excel::class)->queue(
+        return $this->getExporter()->queue(
             $this,
             $filePath,
             $disk ?? $this->disk ?? null,
@@ -86,5 +86,13 @@ trait Exportable
     public function toResponse($request)
     {
         return $this->download();
+    }
+
+    /**
+     * @return Exporter
+     */
+    private function getExporter(): Exporter
+    {
+        return app(Exporter::class);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Session;
 use Illuminate\Http\Request;
 use App\User;
+use App\Client;
 use App\Periodo;
 use App\Message;
 use App\Notifications\MessageSent;
@@ -29,10 +30,10 @@ class ProcessController extends Controller
 		return view('procesos.nomina')->with(compact('periodo','navbar'));
 	}
 
+	// Envia notificación al NOMINISTA de la célula para el pre-proceso de la nómina
 	public function requestNomina(Request $data)
 	{
 		
-   	
     	$selCliente = Session::get('selCliente');
     	$celula = $selCliente->cell_id;
   		$recipient = User::where('profile_id',User::PERFILES_CELULA['NOMINISTA'])->where('cell_id',$celula)->first();  
@@ -49,7 +50,7 @@ class ProcessController extends Controller
 	}
 
 
-	public function generaFirma($cadena)
+	public function generaFirma($cadena, $celula, $rfc)
 	{
 		// Load required classes manualy.
 		require(dirname(__DIR__) .'/../../vendor/robrichards/xmlseclibs/xmlseclibs.php');
@@ -59,17 +60,15 @@ class ProcessController extends Controller
 		require dirname(__DIR__) . '/../../vendor/autoload.php';
 
 		// Asymmetric cryptographic key pair for signing (in PEM format).
-		$signKey = public_path() . '/keys/my-key.pem';
-		$signCert = public_path() . '/keys/my-cert.pem';
-		$signKeyPassword = '12345678'; // Use null if it is not needed.
+		//$signKey = public_path() . '/keys/my-key.pem';
+		//$signCert = public_path() . '/keys/my-cert.pem';
+		//$signKeyPassword = '12345678'; // Use null if it is not needed.
+		$rutaCert = Client::getRutaCertificado($celula, $rfc);
+		$signKey = $rutaCert.'/'.$rfc.'-priv.key';
+        $signCert = $rutaCert.'/'.$rfc.'-cert.pem';
+		$signKeyPassword = NULL;
 
 		// User data.
-		// $data = [
-		//     'name' => 'Jorge Conde B.',
-		//     'role' => 'Admin',
-		//     'location' => 'Vally'
-		// ];
-		
 		//$values = $this->getPDFText();
 		$values = explode("|",$cadena);
 		foreach ($values as $key => $value) {
@@ -81,11 +80,6 @@ class ProcessController extends Controller
 
 		// Get the XML Digital Signature. 
 		$sig = $token->getXML();
-
-		// Display the XML Digital Signature.
-		//return htmlentities($sig);		# code...
-
-		//var_dump($sig);
 
 		// Now, verify the token
 
@@ -100,23 +94,23 @@ class ProcessController extends Controller
 
 		// The issuer information of the sender to which the certificate transmitted
 		// in the XML digital signature should correspond to be declared valid.
-		$expectedIssuer = [
-		    'C'  => 'MERIDA',
-		    'ST' => 'YUCATAN',
-		    'O'  => 'VALLY TECNOLOGIES',
-		    'OU' => '',
-		    'CN' => '',
-		    'emailAddress' => ''
-		];
+		// $expectedIssuer = [
+		//     'C'  => 'MERIDA',
+		//     'ST' => 'YUCATAN',
+		//     'O'  => 'VALLY TECNOLOGIES',
+		//     'OU' => '',
+		//     'CN' => '',
+		//     'emailAddress' => ''
+		// ];
 
 		// CA intermediate certificate against which to verify origin of 
 		// the signing certificate transmitted in the XML Digital Signature.
 		//'path/to/ca/intermediate/certificate';
-		$caCertPath = public_path() . '/keys/my-test.cert.pfx'; 
+		//++$caCertPath = public_path() . '/keys/my-test.cert.pfx'; 
 
 		// Create token object from the XML Digital Signature 
 		//$token = XMLDSigToken::analyzeSecureXMLToken($sig, $cryptKey, $cryptKeyPassword);
-		$token = XMLDSigToken::analyzeXMLToken($sig);
+		//++$token = XMLDSigToken::analyzeXMLToken($sig);
 
 
 		// NOTE: The above instruction works even if user data is not encrypted.
@@ -137,13 +131,13 @@ class ProcessController extends Controller
 		//     exit();
 		// }
 
-		// Verify that the X.509 certificate included in 
-		// the XML digital signature is not out of date.
-		if ($token->isCertOutOfDate()) 
-		{
-		    echo "ERROR: Signing certificate is out of date!";
-		    exit();
-		}
+		// ++Verify that the X.509 certificate included in 
+		// ++the XML digital signature is not out of date.
+		// ++if ($token->isCertOutOfDate()) 
+		// ++{
+		// ++    echo "ERROR: Signing certificate is out of date!";
+		// ++    exit();
+		// ++}
 
 		// Verify that the issuer of the X.509 certificate included 
 		// in the XML digital signature is indeed the one we expect.
@@ -161,12 +155,12 @@ class ProcessController extends Controller
 		//     exit();
 		// }
 
-		// Verify that the XML token was issued less than 2 minutes ago.
-		if ($token->isOutOfDate(365)) 
-		{
-		    echo "ERROR: Token is out of date!";
-		    exit();
-		}
+		// ++Verify that the XML token was issued less than 2 minutes ago.
+		// ++if ($token->isOutOfDate(365)) 
+		// ++{
+		// ++    echo "ERROR: Token is out of date!";
+		// ++    exit();
+		// ++}
 
 		// All is fine ! We can trust user data.
 		//echo "\nToken data: \n";
@@ -206,18 +200,18 @@ class ProcessController extends Controller
 		// Autoload required classes.
 		//require dirname(__DIR__) . '/../../vendor/autoload.php';
 
-    //$file = public_path() . '/files/Reporte_servicio_vally' ; 
-    $pdf = new PdfToText ( $file ) ; 
+	    //$file = public_path() . '/files/Reporte_servicio_vally' ; 
+	    $pdf = new PdfToText ( $file ) ; 
 
-    //output( "Original file contents :\n" ) ; 
-    //output( file_get_contents( "$file.pdf" ) ) ; 
-    //output( "-----------------------------------------------------------\n" ) ; 
-
-    //output( "Contenido a sellar:\n" ) ;
-    $cadena = getLastLine($pdf -> Text); 
-    //output( $cadena . "\n" );
-    $cadena = substr($cadena,1);
-    //return explode("|",$cadena);
-    return $cadena;
+	    //output( "Original file contents :\n" ) ; 
+	    //output( file_get_contents( "$file.pdf" ) ) ; 
+	    //output( "-----------------------------------------------------------\n" ) ; 
+	    //dd($pdf);
+	    //output( "Contenido a sellar:\n" ) ;
+	    $cadena = getLastLine($pdf -> Text); 
+	    //output( $cadena . "\n" );
+	    $cadena = substr($cadena,1);
+	    //return explode("|",$cadena);
+	    return $cadena;
 	}
 }

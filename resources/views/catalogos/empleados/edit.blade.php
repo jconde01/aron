@@ -272,7 +272,7 @@
                      <div class="col-md-4 no-pad" style="border-left: 2px #F0F0F0 solid;">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Estatus</p></div>
-                            <select style="width: 340px; height: 40px; border-radius: 10px; text-align: right; padding-right: 20px;" name="ESTATUS" value="{{$empl->ESTATUS}}" class="inderecha">
+                            <select style="width: 340px; height: 40px; border-radius: 10px; text-align: right; padding-right: 20px;" name="ESTATUS" value="{{$empl->ESTATUS}}" class="inderecha" onChange="activa_boton(this,this.form.boton)">
                                 <option value="A" <?php if ($empl->ESTATUS=='A'):{
                                     echo 'selected="selected"';
                                 } ?> <?php endif ?>>Activo</option>
@@ -283,9 +283,9 @@
                                     echo 'selected="selected"';
                                 } ?> <?php endif ?>>Vacaciones</option>                                
                             </select>
-                        </div> 
+                        </div>
                     </div>
-
+                    <p data-toggle="modal" data-target="#GSCCModal">bajaaa</p>
                     <div style="" id="GSCCModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
                              <div class="modal-dialog">
                                 <div class="modal-content">
@@ -1119,5 +1119,13 @@ document.getElementById("EMP2").value = document.getElementById("EMP").value;
         el.selectionEnd = pos;
     }
 }
+
+function activa_boton(campo,boton){
+        if (campo.value == "B"){
+           $("#GSCCModal").modal()
+        } else {
+            
+        }
+    }
 </script>
 @endsection

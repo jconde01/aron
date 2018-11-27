@@ -57,6 +57,7 @@ class XActsController extends Controller
 		$perfil = auth()->user()->profile_id; 
         $navbar = ProfileController::getNavBar('',0,$perfil);
 		$selProceso = Session::get('selProceso');
+		// aqui obtenemos el objeto completo y así se pasa a la vista
 		$concepto = Concepto::where('TIPONO',$selProceso)->where('CONCEPTO',$this::horasExtra)->get();
 		$periCalc = Nomina::where('TIPONO',$selProceso)->first()->PERICALC;
 		$periodos = Periodo::where('TIPONO',$selProceso)->where('SWCIERRE','0')->get();
@@ -81,6 +82,9 @@ class XActsController extends Controller
 				->select('EMPLEADO.EMP','EMPLEADO.NOMBRE','MOVTOS.*')
 				->orderBy('EMPLEADO.EMP')
 				->get();
+		$incapa = Incapa::where('EMP',$data->emp)
+					->where('REFIMSS',$data->refIMSS[$key])
+					->where('FECHA',$data->fecha[$key])->firstOrFail();
         return response($capturado);
         //return response(array(['EMP' => $selProceso, 'NOMBRE' => $data->concepto,'CALCULO' => $data->periodo]));
 	}
@@ -272,10 +276,14 @@ class XActsController extends Controller
 		DB::transaction(function () use($data) {
 
 			$selProceso = Session::get('selProceso');
-			$deleted1 = Movtos::where('TIPONO',$selProceso)->where('CONCEPTO',$data->Concepto)->where('PERIODO',$data->Periodo)->delete();
-			$deleted2 = Imss::where('TIPONO',$selProceso)->where('CONCEPTO',$data->Concepto)->where('PERIODO',$data->Periodo)->delete();
-		    $concepto = Concepto::where('TIPONO',$selProceso)->where('CONCEPTO',$data->Concepto)
-		    				->select('METODO','PARAM1','PARAM2')->get()->first();
+		    $concepto = Concepto::where('TIPONO',$selProceso)->where('CONCEPTO',$this::horasExtra)->first();			
+			$deleted1 = Movtos::where('TIPONO',$selProceso)
+							->where('CONCEPTO',$concepto->CONCEPTO)
+							->where('PERIODO',$data->Periodo)->delete();
+			$deleted2 = Imss::where('TIPONO',$selProceso)
+							->where('CONCEPTO',$concepto->CONCEPTO)
+							->where('PERIODO',$data->Periodo)->delete();
+
 
 		    foreach ($data->emp as $key => $emp) {
 		    	$empleado = Empleado::where('TIPONO',$selProceso)->where('EMP',$emp)
@@ -300,15 +308,15 @@ class XActsController extends Controller
 		    	$mov = New Movtos();
 		    	$mov->TIPONO = $selProceso;
 		    	$mov->EMP = $emp;
-		    	$mov->CONCEPTO = $data->Concepto;
+		    	$mov->CONCEPTO = $concepto->CONCEPTO;
 		    	$mov->PERIODO = $data->Periodo;
-		    	$mov->METODO = $data->Metodo;
+		    	$mov->METODO = $concepto->TIPCONCEP . $concepto->TIPCALCUL . $concepto->METODO;
 		    	$mov->UNIDADES = $data->dias[$key];
 		    	$mov->SALDO = 0;
 		    	$mov->SUMRES = 0;
 		    	$mov->CALCULO = Calculo::perPrim($empleado, $mov, $concepto);
-		    	$mov->METODOISP = $data->MetodoISP;			// Para que grabar esto en Movtos si está en CONCEPTOS ???????
-		    	$mov->FLAGCIEN = '';						// Investigar para que sirve esto??????
+		    	$mov->METODOISP = $concepto->METODOISP;			// Para que grabar esto en Movtos si está en CONCEPTOS ???????
+		    	$mov->FLAGCIEN = '';							// Investigar para que sirve esto??????
 		    	$mov->ACTIVO = 1;
 		    	$mov->OTROS = 0;
 		    	$mov->ESPECIAL = 1;

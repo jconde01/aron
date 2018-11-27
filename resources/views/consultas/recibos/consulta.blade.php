@@ -11,13 +11,7 @@
         <br>
         
         <?php
-      // dd($ruta,$rfc, $id_empleado);
-        $ru = $ruta.$celula_empresa.'/'.$rfc_cliente.'/timbrado';
-
-          
-          //dd($ru);
-            $directorio = opendir($ru); 
-
+            $directorio = opendir($ruta); 
             while ($archivo = readdir($directorio)) //obtenemos un archivo y luego otro sucesivamente
             {
                 if (is_dir($archivo))//verificamos si es o no un directorio
@@ -27,12 +21,12 @@
                 else
                 {
                  // AAGS-73-04-20-H-DF-LNM-08
-                    $rfc=$rfc_empleado;;
-                    $ext = '.pdf';
+                    $rfc = $rfc_empleado;;
+                    $pdf = '.pdf';
                     $xml = '.xml';
                     //echo '<a href="/archivos/'.$archivo.'">'.$archivo.'</a>' . "<br />";
                     $restar=substr ($archivo, 7,-15 );
-                    $pdf=substr ($archivo, -4);
+                    $ext=substr ($archivo, -4);
                     if ($rfc==$restar && $ext== $pdf){
                       
                       
@@ -42,7 +36,7 @@
 
                     }
                     
-                    if ($rfc==$restar && $xml== $pdf){
+                    if ($rfc==$restar && $ext == $xml){
                        echo '<div class="col-lg-5" style="border:1px blue solid; border-radius:10px;margin-right: 80px; margin-top: 20px;"><br><i class="fas fa-file-alt" style="font-size: 50px;"></i><br><br><a href="/descarga/'.$archivo.'">'.$archivo.'</a>' . "<br /><br></div>"; 
                     }
                     

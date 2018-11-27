@@ -2,15 +2,23 @@
 
 namespace Maatwebsite\Excel;
 
+use Illuminate\Support\Collection;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Filesystem\FilesystemManager;
-use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Contracts\Filesystem\Factory;
+use Illuminate\Foundation\Bus\PendingDispatch;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Maatwebsite\Excel\Exceptions\NoTypeDetectedException;
 
-class Excel implements Exporter
+class Excel implements Exporter, Importer
 {
+    use RegistersCustomConcerns;
+
     const XLSX     = 'Xlsx';
 
     const CSV      = 'Csv';
+
+    const TSV      = 'Csv';
 
     const ODS      = 'Ods';
 
@@ -41,29 +49,29 @@ class Excel implements Exporter
     protected $queuedWriter;
 
     /**
-     * @var ResponseFactory
-     */
-    protected $response;
-
-    /**
-     * @var FilesystemManager
+     * @var Factory
      */
     protected $filesystem;
 
     /**
+     * @var Reader
+     */
+    private $reader;
+
+    /**
      * @param Writer            $writer
      * @param QueuedWriter      $queuedWriter
-     * @param ResponseFactory   $response
-     * @param FilesystemManager $filesystem
+     * @param Reader            $reader
+     * @param Factory $filesystem
      */
     public function __construct(
         Writer $writer,
         QueuedWriter $queuedWriter,
-        ResponseFactory $response,
-        FilesystemManager $filesystem
+        Reader $reader,
+        Factory $filesystem
     ) {
         $this->writer       = $writer;
-        $this->response     = $response;
+        $this->reader       = $reader;
         $this->filesystem   = $filesystem;
         $this->queuedWriter = $queuedWriter;
     }
@@ -75,7 +83,7 @@ class Excel implements Exporter
     {
         $file = $this->export($export, $fileName, $writerType);
 
-        return $this->response->download($file, $fileName);
+        return response()->download($file, $fileName);
     }
 
     /**
@@ -97,11 +105,53 @@ class Excel implements Exporter
      */
     public function queue($export, string $filePath, string $disk = null, string $writerType = null)
     {
-        if (null === $writerType) {
-            $writerType = $this->findTypeByExtension($filePath);
-        }
+        $writerType = $this->findTypeByExtension($filePath, $writerType);
 
         return $this->queuedWriter->store($export, $filePath, $disk, $writerType);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function import($import, $filePath, string $disk = null, string $readerType = null)
+    {
+        $readerType = $this->getReaderType($filePath, $readerType);
+
+        $response =  $this->reader->read($import, $filePath, $readerType, $disk);
+
+        if ($response instanceof PendingDispatch) {
+            return $response;
+        }
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function toArray($import, $filePath, string $disk = null, string $readerType = null): array
+    {
+        $readerType = $this->getReaderType($filePath, $readerType);
+
+        return $this->reader->toArray($import, $filePath, $readerType, $disk);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function toCollection($import, $filePath, string $disk = null, string $readerType = null): Collection
+    {
+        $readerType = $this->getReaderType($filePath, $readerType);
+
+        return $this->reader->toCollection($import, $filePath, $readerType, $disk);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function queueImport(ShouldQueue $import, $filePath, string $disk = null, string $readerType = null)
+    {
+        return $this->import($import, $filePath, $disk, $readerType);
     }
 
     /**
@@ -115,22 +165,53 @@ class Excel implements Exporter
      */
     protected function export($export, string $fileName, string $writerType = null)
     {
-        if (null === $writerType) {
-            $writerType = $this->findTypeByExtension($fileName);
-        }
+        $writerType = $this->findTypeByExtension($fileName, $writerType);
 
         return $this->writer->export($export, $writerType);
     }
 
     /**
-     * @param string $fileName
+     * @param string|UploadedFile $fileName
+     * @param string|null         $type
      *
      * @return string|null
      */
-    protected function findTypeByExtension(string $fileName)
+    protected function findTypeByExtension($fileName, string $type = null): string
     {
-        $pathInfo = pathinfo($fileName);
+        if (null !== $type) {
+            return $type;
+        }
 
-        return config('excel.extension_detector.' . strtolower($pathInfo['extension'] ?? ''));
+        if (!$fileName instanceof UploadedFile) {
+            $pathInfo  = pathinfo($fileName);
+            $extension = $pathInfo['extension'] ?? '';
+        } else {
+            $extension = $fileName->getClientOriginalExtension();
+        }
+
+        if (null === $type && trim($extension) === '') {
+            throw new NoTypeDetectedException();
+        }
+
+        return config('excel.extension_detector.' . strtolower($extension));
+    }
+
+    /**
+     * @param string|UploadedFile $filePath
+     * @param string|null         $readerType
+     *
+     * @throws NoTypeDetectedException
+     * @return string
+     */
+    private function getReaderType($filePath, string $readerType = null): string
+    {
+        $readerType = $this->findTypeByExtension($filePath, $readerType);
+        $readerType = $readerType ?? IOFactory::identify($filePath);
+
+        if (null === $readerType) {
+            throw new NoTypeDetectedException();
+        }
+
+        return $readerType;
     }
 }

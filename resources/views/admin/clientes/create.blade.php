@@ -71,7 +71,7 @@
                 </div>
 
                 <div class="col-sm-3" style="">
-                    <div class="col-sm-12 col-sm-offset-" style="">
+                    <div class="col-sm-12" style="">
                         <label class="label-left" style="float: left; margin-top: 7px;">Celula &nbsp;&nbsp;</label>
                         <select class="form-control giros_list" style="width: 70%;" name="celula" style="float: right!important;">
                             @foreach ($celulas as $celula)
@@ -80,7 +80,16 @@
                         </select>
                     </div>
                 </div>
-        <br><br><br>
+
+                <div class="row" style="margin-bottom: 5px;">
+                    <div class="col-sm-6 col-sm-offset-3">
+                        <div class="form-group content-descripcion-left-input">
+                            <label class="label-left" style="width:220px;">Contraseña de clave privada</label>
+                            <input style="padding-left: 230px;" type="password" placeholder="Ingrese al menos 6 caracteres..." name="key_pwd" maxlength="12" required value="{{ old('key_pwd') }}">
+                        </div>
+                    </div>
+                </div>
+
                 <label class="etiqueta">Servicios contratados</label>
                 <div style="border:1px red solid;">
                     <div class="row" style="margin-bottom: 2px;">

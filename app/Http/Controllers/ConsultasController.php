@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Session;
 use FPDF;
-use setasign\Fpdi\Fpdi;
 use QRcode;
 use Response;
-use App\Empleado;
+use App\Cell;
 use App\Client;
 use App\Ciasno;
-use App\Cell;
-
+use App\Empleado;
+use App\Checklist;
+use setasign\Fpdi\Fpdi;
+use Illuminate\Http\Request;
 
 class ConsultasController extends Controller
 {
@@ -54,7 +54,6 @@ class ConsultasController extends Controller
     {
         $rfc_cliente = Ciasno::first()->RFCCIA;
         session(['rfc_cliente' => $rfc_cliente]);
-        $ruta = Empleado::Rutas['Timbrados'] .'/';
         $rfc_empleado0 = $RFC;
         $rfc_empleado1=substr ($rfc_empleado0, 0,4);
         $rfc_empleado2=substr ($rfc_empleado0, 5,6);
@@ -62,10 +61,10 @@ class ConsultasController extends Controller
         $rfc_empleado= $rfc_empleado1.$rfc_empleado2.$rfc_empleado3;
         $cliente = Session::get('selCliente');
         $celula_empresa = Cell::where('id', $cliente->cell_id)->first()->nombre;
-
-       $perfil = auth()->user()->profile->id;        
+        $ruta = Client::getRutaTimbrado($cliente->cell_id,$rfc_cliente);
+        $perfil = auth()->user()->profile->id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
-    	return view('consultas.recibos.consulta')->with(compact('navbar', 'ruta', 'rfc_cliente', 'rfc_empleado', 'celula_empresa')); 
+    	return view('consultas.recibos.consulta')->with(compact('navbar', 'ruta', 'rfc_empleado')); 
     }
 
     public function indexContrato()
@@ -80,7 +79,6 @@ class ConsultasController extends Controller
 
      public function consultaContrato($RFC)
     {
-        $ruta = Empleado::Rutas['Contratos'] .'/';
         $rfc_cliente = Ciasno::first()->RFCCIA;
         $rfc_empleado0 = $RFC;
         $rfc_empleado1=substr ($rfc_empleado0, 0,4);
@@ -102,8 +100,7 @@ class ConsultasController extends Controller
         $cliente = Session::get('selCliente');
         $celula_empresa = Cell::where('id', $cliente->cell_id)->first()->nombre;
         $rfc_cliente = Session::get('rfc_cliente');
-        $ruta = Empleado::Rutas['Timbrados'] .'/';
-        $file="$ruta$celula_empresa/$rfc_cliente/timbrado/$archivo";
+        $file= Client::getRutaAutorizados($cliente->cell_id,$rfc_cliente) . '/'.$archivo;
         return Response::download($file);
     }
 
@@ -114,36 +111,78 @@ class ConsultasController extends Controller
         $celula_empresa = Cell::where('id', $cliente->cell_id)->first()->nombre;
         $rfc_cliente = Session::get('rfc_cliente');
         $rfc_empleado = Session::get('rfc_empleado');
-        $ruta = Empleado::Rutas['Contratos'] .'/';
-        $file="$ruta$celula_empresa/$rfc_cliente/empleados/$rfc_empleado/contratos/$archivo";
+        $file = Client::gerRutaEmpleados($cliente->cell_id,$rfc_cliente) .'/'.$rfc_empleado.'/contratos/'.$archivo;
         return Response()->file($file);
         //return Response::download($file);
     }
 
-    public function documentos() //aqui se agrego
+    public function documentos() 
     {
         $rfc_cliente = Ciasno::first()->RFCCIA;
         session(['rfc_cliente' => $rfc_cliente]);
-        $ruta = Client::Rutas['PorTimbrar'] .'/';
         $cliente = Session::get('selCliente');
         $celula_empresa = Cell::where('id', $cliente->cell_id)->first()->nombre;
-
+        $ruta_documentos = Client::getRutaDocumentos($cliente->cell_id,$rfc_cliente);
         $perfil = auth()->user()->profile->id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
        
         
-        return view('consultas.documentos.index')->with(compact('navbar', 'ruta', 'rfc_cliente', 'celula_empresa'));
+        return view('consultas.documentos.index')->with(compact('navbar', 'ruta_documentos', 'rfc_cliente', 'celula_empresa'));
     }
 
-     public function descargaDoc($archivo) //aqui se agrego
+     public function descargaDoc($archivo) 
     {
         
         $cliente = Session::get('selCliente');
         $celula_empresa = Cell::where('id', $cliente->cell_id)->first()->nombre;
         $rfc_cliente = Session::get('rfc_cliente');
-        $ruta = Empleado::Rutas['Contratos'] .'/';
-        $file="$ruta$celula_empresa/$rfc_cliente/documentos/$archivo";
+        $file = Client::getRutaDocumentos($cliente->cell_id,$rfc_cliente).'/'.$archivo;
         return Response()->file($file);
         //return Response::download($file);
     }    
+
+
+    public function checklist()
+    {
+        $checks = Checklist::check;
+        $lists = Checklist::where('CELULA',auth()->user()->cell_id)->get();
+        $clientes = Client::get();
+        //dd($clientes);
+
+        return view('consultas.checklist.index')->with(compact('checks','lists','clientes'));
+    }
+
+
+    public function getDatosChecklist(Request $data) {
+        
+        $list = Checklist::where('id',$data->fldid)->first();   
+        
+       return response($list);
+       
+    }
+
+
+    public function checklistUpdate(Request $request)
+    {
+        $list = Checklist::where('id',$request->id)->first();
+        foreach ($request->CHECK as $valores) {
+           echo $valores.'<br>';
+           $elemento = 'CHECK'.$valores;
+           $list->$elemento = 1;
+            $list->save();
+        }
+        $cont = 1;
+        //dd($request->FECHA);
+       foreach ($request->FECHA as $fecha) {
+           echo $fecha.'<br>';
+           $fe = 'FECHA'.$cont;
+           $list->$fe = $fecha;
+           $list->save();
+           $cont++;
+       }
+
+        //dd('ya');
+
+        return back();
+    }       
 }
