@@ -61,7 +61,7 @@ class ConsultasController extends Controller
         $rfc_empleado= $rfc_empleado1.$rfc_empleado2.$rfc_empleado3;
         $cliente = Session::get('selCliente');
         $celula_empresa = Cell::where('id', $cliente->cell_id)->first()->nombre;
-        $ruta = Client::getRutaTimbrado($cliente->cell_id,$rfc_cliente);
+        $ruta = Client::getRutaEmpleados($cliente->cell_id,$rfc_cliente) . '/' . $rfc_empleado . '/recibos';
         $perfil = auth()->user()->profile->id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
     	return view('consultas.recibos.consulta')->with(compact('navbar', 'ruta', 'rfc_empleado')); 
