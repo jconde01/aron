@@ -54,7 +54,14 @@
                             }
                             ?></td>
                                                  
-                            <td class="parrafo"><a href="{{url('/catalogos/empleados/'.$emp->EMP.'/edit')}}" rel="tooltip" title="Editar" class="btn btn-success btn-simple btn-xs"><i class="fa fa-edit"></i></a></td>             
+                            <td class="parrafo">
+                              <a href="{{url('/catalogos/empleados/'.$emp->EMP.'/edit')}}" rel="tooltip" title="Editar" class="btn btn-success btn-simple btn-xs">
+                                <i class="fa fa-edit"></i>
+                              </a>
+                              <a href="{{url('/catalogos/empleados/'.$emp->EMP.'/documentos')}}" rel="tooltip" title="Documentos" class="btn btn-warning btn-simple btn-xs">
+                                <i class="fa fa-file"></i>
+                              </a>
+                            </td>             
                         </tr>  @endforeach 
                     </tbody>
                              

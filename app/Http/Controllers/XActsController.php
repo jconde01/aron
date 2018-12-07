@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Session;
+use App\Imss;
 use App\Calculo;
 use App\Concepto;
 use App\Empleado;
 use App\Periodo;
 use App\Movtos;
 use App\Nomina;
-use App\Imss;
 use App\Incapa;
-use Session;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class XActsController extends Controller
 {
@@ -26,6 +26,7 @@ class XActsController extends Controller
 
 	const conIncap = ['400','401','402','403','404','405','406','407','408','360','361','100'];
 	const horasExtra = '200';
+	const CONINFONAVIT0 = "652";
 
 	public function porConcepto()
 	{
@@ -65,6 +66,7 @@ class XActsController extends Controller
 		return view('transacciones.horas-extra')->with(compact('navbar','concepto','periCalc','periodos','empleados'));
 	}
 
+
 	public function getMovtosCapturados(Request $data)
 	{
 		$selProceso = Session::get('selProceso');
@@ -82,21 +84,41 @@ class XActsController extends Controller
 				->select('EMPLEADO.EMP','EMPLEADO.NOMBRE','MOVTOS.*')
 				->orderBy('EMPLEADO.EMP')
 				->get();
-		$incapa = Incapa::where('EMP',$data->emp)
-					->where('REFIMSS',$data->refIMSS[$key])
-					->where('FECHA',$data->fecha[$key])->firstOrFail();
+
         return response($capturado);
         //return response(array(['EMP' => $selProceso, 'NOMBRE' => $data->concepto,'CALCULO' => $data->periodo]));
 	}
+
 
 	public function getConcepto(Request $data)
 	{
 		$selProceso = Session::get('selProceso');
 		$concepto = Concepto::where('TIPONO', $selProceso)
 				->where('CONCEPTO', $data->concepto)
-				->first();
+				->first();			
         return array($concepto);
 	}
+
+
+	// Obtiene los datos de la tabla IMSS y tabla INCAPA
+	// del concepto y período pasados en el REQUEST
+	public function getFromImss(Request $data)
+	{
+		$selProceso = Session::get('selProceso');
+		$movtos = Imss::join('EMPLEADO','EMPLEADO.EMP', '=', 'IMSS.EMP')
+					->leftJoin('Incapa', function($join) {
+         				$join->on('INCAPA.EMP', '=', 'IMSS.EMP');
+         				$join->on('INCAPA.REFIMSS', '=', 'IMSS.REFIMSS');
+         				$join->on('INCAPA.FECHA', '=', 'IMSS.FECHA');
+     				})->where('IMSS.TIPONO',$selProceso)
+						->where('IMSS.CONCEPTO',$data->concepto)
+						->where('IMSS.PERIODO',$data->periodo)
+						->select('EMPLEADO.NOMBRE','INCAPA.TIPO','IMSS.*')
+						->orderBy('EMPLEADO.NOMBRE')
+						->get();				
+        return response($movtos);
+	}
+
 
 	public function storeMovtos(Request $data)
 	{
@@ -118,14 +140,14 @@ class XActsController extends Controller
 			//$selProceso = \Cache::get('selProceso');
 			$selProceso = Session::get('selProceso');
 			$sumRes = substr($data->Metodo, 1, 1) == "3"? "2" : "0";
-			$deleted = Movtos::where('TIPONO',$selProceso)->where('CONCEPTO',$data->Concepto)->where('PERIODO',$data->Periodo)->delete();
+			$deleted = Movtos::where('TIPONO',$selProceso)->where('CONCEPTO',$data->Concepto)->where('PERIODO',$data->Pdo)->delete();
 		    foreach ($data->emp as $key => $emp) {
 		    	$cuenta = Empleado::where('TIPONO',$selProceso)->where('EMP',$emp)->value('cuenta');
 		    	$mov = New Movtos();
 		    	$mov->TIPONO = $selProceso;
 		    	$mov->EMP = $emp;
 		    	$mov->CONCEPTO = $data->Concepto;
-		    	$mov->PERIODO = $data->Periodo;
+		    	$mov->PERIODO = $data->Pdo;
 		    	$mov->METODO = $data->Metodo;
 		    	$mov->UNIDADES = $data->unidades[$key];
 		    	$mov->SALDO = 0;
@@ -137,13 +159,18 @@ class XActsController extends Controller
 		    	$mov->OTROS = 0;
 		    	$mov->ESPECIAL = 1;
 		    	$mov->PLAZO = 0;
+		    	if ($data->Concepto == CONINFONAVIT0) {
+		    		$mov->OTROS = $data->otros[$key];
+		    	}
 		    	$mov->cuenta = $cuenta;					// para que grabar la cuenta si esta asociada a un solo empleado?????
 		    	//dd($mov);
 		    	$mov->save();
 		    }
 		});
-  		session()->flash('message', 'Movimientos guardados exitósamente!');
-    	return redirect()->back();
+  		//session()->flash('message', 'Movimientos guardados exitósamente!');
+    	//return redirect()->back();
+    	return back()->with('flash','Movimientos guardados exitósamente!');
+
 	}
 
 	public function storeIncapacidad(Request $data)
@@ -225,7 +252,7 @@ class XActsController extends Controller
 					  	$incapa = New Incapa();
 					  	$incapa->EMP = $emp;
 					  	$incapa->REFIMSS = $data->refIMSS[$key] . '';
-					  	$incapa->Fecha = $data->fecha[$key];
+					  	$incapa->Fecha = date('d-m-Y', strtotime($data->fecha[$key]));
 					  	$incapa->DIAS = $data->dias[$key];
 					  	$incapa->TIPO = $data->tipo[$key];
 					  	$incapa->REGPAT = "";
@@ -233,31 +260,81 @@ class XActsController extends Controller
 					}
 				}
 
-		    	$mov = New Movtos();
-		    	$mov->TIPONO = $selProceso;
-		    	$mov->EMP = $emp;
-		    	$mov->CONCEPTO = $data->Concepto;
-		    	$mov->PERIODO = $data->Periodo;
-		    	$mov->METODO = $data->Metodo;
-		    	$mov->UNIDADES = $data->dias[$key];
-		    	$mov->SALDO = 0;
-		    	$mov->SUMRES = 0;
-		    	$mov->CALCULO = Calculo::perPrim($empleado, $mov, $concepto);
-		    	$mov->METODOISP = $data->MetodoISP;			// Para que grabar esto en Movtos si está en CONCEPTOS ???????
-		    	$mov->FLAGCIEN = '';						// Investigar para que sirve esto??????
-		    	$mov->ACTIVO = 1;
-		    	$mov->OTROS = 0;
-		    	$mov->ESPECIAL = 1;
-		    	$mov->PLAZO = 0;
-		    	//$mov->cuenta = $emp->cuenta[$key];		// para que grabar la cuenta si esta asociada a un solo empleado?????
-		    	$mov->cuenta = '';
-		    	//dd($mov);
-		    	$mov->save();
+		    }
+
+		    // El codigo siguiente es un relajo... 
+		    // Acumula los dias de incapacidad del período POR EMPLEADO.
+		    // Como el arreglo no esta ordenado, tiene que hacer un doble ciclo
+		    // Pero funciona...
+		    $totalizados = [];					// arreglo de los empleados que YA FUERON totalizados
+		    $totIndex = 0;						// Indice actual de el arreglo anterior
+		    $empIndex = 0;						// Indice de la tabla recibida enn el Request
+		    $currEmp = $data->emp[$empIndex];	// Empleado actual que será totalizado
+		    $terminado = 0;						// Flag de proceso termiinado
+		    while ($terminado !== 1 && $empIndex < count($data->emp)) {
+			    $totalizados[$totIndex] = $currEmp;	// Agrega a la tabla el empleado a ser totalizado
+			    $totDias = 0;
+			    // Acumula dias del mismo empleado
+			    foreach ($data->emp as $key => $emp) {
+			    	if ($emp == $currEmp) {
+			    		$totDias += $data->dias[$key];
+			    	}
+			    }
+			    // Al terminar de 'barrer' el arreglo de empleados,
+			    // Si acumuló algo, lo graba...
+			    if ($totDias > 0) {
+			    	$mov = New Movtos();
+			    	$mov->TIPONO = $selProceso;
+			    	$mov->EMP = $currEmp;
+			    	$mov->CONCEPTO = $data->Concepto;
+			    	$mov->PERIODO = $data->Periodo;
+			    	$mov->METODO = $data->Metodo;
+			    	$mov->UNIDADES = $totDias;
+			    	$mov->SALDO = 0;
+			    	$mov->SUMRES = 0;
+			    	$mov->CALCULO = Calculo::perPrim($empleado, $mov, $concepto);
+			    	$mov->METODOISP = $data->MetodoISP;			// Para que grabar esto en Movtos si está en CONCEPTOS ???????
+			    	$mov->FLAGCIEN = '';						// Investigar para que sirve esto??????
+			    	$mov->ACTIVO = 1;
+			    	$mov->OTROS = 0;
+			    	$mov->ESPECIAL = 1;
+			    	$mov->PLAZO = 0;
+			    	//$mov->cuenta = $emp->cuenta[$key];		// para que grabar la cuenta si esta asociada a un solo empleado?????
+			    	$mov->cuenta = '';
+			    	//dd($mov);
+			    	$mov->save();
+
+			    	// Aqui viene el doble ciclo...
+			    	$empIndex++; 							// Incrementa el indice del arreglo de empleados
+			    	$continuar = 1;
+			    	// Aqui se verifica si el empleado que sigue, NO ha sido acumulado
+			    	while ($continuar == 1 && $empIndex < count($data->emp)) {
+			    		$currEmp = $data->emp[$empIndex];		// Toma el empleado que sigue de la tabla recibida en el Request
+						$idx = 0;			    		
+						$yaAcumulado = 0;
+			    		while ($yaAcumulado == 0 && $idx < count($totalizados)) {
+			    			if ($currEmp == $totalizados[$idx]) {
+			    				$yaAcumulado = 1;
+			    			}
+			    			$idx++;
+			    		}
+			    		if ($yaAcumulado == 1) {
+			    			$empIndex++;						// Incrementa el indice del arreglo de empleados
+			    			//$currEmp = $data->emp[$empIndex];	// Toma el empleado que sigue de la tabla recibida en el Request 
+			    		} else {
+			    			$totIndex++;
+			    			$continuar = 0;
+			    		}
+			    	}
+			    } else {
+			    	$terminado = 1;
+			    }
+
 		    }
 		});
-  		session()->flash('message', 'Movimientos guardados exitósamente!');
-    	return redirect()->back();
-		// redirect('/transacciones/porConcepto');
+  		//session()->flash('message', 'Movimientos guardados exitósamente!');
+    	//return redirect()->back();
+		return back()->with('flash','Movimientos guardados exitósamente!');
 	}
 
 	public function storeHorasExtra(Request $data)
@@ -327,9 +404,9 @@ class XActsController extends Controller
 		    	$mov->save();
 		    }
 		});
-  		session()->flash('message', 'Movimientos guardados exitósamente!');
-    	return redirect()->back();
-		// redirect('/transacciones/porConcepto');
+  		//session()->flash('message', 'Movimientos guardados exitósamente!');
+    	//return redirect()->back();
+		return back()->with('flash','Movimientos guardados exitósamente!');
 	}
 
 }

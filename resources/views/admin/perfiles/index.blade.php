@@ -12,7 +12,6 @@
         <div class="section text-center">
             <h2 class="titulo">Listado de perfiles de usuario</h2>
             <div class="row">
-                <!-- <a href=" {{ url('/admin/empresas/create')}} "class="btn btn-primary btn-round">Nueva Empresa</a> -->
                 <a href="{{ url('/admin/perfiles/create')}}" class="btn btn-primary btn-round">Nuevo Perfil</a>
                 <br>
                 <br>

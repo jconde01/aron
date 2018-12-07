@@ -147,9 +147,11 @@ class ConsultasController extends Controller
         $checks = Checklist::check;
         $lists = Checklist::where('CELULA',auth()->user()->cell_id)->get();
         $clientes = Client::get();
+        $perfil = auth()->user()->profile->id;        
+        $navbar = ProfileController::getNavBar('',0,$perfil);
         //dd($clientes);
 
-        return view('consultas.checklist.index')->with(compact('checks','lists','clientes'));
+        return view('consultas.checklist.index')->with(compact('checks','lists','clientes','navbar'));
     }
 
 

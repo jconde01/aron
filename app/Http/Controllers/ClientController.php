@@ -236,6 +236,13 @@ class ClientController extends Controller
         // Crea y almacena las llaves y certificado
         $this::makeCert($request->Nombre, $ciaFiscal->RFCCIA, $rutaCertFiscal, $request->passwd);
         $this::makeCert($request->Nombre, $ciaAsim->RFCCIA, $rutaCertAsim, $request->passwd);
+        $docsRequeridosEmp = new DocsRequeridos();
+        $docsRequeridosEmp->REQUERIDO1 = 1;
+        $docsRequeridosEmp->REQUERIDO2 = 1;
+        $docsRequeridosEmp->REQUERIDO3 = 1;
+        $docsRequeridosEmp->REQUERIDO4 = 1;
+        $docsRequeridosEmp->REQUERIDO5 = 1;
+        $docsRequeridosEmp->save();
 
     	return redirect('/admin/clientes'); 
     }

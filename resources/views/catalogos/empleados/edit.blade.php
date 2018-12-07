@@ -285,7 +285,7 @@
                             </select>
                         </div>
                     </div>
-                    <p data-toggle="modal" data-target="#GSCCModal">bajaaa</p>
+                    
                     <div style="" id="GSCCModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
                              <div class="modal-dialog">
                                 <div class="modal-content">

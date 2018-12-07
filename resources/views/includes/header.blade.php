@@ -86,7 +86,9 @@
     @endif
     @if (session()->has('flash'))
       <div class="container">
-        <div class="alert alert-success">{{ session('flash') }}</div>
+        <div class="alert alert-success">{{ session('flash') }}
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        </div>
       </div>
     @endif
   </div>

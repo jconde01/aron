@@ -17,6 +17,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
+//Route::get('/testajapi','HomeController@testajapi');
 
 // Rutas para las opciones que NO son del menu asociado al perfil ( o sea, que TODOS puedem accesar)
 Route::middleware(['auth'])->group(function () {
@@ -70,7 +71,9 @@ Route::middleware(['auth','basic'])->prefix('catalogos')->group(function () {
 	Route::post('/empleados/{EMP}/edit', 'EmpleadosController@update');
 	Route::post('/empleados/getSalarioIntegrado','EmpleadosController@getSalarioIntegrado');
 	Route::post('/empleados/getDatosEmpleado','EmpleadosController@getDatosEmpleado');
-
+	Route::get('/empleados/{EMP}/documentos', 'EmpleadosController@documentos');
+	Route::get('/documentos/empleados/{documento}', 'EmpleadosController@visualizar');
+	Route::post('/documentos/empleados/actualizar','EmpleadosController@UpDocs');
 
 });
 
@@ -98,6 +101,7 @@ Route::middleware(['auth'])->prefix('transacciones')->group(function () {
 	Route::get('/porIncapacidad','XActsController@porIncapacidad')->name('porIncapacidad');
 	Route::post('/porIncapacidad','XActsController@storeIncapacidad');	
 	//Route::get('/get-movtos','XActsController@buscaMovtos');
+	Route::post('/get-from-imss','XActsController@getFromImss');				// Ajax call
 	Route::post('/get-movtos','XActsController@getMovtosCapturados');			// Ajax call
 	Route::post('/get-concepto','XActsController@getConcepto');					// Ajax call
 	Route::get('/horasExtra','XActsController@horasExtra');
@@ -196,4 +200,7 @@ Route::middleware(['auth'])->prefix('tickets')->group(function () {
 	Route::get('/sistema/{folio}/ver','ticketsController@ver');
 });
 
-
+Route::middleware(['auth'])->prefix('configuracion')->group(function () {
+	Route::get('/documentos/requeridos','EmpleadosController@configuracion');
+	Route::post('/documentos/update','EmpleadosController@DocsUpdate');
+});

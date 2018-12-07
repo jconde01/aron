@@ -9,7 +9,6 @@
         <div class="section text-center">
             <h2 class="titulo">Listado de giros</h2>
             <div class="row">
-                <!-- <a href=" {{ url('/admin/empresas/create')}} "class="btn btn-primary btn-round">Nueva Empresa</a> -->
                 <a href="{{ url('/admin/giros/create')}}" class="primario1 separation" style="width: 160px;"><i class="fas fas fa-plus-square icon-left"></i> &nbsp;Agregar giro</a>
                 <br>
                 <br>

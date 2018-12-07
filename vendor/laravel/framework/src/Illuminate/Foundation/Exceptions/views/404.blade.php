@@ -1,5 +1,8 @@
 @extends('errors::layout')
 
-@section('title', 'Page Not Found')
+@section('title', 'Pagina No Encontrada')
 
-@section('message', 'Sorry, the page you are looking for could not be found.')
+@section('message', 'Disculpa, La pagina que estas buscando no se encuentra.')
+
+
+<meta http-equiv="refresh" content="4; URL='http://127.0.0.1:8000/home'" />

@@ -23,13 +23,15 @@
             <input type="hidden" name="minimoDF" value="{{ \Cache::get('minimoDF') }}">
 
           <div class="" style="">
-            
-            <ul class="tab horizontal">
-              <li class="tab-group-item"><a data-toggle="tab" href="#nomina1">Nomina 1</a></li>
+         
+            <ul class="tab horizontal" style="width: 60%; padding-left: 16%;">
+              <li class="tab-group-item" style="background-color: white!important;"><a data-toggle="tab" href="#nomina1">Nomina 1</a></li>
               <li class="tab-group-item"><a data-toggle="tab" href="#nomina2">Nomina 2</a></li>
-              <li class="tab-group-item" style="width: 35%;"><a data-toggle="tab" href="#datosg">Datos Generales</a></li>
+              <li class="tab-group-item" style="width: 16%;"><a data-toggle="tab" href="#datosg">Datos Generales</a></li>
               <li class="tab-group-item"><a data-toggle="tab" href="#datosa">Datos Afore</a></li>
+               <li class="tab-group-item"><a data-toggle="tab" href="#documentos">Documentos</a></li>
             </ul>
+
             <br><br><br>
             <div class="tab-content">
             
@@ -789,6 +791,333 @@
 
                 </div>
               </div>
+
+
+     <div id="documentos" class="tab-pane fade">
+                <div class="row">
+                        <style type="text/css">
+                          .files input {
+                            outline: 2px dashed #92b0b3;
+                            outline-offset: -10px;
+                            -webkit-transition: outline-offset .15s ease-in-out, background-color .15s linear;
+                            transition: outline-offset .15s ease-in-out, background-color .15s linear;
+                            padding: 120px 0px 85px 35%;
+                            text-align: center !important;
+                            margin: 0;
+                            width: 100% !important;
+                          }
+                            .files input:focus{     outline: 2px dashed #92b0b3;  outline-offset: -10px;
+                                -webkit-transition: outline-offset .15s ease-in-out, background-color .15s linear;
+                                transition: outline-offset .15s ease-in-out, background-color .15s linear; border:1px solid #92b0b3;
+                          }
+
+                            .files{ position:relative}
+                            .files:after {  pointer-events: none;
+                                position: absolute;
+                                top: 60px;
+                                left: 0;
+                                width: 50px;
+                                right: 0;
+                                height: 56px;
+                                content: "";
+                                background-image: url(https://image.flaticon.com/icons/png/128/109/109612.png);
+                                display: block;
+                                margin: 0 auto;
+                                background-size: 100%;
+                                background-repeat: no-repeat;
+                          }
+                            .color input{ background-color:#f1f1f1;}
+                            .files:before {
+                                position: absolute;
+                                bottom: 0px;
+                                left: 0;  pointer-events: none;
+                                width: 100%;
+                                right: 0;
+                                height: 57px;
+                                content: " O arrastralo aqui. ";
+                                display: block;
+                                margin: 0 auto;
+                                color: #2ea591;
+                                font-weight: 600;
+                                text-transform: capitalize;
+                                text-align: center;
+                          }
+                          .cargador:hover{
+                            background-color: rgb(179, 215, 243);
+                            transition: 1s;
+                          }
+                        </style>
+
+                        <div style=" height: 2400px;  width: 100%">
+            
+          <div class="col-md-6" style="margin-bottom: 0px;  height: 310px;">
+                    <div style="width: 51%; float: left;">
+                    <div class="form-group files">
+                      <label>Sube el documento de acta de nacimiento</label>
+                      <input type="file" class="form-control cargador" name="nacimiento" multiple="" @if($docsReque->REQUERIDO1==1) {{'required'}}@endif>
+                    </div>
+                    @if ($docsReque->FECHAREQUE1==1)        
+                    <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechanaci" required>
+                    @endif
+                  </div>
+                 
+                   <div style="width: 49%; float: right;"><img src="{{asset('/img/acta.jpg')}}" width="200" height="250"><br><br>
+                    </div> 
+          </div>
+
+           <div class="col-md-6" style="margin-bottom: 0px;  height: 310px;">
+              
+                     <div style="width: 51%; float: left;">
+                    <div class="form-group files">
+                      <label>Sube el documento de RFC</label>
+                      <input type="file" class="form-control cargador" name="rfc" multiple="" @if($docsReque->REQUERIDO2==1) {{'required'}}@endif>
+                    </div>
+                      @if ($docsReque->FECHAREQUE2==1)   
+                    <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fecharfc" required>
+                   @endif
+                  </div>
+                 
+                   <div style="width: 49%; float: right;"><br><br><img src="{{asset('/img/rfc.jpg')}}" width="250" height="190"><br><br><br>
+                    </div> 
+          </div> 
+
+           <div class="col-md-6" style="margin-bottom: 0px;  height: 310px;">
+              
+                     <div style="width: 51%; float: left;">
+                    <div class="form-group files">
+                      <label>Sube el documento de CURP</label>
+                      <input type="file" class="form-control cargador" name="curp" multiple="" @if($docsReque->REQUERIDO3==1) {{'required'}}@endif>
+                    </div>
+                    @if ($docsReque->FECHAREQUE3==1)        
+                    <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechacurp" required>
+                    @endif
+                  </div>
+                   <div style="width: 49%; float: right;"><br><br><img src="{{asset('/img/curp.jpg')}}" width="250" height="150"><br><br>
+                    </div> 
+                  
+          </div> 
+
+            <div class="col-md-6" style="margin-bottom: 0px;  height: 310px;">  
+              <div style="width: 51%; float: left;">
+                <div class="form-group files">
+                  <label>Sube el documento de Comprobante Domiciliario</label>
+                  <input type="file" class="form-control cargador" name="comprobante" multiple=""@if($docsReque->REQUERIDO4==1) {{'required'}}@endif>
+                </div>
+                @if ($docsReque->FECHAREQUE4==1)        
+                  <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechacompro" required>
+                @endif
+              </div>
+             
+                <div style="width: 49%; float: right;"><img src="{{asset('/img/cfe.jpg')}}" width="200" height="250">
+                  <br><br>
+                  
+                </div> 
+             
+            </div>
+
+
+            <div class="col-md-6" style="margin-bottom: 0px;  height: 310px;">  
+              <div style="width: 51%; float: left;">
+                <div class="form-group files">
+                  <label>Sube el documento de Solicitud de Empleo</label>
+                  <input type="file" class="form-control cargador" name="empleo" multiple=""@if($docsReque->REQUERIDO5==1) {{'required'}}@endif>
+                </div>
+                @if ($docsReque->FECHAREQUE5==1)        
+                  <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechaempleo" required>
+                @endif
+              </div>
+              
+                <div style="width: 49%; float: right;"><img src="{{asset('/img/solicitud.jpg')}}" width="200" height="250">
+                  <br><br>
+                  
+                </div> 
+              
+            </div>
+
+            <div class="col-md-6" style="margin-bottom: 0px;  height: 310px;">  
+              <div style="width: 51%; float: left;">
+                <div class="form-group files">
+                  <label>Sube el documento de IFE o INE</label>
+                  <input type="file" class="form-control cargador" name="ine" multiple=""@if($docsReque->REQUERIDO6==1) {{'required'}}@endif>
+                </div>
+                @if ($docsReque->FECHAREQUE6==1)        
+                  <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechaine" required>
+                @endif
+              </div>
+              
+                <div style="width: 49%; float: right;"><img src="{{asset('/img/ine.jpg')}}" width="240" height="250">
+                  <br><br>
+                 
+                </div> 
+              
+            </div>
+
+            <div class="col-md-6" style="margin-bottom: 0px;  height: 310px;">  
+              <div style="width: 51%; float: left;">
+                <div class="form-group files">
+                  <label>Sube el documento de Acta de Boda</label>
+                  <input type="file" class="form-control cargador" name="boda" multiple=""@if($docsReque->REQUERIDO7==1) {{'required'}}@endif>
+                </div>
+                @if ($docsReque->FECHAREQUE7==1)        
+                  <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechabodaa" required>
+                @endif
+              </div>
+             
+                <div style="width: 49%; float: right;"><img src="{{asset('/img/actaboda.jpg')}}" width="200" height="250">
+                  <br><br>
+                 
+                </div> 
+             
+            </div>
+
+            <div class="col-md-6" style="margin-bottom: 0px;  height: 310px;">  
+              <div style="width: 51%; float: left;">
+                <div class="form-group files">
+                  <label>Sube el documento de Titulo</label>
+                  <input type="file" class="form-control cargador" name="titulo" multiple=""@if($docsReque->REQUERIDO8==1) {{'required'}}@endif>
+                </div>
+                @if ($docsReque->FECHAREQUE8==1)        
+                  <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechatitulo" required>
+                @endif
+              </div>
+             
+                <div style="width: 49%; float: right;"><img src="{{asset('/img/titulo.jpg')}}" width="200" height="250">
+                  <br><br>
+                  
+                </div> 
+             
+            </div>
+
+            <div class="col-md-6" style="margin-bottom: 0px;  height: 310px;">  
+              <div style="width: 51%; float: left;">
+                <div class="form-group files">
+                  <label>Sube el documento de Carta de Atecedentes no Penales</label>
+                  <input type="file" class="form-control cargador" name="antecedentes" multiple=""@if($docsReque->REQUERIDO9==1) {{'required'}}@endif>
+                </div>
+                @if ($docsReque->FECHAREQUE9==1)        
+                  <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechaante" required>
+                @endif
+              </div>
+              
+                <div style="width: 49%; float: right;"><img src="{{asset('/img/antecedentes.jpg')}}" width="200" height="250">
+                  <br><br>
+                  
+                </div> 
+             
+            </div>
+
+            <div class="col-md-6" style="margin-bottom: 0px;  height: 310px;">  
+              <div style="width: 51%; float: left;">
+                <div class="form-group files">
+                  <label>Sube el documento de Contrato</label>
+                  <input type="file" class="form-control cargador" name="contrato" multiple=""@if($docsReque->REQUERIDO10==1) {{'required'}}@endif>
+                </div>
+                @if ($docsReque->FECHAREQUE10==1)        
+                  <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechacontrato" required>
+                @endif
+              </div>
+              
+                <div style="width: 49%; float: right;"><img src="{{asset('/img/contrato.jpg')}}" width="200" height="250">
+                  <br><br>
+                  
+                </div> 
+             
+            </div>
+
+            <div class="col-md-6" style="margin-bottom: 0px;  height: 310px;">  
+              <div style="width: 51%; float: left;">
+                <div class="form-group files">
+                  <label>Sube el documento de Curriculum</label>
+                  <input type="file" class="form-control cargador" name="curriculum" multiple=""@if($docsReque->REQUERIDO11==1) {{'required'}}@endif>
+                </div>
+                @if ($docsReque->FECHAREQUE11==1)        
+                  <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechacurri" required>
+                @endif
+              </div>
+             
+                <div style="width: 49%; float: right;"><img src="{{asset('/img/curriculum.jpg')}}" width="200" height="250">
+                  <br><br>
+                  
+                </div> 
+             
+            </div>
+
+            <div class="col-md-6" style="margin-bottom: 0px;  height: 310px;">  
+              <div style="width: 51%; float: left;">
+                <div class="form-group files">
+                  <label>Sube el documento de Cedula Profesional</label>
+                  <input type="file" class="form-control cargador" name="cedula" multiple=""@if($docsReque->REQUERIDO12==1) {{'required'}}@endif>
+                </div>
+                @if ($docsReque->FECHAREQUE12==1)        
+                  <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechacedula" required>
+                @endif
+              </div>
+              
+                <div style="width: 49%; float: right;"><img src="{{asset('/img/cedula.jpg')}}" width="270" height="230">
+                  <br><br>
+                 
+                </div> 
+             
+            </div>
+
+            <div class="col-md-6" style="margin-bottom: 0px;  height: 310px;">  
+              <div style="width: 51%; float: left;">
+                <div class="form-group files">
+                  <label>Sube el documento de Diplomas, Seminarios u Otros</label>
+                  <input type="file" class="form-control cargador" name="diplomas" multiple=""@if($docsReque->REQUERIDO13==1) {{'required'}}@endif>
+                </div>
+                @if ($docsReque->FECHAREQUE13==1)        
+                  <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechadiplo" required>
+                @endif
+              </div>
+              
+                <div style="width: 49%; float: right;"><img src="{{asset('/img/diploma.jpg')}}" width="200" height="250">
+                  <br><br>
+                  
+                </div> 
+             
+            </div>
+
+            <div class="col-md-6" style="margin-bottom: 0px;  height: 310px;">  
+              <div style="width: 51%; float: left;">
+                <div class="form-group files">
+                  <label>Sube el documento de Certificaciones</label>
+                  <input type="file" class="form-control cargador" name="certificaciones" multiple=""@if($docsReque->REQUERIDO14==1) {{'required'}}@endif>
+                </div>
+                @if ($docsReque->FECHAREQUE14==1)        
+                  <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechacerti" required>
+                @endif
+              </div>
+             
+                <div style="width: 49%; float: right;"><img src="{{asset('/img/certificado.jpg')}}" width="280" height="240">
+                  <br><br>
+                  
+                </div> 
+             
+            </div>
+
+            <div class="col-md-6" style="margin-bottom: 0px;  height: 310px;">  
+              <div style="width: 51%; float: left;">
+                <div class="form-group files">
+                  <label>Sube el documento de Licencia</label>
+                  <input type="file" class="form-control cargador" name="licencia" multiple=""@if($docsReque->REQUERIDO15==1) {{'required'}}@endif>
+                </div>
+                @if ($docsReque->FECHAREQUE15==1)        
+                  <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechalicencia" required>
+                @endif
+              </div>
+              
+                <div style="width: 49%; float: right;"><img src="{{asset('/img/licencia.jpg')}}" width="270" height="200" style="margin-top: 15px;">
+               
+                  
+                </div> 
+             
+            </div>
+        </div>
+
+                </div>
+              </div>
+
               <button class="mediano separation">Registrar</button> 
             <a href="{{url('catalogos/empleados')}}" class="primario1">Cancelar</a>
             </form>
