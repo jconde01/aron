@@ -23,6 +23,8 @@
 		<input type="hidden" id="Metodo"  name="Metodo" value="">
 		<input type="hidden" id="MetodoISP"  name="MetodoISP" value="">
 		<input type="hidden" id="FlagCien"  name="FlagCien" value="">
+		<input type="hidden" id="FechaHoy" name="FechaHoy" value="{{ date('Y-m-d', time()) }}">
+		<input type="hidden" id="PrimerPeriodoAbierto" name="PrimerPeriodoAbierto" value="{{ $periodos->first()->PERIODO }}">
         <!-- <p class="text-center" style="color:Azure; text-align: center;">Ingresa tus datos</p> -->
         <div class="row" style="margin-bottom: 0px;">
             <div class="col-md-6">
@@ -146,8 +148,9 @@
 	var saldo;
 	var activo;
 	var sueldo;
+	var promed;
 	var metodo;	
-	var periodo;
+	var periodo = 0;
 	var rowElem;
 	var descuento;
 	var unidades;
@@ -185,7 +188,7 @@
         				'</div>';
 	importeFld["Add"] =  '<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;"> ' +
             			'	<label class="label-left" style="font-size: 14px;">Importe</label>' +
-            			'	<input type="text" id="importe" name="Importe" value="">' +
+            			'	<input type="text" id="unidades" name="Importe" value="">' +
         				'</div>';
     fechaFld["Add"]	= '<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;"> ' +
             			'	<label class="label-left" style="font-size: 14px;">Fecha</label>' +
@@ -217,11 +220,11 @@
         				'</div>';
     fechaFld["Edit"]	= '<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;"> ' +
             			'	<label class="label-left" style="font-size: 14px;">Fecha</label>' +
-            			'	<input type="date" id="ed_fecha" name="Fecha" value="">' +
+            			'	<input type="date" id="ed_fecha" name="Fecha" readonly value="">' +
         				'</div>';
 	saldoFld["Edit"] =  '<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;"> ' +
             			'	<label class="label-left" style="font-size: 14px;">Saldo</label>' +
-            			'	<input type="text" id="ed_saldo" name="Saldo" value="">' +
+            			'	<input type="text" id="ed_saldo" name="Saldo" readonly value="">' +
         				'</div>';        				
 
 	$.ajaxSetup({
@@ -229,6 +232,22 @@
 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 		}
 	});
+
+
+	function stringToDate(_date,_format,_delimiter)
+	{
+	        var formatLowerCase=_format.toLowerCase();
+	        var formatItems=formatLowerCase.split(_delimiter);
+	        var dateItems=_date.split(_delimiter);
+	        var monthIndex=formatItems.indexOf("mm");
+	        var dayIndex=formatItems.indexOf("dd");
+	        var yearIndex=formatItems.indexOf("yyyy");
+	        var month=parseInt(dateItems[monthIndex]);
+	        month-=1;
+	        var formatedDate = new Date(dateItems[yearIndex],month,dateItems[dayIndex]);
+	        return formatedDate;
+	}
+
 
 	$(document).ready(function() {
 		token = $('input[name=_token]').val();
@@ -251,18 +270,45 @@
 
 
     $("#btnNuevo").click(function(){
-		concepto  = $('.cpto').val();
-		periodo   = $('.pdo').val();
-    	if ( concepto != 0 && periodo != 0 ) {
-        	$("#nuevo").modal();
-        } else {
-           alert('No ha seleccionado un concepto o período!');
-        }
+		concepto = $('.cpto').val();
+		if (concepto != 0) {
+			if (document.getElementById("pdo").disabled) {
+				periodo = 0;
+				$("#nuevo").modal();	
+			} else {
+				periodo = $('.pdo').val();
+	    		if ( periodo != 0 ) {
+	        		$("#nuevo").modal();
+	        	} else {
+	           		alert('No ha seleccionado el período!');
+	        	}
+	        }
+		} else {
+			alert('No ha seleccionado el concepto!');
+		}
     });
 
 	$("#nuevo").on('show.bs.modal', function() {
 		// Agrega al MODAL, los campos que se deben capturar de acuerdo al valor de 'pantalla'
 		addInputFields("Add", $("#nuevo .input-data"));
+		var periodoFld =  document.getElementById("periodo");
+		var fechaInicia = document.getElementById("fecha");
+		if (periodo == 0) {
+			periodoFld.value = $('#PrimerPeriodoAbierto').val();
+		} else {
+			periodoFld.value = periodo;
+		}
+		if (fechaInicia) {
+			fechaInicia.value = $('#FechaHoy').val();
+		}
+		switch (pantalla) {
+			case 1:
+			case 2:
+			case 5:
+				document.getElementById("activo").checked = true;
+				break;
+		}
+		
 	});
 
 
@@ -301,131 +347,98 @@
             tipoCaptura = conceptData[0]["TIPCAPT"];
             flagCien = getFlagValue(conceptData[0]["METODO"],tipoCaptura);
     		document.getElementById("FlagCien").value = flagCien;
+    		document.getElementById("pdo").disabled = false;
     		// Choose pantalla
 			switch (concepto) {
 				case CONINFONAVIT0:
+					// INFONAVIT con saldo acumulado.
+					// NO se captura el saldo.
 					pantalla = 1;
+			    	document.getElementById("pdo").disabled = true;					
 					break;
 				case (CONFONACOT.includes(concepto)?concepto:null):
+					// FONACOT con Descuento Mensual
+					// SI se captura SALDO.
 					pantalla = 2;
 					break;
 				default:
-					//console.log(tipoCaptura);
 	    			switch (tipoCaptura) {
-			    		case CAPUNI: 		// Captura Unidades y calcula importe
+			    		case CAPUNI: 			// "1" - Captura Unidades y calcula importe
+			    			// EJEMPLO : Dia festivo/descanso trabajado
 			    			pantalla = 3;
 			    			break;
-			    		case CAPIMP: 		// Captura Importes 
+			    		case CAPIMP: 			// "2" - Captura Importes
+			    			// Ejemplo : Gratificaciones, Bonos
 			    			pantalla = 4;
 			    			break;
-			    		case CAPSALAUTO: 	// Captura Saldo Automático 
+			    		case CAPSALAUTO: 		// "3" - Captura Saldo Automático. 
+			    			// Deshabilita el PERIODO para este tipo de captura
+			    			document.getElementById("pdo").disabled = true;
+			    			// Aqui es el METODO (= TIPCONCEP + TIPCALCUL + METODO) el que determina la pantalla  
 			    			if (metodo == "2303" || metodo == "2310" || metodo == "2323" || metodo == "2327" || metodo == "2328" ) {
+			    				// Conceptos que van acumulando lo descontado.
+			    				// NO se captura el SALDO. Solo se debe desplegar
 			    				pantalla = 1;
 			    			} else {
+			    				// En esta pantalla SI debe solicitarse el saldo al dar de alta el renglón. NO al editar
+			    				// Ejemplo : Concepto PRESTAMO EMPRESA
 			    				pantalla = 5;
 			    			}
 			    			break;
 			    	}
 			    	break;
 	    	}
-    		console.log('concepto: '+ concepto +', metodo: ' + metodo + ', flagCien:' + flagCien + ', pantalla:' + pantalla + ', tipo captura: '+tipoCaptura);
+    		console.log('concepto: '+ concepto +', metodo: ' + metodo + ', flagCien:' + flagCien + ', pantalla:' + pantalla + ', tipo captura (TIPCAPT): '+tipoCaptura);
 	    	creaPantalla(pantalla);
+	    	if (document.getElementById("pdo").disabled) {
+	    		$("body").css("cursor", "wait");
+	    		$.post("get-movtos", { concepto: concepto, periodo: '', _token: token }, function( data ) {
+		        	$("body").css("cursor", "default");
+		            var movtos = Object.values(data);
+		            despliegaDatos(movtos);
+	    		});
+	    	}
         });
 	});
 
 
 	$('.pdo').change(function() {
 		concepto  =  $('.cpto').val();
-		periodo = $('.pdo').val();
-    	//console.log(concepto + ' - ' + periodo);
-    	// checa si hay movimientos capturados del período en cuyo caso los despliega
-		totUnidades = 0;
-		totImporte = 0;
-		$("body").css("cursor", "wait");
-        $.post("get-movtos", { concepto: concepto, periodo: periodo, _token: token }, function( data ) {
-        	$("body").css("cursor", "default");
-            var movtos = Object.values(data);
-    		// console.log(movtos);
-    		// limpia la tabla para desplegar los movtos leidos
-		    while (tabla.rows.length > 1) {
-		        tabla.deleteRow(tabla.rows.length-1);
-    		}
-    		// Aqui los despliega !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    	    for (var i = 0; i < movtos.length; i++) {
-            	var row = tabla.insertRow(tabla.rows.length);
-            	var col0 = row.insertCell(0);
-            	var col1 = row.insertCell(1);
-            	var col2 = row.insertCell(2);
-	        	var col3 = row.insertCell(3);
-	        	var col4 = row.insertCell(4);
-	        	var col5 = row.insertCell(5);    	    	
-				col0.innerHTML = '<td><input type="text" class="emp" name="emp[]" value="'+movtos[i]["EMP"]+'"/></td>'; col0.style.display = 'none';
-				col1.innerHTML = '<td style="text-align:left!important;">' + movtos[i]["NOMBRE"] + '</td>';
-				col2.innerHTML = '<td><input type="text" class="periodo" name="periodo[]" style="border:0px;width:150px!important;text-align:center!important;" readonly value="'+movtos[i]["PERIODO"]+'"/></td>';
-				switch (pantalla) {
-    	    		case 1:
-    	    		case 2:
-						totUnidades = totUnidades + movtos[i]["UNIDADES"];
-						totImporte = totImporte + movtos[i]["SALDO"];
-
-			        	var col6 = row.insertCell(6);
-			        	var col7 = row.insertCell(7);
-			        	var col8 = row.insertCell(8);
-						var checked = (movtos[i]["ACTIVO"] == 1)?'checked':'';
-						if (concepto >= DEDUCCIONES) {
-							col3.innerHTML = '<td><input type="text" class="descuento" name="unidades[]" style="border:0px;width:100px!important;text-align:right!important;" readonly value="'+movtos[i]["UNIDADES"]+'" /></td>';
-						} else {
-							col3.innerHTML = '<td><input type="text" class="importe" name="importe[]"  style="border:0px;width:100px!important;text-align:right!important;" readonly value="'+movtos[i]["UNIDADES"]+'" /></td>';
-						}
-						col4.innerHTML = '<td><input type="text" class="saldo" name="saldo[]"  style="border:0px;width:100px!important;text-align:right!important;" readonly value="'+movtos[i]["SALDO"]+'" /></td>';
-						col5.innerHTML = '<td><input type="checkbox" class="activo" name="activo[]"  style="border:0px;width:100px!important;text-align:center!important;" readonly '+ checked +'/></td>';
-						col6.innerHTML = '<td><input type="text" class="calculo" name="calculo[]" readonly value="'+movtos[i]["CALCULO"]+'" /></td>'; col6.style.display = 'none';
-						col7.innerHTML = '<td><input type="text" class="fecha" name="fecha[]" style="border:0px;width:100px!important;text-align:right!important;" readonly value="'+movtos[i]["fecha"]+'"/></td>';
-						col8.innerHTML = '<td class="td-actions text-center">'+
-							'<a href="#" rel="tooltip" title="Editar" class="btn btn-success btn-simple btn-xs"><i class="fa fa-edit"></i></a>'+
-							'&nbsp&nbsp<a href="#" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs"><i class="fa fa-times"></i></a>'+'</td>';						
-    	    			break;
-    	    		case 3:
-						totUnidades = totUnidades + movtos[i]["UNIDADES"];
-						totImporte = totImporte + movtos[i]["CALCULO"];    	    		
-
-						col3.innerHTML = '<td><input type="text" class="unidades" name="unidades[]" style="border:0px;width:150px!important;text-align:right!important;" readonly value="'+movtos[i]["UNIDADES"]+'"/></td>';
-						col4.innerHTML = '<td><input type="text" class="calculo" name="calculo[]"  style="border:0px;width:150px!important;text-align:right!important;" readonly value="'+movtos[i]["CALCULO"]+'" /></td>';
-						col5.innerHTML = '<td class="td-actions text-center">'+
-							'<a href="#" rel="tooltip" title="Editar" class="btn btn-success btn-simple btn-xs"><i class="fa fa-edit"></i></a>'+
-							'&nbsp&nbsp<a href="#" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs"><i class="fa fa-times"></i></a>'+'</td>';						
-						break;
-    	    		case 4:
-						totUnidades = totUnidades + movtos[i]["UNIDADES"];
-						totImporte = totImporte + movtos[i]["CALCULO"];    	    		
-
-						col3.innerHTML = '<td><input type="text" class="unidades" name="unidades[]" style="border:0px;width:150px!important;text-align:right!important;" readonly value="'+movtos[i]["UNIDADES"]+'"/></td>';
-						col4.innerHTML = '<td><input type="text" class="calculo" name="calculo[]"  style="border:0px;width:150px!important;text-align:right!important;" readonly value="'+movtos[i]["CALCULO"]+'" /></td>'; col4.style.display = 'none';
-						col5.innerHTML = '<td class="td-actions text-center">'+
-							'<a href="#" rel="tooltip" title="Editar" class="btn btn-success btn-simple btn-xs"><i class="fa fa-edit"></i></a>'+
-							'&nbsp&nbsp<a href="#" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs"><i class="fa fa-times"></i></a>'+'</td>';						
-						break;
-    	    		case 5:
-    	    			break;
-       	    	}
-
-            }
-        });		
+		if (concepto != 0) {
+			periodo = $('.pdo').val();
+	    	// checa si hay movimientos capturados del período en cuyo caso los despliega
+			totUnidades = 0;
+			totImporte = 0;
+			$("body").css("cursor", "wait");
+	        $.post("get-movtos", { concepto: concepto, periodo: periodo, _token: token }, function( data ) {
+	        	$("body").css("cursor", "default");
+	            var movtos = Object.values(data);
+	    		despliegaDatos(movtos);
+	        });			
+		} else {
+			alert('No ha seleccionado el concepto!');
+		}
+		
 	});
 
 
+	// Valida los valores capturados en el MODAL y los pasa a la tabla si no falla la validacion
     $("#Add").click(function(event){
 		var nombre = $('#empleado>option:selected').text();
 		var importe;
 		empleado  =  $('#empleado').val();
 		sueldo =  Number($('.emp').find(':selected').data('sueldo'));
 		promed = Number($('.emp').find(':selected').data('promed'));
- 		//descuento = $('#descuento').val();
+		periodo = $('#periodo').val();
+ 		descuento = $('#descuento').val();
  		fecha = $('#fecha').val();
 		unidades = $('#unidades').val();
+		if (pantalla == 4) {
+			unidades = $('#importe').val();	
+		}
 		saldo = $('#saldo').val();
+		if (!saldo) saldo = 0;
 		activo = $('#activo').is(':checked');
-		calculo = 0; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Checar este valor en TISANOM !!!!!!!!!!!!!!!!!!!!!!!!!
 		console.log('periodo: ' + periodo);
 		console.log('empleado: ' + empleado + ', sueldo: ' + sueldo + ', promed: ' + promed);
 	    console.log('pantalla: ' + pantalla + ', descuento: ' + descuento + ', unidades: ' + unidades + ', saldo: ' + saldo + ', activo: ' + activo);
@@ -439,18 +452,23 @@
         	var col3 = row.insertCell(3);
         	var col4 = row.insertCell(4);
         	var col5 = row.insertCell(5);
+
+        	// Obtiene el valor de la columna CALCULO
+	    	calculo = getCalculoValue();
+	    	console.log('resultado del cálculo: ' + calculo);
+
+			col0.innerHTML = '<td><input type="text" class="emp" name="emp[]" data-sueldo="'+ sueldo +'" data-promed="'+ promed +'" value="'+empleado+'"/></td>'; col0.style.display = 'none';
+			col1.innerHTML = '<td style="text-align:left!important;">' + nombre + '</td>';					
+			col2.innerHTML = '<td><input type="text" class="periodo" name="periodo[]"  style="border:0px;width:100px!important;text-align:center!important;" readonly value="' + periodo + '"/></td>';
 	    	switch (pantalla) {
 	    		case 1:
 	    		case 2:
 		        	var col6 = row.insertCell(6);
 		        	var col7 = row.insertCell(7);
 		        	var col8 = row.insertCell(8);
-
 		        	var checked = (activo)?'checked':'';
-					col0.innerHTML = '<td><input type="text" class="emp" name="emp[]" value="'+empleado+'"/></td>'; col0.style.display = 'none';
-					col1.innerHTML = '<td style="text-align:left!important;">' + nombre + '</td>';					
-					col2.innerHTML = '<td style="text-align:center!important;">' + periodo + '</td>';
-					col3.innerHTML = '<td><input type="text" class="unidades" name="unidades[]" style="border:0px;width:100px!important;text-align:right!important;" readonly value="'+unidades+'" /></td>';
+
+					col3.innerHTML = '<td><input type="text" class="unidades" name="unidades[]" style="border:0px;width:100px!important;text-align:right!important;" readonly value="'+descuento+'" /></td>';
 					col4.innerHTML = '<td><input type="text" class="saldo" name="saldo[]"  style="border:0px;width:150px!important;text-align:right!important;" readonly value="'+saldo+'" /></td>';
 					col5.innerHTML = '<td><input type="checkbox" class="activo" name="activo[]"  style="border:0px;width:150px!important;text-align:center!important;" readonly '+ checked +'/></td>';
 					col6.innerHTML = '<td><input type="text" class="calculo" name="calculo[]"  style="border:0px;width:0px!important;text-align:right!important;" readonly value="'+calculo+'" /></td>'; col6.style.display = 'none';
@@ -460,72 +478,23 @@
 						'&nbsp&nbsp<a href="#" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs"><i class="fa fa-times"></i></a>'+'</td>';
 			        break;
 			    case 3:
-		            switch (metodo.substr(2, 2)) {
-		            	case "01":
-		            		importe = (sueldo + promed) * unidades;
-		            		break;
-		            	case "05":
-		            		importe = unidades;
-		            		break;
-		                case "06":
-		                    // Sal.Base * param1 * uni.dias  
-				            importe = (sueldo + promed)  * conceptParam[1] / 100 * unidades;
-		                    break;
-		                case "21":
-		                    //ObjCal.DedPrim rs, RsAux, rstinteg, RstCon, rstnom, Afe100con, Result, sr, tipn
-		                    break;
-		            }
-
-					col0.innerHTML = '<td><input type="text" class="emp" name="emp[]" value="'+empleado+'"/></td>'; col0.style.display = 'none'; 
-					col1.innerHTML = '<td style="text-align:left!important;">' + nombre + '</td>';
-					col2.innerHTML = '<td style="text-align:center!important;">' + periodo + '</td>';
 					col3.innerHTML = '<td><input type="text" class="unidades" name="unidades[]" style="border:0px;width:150px!important;text-align:right!important;" readonly value="'+unidades+'"/></td>';	
-					col4.innerHTML = '<td><input type="text" class="calculo" name="calculo[]"  style="border:0px;width:150px!important;text-align:right!important;" readonly value="'+importe+'"/></td>';
+					col4.innerHTML = '<td><input type="text" class="calculo" name="calculo[]"  style="border:0px;width:150px!important;text-align:right!important;" readonly value="'+calculo+'"/></td>';
 					col5.innerHTML = '<td class="td-actions text-center">'+
 						'<a href="#" rel="tooltip" title="Editar" class="btn btn-success btn-simple btn-xs"><i class="fa fa-edit"></i></a>'+
 						'&nbsp&nbsp<a href="#" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs"><i class="fa fa-times"></i></a>'+'</td>';
 			    	break;
 			    case 4:
-			    	unidades = $('#importe').val();
-		            switch (metodo.substr(2, 2)) {
-		            	case "01":
-		            		if (metodo.substr(0,2) == '11') {
-		            			Result = (sueldo + promed) * unidades;
-		            		} else {
-		            			Result = unidades;
-		            		}
-		            		break;
-		                case "05":
- 				            Result = unidades;
-		                    break;
-		                case "11":
-				            var VAR1 = -1 * Math.abs(unidades);
-				            var VAR2 = sueldo * conceptParam[1] / 100;
-				            Result = VAR1 * VAR2;
-				            unidades = VAR1;
-		                    break;
-						default:
-							alert('Metodo NO definido!');
-							Result = 0;
-							break;
-		            }
-		            if (Result != 0) {
-			        	col0.innerHTML = '<td><input type="text" class="emp" name="emp[]" value="'+empleado+'"/></td>'; col0.style.display = 'none'; 
-						col1.innerHTML = '<td style="text-align:left!important;">' + nombre + '</td>';
-						col2.innerHTML = '<td><input type="text" class="periodo" name="periodo[]" style="border:0px;width:150px!important;text-align:right;" readonly value="'+periodo+'"/></td>'; col2.style.display = 'none';
-						col3.innerHTML = '<td><input type="text" class="unidades" name="unidades[]" style="border:0px;width:150px!important;text-align:right;" readonly value="'+unidades+'" /></td>';
-						col4.innerHTML = '<td><input type="text" class="calculo" name="calculo[]" readonly value="'+Result+'" /></td>'; col4.style.display = 'none';
-						col5.innerHTML = '<td class="td-actions text-center">'+
-							'<a href="#" rel="tooltip" title="Editar" class="btn btn-success btn-simple btn-xs"><i class="fa fa-edit"></i></a>'+
-							'&nbsp&nbsp<a href="#" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs"><i class="fa fa-times"></i></a>'+'</td>';						
-					}
+					col3.innerHTML = '<td><input type="text" class="unidades" name="unidades[]" style="border:0px;width:150px!important;text-align:right;" readonly value="'+unidades+'" /></td>';
+					col4.innerHTML = '<td><input type="text" class="calculo" name="calculo[]" readonly value="'+calculo+'" /></td>'; col4.style.display = 'none';
+					col5.innerHTML = '<td class="td-actions text-center">'+
+						'<a href="#" rel="tooltip" title="Editar" class="btn btn-success btn-simple btn-xs"><i class="fa fa-edit"></i></a>'+
+						'&nbsp&nbsp<a href="#" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs"><i class="fa fa-times"></i></a>'+'</td>';
 			    	break;
 			    case 5:
 		        	var col6 = row.insertCell(6);
 		        	var col7 = row.insertCell(7);
-					col0.innerHTML = '<td><input type="text" class="emp" name="emp[]" value="'+empleado+'"/></td>'; col0.style.display = 'none'; 
-					col1.innerHTML = '<td style="text-align:left!important;">' + nombre + '</td>';
-					col2.innerHTML = '<td><input type="text" class="periodo" name="periodo[]" style="border:0px;width:150px!important;text-align:center!important;" readonly value="'+periodo+'"/></td>';
+
 					col3.innerHTML = '<td><input type="text" class="importe" name="unidades[]" style="border:0px;width:150px!important;text-align:right!important;" readonly value="'+unidades+'" /></td>';
 					// if (concepto >= DEDUCCIONES) {
 					// 	col3.innerHTML = '<td><input type="text" class="importe" name="unidades[]" style="border:0px;width:150px!important;text-align:right!important;" readonly value="'+unidades+'" /></td>';
@@ -533,7 +502,7 @@
 					// 	col3.innerHTML = '<td><input type="text" class="importe" name="unidades[]"  style="border:0px;width:150px!important;text-align:right!important;"readonly value="'+importe+'" /></td>';
 					// }
 					col4.innerHTML = '<td><input type="text" class="saldo" name="saldo[]"  style="border:0px;width:150px!important;text-align:right!important;" readonly value="'+saldo+'" /></td>';
-					col5.innerHTML = '<td><input type="checkbox" class="activo" name="activo[]"  style="border:0px;width:150px!important;text-align:center!important;"'+  +' /></td>';
+					col5.innerHTML = '<td><input type="checkbox" class="activo" name="activo[]"  style="border:0px;width:150px!important;text-align:center!important;" '+ checked +' /></td>';
 					col6.innerHTML = '<td><input type="text" class="calculo" name="calculo[]" value="'+calculo+'" /></td>'; col6.style.display = 'none';					
 					col7.innerHTML = '<td class="td-actions text-center">'+
 						'<a href="#" rel="tooltip" title="Editar" class="btn btn-success btn-simple btn-xs"><i class="fa fa-edit"></i></a>'+
@@ -547,25 +516,46 @@
 	// Valida pantalla de edición y pasa los datos a la tabla
     $("#Edit").click(function(event) {
     	empleado = $('#ed_emp').val();
+		descuento = $('#ed_descuento').val();
+		saldo = $('#ed_saldo').val();
+		activo = $('#ed_activo').is(':checked');
+		fecha = $('#ed_fecha').val();
+		unidades = $('#ed_unidades').val();
+		importe = $('#ed_importe').val();
+		sueldo = Number(rowElem.find('td .emp').data('sueldo'));
+		promed = Number(rowElem.find('td .emp').data('promed'));
+	
 		if (validaEdicion(rowElem.index())) {
+
+        	// Obtiene el valor de la columna CALCULO
+	    	calculo = getCalculoValue();
+			rowElem.find('td .calculo').val(calculo);
 			switch (pantalla) {
 				case 1:
-					var descto = $('#ed_descuento').val();
-					var saldo = $('#ed_saldo');
-					var activo = $('#ed_activo');
-					var fecha = $('#ed_fecha');
 				    rowElem.find('td .descuento').val(descto);
 				    rowElem.find('td .saldo').val(saldo);
-				    rowElem.find('td .activo').val(activo);			
+				    rowElem.find('td .activo').checked = activo;	
 				    rowElem.find('td .fecha').val(date2Str(fecha));
 					break;			
 				case 2:
+				    rowElem.find('td .descuento').val(descto);
+				    rowElem.find('td .saldo').val(saldo);
+				    rowElem.find('td .activo').checked = activo;				
 					break;
 				case 3:
+				    rowElem.find('td .unidades').val(unidades);				
 					break;
 				case 4:
+				    rowElem.find('td .importe').val(importe);				
 					break;
 				case 5:
+					if (concepto >= DEDUCCIONES) {
+						rowElem.find('td .descuento').val(descto);
+					} else {
+				    	rowElem.find('td .importe').val(importe);						
+					}
+				    rowElem.find('td .saldo').val(saldo);
+				    rowElem.find('td .activo').checked = activo;					
 					break;
 			}
 		}
@@ -574,14 +564,16 @@
 	function addInputFields(action, fields) {
 		fields[0].innerHTML = periodoFld[action];
 		switch (pantalla) {
-			case 1:
+			case 1:			
+			    fields[0].innerHTML += descuentoFld[action];
+			    //fields[0].innerHTML += saldoFld[action]; // En esta pantalla NO se captura Saldo. Solo se despliega en tabla
+			    fields[0].innerHTML += activoFld[action];
+		    	fields[0].innerHTML += fechaFld[action];
+				break;
 			case 2:
-			    fields[0].innerHTML += unidadesFld[action];
+			    fields[0].innerHTML += descuentoFld[action];
 			    fields[0].innerHTML += saldoFld[action];
 			    fields[0].innerHTML += activoFld[action];
-			    if (pantalla == 1) {
-			    	fields[0].innerHTML += fechaFld[action];
-			    }	
 				break;
 			case 3:
 			    fields[0].innerHTML += unidadesFld[action];
@@ -591,7 +583,7 @@
 				break;
 			case 5:
 				if (concepto >= DEDUCCIONES) {
-					fields[0].innerHTML += descuentoFld[action];
+					fields[0].innerHTML += descuentoFld[action]; // Esta creo que se refiere al Descuento Mensual !!!!!
 				} else {
 					fields[0].innerHTML += importeFld[action];
 				}
@@ -689,15 +681,112 @@
 	}
 
 
+	function date2Str(fecha) {
+		// fecha en formato YYYY-MM-DD
+		var fechaParts = fecha.substr(0,10).split('-');
+		// DD-MM-YYYY
+		return fechaParts[2] + '-' + fechaParts[1] + '-' + fechaParts[0];	
+	}
+
+
+	function despliegaDatos(movtos) {
+		// limpia la tabla para desplegar los movtos leidos
+	    while (tabla.rows.length > 1) {
+	        tabla.deleteRow(tabla.rows.length-1);
+		}
+		// Aqui los despliega !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	    for (var i = 0; i < movtos.length; i++) {
+	    	var row = tabla.insertRow(tabla.rows.length);
+	    	var col0 = row.insertCell(0);
+	    	var col1 = row.insertCell(1);
+	    	var col2 = row.insertCell(2);
+	    	var col3 = row.insertCell(3);
+	    	var col4 = row.insertCell(4);
+	    	var col5 = row.insertCell(5);
+
+			col0.innerHTML = '<td><input type="text" class="emp" name="emp[]" data-sueldo="'+ movtos[i]["SUELDO"] +'" data-promed="'+ movtos[i]["PROMED"] +'" value="'+movtos[i]["EMP"]+'"/></td>'; col0.style.display = 'none';
+			col1.innerHTML = '<td style="text-align:left!important;">' + movtos[i]["NOMBRE"] + '</td>';
+			col2.innerHTML = '<td><input type="text" class="periodo" name="periodo[]" style="border:0px;width:150px!important;text-align:center!important;" readonly value="'+movtos[i]["PERIODO"]+'"/></td>';
+			switch (pantalla) {
+	    		case 1:
+	    		case 2:
+					totUnidades = totUnidades + movtos[i]["UNIDADES"];
+					totImporte = totImporte + movtos[i]["SALDO"];
+
+		        	var col6 = row.insertCell(6);
+		        	var col7 = row.insertCell(7);
+		        	var col8 = row.insertCell(8);
+					var checked = (movtos[i]["ACTIVO"] == 1)?'checked':'';
+
+					if (concepto >= DEDUCCIONES) {
+						col3.innerHTML = '<td><input type="text" class="descuento" name="unidades[]" style="border:0px;width:100px!important;text-align:right!important;" readonly value="'+movtos[i]["UNIDADES"]+'" /></td>';
+					} else {
+						col3.innerHTML = '<td><input type="text" class="importe" name="unidades[]"  style="border:0px;width:100px!important;text-align:right!important;" readonly value="'+movtos[i]["UNIDADES"]+'" /></td>';
+					}
+					col4.innerHTML = '<td><input type="text" class="saldo" name="saldo[]"  style="border:0px;width:100px!important;text-align:right!important;" readonly value="'+movtos[i]["SALDO"]+'" /></td>';
+					col5.innerHTML = '<td><input type="checkbox" class="activo" name="activo[]"  style="border:0px;width:100px!important;text-align:center!important;" readonly '+ checked +'/></td>';
+					col6.innerHTML = '<td><input type="text" class="calculo" name="calculo[]" readonly value="'+movtos[i]["CALCULO"]+'" /></td>'; col6.style.display = 'none';
+					col7.innerHTML = '<td><input type="text" class="fecha" name="fecha[]" style="border:0px;width:100px!important;text-align:right!important;" readonly value="'+movtos[i]["fecha"]+'"/></td>';
+					col8.innerHTML = '<td class="td-actions text-center">'+
+						'<a href="#" rel="tooltip" title="Editar" class="btn btn-success btn-simple btn-xs"><i class="fa fa-edit"></i></a>'+
+						'&nbsp&nbsp<a href="#" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs"><i class="fa fa-times"></i></a>'+'</td>';						
+	    			break;
+	    		case 3:
+					totUnidades = totUnidades + movtos[i]["UNIDADES"];
+					totImporte = totImporte + movtos[i]["CALCULO"];    	    		
+
+					col3.innerHTML = '<td><input type="text" class="unidades" name="unidades[]" style="border:0px;width:150px!important;text-align:right!important;" readonly value="'+movtos[i]["UNIDADES"]+'"/></td>';
+					col4.innerHTML = '<td><input type="text" class="calculo" name="calculo[]"  style="border:0px;width:150px!important;text-align:right!important;" readonly value="'+movtos[i]["CALCULO"]+'" /></td>';
+					col5.innerHTML = '<td class="td-actions text-center">'+
+						'<a href="#" rel="tooltip" title="Editar" class="btn btn-success btn-simple btn-xs"><i class="fa fa-edit"></i></a>'+
+						'&nbsp&nbsp<a href="#" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs"><i class="fa fa-times"></i></a>'+'</td>';						
+					break;
+	    		case 4:
+					totUnidades = totUnidades + movtos[i]["UNIDADES"];
+					totImporte = totImporte + movtos[i]["CALCULO"];    	    		
+
+					col3.innerHTML = '<td><input type="text" class="unidades" name="unidades[]" style="border:0px;width:150px!important;text-align:right!important;" readonly value="'+movtos[i]["UNIDADES"]+'"/></td>';
+					col4.innerHTML = '<td><input type="text" class="calculo" name="calculo[]"  style="border:0px;width:150px!important;text-align:right!important;" readonly value="'+movtos[i]["CALCULO"]+'" /></td>'; col4.style.display = 'none';
+					col5.innerHTML = '<td class="td-actions text-center">'+
+						'<a href="#" rel="tooltip" title="Editar" class="btn btn-success btn-simple btn-xs"><i class="fa fa-edit"></i></a>'+
+						'&nbsp&nbsp<a href="#" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs"><i class="fa fa-times"></i></a>'+'</td>';						
+					break;
+	    		case 5:
+					totUnidades = totUnidades + movtos[i]["UNIDADES"];
+					totImporte = totImporte + movtos[i]["SALDO"];
+
+		        	var col6 = row.insertCell(6);
+		        	var col7 = row.insertCell(7);
+					var checked = (movtos[i]["ACTIVO"] == 1)?'checked':'';
+
+					if (concepto >= DEDUCCIONES) {
+						col3.innerHTML = '<td><input type="text" class="descuento" name="unidades[]" style="border:0px;width:100px!important;text-align:right!important;" readonly value="'+movtos[i]["UNIDADES"]+'" /></td>';
+					} else {
+						col3.innerHTML = '<td><input type="text" class="importe" name="unidades[]"  style="border:0px;width:100px!important;text-align:right!important;" readonly value="'+movtos[i]["UNIDADES"]+'" /></td>';
+					}
+					col4.innerHTML = '<td><input type="text" class="saldo" name="saldo[]"  style="border:0px;width:100px!important;text-align:right!important;" readonly value="'+movtos[i]["SALDO"]+'" /></td>';
+					col5.innerHTML = '<td><input type="checkbox" class="activo" name="activo[]"  style="border:0px;width:100px!important;text-align:center!important;" readonly '+ checked +'/></td>';
+					col6.innerHTML = '<td><input type="text" class="calculo" name="calculo[]" readonly value="'+movtos[i]["CALCULO"]+'" /></td>'; col6.style.display = 'none';
+					col7.innerHTML = '<td class="td-actions text-center">'+
+						'<a href="#" rel="tooltip" title="Editar" class="btn btn-success btn-simple btn-xs"><i class="fa fa-edit"></i></a>'+
+						'&nbsp&nbsp<a href="#" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs"><i class="fa fa-times"></i></a>'+'</td>';	    		
+	    			break;
+		    	}
+
+	    }
+
+	}
+
+
     // ASIGNA valores a los campos del modal de edicion y lanza el modal
 	function editaRenglon(rowElem) {
 	    document.getElementById("ed_emp").value = rowElem.find('td .emp').val();
 	    document.getElementById("ed_empleado").value = rowElem.find('td:eq(1)').text();
+	    document.getElementById("ed_periodo").value = rowElem.find('td .periodo').val();
 		switch (pantalla) {
 			case 1:
-			    document.getElementById("ed_periodo").value = rowElem.find('td .periodo').val();
 				if (concepto >= DEDUCCIONES) {
-					document.getElementById("ed_descuento").value = rowElem.find('td .unidades').val();
+					document.getElementById("ed_descuento").value = rowElem.find('td .descuento').val();
 				} else {
 					document.getElementById("ed_importe").value = rowElem.find('td .importe').val();
 				}			    
@@ -711,14 +800,12 @@
 			    document.getElementById("ed_activo").value = rowElem.find('td .activo').val();											
 				break;
 			case 3:
-			    document.getElementById("ed_periodo").value = rowElem.find('td .periodo').val();
 				document.getElementById("ed_unidades").value = rowElem.find('td .unidades').val();
 				break;
 			case 4:
 				document.getElementById("ed_importe").value = rowElem.find('td .importe').val();
 				break;
 			case 5:
-			    document.getElementById("ed_periodo").value = rowElem.find('td .periodo').val();
 				if (concepto >= DEDUCCIONES) {
 					document.getElementById("ed_descuento").value = rowElem.find('td .importe').val();
 				} else {
@@ -732,6 +819,74 @@
      	$("#editar").modal();		
 	}	
 
+
+	function getCalculoValue() {
+		var calculo = 0;
+		switch (metodo.substr(0, 2)) {
+			case "11":
+				// Percepciones
+				// TISANOM - ObjCal.PerPrim rs, RsAux, rstinteg, RstCon, Afe100con, Result, tipn
+				switch (metodo.substr(2, 2)) {
+					case "01":
+						calculo = (sueldo + promed) * unidades;
+					case "04":
+						calculo = conceptParam[1] * unidades;					
+					case "05":
+						calculo = unidades;
+					case "06":
+						calculo = (sueldo + promed)  * conceptParam[1] / 100 * unidades;
+						break;
+	                case "11":
+			            var VAR1 = -1 * Math.abs(unidades);
+			            var VAR2 = sueldo * conceptParam[1] / 100;
+			            calculo = VAR1 * VAR2;
+			            unidades = VAR1;
+	                    break;	
+					case "13":
+             			calculo = (sueldo + promed)  * conceptParam[1] / 100 * unidades;
+             			afe100 = "3";
+						break;
+					case "25":
+             			// Dim Ant As Integer
+             			// Ant = CInt((Date - rsEmp!Ingreso) / 365)
+             			// Rstteg.Find "numano= " & Ant
+             			// If Rstteg.RecordCount > 0 Then
+                		// Result = rsmov!Unidades * (rsEmp!Sueldo + rsEmp!Promed) * Rstteg!porcpri / 100
+             			// End If
+             			// Pendiente el calculo de la prima vavacional !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+             			break;
+				}
+				break; 	    		
+			case "21":
+				// Deducciones
+				// TISANOM - ObjCal.DedPrim rs, RsAux, rstinteg, RstCon, rstnom, Afe100con, Result, sr, tipn
+            	switch (metodo.substr(2, 2)) {
+	            	case "01":
+	            		calculo = unidades;
+	            		break;
+	            	case "05":
+           				// descuento horas no trabajadas ORMEX
+           				if (conceptParam[2] != 0) {
+           					calculo = sueldo * conceptParam[1] * unidades / conceptParam[2];
+           				}
+	            		break;
+	                case "06":
+	                    // Sal.Base * param1 * uni.dias  
+			            calculo = (sueldo + promed)  * conceptParam[1] / 100 * unidades;
+	                    break;
+	                case "20":
+           				calculo = unidades;
+           				if (saldo < unidades) {
+             				calculo = saldo;
+           				}
+           				sr = 1;	                   
+	                    break;
+	            }					
+				break;
+		}
+		return calculo;
+	}
+	
 
 	function validaNuevo() {
 		var bOK = true;
@@ -761,7 +916,14 @@
 		        }
 				break;
 			case 3:
-				bOK = (unidades != 0);
+				if (periodo < $('#PrimerPeriodoAbierto').val()) {
+					alert('No puede capturar incidencias de períodos cerrados!');
+					bOK = false;
+				}
+				if (unidades <= 0) {
+					alert('El valor de las unidades debe ser igual o mayor que 1');
+					bOK = false;
+				}
 				break;
 			case 5:
 				break;
@@ -774,20 +936,6 @@
 	function validaEdicion(rowNum) {
 		var bOK = true;
 		var rowLength = tabla.rows.length;
-		var descuento = $('#ed_descuento').val();
-		var unidades = $('#ed_unidades').val();
-		var importe = $('#ed_importe').val();
-
-		// // Checa si ya existe el empleado con la misma fecha
-		// for(var i=1; i<rowLength; i+=1){
-		//     var row = tabla.rows[i];
-
-		//     if (row.cells[0].firstChild.value == empleado) {
-		//     	if (rowNum != i) {
-		//     		// No es el renlglon que se esta editando ?
-		// 	  	}
-		// 	}
-		// }
 
 		switch (pantalla) {
 			case 1:
@@ -799,7 +947,10 @@
 		        }
 				break;
 			case 3:
-				bOK = (unidades != 0);
+				if (unidades <= 0) {
+					alert('El valor de las unidades debe ser igual o mayor que 1');
+					bOK = false;
+				}
 				break;
 			case 5:
 				break;

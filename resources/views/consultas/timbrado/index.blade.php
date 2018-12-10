@@ -7,7 +7,7 @@
 <div class="main main-raised"> 
     <div class="container">   
       <div class="section text-center">
-        <h3 class="titulo">Confirmar Nómina</h3>
+        <h5 class="titulo">Autorizar Nómina</h5>
 	 	
 		<?php
             $directorio = opendir($ruta);

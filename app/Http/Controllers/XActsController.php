@@ -25,7 +25,7 @@ class XActsController extends Controller
     }
 
 	const conIncap = ['400','401','402','403','404','405','406','407','408','360','361','100'];
-	const horasExtra = '200';
+	const HORASEXTRA = '200';
 	const CONINFONAVIT0 = "652";
 
 	public function porConcepto()
@@ -59,7 +59,7 @@ class XActsController extends Controller
         $navbar = ProfileController::getNavBar('',0,$perfil);
 		$selProceso = Session::get('selProceso');
 		// aqui obtenemos el objeto completo y así se pasa a la vista
-		$concepto = Concepto::where('TIPONO',$selProceso)->where('CONCEPTO',$this::horasExtra)->get();
+		$concepto = Concepto::where('TIPONO',$selProceso)->where('CONCEPTO',$this::HORASEXTRA)->first();
 		$periCalc = Nomina::where('TIPONO',$selProceso)->first()->PERICALC;
 		$periodos = Periodo::where('TIPONO',$selProceso)->where('SWCIERRE','0')->get();
 		$empleados = Empleado::where('TIPONO',$selProceso)->where('ESTATUS','A')->get();
@@ -70,18 +70,15 @@ class XActsController extends Controller
 	public function getMovtosCapturados(Request $data)
 	{
 		$selProceso = Session::get('selProceso');
-		// $capturado = DB::connection('sqlsrv2')->table('Movtos')->join('Empleado','MOVTOS.EMP', '=', 'EMPLEADO.EMP')
-		// 		->where('MOVTOS.TIPONO', $selProceso)
-		// 		->where('MOVTOS.CONCEPTO', $data->concepto)
-		// 		->where('MOVTOS.PERIODO', $data->periodo)
-		// 		->select('EMPLEADO.EMP','EMPLEADO.NOMBRE','MOVTOS.*')
-		// 		->orderBy('EMPLEADO.EMP')
-		// 		->get();
+		$periodo = $data->periodo;
 		$capturado = Movtos::join('Empleado','MOVTOS.EMP', '=', 'EMPLEADO.EMP')
 				->where('MOVTOS.TIPONO', $selProceso)
 				->where('MOVTOS.CONCEPTO', $data->concepto)
-				->where('MOVTOS.PERIODO', $data->periodo)
-				->select('EMPLEADO.EMP','EMPLEADO.NOMBRE','MOVTOS.*')
+				->where(function($query) use ($periodo){
+            		if ($periodo != '') {
+                		$query->where('MOVTOS.PERIODO', '=', $periodo);
+            		}
+            	})->select('EMPLEADO.EMP','EMPLEADO.NOMBRE','EMPLEADO.SUELDO','EMPLEADO.PROMED','MOVTOS.*')
 				->orderBy('EMPLEADO.EMP')
 				->get();
 
@@ -125,7 +122,7 @@ class XActsController extends Controller
 		// INSERT INTO MOVTOS (TIPONO,EMP,CONCEPTO,PERIODO,METODO,UNIDADES,SALDO,SUMRES,
 		//                    CALCULO,METODOISP,FLAGCIEN,CUENTA,ACTIVO,OTROS,ESPECIAL,PLAZO,fecvac)
 		// Str = "Delete from movtos where tipono='" & tipn & "' and concepto='" & TxtConcepto.Text & "'"
-
+		// dd($data->all());
         $messages = [
             'emp.required' => 'No se ha ingresado ningún empleado'
         ];
@@ -137,17 +134,22 @@ class XActsController extends Controller
         $this->validate($data,$rules,$messages);
 
 		DB::transaction(function () use($data) {
-			//$selProceso = \Cache::get('selProceso');
 			$selProceso = Session::get('selProceso');
 			$sumRes = substr($data->Metodo, 1, 1) == "3"? "2" : "0";
-			$deleted = Movtos::where('TIPONO',$selProceso)->where('CONCEPTO',$data->Concepto)->where('PERIODO',$data->Pdo)->delete();
+
+			if ($data->Pdo != '0') {
+				$deleted = Movtos::where('TIPONO',$selProceso)->where('CONCEPTO',$data->Concepto)->where('PERIODO',$data->Pdo)->delete();
+			} else {
+				$deleted = Movtos::where('TIPONO',$selProceso)->where('CONCEPTO',$data->Concepto)->delete();
+			}
+			
 		    foreach ($data->emp as $key => $emp) {
 		    	$cuenta = Empleado::where('TIPONO',$selProceso)->where('EMP',$emp)->value('cuenta');
 		    	$mov = New Movtos();
 		    	$mov->TIPONO = $selProceso;
 		    	$mov->EMP = $emp;
 		    	$mov->CONCEPTO = $data->Concepto;
-		    	$mov->PERIODO = $data->Pdo;
+		    	$mov->PERIODO = $data->periodo[$key];
 		    	$mov->METODO = $data->Metodo;
 		    	$mov->UNIDADES = $data->unidades[$key];
 		    	$mov->SALDO = 0;
@@ -159,7 +161,7 @@ class XActsController extends Controller
 		    	$mov->OTROS = 0;
 		    	$mov->ESPECIAL = 1;
 		    	$mov->PLAZO = 0;
-		    	if ($data->Concepto == CONINFONAVIT0) {
+		    	if ($data->Concepto == $this::CONINFONAVIT0) {
 		    		$mov->OTROS = $data->otros[$key];
 		    	}
 		    	$mov->cuenta = $cuenta;					// para que grabar la cuenta si esta asociada a un solo empleado?????
@@ -353,34 +355,18 @@ class XActsController extends Controller
 		DB::transaction(function () use($data) {
 
 			$selProceso = Session::get('selProceso');
-		    $concepto = Concepto::where('TIPONO',$selProceso)->where('CONCEPTO',$this::horasExtra)->first();			
+		    $concepto = Concepto::where('TIPONO',$selProceso)->where('CONCEPTO',$this::HORASEXTRA)->first();			
 			$deleted1 = Movtos::where('TIPONO',$selProceso)
 							->where('CONCEPTO',$concepto->CONCEPTO)
 							->where('PERIODO',$data->Periodo)->delete();
-			$deleted2 = Imss::where('TIPONO',$selProceso)
-							->where('CONCEPTO',$concepto->CONCEPTO)
-							->where('PERIODO',$data->Periodo)->delete();
+			//$deleted2 = Imss::where('TIPONO',$selProceso)
+			//				->where('CONCEPTO',$concepto->CONCEPTO)
+			//				->where('PERIODO',$data->Periodo)->delete();
 
 
 		    foreach ($data->emp as $key => $emp) {
 		    	$empleado = Empleado::where('TIPONO',$selProceso)->where('EMP',$emp)
 		    					->select('CUENTA','SUELDO','PROMED','INTEG','INTIV')->get()->first();
-		    	// $imss = New Imss();
-		    	// $imss->TIPONO = $selProceso;
-		    	// $imss->EMP = $emp;
-		    	// $imss->SUELDO = $empleado->SUELDO;
-		    	// $imss->SUELDONUE = $empleado->SUELDO;
-		    	// $imss->INTEG = $empleado->INTEG;
-		    	// $imss->INTIV = $empleado->INTIV;
-		    	// $imss->INTEGNUE = $empleado->INTEG;
-		    	// $imss->INTIVNUE = $empleado->INTIV;
-		    	// $imss->REFIMSS = $data->refIMSS[$key] . "";
-		    	// $imss->FECHA = date('d-m-Y', strtotime($data->fecha[$key]));
-		    	// $imss->DIAS = $data->dias[$key];
-		    	// $imss->CONCEPTO = $data->Concepto;
-		    	// $imss->PERIODO = $data->Periodo;
-		    	// $imss->CLAVE = $data->Clave;
-		    	// $imss->save();
 
 		    	$mov = New Movtos();
 		    	$mov->TIPONO = $selProceso;
@@ -388,7 +374,7 @@ class XActsController extends Controller
 		    	$mov->CONCEPTO = $concepto->CONCEPTO;
 		    	$mov->PERIODO = $data->Periodo;
 		    	$mov->METODO = $concepto->TIPCONCEP . $concepto->TIPCALCUL . $concepto->METODO;
-		    	$mov->UNIDADES = $data->dias[$key];
+		    	$mov->UNIDADES = $data->unidades[$key];
 		    	$mov->SALDO = 0;
 		    	$mov->SUMRES = 0;
 		    	$mov->CALCULO = Calculo::perPrim($empleado, $mov, $concepto);
@@ -398,8 +384,8 @@ class XActsController extends Controller
 		    	$mov->OTROS = 0;
 		    	$mov->ESPECIAL = 1;
 		    	$mov->PLAZO = 0;
-		    	//$mov->cuenta = $emp->cuenta[$key];		// para que grabar la cuenta si esta asociada a un solo empleado?????
-		    	$mov->cuenta = '';
+		    	$mov->cuenta = $data->cuenta[$key];		// para que grabar la cuenta si esta asociada a un solo empleado?????
+		    	$mov->fecha = date('Y-m-d', strtotime($data->fecha[$key]));
 		    	//dd($mov);
 		    	$mov->save();
 		    }
