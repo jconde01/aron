@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Ciasno extends Model
+class CiasNo extends Model
 {
      protected $connection = 'sqlsrv2';
     protected $table = 'CIASNO';

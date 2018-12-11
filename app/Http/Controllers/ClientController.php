@@ -188,11 +188,11 @@ class ClientController extends Controller
                 ]);
             session(['sqlsrv2' => Config::get("database.connections.sqlsrv2")]);
             $ciaFiscal = CiasNo::first();
-            $rutaCertFiscal = Client::getRutaCertificado($request->celula, $ciaFiscal->RFCCIA);
-            $rutaPorAutorizar = Client::getRutaPorAutorizar($request->celula, $ciaFiscal->RFCCIA);
-            $rutaAutorizados = Client::getRutaAutorizados($request->celula, $ciaFiscal->RFCCIA);
-            $rutaEmpleados = Client::getRutaEmpleados($request->celula, $ciaFiscal->RFCCIA);
-            $rutaDocumentos = Client::getRutaDocumentos($request->celula, $ciaFiscal->RFCCIA);
+            $rutaCertFiscal = Client::getRutaCertificado($request->celula, $ciaFiscal->RFCCTE);
+            $rutaPorAutorizar = Client::getRutaPorAutorizar($request->celula, $ciaFiscal->RFCCTE);
+            $rutaAutorizados = Client::getRutaAutorizados($request->celula, $ciaFiscal->RFCCTE);
+            $rutaEmpleados = Client::getRutaEmpleados($request->celula, $ciaFiscal->RFCCTE);
+            $rutaDocumentos = Client::getRutaDocumentos($request->celula, $ciaFiscal->RFCCTE);
 
             try {
                 mkdir($rutaCertFiscal,0755,true);
@@ -218,11 +218,11 @@ class ClientController extends Controller
                 ]);
             session(['sqlsrv2' => Config::get("database.connections.sqlsrv2")]);
             $ciaAsim = CiasNo::first();
-            $rutaCertAsim = Client::getRutaCertificado($request->celula, $ciaAsim->RFCCIA);
-            $rutaPorAutorizar = Client::getRutaPorAutorizar($request->celula, $ciaAsim->RFCCIA);
-            $rutaAutorizados = Client::getRutaAutorizados($request->celula, $ciaAsim->RFCCIA);
-            $rutaEmpleados = Client::getRutaEmpleados($request->celula, $ciaAsim->RFCCIA);        
-            $rutaDocumentos = Client::getRutaDocumentos($request->celula, $ciaAsim->RFCCIA);
+            $rutaCertAsim = Client::getRutaCertificado($request->celula, $ciaAsim->RFCCTE);
+            $rutaPorAutorizar = Client::getRutaPorAutorizar($request->celula, $ciaAsim->RFCCTE);
+            $rutaAutorizados = Client::getRutaAutorizados($request->celula, $ciaAsim->RFCCTE);
+            $rutaEmpleados = Client::getRutaEmpleados($request->celula, $ciaAsim->RFCCTE);        
+            $rutaDocumentos = Client::getRutaDocumentos($request->celula, $ciaAsim->RFCCTE);
             try {
                 mkdir($rutaCertAsim, 0755, true);
                 mkdir($rutaPorAutorizar,0755,true);
@@ -235,8 +235,8 @@ class ClientController extends Controller
         }
 
         // Crea y almacena las llaves y certificado
-        $this::makeCert($request->Nombre, $ciaFiscal->RFCCIA, $rutaCertFiscal, $request->passwd);
-        $this::makeCert($request->Nombre, $ciaAsim->RFCCIA, $rutaCertAsim, $request->passwd);
+        $this::makeCert($request->Nombre, $ciaFiscal->RFCCTE, $rutaCertFiscal, $request->passwd);
+        $this::makeCert($request->Nombre, $ciaAsim->RFCCTE, $rutaCertAsim, $request->passwd);
         $docsRequeridosEmp = new DocsRequeridos();
         $docsRequeridosEmp->REQUERIDO1 = 1;
         $docsRequeridosEmp->REQUERIDO2 = 1;

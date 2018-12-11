@@ -32,7 +32,7 @@ class TimbradoController extends Controller
     // despliega los docuentos pendientes por autorizar
     public function index()
     {
-    	$rfc_cliente = Ciasno::first()->RFCCIA;
+    	$rfc_cliente = Ciasno::first()->RFCCTE;
         Session(['rfc_cliente' => $rfc_cliente]);
         $cliente = Session::get('selCliente');
         $ruta = Client::getRutaPorAutorizar($cliente->cell_id,$rfc_cliente);
@@ -55,7 +55,7 @@ class TimbradoController extends Controller
         $archivo = $request->archivo;
         $passphrase = $request->pkey_pwd;
         $celula = $cliente->cell_id;
-        $rfc_cliente = Ciasno::first()->RFCCIA;
+        $rfc_cliente = Ciasno::first()->RFCCTE;
 
 		$usuario = auth()->user()->name;        
         //$navbar = ProfileController::getNavBar('',0,$perfil);
@@ -136,7 +136,7 @@ class TimbradoController extends Controller
     // Despliega TODAS las nominas Firmadas
     public function consultaAutorizadas() {
         $cliente = Session::get('selCliente');
-        $rfc_cliente = Ciasno::first()->RFCCIA;
+        $rfc_cliente = Ciasno::first()->RFCCTE;
         $ruta = Client::getRutaAutorizados($cliente->cell_id,$rfc_cliente);
         $perfil = auth()->user()->profile->id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);

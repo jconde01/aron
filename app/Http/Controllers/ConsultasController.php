@@ -52,7 +52,7 @@ class ConsultasController extends Controller
 
      public function consulta($RFC)
     {
-        $rfc_cliente = Ciasno::first()->RFCCIA;
+        $rfc_cliente = Ciasno::first()->RFCCTE;
         session(['rfc_cliente' => $rfc_cliente]);
         $rfc_empleado0 = $RFC;
         $rfc_empleado1=substr ($rfc_empleado0, 0,4);
@@ -79,7 +79,7 @@ class ConsultasController extends Controller
 
      public function consultaContrato($RFC)
     {
-        $rfc_cliente = Ciasno::first()->RFCCIA;
+        $rfc_cliente = Ciasno::first()->RFCCTE;
         $rfc_empleado0 = $RFC;
         $rfc_empleado1=substr ($rfc_empleado0, 0,4);
         $rfc_empleado2=substr ($rfc_empleado0, 5,6);
@@ -118,7 +118,7 @@ class ConsultasController extends Controller
 
     public function documentos() 
     {
-        $rfc_cliente = Ciasno::first()->RFCCIA;
+        $rfc_cliente = Ciasno::first()->RFCCTE;
         session(['rfc_cliente' => $rfc_cliente]);
         $cliente = Session::get('selCliente');
         $celula_empresa = Cell::where('id', $cliente->cell_id)->first()->nombre;
