@@ -12,10 +12,10 @@
             {{ csrf_field() }}
           <div class="" style="">           
             <ul class="tab horizontal">
-              <li class="tab-group-item"><a data-toggle="tab" href="#nomina1">Nomina 1</a></li>
-              <li class="tab-group-item"><a data-toggle="tab" href="#nomina2">Nomina 2</a></li>
-              <li class="tab-group-item" style="width: 35%;"><a data-toggle="tab" href="#datosg">Datos Generales</a></li>
-              <li class="tab-group-item"><a data-toggle="tab" href="#datosa">Datos Afore</a></li>
+              <li class="tab-group-item pestanas" onClick="cambiar_color_over(this)" style="background-color: rgb(179, 215, 243)!important;"><a style="text-decoration: none;padding: 6px;" data-toggle="tab" href="#nomina1">Nomina 1</a></li>
+              <li class="tab-group-item pestanas" onClick="cambiar_color_over(this)"><a style="text-decoration: none;padding: 6px;" data-toggle="tab" href="#nomina2">Nomina 2</a></li>
+              <li class="tab-group-item pestanas" onClick="cambiar_color_over(this)" style="width: 35%;"><a style="text-decoration: none;padding: 6px;" data-toggle="tab" href="#datosg">Datos Generales</a></li>
+              <li class="tab-group-item pestanas" onClick="cambiar_color_over(this)"><a style="text-decoration: none;padding: 6px 3px 6px 3px;" data-toggle="tab" href="#datosa">Datos Afore</a></li>
             </ul>
             <br><br><br>
             <div class="tab-content">
@@ -747,6 +747,7 @@
                     </style>
                     <div class="col-md-4" style="">
                         <h4>Imagen del Empleado: </h4>
+                        
                        <input type="file" id="files" name="archivo"/>
                         <br/>
                        <!--  <img src="<?php //echo "/admon/empleados/empresas/$empl1->EMP/$empl1->FOTO"; ?>" style="width: 150px; height: 150px;"> -->
@@ -755,7 +756,7 @@
                             if ($empl1->FOTO==null) {
                               echo '<img src="/admon/empleados/Ideatisa.ico" style="width: 100px; height: 100px;">'; 
                             }else{
-                                echo '<img src="/admon/empleados/empresas/'.$empl1->EMP.'/'.$empl1->FOTO.'" style="width: 150px; height: 150px;">';
+                                echo '<img src="/img_emp/'.$empl1->FOTO.'" style="width: 150px; height: 150px;">';
                             }
                             
                             ?>
@@ -763,7 +764,6 @@
                         
                     </div>
                 
-                    
                     
 
                     <div class="col-md-12 no-pad" style="border-top: 2px #F0F0F0 solid; margin-bottom: 10px;">                   
@@ -1128,4 +1128,16 @@ function activa_boton(campo,boton){
         }
     }
 </script>
+<!-- ----- cambio de color pestañas---------------- -->
+<script type="text/javascript">
+    function cambiar_color_over(pestana){ 
+    var x= document.getElementsByClassName("pestanas");
+    var i;
+    for (i = 0; i < x.length; i++) {
+        x[i].style.backgroundColor = "white";
+        }
+    pestana.style.backgroundColor="rgb(179, 215, 243)";
+    } 
+</script>
+<!-- ----------- fin de cambio de color pestañas------------------ -->
 @endsection

@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
+
 class ClientController extends Controller
 {
 
@@ -287,7 +288,7 @@ class ClientController extends Controller
             $cliente->asimilado_company_id = $request->Asimilado_Company_id;
             $cliente->asimilado_BDA = $request->Asimilado_BDA;
         }
-        $cliente->pkey_passwd = bcrypt($request->key_pwd);
+        //$cliente->pkey_passwd = bcrypt($request->key_pwd);
         $cliente->save();   // Update
         return redirect('/admin/clientes'); 
     }    

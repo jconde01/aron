@@ -81,7 +81,7 @@
                 <select class="form-control emp" id="empleado" name="Empleado">
                     <option value="0" selected>Seleccione un empleado...</option>
                     @foreach ($empleados as $emp)
-                        <option value="{{ $emp->EMP }}" data-sueldo="{{ $emp->SUELDO }}" data-promed="{{ $emp->PROMED }}" >{{ $emp->NOMBRE }}</option>
+                        <option value="{{ $emp->EMP }}" data-sexo="{{ $emp->SEXO }}" data-sueldo="{{ $emp->SUELDO }}" data-promed="{{ $emp->PROMED }}" >{{ $emp->NOMBRE }}</option>
                     @endforeach
                 </select>
             </div>
@@ -110,7 +110,7 @@
         		</div> -->
             	<div class="form-group label-floating">
                 	<label class="control-label">Tipo de Incapacidad:</label>        		
-	                <select class="form-control emp" id="tipo" name="Tipo">
+	                <select class="form-control" id="tipo" name="Tipo">
 		                <option value="0" selected>Seleccione...</option>
 		                <option value="EG">EG</option>
 		                <option value="AT">AT</option>
@@ -160,7 +160,7 @@
 				</div>
             	<div class="form-group label-floating">
                 	<label class="control-label">Tipo de Incapacidad:</label>        		
-	                <select class="form-control emp" id="ed_tipo" name="Tipo">
+	                <select class="form-control" id="ed_tipo" name="Tipo">
 		                <option value="0" selected>Seleccione...</option>
 		                <option value="EG">EG</option>
 		                <option value="AT">AT</option>
@@ -190,6 +190,7 @@
 		}
 	});
 
+	const MATERNIDAD = "400";
 	const CONINCAP1 = "400";
 	const CONINCAP2 = "401";
 	const CONINCAP3 = "402";
@@ -204,6 +205,9 @@
 	const CONINCAP12 = "100";
 
 	var dias;
+	var sexo;
+	var tipo;
+	var fecha;
 	var tabla;
 	var token;
 	var metodo;
@@ -237,16 +241,16 @@
 
 	function stringToDate(_date,_format,_delimiter)
 	{
-	        var formatLowerCase=_format.toLowerCase();
-	        var formatItems=formatLowerCase.split(_delimiter);
-	        var dateItems=_date.split(_delimiter);
-	        var monthIndex=formatItems.indexOf("mm");
-	        var dayIndex=formatItems.indexOf("dd");
-	        var yearIndex=formatItems.indexOf("yyyy");
-	        var month=parseInt(dateItems[monthIndex]);
-	        month-=1;
-	        var formatedDate = new Date(dateItems[yearIndex],month,dateItems[dayIndex]);
-	        return formatedDate;
+        var formatLowerCase=_format.toLowerCase();
+        var formatItems=formatLowerCase.split(_delimiter);
+        var dateItems=_date.split(_delimiter);
+        var monthIndex=formatItems.indexOf("mm");
+        var dayIndex=formatItems.indexOf("dd");
+        var yearIndex=formatItems.indexOf("yyyy");
+        var month=parseInt(dateItems[monthIndex]);
+        month-=1;
+        var formatedDate = new Date(dateItems[yearIndex],month,dateItems[dayIndex]);
+        return formatedDate;
 	}	
 
 
@@ -255,10 +259,9 @@
     	tabla = this.getElementById("captura");
 	    creaPantalla();
 	    totUnidades = 0;
-	    dias = document.getElementById("dias");
+	    // dias = document.getElementById("dias");
 	    fechaIncidencia = document.getElementById("fecha");
-	    refIMSS = document.getElementById("refIMSS");
-		console.log('Token is: ' + token);
+	    // refIMSS = document.getElementById("refIMSS");
 
 
 		$('#captura tbody').on('click', '.btn-success', function () {
@@ -291,6 +294,9 @@
 			var fechaIni = $('.pdo>option:selected').data('fi');
 			//alert(periodo + ' - ' + fechaIni + fechaIncidencia.value);
 			fechaIncidencia.value = fechaIni;
+			if (concepto == MATERNIDAD) {
+				$('#tipo').val('MA');
+			}
         	$("#nuevo").modal();
         } else {
            alert('No ha seleccionado un concepto o período!');
@@ -306,12 +312,14 @@
 		var bOK = true;
 		empleado  =  $('#empleado').val();
 		sueldo =  Number($('#empleado').find(':selected').data('sueldo'));
-		var dias = parseInt($('#dias').val());
-		var fecha = $('#fecha').val();
-		var refIMSS = $('#refIMSS').val();
+		sexo = $('#empleado').find(':selected').data('sexo');
+		dias = parseInt($('#dias').val());
+		fecha = $('#fecha').val();
+		refIMSS = $('#refIMSS').val();
+		tipo = $('#tipo>option:selected').val();
 
-		if (validaNuevo(empleado,dias,fecha,refIMSS)) {
-			var tipo = ($('#tipo').val() == 0)? '':$('#tipo').text();
+		if (validaNuevo()) {
+			//var tipo = ($('#tipo').val() == 0)? '':$('#tipo').text();
 			var fechaStr = date2Str(fecha);			
         	var row = tabla.insertRow(tabla.rows.length);
         	var col1 = row.insertCell(0);
@@ -430,7 +438,7 @@
 		var dias = $('#ed_dias').val();
 		var fecha = $('#ed_fecha').val();
 		var refIMSS = $('#ed_refIMSS').val();
-		var tipo = $('#ed_tipo').val();
+		var tipo = $('#ed_tipo>option:selected').val();
 		var row_index = rowElem.index();
 		//console.log(row_index);
 
@@ -501,17 +509,16 @@
 		col7.innerHTML = '<th>Opciones</th>';	col7.style.width = "10%"; col7.style.backgroundColor="lightgrey";
 	}
 
-	function validaNuevo(emp, dias, fecha, refImss) {
+	function validaNuevo() {
 		var bOK = true;
-		var table = document.getElementById('captura');
-		var rowLength = table.rows.length;
+		var rowLength = tabla.rows.length;
 
-    	if ( emp != 0 ) {
+    	if ( empleado != 0 ) {
 			// Checa si ya existe el empleado con la misma fecha
 			for(var i=1; i<rowLength; i+=1){
-			    var row = table.rows[i];
-				console.log(row + ' - ' + row.cells[0].firstChild.value + ' - ' + emp)
-			    if (row.cells[0].firstChild.value == emp) {
+			    var row = tabla.rows[i];
+				console.log(row + ' - ' + row.cells[0].firstChild.value + ' - ' + empleado)
+			    if (row.cells[0].firstChild.value == empleado) {
 			    	
 					var fechaStr = date2Str(fecha);
 					var fechaIni = stringToDate(row.cells[2].firstChild.value,"dd-mm-yyyy","-");
@@ -534,11 +541,18 @@
 	           alert('No se capturó el número de dias!');
 	           bOK = false;
 	        }
+	        // Si es MATERNIDAD, debe ser de sexo FEMENINO (F)
+	        if (concepto == MATERNIDAD) {
+	        	if (sexo != 'F') {
+	        		alert('Este concepto solo aplica a empleados de sexo FEMENINO');
+	        		bOK = false;
+	        	}
+	        }
 	        // verifica que la referencia no haya sido capturada previamente
-	        if (refImss != '') {
+	        if (refIMSS != '') {
 		        for(var i=1; i<rowLength; i+=1){
-					var row = table.rows[i];
-		        	if (row.cells[4].firstChild.value == refImss) {
+					var row = tabla.rows[i];
+		        	if (row.cells[4].firstChild.value == refIMSS) {
 						alert('Ya existe esa referencia en la lista!');
 						bOK = false;
 					}
@@ -546,7 +560,7 @@
 	        }
 	        // verifica que se haya capturado una referencia o folio de Incapacidad
 	        if (pideFolioIMMS.includes(concepto)) {
-	        	if (refImss == '') {
+	        	if (refIMSS == '') {
 	        		alert('Debe capturar el folio de Incapacidad!');
 	        		bOK = false;
 	        	}
@@ -559,26 +573,25 @@
         return bOK;
 	}
 
-	function validaEdicion(rowNum, emp, dias, fecha, refImss) {
+	function validaEdicion(rowNum) {
 		var bOK = true;
-		var table = document.getElementById('captura');
-		var rowLength = table.rows.length;
+		var rowLength = tabla.rows.length;
 
 		// Checa si ya existe el empleado con la misma fecha
 		for(var i=1; i<rowLength; i+=1){
-		    var row = table.rows[i];
+		    var row = tabla.rows[i];
 
 	        // verifica que la referencia no haya sido capturada
-	        if (refImss != '' ) {
+	        if (refIMSS != '' ) {
 		        for(var i=1; i<rowLength; i+=1){
-					var row = table.rows[i];
-		        	if (row.cells[4].firstChild.value == refImss && rowNum != i) {
+					var row = tabla.rows[i];
+		        	if (row.cells[4].firstChild.value == refIMSS && rowNum != i) {
 						alert('Ya existe esa referencia en la lista!');
 						bOK = false;
 					}
 				}
 			}
-		    if (row.cells[0].firstChild.value == emp) {
+		    if (row.cells[0].firstChild.value == empleado) {
 
 		    	if (rowNum != i) {
 					var fechaStr = date2Str(fecha);

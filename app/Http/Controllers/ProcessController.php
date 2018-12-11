@@ -50,7 +50,7 @@ class ProcessController extends Controller
 	}
 
 
-	public function generaFirma($cadena, $celula, $rfc)
+	public function generaFirma($cadena, $celula, $rfc, $passphrase)
 	{
 		// Load required classes manualy.
 		require(dirname(__DIR__) .'/../../vendor/robrichards/xmlseclibs/xmlseclibs.php');
@@ -66,7 +66,7 @@ class ProcessController extends Controller
 		$rutaCert = Client::getRutaCertificado($celula, $rfc);
 		$signKey = $rutaCert.'/'.$rfc.'-priv.key';
         $signCert = $rutaCert.'/'.$rfc.'-cert.pem';
-		$signKeyPassword = NULL;
+		$signKeyPassword = $passphrase;
 
 		// User data.
 		//$values = $this->getPDFText();

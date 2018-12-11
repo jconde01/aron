@@ -48,7 +48,13 @@ class XActsController extends Controller
 		$conceptos = Concepto::where('TIPONO',$selProceso)->where('TIPCAPT','<>','0')->whereIn('CONCEPTO',$this::conIncap)->orderBy('NOMBRE')->get();
 		$periCalc = Nomina::where('TIPONO',$selProceso)->first()->PERICALC;
 		$periodos = Periodo::where('TIPONO',$selProceso)->where('SWCIERRE','0')->get();
-		$empleados = Empleado::where('TIPONO',$selProceso)->where('ESTATUS','A')->get();
+		$empleados = Empleado::Join('EMPGEN', function($q) {
+        				$q->on('EMPGEN.EMP', '=', 'EMPLEADO.EMP')
+            				->on('EMPGEN.TIPONO', '=', 'EMPLEADO.TIPONO');
+    					})
+					->where('EMPLEADO.TIPONO',$selProceso)->where('ESTATUS','A')
+					->select('EMPGEN.SEXO','EMPLEADO.*')
+					->orderBy('EMPLEADO.NOMBRE')->get();
 		return view('transacciones.por-incapacidad')->with(compact('navbar','conceptos','periCalc','periodos','empleados'));
 	}
 

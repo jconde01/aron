@@ -25,11 +25,11 @@
           <div class="" style="">
          
             <ul class="tab horizontal" style="width: 60%; padding-left: 16%;">
-              <li class="tab-group-item" style="background-color: white!important;"><a data-toggle="tab" href="#nomina1">Nomina 1</a></li>
-              <li class="tab-group-item"><a data-toggle="tab" href="#nomina2">Nomina 2</a></li>
-              <li class="tab-group-item" style="width: 16%;"><a data-toggle="tab" href="#datosg">Datos Generales</a></li>
-              <li class="tab-group-item"><a data-toggle="tab" href="#datosa">Datos Afore</a></li>
-               <li class="tab-group-item"><a data-toggle="tab" href="#documentos">Documentos</a></li>
+              <li class="tab-group-item pestanas" onClick="cambiar_color_over(this)" style="background-color: rgb(179, 215, 243)!important;"><a style="text-decoration: none; padding: 6px;" data-toggle="tab" href="#nomina1">Nómina 1</a></li>
+              <li class="tab-group-item pestanas" onClick="cambiar_color_over(this)"><a style="text-decoration: none;padding: 6px;" data-toggle="tab" href="#nomina2">Nómina 2</a></li>
+              <li class="tab-group-item pestanas" style="width: 16%;" onClick="cambiar_color_over(this)"><a style="text-decoration: none;padding: 6px;" data-toggle="tab" href="#datosg">Datos Generales</a></li>
+              <li class="tab-group-item pestanas" onClick="cambiar_color_over(this)"><a style="text-decoration: none;padding: 5px;" data-toggle="tab" href="#datosa">Datos Afore</a></li>
+               <li class="tab-group-item pestanas" onClick="cambiar_color_over(this)"><a style="text-decoration: none;padding: 6px;" data-toggle="tab" href="#documentos">Documentos</a></li>
             </ul>
 
             <br><br><br>
@@ -409,8 +409,8 @@
 
                     <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
-                            <div class="label-left"><p>Sueldo:</p></div>
-                            <input type="number" id="Sueldo" step="0.01" name="SUELDO" max="999999999" value="{{ old('SUELDO') }}">
+                            <div class="label-left"><p>Sueldo Diario:</p></div>
+                            <input type="number" id="Sueldo" step="0.01" name="SUELDO" min="80.6" max="999999999" value="{{ old('SUELDO') }}">
                         </div> 
                     </div>
 
@@ -1288,7 +1288,7 @@ $("#checkbox1").on('change', function() {
         var ingreso = $('#Ingreso').val();
         var eym = document.getElementById("Integ");
         var iv = document.getElementById("Intiv");      
-        alert('F.Ingreso: ' + ingreso + ' - Sueldo : ' + sueldo);        
+        //alert('F.Ingreso: ' + ingreso + ' - Sueldo : ' + sueldo);        
         $.post("getSalarioIntegrado", { fldSueldo: sueldo, fldIngreso: ingreso, _token: token }, function( data ) {
             
             eym.value = data['integrado'];
@@ -1297,5 +1297,18 @@ $("#checkbox1").on('change', function() {
         });     
     });
 </script>
+
+<!-- ----- cambio de color pestañas---------------- -->
+<script type="text/javascript">
+    function cambiar_color_over(pestana){ 
+    var x= document.getElementsByClassName("pestanas");
+    var i;
+    for (i = 0; i < x.length; i++) {
+        x[i].style.backgroundColor = "white";
+        }
+    pestana.style.backgroundColor="rgb(179, 215, 243)";
+    } 
+</script>
+<!-- ----------- fin de cambio de color pestañas------------------ -->
 @endsection
-<!-- termina el codigo escrito por Ricardo Cordero 2018 -->
+<!-- termina el codigo escrito por Ricardo Cordero 2018

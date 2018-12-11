@@ -76,7 +76,7 @@
                                   <div class="modal-body" style="text-align: center;">
                                     <a href="" data-toggle="modal" data-target="#GSCCModal2"><i class="fas fa-address-card"></i>&nbsp;Datos Generales</a>
                                     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                                    <a href="/files/formato.pdf"><i class="fas fa-book"></i>&nbsp;Curriculum</a>
+                                    <a href="" id="curri"><i class="fas fa-book"></i>&nbsp;Curriculum</a>
                                   </div>
                                   <div class="modal-footer">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Aceptar</button>                  
@@ -188,14 +188,26 @@
             sangre.value = data['sangre'];
             imss.value = data['imss'];
             var foto = data['foto'];
-            var img = '/admon/empleados/empresas/'+id+'/'+foto;
+            var img = '/img_emp/'+foto;
+            var curriculum = data['curriculum'];
+            var curri = '/catalogos/documentos/empleados/'+curriculum;
+            //alert('dir: ' + curri); 
             if (data['foto']) {
-             $('#ima').removeAttr('scr');
-            $('#ima').attr('src',img);
-        }else{
-             $('#ima').removeAttr('scr');
-             $('#ima').attr('src',"{{ asset('/img/Ideatisa.ico')}}");
-        }
+              $('#ima').removeAttr('scr');
+              $('#ima').attr('src',img);
+            }else{
+              $('#ima').removeAttr('scr');
+              $('#ima').attr('src',"{{ asset('/img/Ideatisa.ico')}}");
+            }
+
+            if (data['curriculum']) {
+              $('#curri').removeAttr('href');
+              $('#curri').attr('href',curri);
+            }else{
+              $('#curri').removeAttr('href');
+              $('#curri').attr('href',"#");
+            }
+
         });
         
             

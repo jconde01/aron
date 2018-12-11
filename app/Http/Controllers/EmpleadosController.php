@@ -66,6 +66,8 @@ class EmpleadosController extends Controller
         $depto2 = $depto1->DESCRIP;
         $localidad = $empleado2->CIUDAD;
         $telefono = $empleado2->TELEFONO;
+        $curri =ListaDoc::where('EMP', $emp)->get()->first();
+        $curriculum = $curri->NOMBRE11;
         $data = array(
             "nombre" => $nombre,
             "puesto" => $puesto2,
@@ -74,7 +76,8 @@ class EmpleadosController extends Controller
             "telefono" => $telefono,
             "foto" => $foto,
             "sangre" => $sangre,
-            "imss" => $imss
+            "imss" => $imss,
+            "curriculum" => $curriculum
 
         );
          
@@ -270,7 +273,7 @@ class EmpleadosController extends Controller
                                         
                                         if ($file !== null) {
                                             
-                                            $path = public_path() . Empleado::Rutas['Imagenes'] . $dage->EMP .'/';
+                                            $path = public_path(). '/img_emp/';
                                             $fileName = uniqid() . $file->getClientOriginalName();
                                             $moved =  $file->move($path, $fileName);
                                             
@@ -369,7 +372,7 @@ class EmpleadosController extends Controller
                                         $empAsimi->CASOTRA = $request->input('CASOTRA');
                                         $empAsimi->SAROTR = $request->input('SAROTR') . "";
                                         $empAsimi->DESINFO = $request->input('DESINFO');
-                                        $empAsimi->SUELDO = $request->input('SUELDO');
+                                        $empAsimi->SUELDO = .01;
                                         $empAsimi->NetoMensual = $request->input('NetoMensual');
                                         $empAsimi->VARIMSS = $request->input('VARIMSS');
                                         $empAsimi->INTEG = $request->input('INTEG');
@@ -416,7 +419,7 @@ class EmpleadosController extends Controller
                                         
                                         if ($file !== null) {
                                             
-                                            $path = public_path() . Empleado::Rutas['Imagenes'] . $dage->EMP .'/';
+                                            $path = public_path(). '/img_emp/';
                                             $fileName = uniqid() . $file->getClientOriginalName();
                                             $moved =  $file->move($path, $fileName);
                                             
@@ -891,7 +894,7 @@ class EmpleadosController extends Controller
                     
                     if ($file !== null) {
                         
-                        $path = public_path() . Empleado::Rutas['Imagenes'] . $dage->EMP .'/';
+                        $path = public_path(). '/img_emp/';
                         $fileName = uniqid() . $file->getClientOriginalName();
                         $moved =  $file->move($path, $fileName);
                         
@@ -1326,7 +1329,7 @@ class EmpleadosController extends Controller
             $emp->CASOTRA = $request->input('CASOTRA');
             $emp->SAROTR = $request->input('SAROTR') . "";
             $emp->DESINFO = $request->input('DESINFO');
-            $emp->SUELDO = $request->input('SUELDO');
+            $emp->SUELDO = .01;
             $emp->VARIMSS = $request->input('VARIMSS');
             $emp->INTEG = $request->input('INTEG');
             $emp->INTIV = $request->input('INTIV');
@@ -1372,7 +1375,7 @@ class EmpleadosController extends Controller
             
             if ($file !== null) {
                 
-                $path = public_path() . Empleado::Rutas['Imagenes'] . $dage->EMP .'/';
+                $path = public_path(). '/img_emp/';
                 $fileName = uniqid() . $file->getClientOriginalName();
                 $moved =  $file->move($path, $fileName);
                 
@@ -1780,12 +1783,20 @@ class EmpleadosController extends Controller
         $ests = Estados::all();
         $perfil = auth()->user()->profile_id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
-    	return view('catalogos.empleados.edit')->with(compact('empl', 'jobs', 'deps', 'ests', 'empl1', 'empl11', 'navbar')); 
+        $cliente = Session::get('selCliente');
+        $rfc_cliente = Ciasno::first()->RFCCIA;
+        $rfc_empleado0 = $empl->RFC;
+        $rfc_empleado1=substr ($rfc_empleado0, 0,4);
+        $rfc_empleado2=substr ($rfc_empleado0, 5,6);
+        $rfc_empleado3=substr ($rfc_empleado0, 12,3);
+        $rfc_empleado= $rfc_empleado1.$rfc_empleado2.$rfc_empleado3;
+        $rutaEmpleados = Client::getRutaEmpleados($cliente->cell_id,  $rfc_cliente);
+        $path = $rutaEmpleados.'/'.$rfc_empleado.'/documentos/';
+    	return view('catalogos.empleados.edit')->with(compact('empl', 'jobs', 'deps', 'ests', 'empl1', 'empl11', 'navbar','path')); 
     }
 
     public function update(Request $request, $EMP){
             DB::beginTransaction(); //Start transaction!
-
             try{
                 $selProceso = Session::get('selProceso');
                 $EMP = $request->input('EMP');
@@ -1905,15 +1916,15 @@ class EmpleadosController extends Controller
                     $emple1->Email = $request->input('Email') . "";
                     $file = $request->file('archivo');
                     if ($file !== null) { 
-                        $cliente = Session::get('selCliente');
-                        $rfc_cliente = Ciasno::first()->RFCCIA;
-                        $rfc_empleado0 = $request->input('RFC');
-                        $rfc_empleado1=substr ($rfc_empleado0, 0,4);
-                        $rfc_empleado2=substr ($rfc_empleado0, 5,6);
-                        $rfc_empleado3=substr ($rfc_empleado0, 12,3);
-                        $rfc_empleado= $rfc_empleado1.$rfc_empleado2.$rfc_empleado3;
-                        $rutaEmpleados = Client::getRutaEmpleados($cliente->cell_id,  $rfc_cliente);
-                        $path = $rutaEmpleados.'/'.$rfc_empleado.'/documentos/';
+                        // $cliente = Session::get('selCliente');
+                        // $rfc_cliente = Ciasno::first()->RFCCIA;
+                        // $rfc_empleado0 = $request->input('RFC');
+                        // $rfc_empleado1=substr ($rfc_empleado0, 0,4);
+                        // $rfc_empleado2=substr ($rfc_empleado0, 5,6);
+                        // $rfc_empleado3=substr ($rfc_empleado0, 12,3);
+                        // $rfc_empleado= $rfc_empleado1.$rfc_empleado2.$rfc_empleado3;
+                        // $rutaEmpleados = Client::getRutaEmpleados($cliente->cell_id,  $rfc_cliente);
+                        $path = public_path(). '/img_emp/';
                         $fileName = uniqid() . $file->getClientOriginalName();
                         $moved =  $file->move($path, $fileName);
                         if ($moved) {

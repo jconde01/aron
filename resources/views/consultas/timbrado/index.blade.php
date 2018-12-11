@@ -8,7 +8,7 @@
     <div class="container">   
       <div class="section text-center">
         <h5 class="titulo">Autorizar Nómina</h5>
-	 	
+ 	
 		<?php
             $directorio = opendir($ruta);
             while ($archivo = readdir($directorio)) //obtenemos un archivo y luego otro sucesivamente
@@ -21,7 +21,7 @@
                     $prefijo=substr($archivo,0,10);
                     if ($prefijo !== 'autorizado') {
                         //echo '<input type="hidden" name="archivo[]" id="'.$archivo.'" value="'.$archivo.'" />';
-                        echo '<a class="primario1 separation firmar" id="'.$archivo.'">Confirmar</a>';
+                        echo '<a class="primario1 separation firmar" id="'.$archivo.'">Autorizar</a>';
                         // echo '<form class="form" method="POST" action="/consultas/timbrado/firmar/$archivo">';
                         // echo '  <input type="hidden" name="_token" value="{{ csrf_token() }}">';
                         // echo '  <div class="row text-center">';
@@ -43,7 +43,7 @@
     <div class="modal-dialog">
 
         <!-- url('/consultas/timbrado/firmar/') -->
-        <form method="GET" action="{{ url('/home') }}" >
+        <form method="POST" action="{{ url('/consultas/timbrado/firmar') }}" >
             <input type="hidden" name="_token" value="{{ csrf_token() }}">';
             <input type="hidden" name="archivo" id="Archivo">
             <!-- Modal content-->
@@ -61,7 +61,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-default">OK</button>
+                    <button type="submit" class="btn btn-default">Autorizar</button>
                 </div>
             </div>
         </form>            

@@ -62,7 +62,6 @@
         </div>
     </nav>
 
-
     @auth
       <!-- <ul class="nav navbar-nav"> -->
       @if (isset($navbar))
@@ -84,12 +83,19 @@
         <span><p class="etiqueta" style="background-color: rgb(179, 215, 243); color: blue; height: 22px !important; float: right;font-size: 8px;">{{ $cli->Nombre }}</p></span>   
       @endif
     @endif
-    @if (session()->has('flash'))
-      <div class="container">
-        <div class="alert alert-success">{{ session('flash') }}
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      @if (session()->has('flash'))
+        <div class="container">
+          <div class="alert alert-success">{{ session('flash') }}
+              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+          </div>
         </div>
-      </div>
-    @endif
+      @endif
+      @if (session()->has('error'))
+          <div class="container">
+            <div class="alert alert-danger">{{ session('error') }}
+              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            </div>
+          </div>
+      @endif
   </div>
 </div>

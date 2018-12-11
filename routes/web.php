@@ -30,7 +30,8 @@ Route::middleware(['auth'])->group(function () {
 	Route::patch('/notificaciones/leida/{id}','NotificationsController@read');
 	Route::get('/descarga/{ru}','ConsultasController@descarga');
 	Route::get('/descargaContratos/{ru}','ConsultasController@descargaCon');
-	Route::get('/descargaTimbres/{archivo}','TimbradoController@descargaNo');
+	Route::get('/descargaTimbres/{archivo}','TimbradoController@descargaPorAutorizar');
+	Route::get('/consultaAutorizados/{archivo}','TimbradoController@descargaAutorizados');
 });
 
 
@@ -176,7 +177,8 @@ Route::middleware(['auth'])->prefix('consultas')->group(function () {
 	Route::get('/contratos/{id}/consulta','ConsultasController@consultaContrato');
 	Route::get('/documentos','ConsultasController@documentos');
 	Route::get('/timbrado','TimbradoController@index');
-	Route::get('/timbrado/firmar/{archivo}','TimbradoController@firmar');	
+	Route::post('/timbrado/firmar','TimbradoController@firmar');
+	Route::get('/autorizada','TimbradoController@consultaAutorizadas');	
 	Route::get('/utilerias/Nominas/Celula1/TIMBRADO/VALLY_MERIDA/201816/{archivo}','ConsultasController@consulta');
 	Route::get('/descargaDocumentos/{archivo}','ConsultasController@descargaDoc');
 	Route::get('/checklist','ConsultasController@checklist');
