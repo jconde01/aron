@@ -410,7 +410,7 @@
                     <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Sueldo Diario:</p></div>
-                            <input type="number" id="Sueldo" step="0.01" name="SUELDO" min="80.6" max="999999999" value="{{ old('SUELDO') }}">
+                            <input type="number" id="Sueldo" step="0.01" name="SUELDO" min="88.36" max="999999999" value="{{ old('SUELDO') }}">
                         </div> 
                     </div>
 

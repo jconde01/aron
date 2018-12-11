@@ -46,7 +46,7 @@
         		<tr>
         			<th style="width:0%; display:none;">Empleado</th>
         			<th style="width:40%;text-align: center;">Nombre</th>
-        			<th style="width:12%;text-align: center;">Suplencia</th>
+        			<!-- <th style="width:12%;text-align: center;">Suplencia</th> -->
         			<th style="width:12%;">Fecha</th>
         			<th style="width:12%;text-align: center;">Unidades</th>
         			<th style="width:14%;">Cuenta</th>
@@ -80,14 +80,14 @@
                 </select>
             </div>
             <div class="input-data">
-                <div class="col-md-4 col-md-offset-4 text-center">
+<!--                 <div class="col-md-4 col-md-offset-4 text-center">
                     <div class="form-group checkbox">
                         <label>
                             <input type="checkbox" id="suplencia" name="Suplencia">
                             Suplencia
                         </label>
                     </div>
-                </div>            	
+                </div>  -->           	
 				<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;">
         			<label class="label-left" style="font-size: 14px;">Fecha</label>
         			<input type="date" id="fecha" name="Fecha" value="">
@@ -126,14 +126,14 @@
                 <input type="text" id="ed_empleado" name="Nombre" readonly value="">
             </div> 
             <div class="input-data">
-                <div class="col-md-4 col-md-offset-4 text-center">
+<!--                 <div class="col-md-4 col-md-offset-4 text-center">
                     <div class="form-group checkbox">
                         <label>
                             <input type="checkbox" id="ed_suplencia" name="Suplencia">
                             Suplencia
                         </label>
                     </div>
-                </div>              
+                </div>  -->             
                 <div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;">
                     <label class="label-left" style="font-size: 14px;">Fecha</label>
                     <input type="date" id="ed_fecha" name="Fecha" value="">
@@ -252,27 +252,26 @@
         unidades = $('#unidades').val();
         fecha = $('#fecha').val();
         cuenta = $('#cuenta').val();
-        suplencia = $('#suplencia').is(':checked');
+        //suplencia = $('#suplencia').is(':checked');
 
 		if (validaPantalla()) {
 
         	var row = tabla.insertRow(tabla.rows.length);
         	var col1 = row.insertCell(0);
         	var col2 = row.insertCell(1);
-        	var col3 = row.insertCell(2);
+       	    var col3 = row.insertCell(2);
         	var col4 = row.insertCell(3);
         	var col5 = row.insertCell(4);
         	var col6 = row.insertCell(5);
-            var col7 = row.insertCell(6);
 
-            _checked = (suplencia)?'checked':'';
+            // _checked = (suplencia)?'checked':'';
 			col1.innerHTML = '<td><input type="text" class="emp" name="emp[]" value="'+empleado+'"/></td>'; col1.style.display = 'none'; 
             col2.innerHTML = '<td style="text-align:left!important;">' + nombre + '</td>';
-			col3.innerHTML = '<td><input type="checkbox" class="suplencia" name="suplencia[]" '+_checked+' style="border:0px;width:150px!important;" value="'+suplencia+'"/></td>'; 
-			col4.innerHTML = '<td><input type="text" name="fecha[]" class="fecha" style="border:0px;width:150px!important;" value="'+fecha+'"/></td>'; 
-			col5.innerHTML = '<td><input type="text" class="unidades" name="unidades[]" style="text-align:center;border:0px;width:150px!important;" value="'+unidades+'"/></td>'; 
-			col6.innerHTML = '<td><input type="text" class="cuenta" name="cuenta[]" style="border:0px;width:150px!important;" value="'+cuenta+'"/></td>';
-            col7.innerHTML = '<td class="td-actions text-center">'+
+			// col3.innerHTML = '<td><input type="checkbox" class="suplencia" name="suplencia[]" '+_checked+' style="border:0px;width:150px!important;" value="'+suplencia+'"/></td>'; 
+			col3.innerHTML = '<td><input type="text" name="fecha[]" class="fecha" style="border:0px;width:150px!important;" value="'+fecha+'"/></td>'; 
+			col4.innerHTML = '<td><input type="text" class="unidades" name="unidades[]" style="text-align:center;border:0px;width:150px!important;" value="'+unidades+'"/></td>'; 
+			col5.innerHTML = '<td><input type="text" class="cuenta" name="cuenta[]" style="border:0px;width:150px!important;" value="'+cuenta+'"/></td>';
+            col6.innerHTML = '<td class="td-actions text-center">'+
                 '<a href="#" rel="tooltip" title="Editar" class="btn btn-success btn-simple btn-xs"><i class="fa fa-edit"></i></a>'+
                 '&nbsp&nbsp<a href="#" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs"><i class="fa fa-times"></i></a>'+'</td>';
         }
@@ -281,14 +280,14 @@
 
     $("#Edit").click(function(event) {
         empleado = $('#ed_emp').val();
-        suplencia = $('#ed_suplencia').is(':checked');
+        //suplencia = $('#ed_suplencia').is(':checked');
         unidades = $('#ed_unidades').val();
         fecha = $('#ed_fecha').val();
         cuenta = $('#ed_cuenta').val();
         row_index = rowElem.index();
 
         if (validaEdicion(row_index, empleado, fecha, unidades)) {
-            rowElem.find('td .suplencia').checked = suplencia;
+            //rowElem.find('td .suplencia').checked = suplencia;
             rowElem.find('td .fecha').val(fecha);
             rowElem.find('td .unidades').val(unidades);            
             rowElem.find('td .cuenta').val(cuenta);         
@@ -303,7 +302,7 @@
         // asigna valores a los campos del modal de edicion
         document.getElementById("ed_emp").value = rowElem.find('td .emp').val();
         document.getElementById("ed_empleado").value = rowElem.find('td:eq(1)').text();
-        document.getElementById("ed_suplencia").value = rowElem.find('td .suplencia').val();
+        //document.getElementById("ed_suplencia").value = rowElem.find('td .suplencia').val();
         document.getElementById("ed_fecha").value = rowElem.find('td .fecha').val();
         document.getElementById("ed_unidades").value = rowElem.find('td .unidades').val();
         document.getElementById("ed_cuenta").value = rowElem.find('td .cuenta').val();
@@ -331,7 +330,7 @@
             var col4 = row.insertCell(3);
             var col5 = row.insertCell(4);
             var col6 = row.insertCell(5);
-            var col7 = row.insertCell(6);
+            //var col7 = row.insertCell(6);
 
             var fechaParts = movtos[i]["fecha"].substr(0,10).split('-');
             var theDate = new Date(fechaParts[0], fechaParts[1] - 1, fechaParts[2]);
@@ -339,14 +338,14 @@
 
             // NO SABEMOS DONDE GUARDA ESTE VALOR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             // var _checked = (movtos[i]["SUPLENCIA"] == 1)?'checked':'';
-            _checked = false;
+            //_checked = false;
             col1.innerHTML = '<td><input type="text" class="emp" name="emp[]" value="'+movtos[i]["EMP"]+'"/></td>'; col1.style.display = 'none'; 
             col2.innerHTML = '<td style="text-align:left!important;">' + movtos[i]["NOMBRE"] + '</td>';
-            col3.innerHTML = '<td><input type="checkbox" class="suplencia" name="suplencia[]" '+_checked+' style="border:0px;width:150px!important;" value="'+suplencia+'"/></td>'; 
-            col4.innerHTML = '<td><input type="text" name="fecha[]" class="fecha" style="border:0px;width:150px!important;" value="'+fechaStr+'"/></td>'; 
-            col5.innerHTML = '<td><input type="text" class="unidades" name="unidades[]" style="text-align:center;border:0px;width:150px!important;" value="'+movtos[i]["UNIDADES"]+'"/></td>'; 
-            col6.innerHTML = '<td><input type="text" class="cuenta" name="cuenta[]" style="border:0px;width:150px!important;" value="'+movtos[i]["CUENTA"]+'"/></td>';
-            col7.innerHTML = '<td class="td-actions text-center">'+
+            //col3.innerHTML = '<td><input type="checkbox" class="suplencia" name="suplencia[]" '+_checked+' style="border:0px;width:150px!important;" value="'+suplencia+'"/></td>'; 
+            col3.innerHTML = '<td><input type="text" name="fecha[]" class="fecha" style="border:0px;width:150px!important;" value="'+fechaStr+'"/></td>'; 
+            col4.innerHTML = '<td><input type="text" class="unidades" name="unidades[]" style="text-align:center;border:0px;width:150px!important;" value="'+movtos[i]["UNIDADES"]+'"/></td>'; 
+            col5.innerHTML = '<td><input type="text" class="cuenta" name="cuenta[]" style="border:0px;width:150px!important;" value="'+movtos[i]["CUENTA"]+'"/></td>';
+            col6.innerHTML = '<td class="td-actions text-center">'+
                 '<a href="#" rel="tooltip" title="Editar" class="btn btn-success btn-simple btn-xs"><i class="fa fa-edit"></i></a>'+
                 '&nbsp&nbsp<a href="#" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs"><i class="fa fa-times"></i></a>'+'</td>';
         }
