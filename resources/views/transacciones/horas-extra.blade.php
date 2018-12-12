@@ -230,6 +230,7 @@
         $.post("get-movesp", { concepto: concepto, periodo: periodo, _token: token }, function( data ) {
             $("body").css("cursor", "default");
             var movtos = Object.values(data);
+            console.log(movtos);
             despliegaDatos(movtos);
         });    
     });
@@ -251,7 +252,7 @@
     // los inserta en la tabla
     $("#Add").click(function(event) {
 		var nombre = $('#empleado>option:selected').text();
-		empleado  =  $('.emp').val();
+		empleado  = $('#empleado>option:selected').val();  //$('.emp').val();
 		sueldo =  Number($('.emp').find(':selected').data('sueldo'));
         unidades = $('#unidades').val();
         fecha = $('#fecha').val();
@@ -363,9 +364,9 @@
             // Checa si ya existe el empleado con la misma fecha
             for(var i=1; i<rowLength; i+=1){
                 var row = tabla.rows[i];
-                console.log(row + ' - ' + row.cells[0].firstChild.value + ' - ' + empleado)
+
                 if (row.cells[0].firstChild.value == empleado) {
-                    
+                    console.log(row + ' - ' + row.cells[0].firstChild.value + ' - ' + empleado)                    
                     var fechaStr = date2Str(fecha);
                     var fechaIni = stringToDate(row.cells[2].firstChild.value,"dd-mm-yyyy","-");
                     var fechaFin = fechaIni;
