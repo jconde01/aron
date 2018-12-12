@@ -252,9 +252,9 @@
     // los inserta en la tabla
     $("#Add").click(function(event) {
 		var nombre = $('#empleado>option:selected').text();
-		empleado  = $('#empleado>option:selected').val();  //$('.emp').val();
+		empleado  = $('#empleado>option:selected').val();
 		sueldo =  Number($('.emp').find(':selected').data('sueldo'));
-        unidades = $('#unidades').val();
+        unidades = parseInt($('#unidades').val());
         fecha = $('#fecha').val();
         cuenta = $('#cuenta').val();
         //suplencia = $('#suplencia').is(':checked');
@@ -348,7 +348,7 @@
             col2.innerHTML = '<td style="text-align:left!important;">' + movtos[i]["NOMBRE"] + '</td>';
             //col3.innerHTML = '<td><input type="checkbox" class="suplencia" name="suplencia[]" '+_checked+' style="border:0px;width:150px!important;" value="'+suplencia+'"/></td>'; 
             col3.innerHTML = '<td><input type="text" name="fecha[]" class="fecha" style="border:0px;width:150px!important;" value="'+fechaStr+'"/></td>'; 
-            col4.innerHTML = '<td><input type="text" class="unidades" name="unidades[]" style="text-align:center;border:0px;width:150px!important;" value="'+movtos[i]["UNIDADES"]+'"/></td>'; 
+            col4.innerHTML = '<td><input type="text" class="unidades" name="unidades[]" style="text-align:center;border:0px;width:150px!important;" value="'+parseInt(movtos[i]["UNIDADES"])+'"/></td>'; 
             col5.innerHTML = '<td><input type="text" class="cuenta" name="cuenta[]" style="border:0px;width:150px!important;" value="'+movtos[i]["CUENTA"]+'"/></td>';
             col6.innerHTML = '<td class="td-actions text-center">'+
                 '<a href="#" rel="tooltip" title="Editar" class="btn btn-success btn-simple btn-xs"><i class="fa fa-edit"></i></a>'+

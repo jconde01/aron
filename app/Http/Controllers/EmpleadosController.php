@@ -385,7 +385,7 @@ class EmpleadosController extends Controller
                                         $empAsimi->save();
 
                                         $dage = new DatosGeAsimi();
-                                        $dage->EMP = $request->input('EMP2');
+                                        $dage->EMP = $ultimo3;
                                         $dage->NIVEL = $request->input('NIVEL') . "";
                                         $dage->DEPTO = $request->input('DEPTO') . "";
                                         $dage->REPORTA = $request->input('REPORTA') . "";
