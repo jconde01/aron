@@ -6,15 +6,19 @@
 @section('content')
 {!! Session::get("message", '') !!}
 <div class="container" style="border:1px red solid;">
+    <h3>Horas Extra</h3>
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
                 @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
+                    <li>
+                        {{ $error }}
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    </li>
                 @endforeach
             </ul>                    
         </div>
-    @endif   	
+    @endif	
     <form class="form" method="POST" action="{{ url('transacciones/horasExtra') }}">
 		<input type="hidden" name="_token" value="{{ csrf_token() }}">
 		<input type="hidden" id="Concepto"  name="Concepto" value="{{ $concepto->CONCEPTO }}">
@@ -223,7 +227,7 @@
         totUnidades = 0;
         totImporte = 0;
         $("body").css("cursor", "wait");
-        $.post("get-movtos", { concepto: concepto, periodo: periodo, _token: token }, function( data ) {
+        $.post("get-movesp", { concepto: concepto, periodo: periodo, _token: token }, function( data ) {
             $("body").css("cursor", "default");
             var movtos = Object.values(data);
             despliegaDatos(movtos);
@@ -332,7 +336,7 @@
             var col6 = row.insertCell(5);
             //var col7 = row.insertCell(6);
 
-            var fechaParts = movtos[i]["fecha"].substr(0,10).split('-');
+            var fechaParts = movtos[i]["FECHA"].substr(0,10).split('-');
             var theDate = new Date(fechaParts[0], fechaParts[1] - 1, fechaParts[2]);
             var fechaStr = fechaParts[2] + '-' + fechaParts[1] + '-' + fechaParts[0];
 

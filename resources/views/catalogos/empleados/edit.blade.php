@@ -209,7 +209,7 @@
                                 } ?> <?php endif ?>>8-Asimilados Comisionistas</option>
                                 <option value="9" <?php if ($empl->TIPOREGIMEN==9):{
                                     echo 'selected="selected"';
-                                } ?> <?php endif ?>>9-Asimilados Horarios</option>
+                                } ?> <?php endif ?>>9-Asimilados Honorarios</option>
                                 <option value="10" <?php if ($empl->TIPOREGIMEN==10):{
                                     echo 'selected="selected"';
                                 } ?> <?php endif ?>>10-Asimilados Acciones</option>
@@ -526,7 +526,7 @@
                     </div>
 
                     <div class="col-md-12" style=" text-align: left;">
-                      <h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Acu. Otra Cía.</h3>
+                      <h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Acumulado Otras Empresas.</h3>
                     </div>
 
                     <div class="col-md-4 no-pad">
@@ -565,7 +565,7 @@
                     </div>
 
                     <div class="col-md-12" style=" text-align: left; border-top: 2px #F0F0F0 solid;">
-                      <h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Integrados.</h3>
+                      <h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sueldos.</h3>
                     </div>
 
                     <div class="col-md-4 no-pad">
@@ -1018,19 +1018,6 @@
                         </div> 
                     </div>
 
-                    <div class="col-md-4 no-pad">
-                        <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
-                            <div class="label-left"><p>Nombre del Padre: </p></div>
-                            <input type="text" name="PADRE" value="{{$empl11->PADRE}}" onkeyup="javascript:this.value=this.value.toUpperCase();">
-                        </div> 
-                    </div>
-
-                    <div class="col-md-4 no-pad">
-                        <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
-                            <div class="label-left"><p>Nombre de la Madre: </p></div>
-                            <input type="text" name="MADRE" value="{{$empl11->MADRE}}" onkeyup="javascript:this.value=this.value.toUpperCase();">
-                        </div> 
-                    </div>
                 </div>
             </div>
               <button class="mediano separation">Actualizar</button> 

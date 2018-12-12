@@ -104,6 +104,7 @@ Route::middleware(['auth'])->prefix('transacciones')->group(function () {
 	//Route::get('/get-movtos','XActsController@buscaMovtos');
 	Route::post('/get-from-imss','XActsController@getFromImss');				// Ajax call
 	Route::post('/get-movtos','XActsController@getMovtosCapturados');			// Ajax call
+	Route::post('/get-movesp','XActsController@getMovtosEspeciales');			// Ajax call
 	Route::post('/get-concepto','XActsController@getConcepto');					// Ajax call
 	Route::get('/horasExtra','XActsController@horasExtra');
 	Route::post('/horasExtra','XActsController@storeHorasExtra');
@@ -178,6 +179,7 @@ Route::middleware(['auth'])->prefix('consultas')->group(function () {
 	Route::get('/documentos','ConsultasController@documentos');
 	Route::get('/timbrado','TimbradoController@index');
 	Route::post('/timbrado/firmar','TimbradoController@firmar');
+	Route::post('/get-signed-data','ProcessController@getSignedData');			// AJAX call
 	Route::get('/autorizada','TimbradoController@consultaAutorizadas');	
 	Route::get('/utilerias/Nominas/Celula1/TIMBRADO/VALLY_MERIDA/201816/{archivo}','ConsultasController@consulta');
 	Route::get('/descargaDocumentos/{archivo}','ConsultasController@descargaDoc');

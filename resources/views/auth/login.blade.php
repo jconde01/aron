@@ -48,12 +48,7 @@
                             </div> -->
                             <br>
                             <br>
-                            <div class="input-group">
-                                <span class="">
-                                    <input type="checkbox" aria-label="..." name="remember" {{ old('remember') ? 'checked' : '' }}>
-                                </span>
-                                <h5>Recordar sesión</h5>
-                            </div>
+                            
                                                       
                         </div>
                         <div class="footer">

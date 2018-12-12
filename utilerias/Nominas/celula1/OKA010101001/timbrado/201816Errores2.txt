@@ -1,0 +1,6 @@
+﻿Ha ocurrido el siguiente error para el empleado :HEPD890626CM1:HERNANDEZ PAVON DAVID RENE:Error al Timbrar Recibo: Este RFC del receptor no existe en la lista de RFC inscritos no cancelados del SAT
+Ha ocurrido el siguiente error para el empleado :CICM6912241JA:CIME CERVANTES MANUEL JESUS:Error al guardar en enviados: Se generó un error al validar el xml contra el esquema.
+
+Línea 1 (1600): [Error] - El atributo 'Departamento' no es válido. El valor 'DIRECCIÓN T.I.' no es válido según su tipo de datos 'String' - Error de restricción de patrón.
+
+

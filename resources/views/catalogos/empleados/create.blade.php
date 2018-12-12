@@ -174,7 +174,7 @@
                                 <option value="6" {{ (old("TIPOREGIMEN") == 6 ? "selected":"") }}>6-Asimilados Integrantes Sociedades Asociaciones Civiles</option>
                                 <option value="7" {{ (old("TIPOREGIMEN") == 7 ? "selected":"") }}>7-Asimilados Miembros Consejo</option>
                                 <option value="8" {{ (old("TIPOREGIMEN") == 8 ? "selected":"") }}>8-Asimilados Comisionistas</option>
-                                <option value="9" {{ (old("TIPOREGIMEN") == 9 ? "selected":"") }}>9-Asimilados Horarios</option>
+                                <option value="9" {{ (old("TIPOREGIMEN") == 9 ? "selected":"") }}>9-Asimilados Honorarios</option>
                                 <option value="10" {{ (old("TIPOREGIMEN") == 10 ? "selected":"") }}>10-Asimilados Acciones</option>
                                 <option value="11" {{ (old("TIPOREGIMEN") == 11 ? "selected":"") }}>11-Asimilados Otros</option>
                                 <option value="99" {{ (old("TIPOREGIMEN") == 99 ? "selected":"") }}>99-Otro Regimen</option>
@@ -365,7 +365,7 @@
                     </div>
 
                     <div class="col-md-12" style=" text-align: left;">
-                      <h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Acu. Otra Cía.</h3>
+                      <h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Acumulado Otras Empresas.</h3>
                     </div>
 
                     <div class="col-md-4 no-pad">
@@ -404,13 +404,13 @@
                     </div>
 
                     <div class="col-md-12" style=" text-align: left; border-top: 2px #F0F0F0 solid;">
-                      <h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Integrados.</h3>
+                      <h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sueldos.</h3>
                     </div>
 
                     <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Sueldo Diario:</p></div>
-                            <input type="number" id="Sueldo" step="0.01" name="SUELDO" min="88.36" max="999999999" value="{{ old('SUELDO') }}">
+                            <input type="number" id="Sueldo" step="0.01" name="SUELDO" min="{{$minimodia}}" max="999999999" value="{{ old('SUELDO') }}">
                         </div> 
                     </div>
 
@@ -775,19 +775,6 @@
                         </div> 
                     </div>
 
-                    <div class="col-md-4 no-pad">
-                        <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
-                            <div class="label-left"><p>Nombre del Padre: </p></div>
-                            <input type="text" name="PADRE" value="{{ old('PADRE') }}" maxlength="30" onkeyup="javascript:this.value=this.value.toUpperCase();">
-                        </div> 
-                    </div>
-
-                    <div class="col-md-4 no-pad">
-                        <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
-                            <div class="label-left"><p>Nombre de la Madre: </p></div>
-                            <input type="text" name="MADRE" value="{{ old('MADRE') }}" maxlength="30" onkeyup="javascript:this.value=this.value.toUpperCase();">
-                        </div> 
-                    </div>
 
                 </div>
               </div>
@@ -1230,7 +1217,7 @@ $("#checkbox1").on('change', function() {
     var out = '';//Salida
     var filtro = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ1234567890';
     var v = 0;//Contador de caracteres validos
-    
+
     //Filtar solo los numeros
     for (var i=0; i<val.length; i++){
        if (filtro.indexOf(val.charAt(i)) != -1){

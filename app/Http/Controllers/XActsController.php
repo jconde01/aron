@@ -9,6 +9,7 @@ use App\Concepto;
 use App\Empleado;
 use App\Periodo;
 use App\Movtos;
+use App\Movesp;
 use App\Nomina;
 use App\Incapa;
 use Illuminate\Http\Request;
@@ -72,6 +73,16 @@ class XActsController extends Controller
 		return view('transacciones.horas-extra')->with(compact('navbar','concepto','periCalc','periodos','empleados'));
 	}
 
+	
+	public function getConcepto(Request $data)
+	{
+		$selProceso = Session::get('selProceso');
+		$concepto = Concepto::where('TIPONO', $selProceso)
+				->where('CONCEPTO', $data->concepto)
+				->first();			
+        return array($concepto);
+	}
+
 
 	public function getMovtosCapturados(Request $data)
 	{
@@ -93,13 +104,23 @@ class XActsController extends Controller
 	}
 
 
-	public function getConcepto(Request $data)
+	public function getMovtosEspeciales(Request $data)
 	{
 		$selProceso = Session::get('selProceso');
-		$concepto = Concepto::where('TIPONO', $selProceso)
-				->where('CONCEPTO', $data->concepto)
-				->first();			
-        return array($concepto);
+		$periodo = $data->periodo;
+		$capturado = Movesp::join('Empleado','MOVESP.EMP', '=', 'EMPLEADO.EMP')
+				->where('MOVESP.TIPONO', $selProceso)
+				->where('MOVESP.CONCEPTO', $data->concepto)
+				->where(function($query) use ($periodo){
+            		if ($periodo != '') {
+                		$query->where('MOVESP.PERIODO', '=', $periodo);
+            		}
+            	})->select('EMPLEADO.EMP','EMPLEADO.NOMBRE','EMPLEADO.SUELDO','EMPLEADO.PROMED','MOVESP.*')
+				->orderBy('EMPLEADO.EMP')
+				->get();
+
+        return response($capturado);
+        //return response(array(['EMP' => $selProceso, 'NOMBRE' => $data->concepto,'CALCULO' => $data->periodo]));
 	}
 
 
@@ -362,7 +383,7 @@ class XActsController extends Controller
 
 			$selProceso = Session::get('selProceso');
 		    $concepto = Concepto::where('TIPONO',$selProceso)->where('CONCEPTO',$this::HORASEXTRA)->first();			
-			$deleted1 = Movtos::where('TIPONO',$selProceso)
+			$deleted1 = Movesp::where('TIPONO',$selProceso)
 							->where('CONCEPTO',$concepto->CONCEPTO)
 							->where('PERIODO',$data->Periodo)->delete();
 			//$deleted2 = Imss::where('TIPONO',$selProceso)
@@ -374,30 +395,19 @@ class XActsController extends Controller
 		    	$empleado = Empleado::where('TIPONO',$selProceso)->where('EMP',$emp)
 		    					->select('CUENTA','SUELDO','PROMED','INTEG','INTIV')->get()->first();
 
-		    	$mov = New Movtos();
+		    	$mov = New Movesp();
 		    	$mov->TIPONO = $selProceso;
 		    	$mov->EMP = $emp;
 		    	$mov->CONCEPTO = $concepto->CONCEPTO;
+		    	$mov->FECHA = date('d-m-Y', strtotime($data->fecha[$key]));
 		    	$mov->PERIODO = $data->Periodo;
 		    	$mov->METODO = $concepto->TIPCONCEP . $concepto->TIPCALCUL . $concepto->METODO;
+		    	$mov->METODOISP = $concepto->METODOISP;		// Para que grabar esto en Movtos si está en CONCEPTOS ???????
 		    	$mov->UNIDADES = $data->unidades[$key];
-		    	$mov->SALDO = 0;
-		    	$mov->SUMRES = 0;
-		    	$mov->CALCULO = Calculo::perPrim($empleado, $mov, $concepto);
-		    	$mov->METODOISP = $concepto->METODOISP;			// Para que grabar esto en Movtos si está en CONCEPTOS ???????
-		    	$mov->FLAGCIEN = '';							// Investigar para que sirve esto??????
-		    	$mov->ACTIVO = 1;
-		    	$mov->OTROS = 0;
-		    	$mov->ESPECIAL = 1;
-		    	$mov->PLAZO = 0;
-		    	$mov->cuenta = $data->cuenta[$key];		// para que grabar la cuenta si esta asociada a un solo empleado?????
-		    	$mov->fecha = date('Y-m-d', strtotime($data->fecha[$key]));
-		    	//dd($mov);
+		    	$mov->CUENTA = $data->cuenta[$key];			// para que grabar la cuenta si esta asociada a un solo empleado?????
 		    	$mov->save();
 		    }
 		});
-  		//session()->flash('message', 'Movimientos guardados exitósamente!');
-    	//return redirect()->back();
 		return back()->with('flash','Movimientos guardados exitósamente!');
 	}
 

@@ -11,9 +11,11 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    public const PERFILES_CELULA = array('NOMINISTA' => 6, 'FISCALISTA' => 7);
+    // Esto no me gusta... Deberia de consultarse los perfiles y buscar sus ID's
     public const NOMINISTA_CELULA = 6;
     public const FISCALISTA_CELULA = 7;
+    public const PERFILES_CELULA = array('NOMINISTA' => 6, 'FISCALISTA' => 7);
+
 
     /**
      * The attributes that are mass assignable.

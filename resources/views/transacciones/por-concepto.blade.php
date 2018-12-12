@@ -6,6 +6,7 @@
 @section('content')
 {!! Session::get("message", '') !!}
 <div class="container" style="border:1px red solid;">
+	<h3>Inciencias por concepto</h3>
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
@@ -17,7 +18,7 @@
                 @endforeach
             </ul>                    
         </div>
-    @endif   
+    @endif
     <form class="form" method="POST" action="{{ url('transacciones/porConcepto') }}">
 		<input type="hidden" name="_token" value="{{ csrf_token() }}">
 		<input type="hidden" id="Metodo"  name="Metodo" value="">
@@ -619,7 +620,7 @@
     			var col7 = row.insertCell(7);
     			var col8 = row.insertCell(8);
 				col3.innerHTML = "<th>Descuento</th>";	col3.style.width = "10%"; 		col3.style.backgroundColor="lightgrey";
-				col4.innerHTML = "<th>Saldo</th>";		col4.style.width = "10%"; 		col4.style.backgroundColor="lightgrey";
+				col4.innerHTML = "<th>Acumulado</th>";	col4.style.width = "10%"; 		col4.style.backgroundColor="lightgrey";
 				col5.innerHTML = "<th>Activo</th>";		col5.style.width = "10%";		col5.style.backgroundColor="lightgrey";
 				col6.innerHTML = '<th>Cálculo</th>'; 	col6.style.display = 'none'; 
 				col7.innerHTML = "<th>Fecha</th>";		col7.style.width = "10%";		col7.style.backgroundColor="lightgrey";
@@ -634,7 +635,7 @@
     			var col8 = row.insertCell(8);
     			var col9 = row.insertCell(9);
 				col3.innerHTML = "<th>Descuento</th>";	col3.style.width = "8%";		col3.style.backgroundColor="lightgrey";
-				col4.innerHTML = "<th>Saldo</th>";		col4.style.width = "8%";		col4.style.backgroundColor="lightgrey";
+				col4.innerHTML = "<th>Acumulado</th>";	col4.style.width = "8%";		col4.style.backgroundColor="lightgrey";
 				col5.innerHTML = "<th>Desc. mes</th>";	col5.style.width = "8%";		col5.style.backgroundColor="lightgrey";
 				col6.innerHTML = "<th>Plazo</th>";		col6.style.width = "8%";		col6.style.backgroundColor="lightgrey";
 				col7.innerHTML = "<th>Activo</th>";		col7.style.width = "8%";		col7.style.backgroundColor="lightgrey";

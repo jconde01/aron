@@ -25,6 +25,7 @@ use App\Ciasno;
 use App\Cell;
 use App\DocsRequeridos;
 use App\Client;
+use App\Nomina;
 
 // DB::transaction(function () use($data) {
 // });
@@ -115,7 +116,9 @@ class EmpleadosController extends Controller
         $emp = new Empleado();
         $emp->TIPONO = $selProceso;
         $docsReque = DocsRequeridos::first();
-    	return view('catalogos.empleados.create')->with(compact('jobs','deps', 'ests', 'selProceso', 'navbar','emp', 'ultimo3','AsimiFiscal','docsReque'));
+        $minimodia = Nomina::first()->MINIMODIA2;
+
+    	return view('catalogos.empleados.create')->with(compact('jobs','deps', 'ests', 'selProceso', 'navbar','emp', 'ultimo3','AsimiFiscal','docsReque','minimodia'));
     }
 
 
@@ -347,7 +350,7 @@ class EmpleadosController extends Controller
                                         $empAsimi->c_Estado = $request->input('c_Estado');
                                         $empAsimi->DIRIND = $request->input('DIRIND');
                                         $empAsimi->TIPOJORNADA = $request->input('TIPOJORNADA');
-                                        $empAsimi->TIPOREGIMEN = $request->input('TIPOREGIMEN');
+                                        $empAsimi->TIPOREGIMEN = 9;
                                         $empAsimi->CHECA = $request->input('CHECA');
                                         $empAsimi->SINDIC = $request->input('SINDIC');
                                         $empAsimi->TURNO = $request->input('TURNO');
@@ -355,7 +358,7 @@ class EmpleadosController extends Controller
                                         $empAsimi->ESTATUS = $request->input('ESTATUS');
                                         $empAsimi->CLIMSS = $request->input('CLIMSS') . "";
                                         $empAsimi->TIPOPAGO = $request->input('TIPOPAGO');
-                                        $empAsimi->c_TipoContrato = $request->input('c_TipoContrato');
+                                        $empAsimi->c_TipoContrato = "09 Modalidades de contratación donde no existe relación de trabajo";
                                         $empAsimi->INGRESO = date('d-m-Y', strtotime($request->input('INGRESO')));
                                         $empAsimi->VACACION = date('d-m-Y', strtotime($request->input('VACACION')));
                                         $empAsimi->PLANTA = date('d-m-Y', strtotime($request->input('PLANTA')));
@@ -363,7 +366,7 @@ class EmpleadosController extends Controller
                                         $empAsimi->BAJA = date('d-m-Y', strtotime($request->input('BAJA')));
                                         $empAsimi->REGPAT = $request->input('REGPAT');
                                         $empAsimi->RFC = $request->input('RFC');
-                                        $empAsimi->IMSS = $request->input('IMSS');
+                                        $empAsimi->IMSS = '';
                                         $empAsimi->GRUIMS = $request->input('GRUIMS');
                                         $empAsimi->FONACOT = $request->input('FONACOT') . "";
                                         $empAsimi->INFONAVIT = $request->input('INFONAVIT') . "";
@@ -372,11 +375,11 @@ class EmpleadosController extends Controller
                                         $empAsimi->CASOTRA = $request->input('CASOTRA');
                                         $empAsimi->SAROTR = $request->input('SAROTR') . "";
                                         $empAsimi->DESINFO = $request->input('DESINFO');
-                                        $empAsimi->SUELDO = .01;
+                                        $empAsimi->SUELDO = 0.01;
                                         $empAsimi->NetoMensual = $request->input('NetoMensual');
-                                        $empAsimi->VARIMSS = $request->input('VARIMSS');
-                                        $empAsimi->INTEG = $request->input('INTEG');
-                                        $empAsimi->INTIV = $request->input('INTIV');
+                                        $empAsimi->VARIMSS = 0.01;
+                                        $empAsimi->INTEG = 0.01;
+                                        $empAsimi->INTIV = 0.01;
                                         $empAsimi->PRESDEC = $request->input('PRESDEC');
                                         $empAsimi->NOCRED = $request->input('NOCRED'); 
                                         $empAsimi->save();
@@ -439,12 +442,10 @@ class EmpleadosController extends Controller
                                         $daafo->EMP = $ultimo3;
                                         $daafo->TIPONO = $selProceso;
                                         $daafo->CURP = $request->input('CURP');
-                                        $daafo->IMSS = $request->input('IMSS2');
+                                        $daafo->IMSS = '';
                                         $daafo->NOMBRES = $request->input('NOMBRES');
                                         $daafo->PATERNO = $request->input('PATERNO') . "";
                                         $daafo->MATERNO = $request->input('MATERNO') . "";
-                                        $daafo->PADRE = $request->input('PADRE') . "";
-                                        $daafo->MADRE = $request->input('MADRE') . "";
                                         $daafo->save();
                                        
                                         $imss = new ImssAsimi();
@@ -452,12 +453,12 @@ class EmpleadosController extends Controller
                                         $imss->EMP = $ultimo3;
                                         $imss->FECHA = date('d-m-Y', strtotime($request->input('INGRESO')));
                                         $imss->CLAVE = 15;
-                                        $imss->SUELDO = $request->input('SUELDO');
-                                        $imss->INTEG = $request->input('INTEG');
-                                        $imss->INTIV = $request->input('INTIV');
-                                        $imss->SUELDONUE = $request->input('SUELDO');
-                                        $imss->INTEGNUE = $request->input('INTEG');
-                                        $imss->INTIVNUE = $request->input('INTIV');
+                                        $imss->SUELDO = 0.01;
+                                        $imss->INTEG = 0.01;
+                                        $imss->INTIV = 0.01;
+                                        $imss->SUELDONUE = 0.01;
+                                        $imss->INTEGNUE = 0.01;
+                                        $imss->INTIVNUE = 0.01;
                                         $imss->save();
             //------------------------------------------------------------------Codigo para gregar los documentos del empleado RFCC 29/11/2018---------------------------------------------------------------------------------------
                                         $emp = $request->input('EMP');
@@ -809,6 +810,7 @@ class EmpleadosController extends Controller
                                        });
                                         
                                 }else{  
+                                    // ---------------------inicio de solo fiscal-----------------------------
                     DB::transaction(function () use($request) {
                     $selProceso = Session::get('selProceso');
 
@@ -1304,7 +1306,7 @@ class EmpleadosController extends Controller
             $emp->c_Estado = $request->input('c_Estado');
             $emp->DIRIND = $request->input('DIRIND');
             $emp->TIPOJORNADA = $request->input('TIPOJORNADA');
-            $emp->TIPOREGIMEN = $request->input('TIPOREGIMEN');
+            $emp->TIPOREGIMEN = 9;
             $emp->CHECA = $request->input('CHECA');
             $emp->SINDIC = $request->input('SINDIC');
             $emp->TURNO = $request->input('TURNO');
@@ -1312,7 +1314,7 @@ class EmpleadosController extends Controller
             $emp->ESTATUS = $request->input('ESTATUS');
             $emp->CLIMSS = $request->input('CLIMSS') . "";
             $emp->TIPOPAGO = $request->input('TIPOPAGO');
-            $emp->c_TipoContrato = $request->input('c_TipoContrato');
+            $emp->c_TipoContrato = "09 Modalidades de contratación donde no existe relación de trabajo";
             $emp->INGRESO = date('d-m-Y', strtotime($request->input('INGRESO')));
             $emp->VACACION = date('d-m-Y', strtotime($request->input('VACACION')));
             $emp->PLANTA = date('d-m-Y', strtotime($request->input('PLANTA')));
@@ -1320,7 +1322,7 @@ class EmpleadosController extends Controller
             $emp->BAJA = date('d-m-Y', strtotime($request->input('BAJA')));
             $emp->REGPAT = $request->input('REGPAT');
             $emp->RFC = $request->input('RFC');
-            $emp->IMSS = $request->input('IMSS');
+            $emp->IMSS = '';
             $emp->GRUIMS = $request->input('GRUIMS');
             $emp->FONACOT = $request->input('FONACOT') . "";
             $emp->INFONAVIT = $request->input('INFONAVIT') . "";
@@ -1329,10 +1331,10 @@ class EmpleadosController extends Controller
             $emp->CASOTRA = $request->input('CASOTRA');
             $emp->SAROTR = $request->input('SAROTR') . "";
             $emp->DESINFO = $request->input('DESINFO');
-            $emp->SUELDO = .01;
-            $emp->VARIMSS = $request->input('VARIMSS');
-            $emp->INTEG = $request->input('INTEG');
-            $emp->INTIV = $request->input('INTIV');
+            $emp->SUELDO = 0.01;
+            $emp->VARIMSS = 0.01;
+            $emp->INTEG = 0.01;
+            $emp->INTIV = 0.01;
             $emp->PRESDEC = $request->input('PRESDEC');
             $emp->NOCRED = $request->input('NOCRED');
             $emp->save();
@@ -1395,12 +1397,10 @@ class EmpleadosController extends Controller
             $daafo->EMP = $request->input('EMP');
             $daafo->TIPONO = $selProceso;
             $daafo->CURP = $request->input('CURP');
-            $daafo->IMSS = $request->input('IMSS2');
+            $daafo->IMSS = '';
             $daafo->NOMBRES = $request->input('NOMBRES');
             $daafo->PATERNO = $request->input('PATERNO') . "";
             $daafo->MATERNO = $request->input('MATERNO') . "";
-            $daafo->PADRE = $request->input('PADRE') . "";
-            $daafo->MADRE = $request->input('MADRE') . "";
             $daafo->save();
            
             $imss = new Imss();
@@ -1408,12 +1408,12 @@ class EmpleadosController extends Controller
             $imss->EMP = $request->input('EMP');
             $imss->FECHA = date('d-m-Y', strtotime($request->input('INGRESO')));
             $imss->CLAVE = 15;
-            $imss->SUELDO = $request->input('SUELDO');
-            $imss->INTEG = $request->input('INTEG');
-            $imss->INTIV = $request->input('INTIV');
-            $imss->SUELDONUE = $request->input('SUELDO');
-            $imss->INTEGNUE = $request->input('INTEG');
-            $imss->INTIVNUE = $request->input('INTIV');
+            $imss->SUELDO = 0.01;
+            $imss->INTEG = 0.01;
+            $imss->INTIV = 0.01;
+            $imss->SUELDONUE = 0.01;
+            $imss->INTEGNUE = 0.01;
+            $imss->INTIVNUE = 0.01;
             $imss->save();
         //---------------------------------------------------------Codigo para gregar los documentos del empleado RFCC 29/11/2018---------------------------------------------------------------------------------------
             $emp = $request->input('EMP');

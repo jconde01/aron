@@ -148,7 +148,7 @@ class TimbradoController extends Controller
         $cliente = Session::get('selCliente');
         $rfc_cliente = Session::get('rfc_cliente');
         $ruta = Client::getRutaAutorizados($cliente->cell_id,$rfc_cliente);
-        $file=$ruta.'/'.$archivo;
+        $file=$ruta.$archivo;
         return Response()->file($file);
     }
 

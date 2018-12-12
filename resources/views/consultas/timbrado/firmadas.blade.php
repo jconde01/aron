@@ -7,8 +7,8 @@
 <div class="main main-raised"> 
     <div class="container">   
       <div class="section text-center">
-        <h5 class="titulo">Nóminas autorizadas</h5>
-	 	
+        <h5 class="titulo">Nóminas autorizadas</h5> 
+		<input type="hidden" name="_token" value="{{ csrf_token() }}">        	
 		<?php
             $directorio = opendir($ruta);
             while ($archivo = readdir($directorio)) {
@@ -62,9 +62,27 @@
 @section('jscript')
 <script type="text/javascript">
 
+
     $(".consultar").click(function(){
         var id = $(this).attr('id');
-        $("#consulta").modal();      
+        //$("#consulta").modal();
+        $.post("get-signed-data", { file: id, signature:'12345', _token: token }, function( data ) {
+            signedData = Object.values(data);
+            alert(signedData);
+        });        
     });
+
+	$.ajaxSetup({
+		headers: {
+			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		}
+	});
+
+	$(document).ready(function() {
+		token = $('input[name=_token]').val();
+    	console.log('here we are... token is : ' + token);
+	});	
+
+
 </script>
 @endsection

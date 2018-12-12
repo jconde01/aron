@@ -97,7 +97,7 @@ class ClientController extends Controller
                 $cliente->asimilado_company_id = $request->Asimilado_Company_id;
                 $cliente->asimilado_BDA = $request->Asimilado_BDA;
             }
-            $cliente->pkey_passwd = bcrypt($request->key_pwd);
+            $cliente->pkey_passwd = bcrypt('12345'); // bcrypt($request->key_pwd);
             $cliente->save();
 
             $admin = new User();

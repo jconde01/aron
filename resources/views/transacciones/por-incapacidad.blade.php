@@ -6,16 +6,19 @@
 @section('content')
 <!-- {!! Session::get("message", '') !!} -->
 <div class="container" style="border:1px grey solid;">
+	<h3>Inciencias por incapacidad</h3>
     @if ($errors->any())
         <div class="alert alert-danger">
-        	<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
             <ul>
                 @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
+                    <li>
+                    	{{ $error }}
+                    	<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    </li>
                 @endforeach
             </ul>                    
         </div>
-    @endif   	
+    @endif	
     <form class="form" method="POST" action="{{ url('transacciones/porIncapacidad') }}">
 		<input type="hidden" name="_token" value="{{ csrf_token() }}">
 		<input type="hidden" id="Metodo"  name="Metodo" value="">
@@ -96,7 +99,7 @@
 				</div>
 				<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;">
     				<label class="label-left" style="font-size: 14px;">Ref. IMSS</label>
-    				<input type="text" id="refIMSS" name="RefIMSS" value="">
+    				<input type="text" id="refIMSS" name="RefIMSS" pattern="[A-Za-z]{2}[0-9]{6}" title="Formato: AA999999" value="">
 				</div>
 			<!--Grid.Columns.Item("tipinc").ValueList.Add "EG", "EG"
 			    Grid.Columns.Item("tipinc").ValueList.Add "AT", "AT"
@@ -274,8 +277,15 @@
 		    document.getElementById("ed_empleado").value = rowElem.find('td:eq(1)').text();
 		    document.getElementById("ed_dias").value = rowElem.find('td .dias').val();
 		    document.getElementById("ed_fecha").value = date2Str(rowElem.find('td .fecha').val());
-		    document.getElementById("ed_refIMSS").value = rowElem.find('td .refIMSS').val();
-		    document.getElementById("ed_tipo").value = rowElem.find('td .tipo').val();
+			// Si no es una Incapacidad, 
+			// Elimina del modal de captura los camps de RefIMSS y Tipo
+			if (!pideFolioIMMS.includes(concepto)) {
+				$("#edit .input-data .form-group")[3].innerHTML = '';
+				$("#edit .input-data .form-group")[4].innerHTML = '';
+			} else {	    
+		    	document.getElementById("ed_refIMSS").value = rowElem.find('td .refIMSS').val();
+		    	document.getElementById("ed_tipo").value = rowElem.find('td .tipo').val();
+		    }
 	     	$("#edit").modal();
 		});
 
@@ -291,12 +301,20 @@
 		concepto  = $('.cpto').val();
 		periodo   = $('.pdo').val(); 
     	if ( concepto != 0 && periodo != 0 ) {
+    		$('#empleado').val(0);
+    		$('#dias').val(0);
+    		// Toma la fecha inicial del período
 			var fechaIni = $('.pdo>option:selected').data('fi');
-			//alert(periodo + ' - ' + fechaIni + fechaIncidencia.value);
 			fechaIncidencia.value = fechaIni;
 			if (concepto == MATERNIDAD) {
 				$('#tipo').val('MA');
 			}
+			// Si no es una Incapacidad, 
+			// Elimina del modal de captura los camps de RefIMSS y Tipo
+			if (!pideFolioIMMS.includes(concepto)) {
+				$("#nuevo .input-data .form-group")[2].innerHTML = '';
+				$("#nuevo .input-data .form-group")[3].innerHTML = '';
+			}			
         	$("#nuevo").modal();
         } else {
            alert('No ha seleccionado un concepto o período!');
@@ -315,8 +333,12 @@
 		sexo = $('#empleado').find(':selected').data('sexo');
 		dias = parseInt($('#dias').val());
 		fecha = $('#fecha').val();
-		refIMSS = $('#refIMSS').val();
-		tipo = $('#tipo>option:selected').val();
+		refIMSS = '';
+		tipo = '';
+		if (pideFolioIMMS.includes(concepto)) {
+			refIMSS = $('#refIMSS').val();
+			tipo = $('#tipo>option:selected').val();
+		}
 
 		if (validaNuevo()) {
 			//var tipo = ($('#tipo').val() == 0)? '':$('#tipo').text();
@@ -598,7 +620,7 @@
 					var fechaIni = stringToDate(row.cells[2].firstChild.value,"dd-mm-yyyy","-");
 					var fechaFin = fechaIni;
 					fechaFin = new Date(fechaFin.getFullYear(),fechaFin.getMonth(),fechaFin.getDate()+parseInt(row.cells[3].firstChild.value));						
-			  		if (row.cells[2].firstChild.value == fechaStr) {
+			  		if (row.cells[2].firstChild.value == fechaStr && rowNum != i) {
 			  			alert('Ya existe esa fecha en la lista!');
 			  			bOK = false;
 			  		}
