@@ -10,7 +10,7 @@ class Client extends Model
 
     public static function getRutaBase($celula, $rfc)
     {
-        return '../utilerias/Nominas/celula'.$celula.'/'.$rfc;
+        return '../utilerias/Nominas/Celula'.$celula.'/'.$rfc;
     }
 
     public static function getRutaCertificado($celula, $rfc)
