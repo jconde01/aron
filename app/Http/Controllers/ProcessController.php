@@ -176,6 +176,7 @@ class ProcessController extends Controller
 	public function getSignedData(Request $XMLfile, $passphrase) {
 
 		return response($XMLfile);
+		
 		// $myfile = simplexml_load_file($XMLfile);
 		// return response($myfile);
 		// $sig = $myfile->SignatureValue;

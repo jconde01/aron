@@ -126,7 +126,7 @@ class TimbradoController extends Controller
     */
     public function descargaPorAutorizar($archivo) {
         $cliente = Session::get('selCliente');
-        $rfc_cliente = Session::get('rfc_cliente');
+        $rfc_cliente = Ciasno::first()->RFCCTE;
         $ruta = Client::getRutaPorAutorizar($cliente->cell_id,$rfc_cliente);
         $file=$ruta.'/'.$archivo;
         return Response()->file($file);
@@ -138,7 +138,6 @@ class TimbradoController extends Controller
         $cliente = Session::get('selCliente');
         $rfc_cliente = Ciasno::first()->RFCCTE;
         $ruta = Client::getRutaAutorizados($cliente->cell_id,$rfc_cliente);
-                dd($rfc_cliente,$ruta);
         $perfil = auth()->user()->profile->id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
         return view('consultas.timbrado.firmadas')->with(compact('navbar', 'ruta', 'rfc_cliente'));
@@ -147,9 +146,9 @@ class TimbradoController extends Controller
 
     public function descargaAutorizados($archivo) {
         $cliente = Session::get('selCliente');
-        $rfc_cliente = Session::get('rfc_cliente');
+        $rfc_cliente = Ciasno::first()->RFCCTE;
         $ruta = Client::getRutaAutorizados($cliente->cell_id,$rfc_cliente);
-        $file=$ruta.$archivo;
+        $file=$ruta.'/'.$archivo;
         return Response()->file($file);
     }
 
