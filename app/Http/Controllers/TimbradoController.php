@@ -138,6 +138,7 @@ class TimbradoController extends Controller
         $cliente = Session::get('selCliente');
         $rfc_cliente = Ciasno::first()->RFCCTE;
         $ruta = Client::getRutaAutorizados($cliente->cell_id,$rfc_cliente);
+                dd($rfc_cliente,$ruta);
         $perfil = auth()->user()->profile->id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
         return view('consultas.timbrado.firmadas')->with(compact('navbar', 'ruta', 'rfc_cliente'));
