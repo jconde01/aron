@@ -2,11 +2,7 @@
  //inicio del codigo escrito por Ricardo Cordero.2018
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Empleado;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\ProfileController;
+
 use App\Job;
 use App\Depto;
 use App\Estados;
@@ -14,6 +10,7 @@ use App\DatosGe;
 use App\DatosAfo;
 use App\Imss;
 use Session;
+use App\Empleado;
 use App\Empresa;
 use App\EmpleadoAsimi;
 use App\DatosGeAsimi;
@@ -21,11 +18,15 @@ use App\DatosAfoAsimi;
 use App\ImssAsimi;
 use Illuminate\Validation\Rule;
 use App\ListaDoc;
-use App\Ciasno;
+use App\CiasNo;
 use App\Cell;
 use App\DocsRequeridos;
 use App\Client;
 use App\Nomina;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\ProfileController;
 
 // DB::transaction(function () use($data) {
 // });
@@ -491,7 +492,7 @@ class EmpleadosController extends Controller
                                         //$rutabase = Empleado::Rutas['Documentos'] .'/';
                                         $cliente = Session::get('selCliente');
                                         $celula_empresa = Cell::where('id', $cliente->cell_id)->first()->nombre;
-                                        $rfc_cliente = Ciasno::first()->RFCCIA;
+                                        $rfc_cliente = CiasNo::first()->RFCCIA;
                                         $rfc_empleado0 = Empleado::where('EMP',$emp)->first()->RFC;
                                         $rfc_empleado1=substr ($rfc_empleado0, 0,4);
                                         $rfc_empleado2=substr ($rfc_empleado0, 5,6);
@@ -975,7 +976,7 @@ class EmpleadosController extends Controller
                                     //$rutabase = Empleado::Rutas['Documentos'] .'/';
                                     $cliente = Session::get('selCliente');
                                     $celula_empresa = Cell::where('id', $cliente->cell_id)->first()->nombre;
-                                    $rfc_cliente = Ciasno::first()->RFCCIA;
+                                    $rfc_cliente = CiasNo::first()->RFCCIA;
                                     $rfc_empleado0 = Empleado::where('EMP',$emp)->first()->RFC;
                                     $rfc_empleado1=substr ($rfc_empleado0, 0,4);
                                     $rfc_empleado2=substr ($rfc_empleado0, 5,6);
@@ -1461,7 +1462,7 @@ class EmpleadosController extends Controller
             //$rutabase = Empleado::Rutas['Documentos'] .'/';
             $cliente = Session::get('selCliente');
             $celula_empresa = Cell::where('id', $cliente->cell_id)->first()->nombre;
-            $rfc_cliente = Ciasno::first()->RFCCIA;
+            $rfc_cliente = CiasNo::first()->RFCCIA;
             $rfc_empleado0 = Empleado::where('EMP',$emp)->first()->RFC;
             $rfc_empleado1=substr ($rfc_empleado0, 0,4);
             $rfc_empleado2=substr ($rfc_empleado0, 5,6);
@@ -1822,7 +1823,7 @@ class EmpleadosController extends Controller
         $perfil = auth()->user()->profile_id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
         $cliente = Session::get('selCliente');
-        $rfc_cliente = Ciasno::first()->RFCCIA;
+        $rfc_cliente = CiasNo::first()->RFCCIA;
         $rfc_empleado0 = $empl->RFC;
         $rfc_empleado1=substr ($rfc_empleado0, 0,4);
         $rfc_empleado2=substr ($rfc_empleado0, 5,6);
@@ -1955,7 +1956,7 @@ class EmpleadosController extends Controller
                     $file = $request->file('archivo');
                     if ($file !== null) { 
                         // $cliente = Session::get('selCliente');
-                        // $rfc_cliente = Ciasno::first()->RFCCIA;
+                        // $rfc_cliente = CiasNo::first()->RFCCIA;
                         // $rfc_empleado0 = $request->input('RFC');
                         // $rfc_empleado1=substr ($rfc_empleado0, 0,4);
                         // $rfc_empleado2=substr ($rfc_empleado0, 5,6);
@@ -2008,7 +2009,7 @@ class EmpleadosController extends Controller
             $listdoc->save();
         }
         $cliente = Session::get('selCliente');
-        $rfc_cliente = Ciasno::first()->RFCCIA;
+        $rfc_cliente = CiasNo::first()->RFCCIA;
         $rfc_empleado0 = Empleado::where('EMP',$emp)->first()->RFC;
         $rfc_empleado1=substr ($rfc_empleado0, 0,4);
         $rfc_empleado2=substr ($rfc_empleado0, 5,6);
@@ -2030,7 +2031,7 @@ class EmpleadosController extends Controller
         $emp = Session::get('emp');
         $listdoc = ListaDoc::where('EMP',$emp)->first();
         $cliente = Session::get('selCliente');
-        $rfc_cliente = Ciasno::first()->RFCCIA;
+        $rfc_cliente = CiasNo::first()->RFCCIA;
         $rfc_empleado0 = Empleado::where('EMP',$emp)->where('TIPONO', $selProceso)->first()->RFC;
         $rfc_empleado1=substr ($rfc_empleado0, 0,4);
         $rfc_empleado2=substr ($rfc_empleado0, 5,6);
@@ -2049,7 +2050,7 @@ class EmpleadosController extends Controller
         //$rutabase = Empleado::Rutas['Documentos'] .'/';
         $cliente = Session::get('selCliente');
         $celula_empresa = Cell::where('id', $cliente->cell_id)->first()->nombre;
-        $rfc_cliente = Ciasno::first()->RFCCIA;
+        $rfc_cliente = CiasNo::first()->RFCCIA;
         $rfc_empleado0 = Empleado::where('EMP',$emp)->first()->RFC;
         $rfc_empleado1=substr ($rfc_empleado0, 0,4);
         $rfc_empleado2=substr ($rfc_empleado0, 5,6);

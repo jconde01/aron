@@ -8,7 +8,7 @@ use FPDF;
 use QRcode;
 use App\User;
 use App\Client;
-use App\Ciasno;
+use App\CiasNo;
 use Session;
 use App\Cell;
 use Response;
@@ -33,7 +33,7 @@ class TimbradoController extends Controller
     // despliega los docuentos pendientes por autorizar
     public function index()
     {
-    	$rfc_cliente = Ciasno::first()->RFCCTE;
+    	$rfc_cliente = CiasNo::first()->RFCCTE;
         Session(['rfc_cliente' => $rfc_cliente]);
         $cliente = Session::get('selCliente');
         $ruta = Client::getRutaPorAutorizar($cliente->cell_id,$rfc_cliente);
@@ -59,7 +59,7 @@ class TimbradoController extends Controller
         $archivo = $request->archivo;
         $passphrase = $request->pkey_pwd;
         $celula = $cliente->cell_id;
-        $rfc_cliente = Ciasno::first()->RFCCTE;
+        $rfc_cliente = CiasNo::first()->RFCCTE;
 
         // realiza el Timbrado (Firma digital) de la cadena
         $sellado = New ProcessController();
@@ -127,7 +127,7 @@ class TimbradoController extends Controller
     */
     public function descargaPorAutorizar($archivo) {
         $cliente = Session::get('selCliente');
-        $rfc_cliente = Ciasno::first()->RFCCTE;
+        $rfc_cliente = CiasNo::first()->RFCCTE;
         $ruta = Client::getRutaPorAutorizar($cliente->cell_id,$rfc_cliente);
         $file=$ruta.'/'.$archivo;
         return Response()->file($file);
@@ -137,7 +137,7 @@ class TimbradoController extends Controller
     // Despliega TODAS las nominas Firmadas
     public function consultaAutorizadas() {
         $cliente = Session::get('selCliente');
-        $rfc_cliente = Ciasno::first()->RFCCTE;
+        $rfc_cliente = CiasNo::first()->RFCCTE;
         $ruta = Client::getRutaAutorizados($cliente->cell_id,$rfc_cliente);
         $perfil = auth()->user()->profile->id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
@@ -147,7 +147,7 @@ class TimbradoController extends Controller
 
     public function descargaAutorizados($archivo) {
         $cliente = Session::get('selCliente');
-        $rfc_cliente = Ciasno::first()->RFCCTE;
+        $rfc_cliente = CiasNo::first()->RFCCTE;
         $ruta = Client::getRutaAutorizados($cliente->cell_id,$rfc_cliente);
         $file=$ruta.'/'.$archivo;
         return Response()->file($file); 

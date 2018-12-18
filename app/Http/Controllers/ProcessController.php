@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Session;
 use App\User;
-use App\Ciasno;
+use App\CiasNo;
 use App\Client;
 use App\Periodo;
 use App\Message;
@@ -178,7 +178,7 @@ class ProcessController extends Controller
 
         $cliente = Session::get('selCliente');
         $celula = $cliente->cell_id;
-        $rfc_cliente = Ciasno::first()->RFCCTE;
+        $rfc_cliente = CiasNo::first()->RFCCTE;
         $ruta = Client::getRutaAutorizados($celula,$rfc_cliente);
         $xmlFile = $ruta.'/'.$request->file;
         if (file_exists($xmlFile)) {
