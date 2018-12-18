@@ -312,16 +312,12 @@ class ClientController extends Controller
 
     public function generaCert(Request $request) {
 
-        /*
-        // Esta seccion puede utilizarse cuando se requiera RECREAR los certificados 
-        /*/
-
         $cliente = Client::find($request->Id);
-        $hashedPassword = $cliente->pkey_passwd;
-        if (!Hash::check($request->pkey_pwd, $hashedPassword)) {
-            // The passwords does not match...
-            return back()->with('error','La contraseña introducida no coincide con la registrada!');
-        }
+       // $hashedPassword = $cliente->pkey_passwd;
+       // if (!Hash::check($request->pkey_pwd, $hashedPassword)) {
+       //     // The passwords does not match...
+       //     return back()->with('error','La contraseña introducida no coincide con la registrada!');
+       //}
         if ($request->new_pwd != $request->conf_pwd) {
             // The passwords does not match...
             return back()->with('error','La nueva contraseña no coincide con la confirmada!');

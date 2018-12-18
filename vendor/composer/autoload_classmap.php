@@ -10,7 +10,7 @@ return array(
     'App\\Calculo2' => $baseDir . '/app/Calculo2.php',
     'App\\Cell' => $baseDir . '/app/Cell.php',
     'App\\CellClient' => $baseDir . '/app/CellClient.php',
-    'App\\Ciasno' => $baseDir . '/app/Ciasno.php',
+    'App\\CiasNo' => $baseDir . '/app/CiasNo.php',
     'App\\Client' => $baseDir . '/app/Client.php',
     'App\\Clientes' => $baseDir . '/app/Tisanom/Connection.php',
     'App\\Company' => $baseDir . '/app/Company.php',
