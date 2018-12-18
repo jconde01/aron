@@ -322,6 +322,8 @@ class ClientController extends Controller
             // The passwords does not match...
             return back()->with('error','La nueva contraseña no coincide con la confirmada!');
         }
+        $cliente->pkey_passwd = bcrypt($request->new_pwd);
+        $cliente->save();
 
         if ($cliente->fiscal_bda > 0) {
             // Crea archivo de certificado y llave privada
