@@ -416,7 +416,7 @@ class ComposerStaticInit4e96183b92f70ee61e7879e35ae7b39f
         'App\\Calculo2' => __DIR__ . '/../..' . '/app/Calculo2.php',
         'App\\Cell' => __DIR__ . '/../..' . '/app/Cell.php',
         'App\\CellClient' => __DIR__ . '/../..' . '/app/CellClient.php',
-        'App\\Ciasno' => __DIR__ . '/../..' . '/app/Ciasno.php',
+        'App\\CiasNo' => __DIR__ . '/../..' . '/app/CiasNo.php',
         'App\\Client' => __DIR__ . '/../..' . '/app/Client.php',
         'App\\Clientes' => __DIR__ . '/../..' . '/app/Tisanom/Connection.php',
         'App\\Company' => __DIR__ . '/../..' . '/app/Company.php',
