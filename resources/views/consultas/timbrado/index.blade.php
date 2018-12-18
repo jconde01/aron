@@ -80,7 +80,6 @@
 
     $(document).ready(function() {
         token = $('input[name=_token]').val();
-        console.log('here we are. The token is: ' + token);
     });
 
     $(".firmar").click(function(){

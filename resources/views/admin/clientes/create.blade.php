@@ -18,13 +18,13 @@
                 </div>
             @endif
             <form method="post" action="{{ url('/admin/clientes') }}">
-                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                {{ csrf_field() }}
 
                 <div class="row" style="margin-bottom: 5px;">
                     <div class="col-sm-10">
                         <div class="form-group content-descripcion-left-input">
                             <label class="label-left" style="font-size: 14px;">Nombre del cliente</label>
-                            <input type="text" name="Nombre" value="{{ old('Nombre') }}">
+                            <input type="text" class="form-control" name="Nombre" value="{{ old('Nombre') }}">
                         </div>
                     </div>
                     <div class="col-sm-2">
@@ -52,36 +52,38 @@
                     </div>
                 </div>
 
-                <div class="col-sm-6" style="">
-                    <div class="form-group content-descripcion-left-input">
-                        <label class="label-left">Dominio</label>
-                        <input type="text" name="dominio" id="DOMINIO" placeholder="@ejemplo.com" value="{{ old('dominio') }}" onkeyup="fAgrega1();" required>
-                    </div>
-                </div>
-
-                <div class="col-sm-3" style="">
-                    <div class="col-sm-12 col-sm-offset-" style="">
-                        <label class="label-left" style="float: left; margin-top: 7px;">Giro &nbsp;&nbsp;</label>
-                        <select class="form-control giros_list" style="width: 80%;" name="Giro" style="float: right!important;">
-                            @foreach ($giros as $giro)
-                                <option value="{{ $giro->id }}">{{ $giro->nombre }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-
-                <div class="col-sm-3" style="">
-                    <div class="col-sm-12" style="">
-                        <label class="label-left" style="float: left; margin-top: 7px;">Celula &nbsp;&nbsp;</label>
-                        <select class="form-control giros_list" style="width: 70%;" name="celula" style="float: right!important;">
-                            @foreach ($celulas as $celula)
-                                <option value="{{ $celula->id }}">{{ $celula->nombre }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-
                 <div class="row" style="margin-bottom: 5px;">
+                    <div class="col-sm-6" style="">
+                        <div class="form-group content-descripcion-left-input">
+                            <label class="label-left">Dominio</label>
+                            <input type="text" name="dominio" id="DOMINIO" placeholder="@ejemplo.com" value="{{ old('dominio') }}" onkeyup="fAgrega1();" required>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-3" style="">
+                        <div class="col-sm-12 col-sm-offset-" style="">
+                            <label class="label-left" style="float: left; margin-top: 7px;">Giro &nbsp;&nbsp;</label>
+                            <select class="form-control giros_list" style="width: 80%;" name="Giro" style="float: right!important;">
+                                @foreach ($giros as $giro)
+                                    <option value="{{ $giro->id }}">{{ $giro->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-3" style="">
+                        <div class="col-sm-12" style="">
+                            <label class="label-left" style="float: left; margin-top: 7px;">Celula &nbsp;&nbsp;</label>
+                            <select class="form-control giros_list" style="width: 70%;" name="celula" style="float: right!important;">
+                                @foreach ($celulas as $celula)
+                                    <option value="{{ $celula->id }}">{{ $celula->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-bottom: 0px;">
                     <div class="col-sm-6 col-sm-offset-3">
                         <div class="form-group content-descripcion-left-input">
                             <label class="label-left" style="width:220px;">Contraseña de clave privada</label>
@@ -90,8 +92,8 @@
                     </div>
                 </div>
 
-                <label class="etiqueta">Servicios contratados</label>
-                <div style="border:1px red solid;">
+                <label class="label-left">Servicios contratados</label>
+                <div style="border:1px red solid;margin-bottom: 10px;">
                     <div class="row" style="margin-bottom: 2px;">
                         <div class="col-sm-2 text-center">
                             <div class="checkbox">
@@ -135,7 +137,6 @@
                         </div>
                         <div class="col-sm-5">                    
                             <div class="form-group label-floating">
-                                <!-- <label class="etiqueta">Prestadora de servicios</label> -->
                                 <select class="form-control" name="Asimilado_Company_id" id="selAsimilados">
                                     <OPTION value="0">No asignado</OPTION>
                                     @foreach ($empresas as $cia)
@@ -146,7 +147,6 @@
                         </div>                    
                         <div class="col-sm-5">
                             <div class="form-group label-floating">
-                                <!-- <label class="etiqueta">BD Asociada</label> -->
                                 <select class="form-control" name="Asimilado_BDA">
                                     <OPTION value="0">No asignado</OPTION>
                                     @foreach ($tisanom_cias as $cia)
@@ -158,30 +158,32 @@
                     </div>                
                 </div>
 
-                <h3><label class="etiqueta">Usuarios y Perfiles</label></h3>
-                <div class="col-sm-4" style="">
-                    <div class="form-group content-descripcion-left-input">
-                        <label class="label-left">Nominista</label>
-                        <input type="text" name="Nominista" id="CORREO" placeholder="@ejemplo.com" readonly="readonly" class="bloqueado">
+                <div style="margin-bottom: 2px;">
+                    <label class="label-left">Usuarios y perfiles</label>
+                    <div class="row" style="margin-bottom: 0px;">
+                        <div class="col-sm-4" style="">
+                            <div class="form-group content-descripcion-left-input">
+                                <label class="label-left">Nominista</label>
+                                <input type="text" name="Nominista" id="CORREO" placeholder="@ejemplo.com" readonly="readonly" class="bloqueado">
+                            </div>
+                        </div>
+                        <div class="col-sm-4" style="">
+                            <div class="form-group content-descripcion-left-input">
+                                <label class="label-left">Fiscalista</label>
+                                <input type="text" name="Fiscalista" id="CORREO1" placeholder="@ejemplo.com" readonly="readonly" class="bloqueado">
+                            </div>
+                        </div>
+                        <div class="col-sm-4" style="">
+                            <div class="form-group content-descripcion-left-input">
+                                <label class="label-left">Administrador</label>
+                                <input type="text" name="Administrador" id="CORREO2" placeholder="@ejemplo.com" readonly="readonly" class="bloqueado">
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-sm-4" style="">
-                    <div class="form-group content-descripcion-left-input">
-                        <label class="label-left">Fiscalista</label>
-                        <input type="text" name="Fiscalista" id="CORREO1" placeholder="@ejemplo.com" readonly="readonly" class="bloqueado">
-                    </div>
-                </div>
-                <div class="col-sm-4" style="">
-                    <div class="form-group content-descripcion-left-input">
-                        <label class="label-left">Administrador</label>
-                        <input type="text" name="Administrador" id="CORREO2" placeholder="@ejemplo.com" readonly="readonly" class="bloqueado">
-                    </div>
-                </div>
-
                 <div class="row text-center">
-                    <br><br><br><br>
-                    <button class="primario separation">Guardar</button>
-                    <a href="{{ url('/admin/clientes') }}" class="primario1">Cancelar</a>
+                    <button class="btn primario separation">Guardar</button>
+                    <a href="{{ url('/admin/clientes') }}" class="btn primario1">Cancelar</a>
                 </div>
             </form>
 

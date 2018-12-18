@@ -88,7 +88,7 @@ class HomeController extends Controller
                                     foreach ($ca2018 as $ca) {
                                          if ($ca->PERIODO==$prueba2->PERIODO) {
                                            
-                                              $sumaunidades = $sumaunidades+$ca->UNIDADES;
+                                              $sumaunidades = $sumaunidades+($ca->UNIDADES*-1);
                                               $sumaunidades2 = $sumaunidades2+$ca->UNIDADES;
                                               $periano2 = $prueba2->PERIANO;
                                           }    
@@ -98,7 +98,8 @@ class HomeController extends Controller
                                   $info = array_push($guardador,$sumaunidades2);                                
                                 }
                                 
-                      $data= [$guardador[2],$guardador[4],$guardador[6],$guardador[8],$guardador[10],$guardador[12],$guardador[14],$guardador[16],$guardador[18],$guardador[20],$guardador[22],$guardador[24]];
+                      $data= [$guardador[2]*-1,$guardador[4]*-1,$guardador[6]*-1,$guardador[8]*-1,$guardador[10]*-1,$guardador[12]*-1,$guardador[14]*-1,$guardador[16]*-1,$guardador[18]*-1,$guardador[20]*-1,$guardador[22]*-1,$guardador[24]*-1];
+
 //----------------------------------------------------------Fin de grafica de faltas injustificadas-------------------------------------------------------------------------------------------------------------
                     
 //-------------------------------------------------------grafica de horas extra-----------------------------------------------------------------------------------------------------------------------------------
@@ -138,7 +139,7 @@ class HomeController extends Controller
 
 //---------------------------------------------------------------inicio de graficas de departamentos ocupados----------------------------------------------------------------------------------------------------
                     $dep = Depto::get();
-                    $deptos = Empleado::all();
+                    $deptos = Empleado::where('ESTATUS','!=','B')->get();
                     $contador = 0;
                     $guardador3 = array();
                     $depto = 0;

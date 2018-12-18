@@ -113,6 +113,7 @@
                 editor.add();
             });
 
+            // Obtiene las opciones de menu 
         	$.post("get-menu-items", { _token: token }, function( data ) {
             	editor.setData(data);
     		});

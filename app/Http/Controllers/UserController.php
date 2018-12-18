@@ -2,14 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+
 use App\User;
 use App\Client;
 use App\Profile;
 use App\Graph;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+
+    public function profile() 
+    {
+        return $this->hasOne(Profile::class,'profile_id');
+    }
+
+
     public function index() 
     {
         //$clientes = Client::all();

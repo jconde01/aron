@@ -141,6 +141,7 @@ Route::middleware(['auth','admin'])->prefix('admin')->group(function () {
 	Route::post('/clientes','ClientController@store');							// guardar nuevo cliente
 	Route::get('/clientes/{id}/edit','ClientController@edit');					// forma para editar cliente
 	Route::post('/clientes/{id}/edit','ClientController@update');				// guardar cambios del cliente
+	Route::post('/clientes/genera-firma','ClientController@generaCert');		// genera nuevo certificado
 	Route::post('/clientes/get-empresas-by-giro','CompanyController@getByGiro');// Ajax call
 
 	Route::get('/usuarios','UserController@index');								// listado de Usuarios

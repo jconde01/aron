@@ -29,29 +29,12 @@ class ConsultasController extends Controller
     	$emps = Empleado::where('TIPONO', $selProceso)->get();
 		$perfil = auth()->user()->profile->id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
-        // require_once "./phpqrcode/qrlib.php";
-        // QRcode::png("prueba numero 1","./contratos/qr.png",'H',5,2);
-
-  //       require_once('./fpdf/fpdf.php'); // Incluímos las librerías anteriormente mencionadas
-		//  // Incluímos las librerías anteriormente mencionadas
-		// require_once('./fpdi/Fpdi.php');
-		// require_once('./fpdi/src/autoload.php');
-		
-		// $pdf = new FPDI();
-		// $pdf->AddPage();
-		// $pdf->setSourceFile("./contratos/QUMS.pdf"); // Sin extensión
-
-		// $template = $pdf->importPage(1);
-		// $pdf->useTemplate($template);
-		// $pdf->Image('./img/qr.jpg', 10, 265, 30, 30);
-
-		// $pdf->Output("./contratos/QUMS.pdf", "F");
-		
     	return view('consultas.recibos.index')->with(compact('emps', 'navbar'));
     }
 
      public function consulta($RFC)
-    {
+     // -------------------Recibos de empleados---------------------------
+    { 
         $rfc_cliente = Ciasno::first()->RFCCTE;
         session(['rfc_cliente' => $rfc_cliente]);
         $rfc_empleado0 = $RFC;
@@ -62,8 +45,20 @@ class ConsultasController extends Controller
         $cliente = Session::get('selCliente');
         $celula_empresa = Cell::where('id', $cliente->cell_id)->first()->nombre;
         $ruta = Client::getRutaEmpleados($cliente->cell_id,$rfc_cliente) . '/' . $rfc_empleado . '/recibos';
+        if (is_dir($ruta)){
+            echo "si se pudo";
+        }else{
+            try {
+            mkdir($ruta,0755,true);
+            } catch (Exception $e) {
+                echo "no se pudo crear los directorios para este empleado";
+            }
+
+        }
+
         $perfil = auth()->user()->profile->id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
+        // dd('fin');
     	return view('consultas.recibos.consulta')->with(compact('navbar', 'ruta', 'rfc_empleado')); 
     }
 
@@ -89,6 +84,16 @@ class ConsultasController extends Controller
         $cliente = Session::get('selCliente');
         $celula_empresa = Cell::where('id', $cliente->cell_id)->first()->nombre;
         $ruta = Client::getRutaEmpleados($cliente->cell_id,$rfc_cliente). '/' . $rfc_empleado . '/contratos';
+         if (is_dir($ruta)){
+            echo "si se pudo";
+        }else{
+            try {
+            mkdir($ruta,0755,true);
+            } catch (Exception $e) {
+                echo "no se pudo crear los directorios para este empleado";
+            }
+
+        }
         $perfil = auth()->user()->profile->id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
     	return view('consultas.contratos.consulta')->with(compact('navbar','ruta')); 
@@ -123,6 +128,16 @@ class ConsultasController extends Controller
         $cliente = Session::get('selCliente');
         $celula_empresa = Cell::where('id', $cliente->cell_id)->first()->nombre;
         $ruta_documentos = Client::getRutaDocumentos($cliente->cell_id,$rfc_cliente);
+         if (is_dir($ruta_documentos)){
+            
+        }else{
+            try {
+            mkdir($ruta_documentos,0755,true);
+            } catch (Exception $e) {
+                echo "no se pudo crear los directorios para este empleado";
+            }
+
+        }
         $perfil = auth()->user()->profile->id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
        

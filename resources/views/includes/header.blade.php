@@ -90,6 +90,13 @@
           </div>
         </div>
       @endif
+      @if (session()->has('warning'))
+          <div class="container">
+            <div class="alert alert-warning">{{ session('warning') }}
+              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            </div>
+          </div>
+      @endif      
       @if (session()->has('error'))
           <div class="container">
             <div class="alert alert-danger">{{ session('error') }}

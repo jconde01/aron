@@ -10,12 +10,10 @@ use App\Http\Controllers\ProfileController;
 
 class OptionController extends Controller
 {
-    //protected $navbar;
 
     public function __construct()
     {
-        $this->middleware('auth');
-        //$navbar = ProfileController::getNavBar('',0,0);        
+        $this->middleware('auth');        
     }
 
 
@@ -25,7 +23,7 @@ class OptionController extends Controller
         $xRefs = OptionXRef::where('parent_id','=',$parent)->orderBy('id')->get();
         foreach ($xRefs as $x) {
             $opcion = $x->option();
-            $checked = $opcion->activo? 'checked':'';
+            $checked = ($opcion->activo == 1)? 'checked':'';
             if ($opcion->padre == 1) {
                 $HTML .= '<div class="panel panel-default">';
                 $HTML .= '  <div class="panel-heading">';
@@ -127,6 +125,7 @@ class OptionController extends Controller
     	$option->padre = ($request->Padre)? 1: 0;
     	$option->activo = ($request->Activo)? 1 : 0;
         $option->ruta = $request->Ruta;
+        $option->uuid = $this::uuid();
     	$option->save();
     	$optionXRef->option_id = $option->id;
     	$optionXRef->parent_id = $parent;
@@ -150,6 +149,20 @@ class OptionController extends Controller
         // $optionXRef->parent_id = $parent;
         // $optionXRef->save();
         return redirect('/admin/opciones/0'); 
+    }
+
+    /**
+    * Generates version 4 UUID: random
+    */
+    public static function uuid() {
+        if (!function_exists('uuid_create'))
+            return false;
+
+        uuid_create(&$context);
+
+        uuid_make($context, UUID_MAKE_V4);
+        uuid_export($context, UUID_FMT_STR, &$uuid);
+        return trim($uuid);
     }    
 
 }

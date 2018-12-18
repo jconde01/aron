@@ -2,6 +2,7 @@
  
 namespace App\Http\Controllers;
 
+use App\Cell;
 use App\CiasNo;
 use App\Company;
 use App\Client;
@@ -10,11 +11,11 @@ use App\Giro;
 use App\User;
 use App\Graph;
 use App\CellClient;
-use App\Cell;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Config;
 
 
 class ClientController extends Controller
@@ -25,13 +26,11 @@ class ClientController extends Controller
         try {
             $empresas = Company::all();
             $clientes = Client::paginate(5);
-            $BDA = Empresa::all(); // empresa asociada en TISANOM
-            $perfil = auth()->user()->profile_id;        
-            $navbar = ProfileController::getNavBar('',0,$perfil);            
+            $BDA = Empresa::all(); // compañias en TISANOM            
         } catch (\Exception $e) {
             return $e->getMessage();
         }
-    	return view('admin.clientes.index')->with(compact('clientes','empresas','BDA', 'navbar'));		// listado de clientes
+    	return view('admin.clientes.index')->with(compact('clientes','empresas','BDA'));	// clientes, facturadoras, Cias.TISANOM
     }
 
     public function create() 
@@ -68,6 +67,14 @@ class ClientController extends Controller
             'Fiscalista' => 'unique:users,email',
             'Administrador' => 'unique:users,email'
         ];
+        if ($request->Fiscal == 'on') {
+            $rules['Fiscal_BDA'] = 'unique:clients,Fiscal_BDA';
+            $messages['Fiscal_BDA'] = 'La BD asociada en TISANOM ya ha sido seleccionada previamente para el proceso de NÓMINA FISCAL'; 
+        }
+        if ($request->Asimilado == 'on') {
+            $rules['Asimilado_BDA'] = 'unique:clients,Asimilado_BDA';
+            $messages['Asimilado_BDA'] = 'La BD asociada en TISANOM ya ha sido seleccionada previamente para el proceso de ASIMILADOS'; 
+        }        
         // validar
         $this->validate($request,$rules,$messages);
 
@@ -97,7 +104,7 @@ class ClientController extends Controller
                 $cliente->asimilado_company_id = $request->Asimilado_Company_id;
                 $cliente->asimilado_BDA = $request->Asimilado_BDA;
             }
-            $cliente->pkey_passwd = bcrypt('12345'); // bcrypt($request->key_pwd);
+            $cliente->pkey_passwd = bcrypt($request->key_pwd);
             $cliente->save();
 
             $admin = new User();
@@ -235,8 +242,15 @@ class ClientController extends Controller
         }
 
         // Crea y almacena las llaves y certificado
-        $this::makeCert($request->Nombre, $ciaFiscal->RFCCTE, $rutaCertFiscal, $request->passwd);
-        $this::makeCert($request->Nombre, $ciaAsim->RFCCTE, $rutaCertAsim, $request->passwd);
+        if ($request->Fiscal_BDA > 0) {
+            $email = 'administrador' . $request->Administrador;
+            $this::makeCert($request->Nombre, $ciaFiscal->RFCCTE, $rutaCertFiscal, $request->passwd,$email);
+        }
+        if ($request->Asimilado_BDA > 0) {
+            $email = 'administrador' . $request->Administrador;
+            $this::makeCert($request->Nombre, $ciaAsim->RFCCTE, $rutaCertAsim, $request->passwd, $email);
+        }
+
         $docsRequeridosEmp = new DocsRequeridos();
         $docsRequeridosEmp->REQUERIDO1 = 1;
         $docsRequeridosEmp->REQUERIDO2 = 1;
@@ -251,11 +265,12 @@ class ClientController extends Controller
     public function edit($id) 
     {
         $cliente = Client::find($id);
+        $usuarios = User::where('client_id',$cliente->id)->get();
         $giros = Giro::all();
     	$empresas = Company::all();
         $tisanom_cias = Empresa::all();
         $celulas = Cell::all();
-        return view('admin.clientes.edit')->with(compact(['cliente','giros','empresas','tisanom_cias', 'celulas']));
+        return view('admin.clientes.edit')->with(compact(['cliente','usuarios','giros','empresas','tisanom_cias', 'celulas']));
     }
 
     public function update(Request $request, $id) 
@@ -290,10 +305,70 @@ class ClientController extends Controller
         }
         //$cliente->pkey_passwd = bcrypt($request->key_pwd);
         $cliente->save();   // Update
+
         return redirect('/admin/clientes'); 
     }    
 
-    public static function makeCert($nomCia, $rfcCia, $rutaCert, $passphrase)
+
+    public function generaCert(Request $request) {
+
+        /*
+        // Esta seccion puede utilizarse cuando se requiera RECREAR los certificados 
+        /*/
+
+        $cliente = Client::find($request->Id);
+        $hashedPassword = $cliente->pkey_passwd;
+        if (!Hash::check($request->pkey_pwd, $hashedPassword)) {
+            // The passwords does not match...
+            return back()->with('error','La contraseña introducida no coincide con la registrada!');
+        }
+        if ($request->new_pwd != $request->conf_pwd) {
+            // The passwords does not match...
+            return back()->with('error','La nueva contraseña no coincide con la confirmada!');
+        }
+
+        if ($cliente->fiscal_bda > 0) {
+            // Crea archivo de certificado y llave privada
+            $empresaTISANOM = Empresa::where('CIA',$cliente->fiscal_bda)->first();
+            Config::set("database.connections.sqlsrv2", [
+                "driver" => 'sqlsrv',
+                "host" => Config::get("database.connections.sqlsrv")["host"],
+                "port" => Config::get("database.connections.sqlsrv")["port"],                       
+                "database" => $empresaTISANOM->DBNAME,
+                "username" => $empresaTISANOM->USERID,
+                "password" => $empresaTISANOM->PASS
+                ]);
+            session(['sqlsrv2' => Config::get("database.connections.sqlsrv2")]);
+            $ciaFiscal = CiasNo::first();
+            $rutaCertFiscal = Client::getRutaCertificado($cliente->cell_id, $ciaFiscal->RFCCTE);
+            $admin = User::where('name','Administrador')->where('client_id',$cliente->id)->first();
+            $email = $admin->email;
+            $this::makeCert($cliente->Nombre, $ciaFiscal->RFCCTE, $rutaCertFiscal, $request->new_pwd, $email);
+        }
+
+        if ($cliente->asimilado_bda > 0) {
+            $empresaTISANOM = Empresa::where('CIA',$cliente->asimilado_bda)->first();
+            DB::disconnect('sqlsrv2');            
+            Config::set("database.connections.sqlsrv2", [
+                "driver" => 'sqlsrv',
+                "host" => Config::get("database.connections.sqlsrv")["host"],
+                "port" => Config::get("database.connections.sqlsrv")["port"],                       
+                "database" => $empresaTISANOM->DBNAME,
+                "username" => $empresaTISANOM->USERID,
+                "password" => $empresaTISANOM->PASS
+                ]);
+            session(['sqlsrv2' => Config::get("database.connections.sqlsrv2")]);
+            $ciaAsim = CiasNo::first();
+            $rutaCertAsim = Client::getRutaCertificado($cliente->cell_id, $ciaAsim->RFCCTE);
+            $admin = User::where('name','Administrador')->where('client_id',$cliente->id)->first();
+            $email = $admin->email;
+            $this::makeCert($cliente->Nombre, $ciaAsim->RFCCTE, $rutaCertAsim, $request->new_pwd, $email);
+        }
+        return back()->with('flash','Firma generada');
+    }
+
+
+    public static function makeCert($nomCia, $rfcCia, $rutaCert, $passphrase, $email)
     {
         // for SSL server certificates the commonName is the domain name to be secured
         // for S/MIME email certificates the commonName is the owner of the email address
@@ -311,7 +386,8 @@ class ClientController extends Controller
         $dn = array(
             "countryName" => "MX",
             "organizationName" => $nomCia,
-            "commonName" => $rfcCia
+            "commonName" => $rfcCia,
+            "emailAddress" => $email
         );
 
         // Generate a new private (and public) key pair
@@ -320,7 +396,7 @@ class ClientController extends Controller
             "private_key_type" => OPENSSL_KEYTYPE_RSA,
         ));
 
-        // Generate a certificate signing request
+        // Generate a certificate signing request (CSR)
         $csr = openssl_csr_new($dn, $privkey, array('digest_alg' => 'sha256'));
 
         // Generate a self-signed cert, valid for 3 years

@@ -116,6 +116,15 @@ class EmpleadosController extends Controller
         $emp = new Empleado();
         $emp->TIPONO = $selProceso;
         $docsReque = DocsRequeridos::first();
+        if ($docsReque==null) {
+            $docsReque = new DocsRequeridos();
+            $docsReque->REQUERIDO1 = 1;
+            $docsReque->REQUERIDO2 = 1;
+            $docsReque->REQUERIDO3 = 1;
+            $docsReque->REQUERIDO4 = 1;
+            $docsReque->REQUERIDO5 = 1;
+            $docsReque->save();
+        }
         $minimodia = Nomina::first()->MINIMODIA2;
 
     	return view('catalogos.empleados.create')->with(compact('jobs','deps', 'ests', 'selProceso', 'navbar','emp', 'ultimo3','AsimiFiscal','docsReque','minimodia'));
@@ -188,12 +197,13 @@ class EmpleadosController extends Controller
         if ($AsimiFiscal == 'fiscal') {
             //inicio de las inserciones de fiscal--------------------------------------------------------------------------
 
-           //inicio fiscal?
+                                    //Estas n fiscar y aparte tienes asimilados inserta en los dos
                                 if ($cliente->fiscal==1 && $cliente->asimilado==1)
                                 {
                                         
-                                        DB::transaction(function () use($request) {
-                                        $selProceso = Session::get('selProceso');
+                                        DB::connection('sqlsrv2')->beginTransaction();
+                                        try{
+                                             $selProceso = Session::get('selProceso');
                                         $emp = new Empleado();
                                         $emp->TIPONO = $selProceso;
                                         $emp->EMP = $request->input('EMP');
@@ -296,12 +306,10 @@ class EmpleadosController extends Controller
                                         $daafo->EMP = $request->input('EMP');
                                         $daafo->TIPONO = $selProceso;
                                         $daafo->CURP = $request->input('CURP');
-                                        $daafo->IMSS = $request->input('IMSS2');
+                                        $daafo->IMSS = $request->input('IMSS');
                                         $daafo->NOMBRES = $request->input('NOMBRES');
                                         $daafo->PATERNO = $request->input('PATERNO') . "";
                                         $daafo->MATERNO = $request->input('MATERNO') . "";
-                                        $daafo->PADRE = $request->input('PADRE') . "";
-                                        $daafo->MADRE = $request->input('MADRE') . "";
                                         $daafo->save();
                                        
                                         $imss = new Imss();
@@ -317,149 +325,166 @@ class EmpleadosController extends Controller
                                         $imss->INTIVNUE = $request->input('INTIV');
                                         $imss->save();
                                         //dd('listo fiscal');
-                                       });
-
-                                        
-
-                                        DB::transaction(function () use($request) {
-                                        $selProceso = Session::get('selProceso');
-                                        $rfcempleado = EmpleadoAsimi::where('RFC', $request->input('RFC'))->first();
-                                        if ($rfcempleado!=null) {
-                                            return back()->with('advertencia','Se ha dado de alta correctamente el empleado en la nomina fiscal, pero no se ha dado de alta en la nomina de asimilados ya que el RFC del empleado ya existe.');
                                         }
-                                        
-                                        
-                                        $emps = EmpleadoAsimi::where('TIPONO', $selProceso)->get()->last();
-                                                if ($emps==null){
-                                                    $ultimo = 1;
-                                                    $add = str_pad($selProceso,2, "0", STR_PAD_LEFT);
-                                                $ultimo2 = str_pad($ultimo,5, "0", STR_PAD_LEFT);
-                                                $ultimo3 =  $add.$ultimo2;
-                                                }else{
-                                                     $ultimo = $emps->EMP + 1;
-                                                     $ultimo3 = str_pad($ultimo,7, "0", STR_PAD_LEFT);
-                                                }
-                                        $empAsimi = new EmpleadoAsimi();
-                                        $empAsimi->TIPONO = $selProceso;
-                                        $empAsimi->EMP = $ultimo3;
-                                        $empAsimi->NOMBRE = $request->input('NOMBRES') . ' ' . $request->input('PATERNO') . ' ' . $request->input('MATERNO');
-                                        $empAsimi->PUESTO = $request->input('PUESTO');
-                                        $empAsimi->cuenta = $request->input('cuenta');
-                                        $empAsimi->DEPTO = $request->input('DEPTO');
-                                        $empAsimi->TIPOTRA = $request->input('TIPOTRA');
-                                        $empAsimi->c_Estado = $request->input('c_Estado');
-                                        $empAsimi->DIRIND = $request->input('DIRIND');
-                                        $empAsimi->TIPOJORNADA = $request->input('TIPOJORNADA');
-                                        $empAsimi->TIPOREGIMEN = 9;
-                                        $empAsimi->CHECA = $request->input('CHECA');
-                                        $empAsimi->SINDIC = $request->input('SINDIC');
-                                        $empAsimi->TURNO = $request->input('TURNO');
-                                        $empAsimi->ZONAECO = $request->input('ZONAECO') . "";
-                                        $empAsimi->ESTATUS = $request->input('ESTATUS');
-                                        $empAsimi->CLIMSS = $request->input('CLIMSS') . "";
-                                        $empAsimi->TIPOPAGO = $request->input('TIPOPAGO');
-                                        $empAsimi->c_TipoContrato = "09 Modalidades de contratación donde no existe relación de trabajo";
-                                        $empAsimi->INGRESO = date('d-m-Y', strtotime($request->input('INGRESO')));
-                                        $empAsimi->VACACION = date('d-m-Y', strtotime($request->input('VACACION')));
-                                        $empAsimi->PLANTA = date('d-m-Y', strtotime($request->input('PLANTA')));
-                                        $empAsimi->VENCIM = date('d-m-Y', strtotime($request->input('VENCIM')));
-                                        $empAsimi->BAJA = date('d-m-Y', strtotime($request->input('BAJA')));
-                                        $empAsimi->REGPAT = $request->input('REGPAT');
-                                        $empAsimi->RFC = $request->input('RFC');
-                                        $empAsimi->IMSS = '';
-                                        $empAsimi->GRUIMS = $request->input('GRUIMS');
-                                        $empAsimi->FONACOT = $request->input('FONACOT') . "";
-                                        $empAsimi->INFONAVIT = $request->input('INFONAVIT') . "";
-                                        $empAsimi->OTRACIA = $request->input('OTRACIA');
-                                        $empAsimi->TAXOTRA = $request->input('TAXOTRA');
-                                        $empAsimi->CASOTRA = $request->input('CASOTRA');
-                                        $empAsimi->SAROTR = $request->input('SAROTR') . "";
-                                        $empAsimi->DESINFO = $request->input('DESINFO');
-                                        $empAsimi->SUELDO = 0.01;
-                                        $empAsimi->NetoMensual = $request->input('NetoMensual');
-                                        $empAsimi->VARIMSS = 0.01;
-                                        $empAsimi->INTEG = 0.01;
-                                        $empAsimi->INTIV = 0.01;
-                                        $empAsimi->PRESDEC = $request->input('PRESDEC');
-                                        $empAsimi->NOCRED = $request->input('NOCRED'); 
-                                        $empAsimi->save();
+                                        catch(\Exception $e){       
+                                           DB::connection('sqlsrv2')->rollBack();
+                                           //throw $e;
+                                           return back()->with('danger','No se puedo dar de alta al empleado, intente de nuevo y si el problema persiste contacte a soporte técnico.');
+                                        }
+                                        DB::connection('sqlsrv2')->commit();
+                                       // --------------------------fin de la insercion de la parte de fiscal cuando tienes fiscal y asimilados-------------------
+                                   
 
-                                        $dage = new DatosGeAsimi();
-                                        $dage->EMP = $ultimo3;
-                                        $dage->NIVEL = $request->input('NIVEL') . "";
-                                        $dage->DEPTO = $request->input('DEPTO') . "";
-                                        $dage->REPORTA = $request->input('REPORTA') . "";
-                                        $dage->DIRECCION = $request->input('DIRECCION') . "";
-                                        $dage->PUESTO = $request->input('PUESTO');
-                                        $dage->Referencia = $request->input('Referencia') . "";
-                                        $dage->noExterior = $request->input('noExterior') . "";
-                                        $dage->noInterior = $request->input('noInterior') . "";
-                                        $dage->Municipio = $request->input('Municipio') . "";
-                                        $dage->COLONIA = $request->input('COLONIA') . "";
-                                        $dage->CIUDAD = $request->input('CIUDAD') . "";
-                                        $dage->ESTADO = $request->input('ESTADO') . "";
-                                        $dage->TELEFONO = $request->input('TELEFONO') . "";
-                                        $dage->ZIP = $request->input('ZIP') . "";
-                                        $dage->CELULAR = $request->input('CELULAR') . "";
-                                        $dage->EXPERI = $request->input('EXPERI') . "";
-                                        $dage->SEXO = $request->input('SEXO') . "";
-                                        $dage->CIVIL = $request->input('CIVIL');
-                                        $dage->BODA = date('d-m-Y', strtotime($request->input('BODA')));
-                                        $dage->LICENCIA = $request->input('LICENCIA');
-                                        $dage->SANGRE = $request->input('SANGRE');
-                                        $dage->ESCOLAR = $request->input('ESCOLAR');
-                                        $dage->CAMB_RESID = $request->input('CAMB_RESID');
-                                        $dage->DISP_VIAJE = $request->input('DISP_VIAJE');
-                                        $dage->BORN = date('d-m-Y', strtotime($request->input('BORN')));
-                                        $dage->NACIM = $request->input('NACIM') . "";
-                                        $dage->TIPONO = $selProceso;
-                                        $dage->NACIONAL = $request->input('NACIONAL');
-                                        $dage->DEPENDIENT = $request->input('DEPENDIENT') . "";
-                                        $dage->MEDIO = $request->input('MEDIO');
-                                        $dage->FUENTE = $request->input('FUENTE') . "";
-                                        $dage->Email = $request->input('Email') . "";
-                                        $file = $request->file('archivo');
                                         
-                                        if ($file !== null) {
+                                        // -----------------------------inicia insercion de asimilados que pertenece a fiscal y asimilado----------------------------------
+                                        DB::connection('sqlsrv3')->beginTransaction();
+                                        try{
+                                            $selProceso = Session::get('selProceso');
+                                            $rfcempleado = EmpleadoAsimi::where('RFC', $request->input('RFC'))->first();
+                                            if ($rfcempleado!=null) {
+                                                return redirect('/catalogos/empleados')->with('advertencia','Se ha dado de alta correctamente el empleado en la nomina fiscal, pero no se ha dado de alta en la nomina de asimilados ya que el RFC del empleado ya existe.');
+                                            }
                                             
-                                            $path = public_path(). '/img_emp/';
-                                            $fileName = uniqid() . $file->getClientOriginalName();
-                                            $moved =  $file->move($path, $fileName);
                                             
-                                            if ($moved) {
-                                            //     // guarda la liga en la BD
-                                             $dage->FOTO = $fileName;
+                                            $emps = EmpleadoAsimi::where('TIPONO', $selProceso)->get()->last();
+                                                    if ($emps==null){
+                                                        $ultimo = 1;
+                                                        $add = str_pad($selProceso,2, "0", STR_PAD_LEFT);
+                                                    $ultimo2 = str_pad($ultimo,5, "0", STR_PAD_LEFT);
+                                                    $ultimo3 =  $add.$ultimo2;
+                                                    }else{
+                                                         $ultimo = $emps->EMP + 1;
+                                                         $ultimo3 = str_pad($ultimo,7, "0", STR_PAD_LEFT);
+                                                    }
+                                            $empAsimi = new EmpleadoAsimi();
+                                            $empAsimi->TIPONO = $selProceso;
+                                            $empAsimi->EMP = $ultimo3;
+                                            $empAsimi->NOMBRE = $request->input('NOMBRES') . ' ' . $request->input('PATERNO') . ' ' . $request->input('MATERNO');
+                                            $empAsimi->PUESTO = $request->input('PUESTO');
+                                            $empAsimi->cuenta = $request->input('cuenta');
+                                            $empAsimi->DEPTO = $request->input('DEPTO');
+                                            $empAsimi->TIPOTRA = $request->input('TIPOTRA');
+                                            $empAsimi->c_Estado = $request->input('c_Estado');
+                                            $empAsimi->DIRIND = $request->input('DIRIND');
+                                            $empAsimi->TIPOJORNADA = $request->input('TIPOJORNADA');
+                                            $empAsimi->TIPOREGIMEN = 9;
+                                            $empAsimi->CHECA = $request->input('CHECA');
+                                            $empAsimi->SINDIC = $request->input('SINDIC');
+                                            $empAsimi->TURNO = $request->input('TURNO');
+                                            $empAsimi->ZONAECO = $request->input('ZONAECO') . "";
+                                            $empAsimi->ESTATUS = $request->input('ESTATUS');
+                                            $empAsimi->CLIMSS = $request->input('CLIMSS') . "";
+                                            $empAsimi->TIPOPAGO = $request->input('TIPOPAGO');
+                                            $empAsimi->c_TipoContrato = '09 Modalidades de contratacion donde no existe relacion de trabajo';
+                                            $empAsimi->INGRESO = date('d-m-Y', strtotime($request->input('INGRESO')));
+                                            $empAsimi->VACACION = date('d-m-Y', strtotime($request->input('VACACION')));
+                                            $empAsimi->PLANTA = date('d-m-Y', strtotime($request->input('PLANTA')));
+                                            $empAsimi->VENCIM = date('d-m-Y', strtotime($request->input('VENCIM')));
+                                            $empAsimi->BAJA = date('d-m-Y', strtotime($request->input('BAJA')));
+                                            $empAsimi->REGPAT = $request->input('REGPAT');
+                                            $empAsimi->RFC = $request->input('RFC');
+                                            $empAsimi->IMSS = '';
+                                            $empAsimi->GRUIMS = $request->input('GRUIMS');
+                                            $empAsimi->FONACOT = $request->input('FONACOT') . "";
+                                            $empAsimi->INFONAVIT = $request->input('INFONAVIT') . "";
+                                            $empAsimi->OTRACIA = $request->input('OTRACIA');
+                                            $empAsimi->TAXOTRA = $request->input('TAXOTRA');
+                                            $empAsimi->CASOTRA = $request->input('CASOTRA');
+                                            $empAsimi->SAROTR = $request->input('SAROTR') . "";
+                                            $empAsimi->DESINFO = $request->input('DESINFO');
+                                            $empAsimi->SUELDO = 0.01;
+                                            $empAsimi->NetoMensual = $request->input('NetoMensual');
+                                            $empAsimi->VARIMSS = 0.01;
+                                            $empAsimi->INTEG = 0.01;
+                                            $empAsimi->INTIV = 0.01;
+                                            $empAsimi->PRESDEC = $request->input('PRESDEC');
+                                            $empAsimi->NOCRED = $request->input('NOCRED'); 
+                                            $empAsimi->save();
+
+                                            $dage = new DatosGeAsimi();
+                                            $dage->EMP = $ultimo3;
+                                            $dage->NIVEL = $request->input('NIVEL') . "";
+                                            $dage->DEPTO = $request->input('DEPTO') . "";
+                                            $dage->REPORTA = $request->input('REPORTA') . "";
+                                            $dage->DIRECCION = $request->input('DIRECCION') . "";
+                                            $dage->PUESTO = $request->input('PUESTO');
+                                            $dage->Referencia = $request->input('Referencia') . "";
+                                            $dage->noExterior = $request->input('noExterior') . "";
+                                            $dage->noInterior = $request->input('noInterior') . "";
+                                            $dage->Municipio = $request->input('Municipio') . "";
+                                            $dage->COLONIA = $request->input('COLONIA') . "";
+                                            $dage->CIUDAD = $request->input('CIUDAD') . "";
+                                            $dage->ESTADO = $request->input('ESTADO') . "";
+                                            $dage->TELEFONO = $request->input('TELEFONO') . "";
+                                            $dage->ZIP = $request->input('ZIP') . "";
+                                            $dage->CELULAR = $request->input('CELULAR') . "";
+                                            $dage->EXPERI = $request->input('EXPERI') . "";
+                                            $dage->SEXO = $request->input('SEXO') . "";
+                                            $dage->CIVIL = $request->input('CIVIL');
+                                            $dage->BODA = date('d-m-Y', strtotime($request->input('BODA')));
+                                            $dage->LICENCIA = $request->input('LICENCIA');
+                                            $dage->SANGRE = $request->input('SANGRE');
+                                            $dage->ESCOLAR = $request->input('ESCOLAR');
+                                            $dage->CAMB_RESID = $request->input('CAMB_RESID');
+                                            $dage->DISP_VIAJE = $request->input('DISP_VIAJE');
+                                            $dage->BORN = date('d-m-Y', strtotime($request->input('BORN')));
+                                            $dage->NACIM = $request->input('NACIM') . "";
+                                            $dage->TIPONO = $selProceso;
+                                            $dage->NACIONAL = $request->input('NACIONAL');
+                                            $dage->DEPENDIENT = $request->input('DEPENDIENT') . "";
+                                            $dage->MEDIO = $request->input('MEDIO');
+                                            $dage->FUENTE = $request->input('FUENTE') . "";
+                                            $dage->Email = $request->input('Email') . "";
+                                            $file = $request->file('archivo');
+                                            
+                                            if ($file !== null) {
                                                 
-                                             }
-                                             
-                                        }
-                                        else{
-                                            
-                                        }  
-                                        $dage->save();
+                                                $path = public_path(). '/img_emp/';
+                                                $fileName = uniqid() . $file->getClientOriginalName();
+                                                $moved =  $file->move($path, $fileName);
+                                                
+                                                if ($moved) {
+                                                //     // guarda la liga en la BD
+                                                 $dage->FOTO = $fileName;
+                                                    
+                                                 }
+                                                 
+                                            }
+                                            else{
+                                                
+                                            }  
+                                            $dage->save();
 
-                                        $daafo = new DatosAfoAsimi();
-                                        $daafo->EMP = $ultimo3;
-                                        $daafo->TIPONO = $selProceso;
-                                        $daafo->CURP = $request->input('CURP');
-                                        $daafo->IMSS = '';
-                                        $daafo->NOMBRES = $request->input('NOMBRES');
-                                        $daafo->PATERNO = $request->input('PATERNO') . "";
-                                        $daafo->MATERNO = $request->input('MATERNO') . "";
-                                        $daafo->save();
-                                       
-                                        $imss = new ImssAsimi();
-                                        $imss->TIPONO = $selProceso;
-                                        $imss->EMP = $ultimo3;
-                                        $imss->FECHA = date('d-m-Y', strtotime($request->input('INGRESO')));
-                                        $imss->CLAVE = 15;
-                                        $imss->SUELDO = 0.01;
-                                        $imss->INTEG = 0.01;
-                                        $imss->INTIV = 0.01;
-                                        $imss->SUELDONUE = 0.01;
-                                        $imss->INTEGNUE = 0.01;
-                                        $imss->INTIVNUE = 0.01;
-                                        $imss->save();
+                                            $daafo = new DatosAfoAsimi();
+                                            $daafo->EMP = $ultimo3;
+                                            $daafo->TIPONO = $selProceso;
+                                            $daafo->CURP = $request->input('CURP');
+                                            $daafo->IMSS = '';
+                                            $daafo->NOMBRES = $request->input('NOMBRES');
+                                            $daafo->PATERNO = $request->input('PATERNO') . "";
+                                            $daafo->MATERNO = $request->input('MATERNO') . "";
+                                            $daafo->save();
+                                           
+                                            $imss = new ImssAsimi();
+                                            $imss->TIPONO = $selProceso;
+                                            $imss->EMP = $ultimo3;
+                                            $imss->FECHA = date('d-m-Y', strtotime($request->input('INGRESO')));
+                                            $imss->CLAVE = 15;
+                                            $imss->SUELDO = 0.01;
+                                            $imss->INTEG = 0.01;
+                                            $imss->INTIV = 0.01;
+                                            $imss->SUELDONUE = 0.01;
+                                            $imss->INTEGNUE = 0.01;
+                                            $imss->INTIVNUE = 0.01;
+                                            $imss->save();
+                                        }
+                                        catch(\Exception $e){       
+                                           DB::connection('sqlsrv3')->rollBack();
+                                           //throw $e;
+                                           return redirect('/catalogos/empleados')->with('warning','Se ha dado de alta correctamente el empleado en la nómina fiscal pero no se pudo dar de alta en la nómina asimilados, intente darle de alta manualmente y si los problemas persisten contacte a soporte técnico.');
+                                        }
+                                        DB::connection('sqlsrv3')->commit();
+                                        
             //------------------------------------------------------------------Codigo para gregar los documentos del empleado RFCC 29/11/2018---------------------------------------------------------------------------------------
                                         $emp = $request->input('EMP');
                                         $rfc_emp = $request->input('RFC');
@@ -807,483 +832,490 @@ class EmpleadosController extends Controller
         //----------------------------------Fin de codigo para agregar documentos del empleado-------------------------------------------------------------------------------------------------------------------------------------
 
                                         //dd('listo fiscal y asimilados');
-                                       });
+                                     
                                         
                                 }else{  
                                     // ---------------------inicio de solo fiscal-----------------------------
-                    DB::transaction(function () use($request) {
-                    $selProceso = Session::get('selProceso');
+                                    DB::connection('sqlsrv2')->beginTransaction();
+                                    try{
+                                        $selProceso = Session::get('selProceso');
+                                        $emp = new Empleado();
+                                        $emp->TIPONO = $selProceso;
+                                        $emp->EMP = $request->input('EMP');
+                                        $emp->NOMBRE = $request->input('NOMBRES') . ' ' . $request->input('PATERNO') . ' ' . $request->input('MATERNO');
+                                        $emp->PUESTO = $request->input('PUESTO');
+                                        $emp->cuenta = $request->input('cuenta');
+                                        $emp->DEPTO = $request->input('DEPTO');
+                                        $emp->TIPOTRA = $request->input('TIPOTRA');
+                                        $emp->c_Estado = $request->input('c_Estado');
+                                        $emp->DIRIND = $request->input('DIRIND');
+                                        $emp->TIPOJORNADA = $request->input('TIPOJORNADA');
+                                        $emp->TIPOREGIMEN = $request->input('TIPOREGIMEN');
+                                        $emp->CHECA = $request->input('CHECA');
+                                        $emp->SINDIC = $request->input('SINDIC');
+                                        $emp->TURNO = $request->input('TURNO');
+                                        $emp->ZONAECO = $request->input('ZONAECO') . "";
+                                        $emp->ESTATUS = $request->input('ESTATUS');
+                                        $emp->CLIMSS = $request->input('CLIMSS') . "";
+                                        $emp->TIPOPAGO = $request->input('TIPOPAGO');
+                                        $emp->c_TipoContrato = $request->input('c_TipoContrato');
+                                        $emp->INGRESO = date('d-m-Y', strtotime($request->input('INGRESO')));
+                                        $emp->VACACION = date('d-m-Y', strtotime($request->input('VACACION')));
+                                        $emp->PLANTA = date('d-m-Y', strtotime($request->input('PLANTA')));
+                                        $emp->VENCIM = date('d-m-Y', strtotime($request->input('VENCIM')));
+                                        $emp->BAJA = date('d-m-Y', strtotime($request->input('BAJA')));
+                                        $emp->REGPAT = $request->input('REGPAT');
+                                        $emp->RFC = $request->input('RFC');
+                                        $emp->IMSS = $request->input('IMSS');
+                                        $emp->GRUIMS = $request->input('GRUIMS');
+                                        $emp->FONACOT = $request->input('FONACOT') . "";
+                                        $emp->INFONAVIT = $request->input('INFONAVIT') . "";
+                                        $emp->OTRACIA = $request->input('OTRACIA');
+                                        $emp->TAXOTRA = $request->input('TAXOTRA');
+                                        $emp->CASOTRA = $request->input('CASOTRA');
+                                        $emp->SAROTR = $request->input('SAROTR') . "";
+                                        $emp->DESINFO = $request->input('DESINFO');
+                                        $emp->SUELDO = $request->input('SUELDO');
+                                        $emp->VARIMSS = $request->input('VARIMSS');
+                                        $emp->INTEG = $request->input('INTEG');
+                                        $emp->INTIV = $request->input('INTIV');
+                                        $emp->PRESDEC = $request->input('PRESDEC');
+                                        $emp->NOCRED = $request->input('NOCRED');
+                                        $emp->save();
 
-                    $emp = new Empleado();
-                    $emp->TIPONO = $selProceso;
-                    $emp->EMP = $request->input('EMP');
-                    $emp->NOMBRE = $request->input('NOMBRES') . ' ' . $request->input('PATERNO') . ' ' . $request->input('MATERNO');
-                    $emp->PUESTO = $request->input('PUESTO');
-                    $emp->cuenta = $request->input('cuenta');
-                    $emp->DEPTO = $request->input('DEPTO');
-                    $emp->TIPOTRA = $request->input('TIPOTRA');
-                    $emp->c_Estado = $request->input('c_Estado');
-                    $emp->DIRIND = $request->input('DIRIND');
-                    $emp->TIPOJORNADA = $request->input('TIPOJORNADA');
-                    $emp->TIPOREGIMEN = $request->input('TIPOREGIMEN');
-                    $emp->CHECA = $request->input('CHECA');
-                    $emp->SINDIC = $request->input('SINDIC');
-                    $emp->TURNO = $request->input('TURNO');
-                    $emp->ZONAECO = $request->input('ZONAECO') . "";
-                    $emp->ESTATUS = $request->input('ESTATUS');
-                    $emp->CLIMSS = $request->input('CLIMSS') . "";
-                    $emp->TIPOPAGO = $request->input('TIPOPAGO');
-                    $emp->c_TipoContrato = $request->input('c_TipoContrato');
-                    $emp->INGRESO = date('d-m-Y', strtotime($request->input('INGRESO')));
-                    $emp->VACACION = date('d-m-Y', strtotime($request->input('VACACION')));
-                    $emp->PLANTA = date('d-m-Y', strtotime($request->input('PLANTA')));
-                    $emp->VENCIM = date('d-m-Y', strtotime($request->input('VENCIM')));
-                    $emp->BAJA = date('d-m-Y', strtotime($request->input('BAJA')));
-                    $emp->REGPAT = $request->input('REGPAT');
-                    $emp->RFC = $request->input('RFC');
-                    $emp->IMSS = $request->input('IMSS');
-                    $emp->GRUIMS = $request->input('GRUIMS');
-                    $emp->FONACOT = $request->input('FONACOT') . "";
-                    $emp->INFONAVIT = $request->input('INFONAVIT') . "";
-                    $emp->OTRACIA = $request->input('OTRACIA');
-                    $emp->TAXOTRA = $request->input('TAXOTRA');
-                    $emp->CASOTRA = $request->input('CASOTRA');
-                    $emp->SAROTR = $request->input('SAROTR') . "";
-                    $emp->DESINFO = $request->input('DESINFO');
-                    $emp->SUELDO = $request->input('SUELDO');
-                    $emp->VARIMSS = $request->input('VARIMSS');
-                    $emp->INTEG = $request->input('INTEG');
-                    $emp->INTIV = $request->input('INTIV');
-                    $emp->PRESDEC = $request->input('PRESDEC');
-                    $emp->NOCRED = $request->input('NOCRED');
-                    $emp->save();
+                                        $dage = new DatosGe();
+                                        $dage->EMP = $request->input('EMP2');
+                                        $dage->NIVEL = $request->input('NIVEL') . "";
+                                        $dage->DEPTO = $request->input('DEPTO') . "";
+                                        $dage->REPORTA = $request->input('REPORTA') . "";
+                                        $dage->DIRECCION = $request->input('DIRECCION') . "";
+                                        $dage->PUESTO = $request->input('PUESTO');
+                                        $dage->Referencia = $request->input('Referencia') . "";
+                                        $dage->noExterior = $request->input('noExterior') . "";
+                                        $dage->noInterior = $request->input('noInterior') . "";
+                                        $dage->Municipio = $request->input('Municipio') . "";
+                                        $dage->COLONIA = $request->input('COLONIA') . "";
+                                        $dage->CIUDAD = $request->input('CIUDAD') . "";
+                                        $dage->ESTADO = $request->input('ESTADO') . "";
+                                        $dage->TELEFONO = $request->input('TELEFONO') . "";
+                                        $dage->ZIP = $request->input('ZIP') . "";
+                                        $dage->CELULAR = $request->input('CELULAR') . "";
+                                        $dage->EXPERI = $request->input('EXPERI') . "";
+                                        $dage->SEXO = $request->input('SEXO') . "";
+                                        $dage->CIVIL = $request->input('CIVIL');
+                                        $dage->BODA = date('d-m-Y', strtotime($request->input('BODA')));
+                                        $dage->LICENCIA = $request->input('LICENCIA');
+                                        $dage->SANGRE = $request->input('SANGRE');
+                                        $dage->ESCOLAR = $request->input('ESCOLAR');
+                                        $dage->CAMB_RESID = $request->input('CAMB_RESID');
+                                        $dage->DISP_VIAJE = $request->input('DISP_VIAJE');
+                                        $dage->BORN = date('d-m-Y', strtotime($request->input('BORN')));
+                                        $dage->NACIM = $request->input('NACIM') . "";
+                                        $dage->TIPONO = $selProceso;
+                                        $dage->NACIONAL = $request->input('NACIONAL');
+                                        $dage->DEPENDIENT = $request->input('DEPENDIENT') . "";
+                                        $dage->MEDIO = $request->input('MEDIO');
+                                        $dage->FUENTE = $request->input('FUENTE') . "";
+                                        $dage->Email = $request->input('Email') . "";
+                                        $file = $request->file('archivo');
+                                        
+                                        if ($file !== null) {
+                                            
+                                            $path = public_path(). '/img_emp/';
+                                            $fileName = uniqid() . $file->getClientOriginalName();
+                                            $moved =  $file->move($path, $fileName);
+                                            
+                                            if ($moved) {
+                                            //     // guarda la liga en la BD
+                                             $dage->FOTO = $fileName;
+                                                
+                                             }
+                                             
+                                        }
+                                        else{
+                                            
+                                        }  
+                                        $dage->save();
 
-                    $dage = new DatosGe();
-                    $dage->EMP = $request->input('EMP2');
-                    $dage->NIVEL = $request->input('NIVEL') . "";
-                    $dage->DEPTO = $request->input('DEPTO') . "";
-                    $dage->REPORTA = $request->input('REPORTA') . "";
-                    $dage->DIRECCION = $request->input('DIRECCION') . "";
-                    $dage->PUESTO = $request->input('PUESTO');
-                    $dage->Referencia = $request->input('Referencia') . "";
-                    $dage->noExterior = $request->input('noExterior') . "";
-                    $dage->noInterior = $request->input('noInterior') . "";
-                    $dage->Municipio = $request->input('Municipio') . "";
-                    $dage->COLONIA = $request->input('COLONIA') . "";
-                    $dage->CIUDAD = $request->input('CIUDAD') . "";
-                    $dage->ESTADO = $request->input('ESTADO') . "";
-                    $dage->TELEFONO = $request->input('TELEFONO') . "";
-                    $dage->ZIP = $request->input('ZIP') . "";
-                    $dage->CELULAR = $request->input('CELULAR') . "";
-                    $dage->EXPERI = $request->input('EXPERI') . "";
-                    $dage->SEXO = $request->input('SEXO') . "";
-                    $dage->CIVIL = $request->input('CIVIL');
-                    $dage->BODA = date('d-m-Y', strtotime($request->input('BODA')));
-                    $dage->LICENCIA = $request->input('LICENCIA');
-                    $dage->SANGRE = $request->input('SANGRE');
-                    $dage->ESCOLAR = $request->input('ESCOLAR');
-                    $dage->CAMB_RESID = $request->input('CAMB_RESID');
-                    $dage->DISP_VIAJE = $request->input('DISP_VIAJE');
-                    $dage->BORN = date('d-m-Y', strtotime($request->input('BORN')));
-                    $dage->NACIM = $request->input('NACIM') . "";
-                    $dage->TIPONO = $selProceso;
-                    $dage->NACIONAL = $request->input('NACIONAL');
-                    $dage->DEPENDIENT = $request->input('DEPENDIENT') . "";
-                    $dage->MEDIO = $request->input('MEDIO');
-                    $dage->FUENTE = $request->input('FUENTE') . "";
-                    $dage->Email = $request->input('Email') . "";
-                    $file = $request->file('archivo');
-                    
-                    if ($file !== null) {
-                        
-                        $path = public_path(). '/img_emp/';
-                        $fileName = uniqid() . $file->getClientOriginalName();
-                        $moved =  $file->move($path, $fileName);
-                        
-                        if ($moved) {
-                        //     // guarda la liga en la BD
-                         $dage->FOTO = $fileName;
-                            
-                         }
-                         
-                    }
-                    else{
-                        
-                    }  
-                    $dage->save();
+                                        $daafo = new DatosAfo();
+                                        $daafo->EMP = $request->input('EMP');
+                                        $daafo->TIPONO = $selProceso;
+                                        $daafo->CURP = $request->input('CURP');
+                                        $daafo->IMSS = $request->input('IMSS');
+                                        $daafo->NOMBRES = $request->input('NOMBRES');
+                                        $daafo->PATERNO = $request->input('PATERNO') . "";
+                                        $daafo->MATERNO = $request->input('MATERNO') . "";
+                                        $daafo->PADRE = $request->input('PADRE') . "";
+                                        $daafo->MADRE = $request->input('MADRE') . "";
+                                        $daafo->save();
+                                       
+                                        $imss = new Imss();
+                                        $imss->TIPONO = $selProceso;
+                                        $imss->EMP = $request->input('EMP');
+                                        $imss->FECHA = date('d-m-Y', strtotime($request->input('INGRESO')));
+                                        $imss->CLAVE = 15;
+                                        $imss->SUELDO = $request->input('SUELDO');
+                                        $imss->INTEG = $request->input('INTEG');
+                                        $imss->INTIV = $request->input('INTIV');
+                                        $imss->SUELDONUE = $request->input('SUELDO');
+                                        $imss->INTEGNUE = $request->input('INTEG');
+                                        $imss->INTIVNUE = $request->input('INTIV');
+                                        $imss->save();
+                                    }
+                                    catch(\Exception $e){       
+                                       DB::connection('sqlsrv2')->rollBack();
+                                       //throw $e;
+                                       return back()->with('danger','No se ha podido dar de alta al empleado, intentelo de nuevo y si los problemas persisten contacte a soporte técnico.');
+                                    }
+                                    DB::connection('sqlsrv2')->commit();
+                                    
+                        //---------------------------------------------------------------Codigo para gregar los documentos del empleado RFCC 29/11/2018---------------------------------------------------------------------------------------
+                                    $emp = $request->input('EMP');
+                                    $rfc_emp = $request->input('RFC');
+                                    //$rutabase = Empleado::Rutas['Documentos'] .'/';
+                                    $cliente = Session::get('selCliente');
+                                    $celula_empresa = Cell::where('id', $cliente->cell_id)->first()->nombre;
+                                    $rfc_cliente = Ciasno::first()->RFCCIA;
+                                    $rfc_empleado0 = Empleado::where('EMP',$emp)->first()->RFC;
+                                    $rfc_empleado1=substr ($rfc_empleado0, 0,4);
+                                    $rfc_empleado2=substr ($rfc_empleado0, 5,6);
+                                    $rfc_empleado3=substr ($rfc_empleado0, 12,3);
+                                    $rfc_empleado= $rfc_empleado1.$rfc_empleado2.$rfc_empleado3;
+                                    $rutaEmpleados = Client::getRutaEmpleados($cliente->cell_id,  $rfc_cliente);
+                                    $file = $rutaEmpleados.'/'.$rfc_empleado.'/documentos/';
+                                    try {
+                                        mkdir($file,0755,true);
+                                       
+                                    } catch (\Exception $e) {
+                                        \Session::flash('error', "No pude crear los directorios de FISCAL para el nuevo cliente... verifique  -  ".$e->getMessage());
+                                    }
+                                     //dd($file);
 
-                    $daafo = new DatosAfo();
-                    $daafo->EMP = $request->input('EMP');
-                    $daafo->TIPONO = $selProceso;
-                    $daafo->CURP = $request->input('CURP');
-                    $daafo->IMSS = $request->input('IMSS2');
-                    $daafo->NOMBRES = $request->input('NOMBRES');
-                    $daafo->PATERNO = $request->input('PATERNO') . "";
-                    $daafo->MATERNO = $request->input('MATERNO') . "";
-                    $daafo->PADRE = $request->input('PADRE') . "";
-                    $daafo->MADRE = $request->input('MADRE') . "";
-                    $daafo->save();
-                   
-                    $imss = new Imss();
-                    $imss->TIPONO = $selProceso;
-                    $imss->EMP = $request->input('EMP');
-                    $imss->FECHA = date('d-m-Y', strtotime($request->input('INGRESO')));
-                    $imss->CLAVE = 15;
-                    $imss->SUELDO = $request->input('SUELDO');
-                    $imss->INTEG = $request->input('INTEG');
-                    $imss->INTIV = $request->input('INTIV');
-                    $imss->SUELDONUE = $request->input('SUELDO');
-                    $imss->INTEGNUE = $request->input('INTEG');
-                    $imss->INTIVNUE = $request->input('INTIV');
-                    $imss->save();
-        //---------------------------------------------------------------Codigo para gregar los documentos del empleado RFCC 29/11/2018---------------------------------------------------------------------------------------
-                    $emp = $request->input('EMP');
-                    $rfc_emp = $request->input('RFC');
-                    //$rutabase = Empleado::Rutas['Documentos'] .'/';
-                    $cliente = Session::get('selCliente');
-                    $celula_empresa = Cell::where('id', $cliente->cell_id)->first()->nombre;
-                    $rfc_cliente = Ciasno::first()->RFCCIA;
-                    $rfc_empleado0 = Empleado::where('EMP',$emp)->first()->RFC;
-                    $rfc_empleado1=substr ($rfc_empleado0, 0,4);
-                    $rfc_empleado2=substr ($rfc_empleado0, 5,6);
-                    $rfc_empleado3=substr ($rfc_empleado0, 12,3);
-                    $rfc_empleado= $rfc_empleado1.$rfc_empleado2.$rfc_empleado3;
-                    $rutaEmpleados = Client::getRutaEmpleados($cliente->cell_id,  $rfc_cliente);
-                    $file = $rutaEmpleados.'/'.$rfc_empleado.'/documentos/';
-                    try {
-                        mkdir($file,0755,true);
-                       
-                    } catch (\Exception $e) {
-                        \Session::flash('error', "No pude crear los directorios de FISCAL para el nuevo cliente... verifique  -  ".$e->getMessage());
-                    }
-                     //dd($file);
+                                    $listdoc = new ListaDoc();
+                                    $listdoc->EMP = $request->input('EMP');
+                                    $listdoc->TIPONO = $selProceso;
+                                    
+                                    $acta = $request->file('nacimiento');
+                                       if ($acta !== null) {
+                                            
+                                            $path = $file;
+                                            $extension = explode(".",$acta->getClientOriginalName());
+                                            $fileName = 'acta.'.$extension[1];
+                                            $moved =  $acta->move($path, $fileName);
+                                            
+                                            if ($moved) {
+                                            //     // guarda la liga en la BD
+                                            $listdoc->CHECK1 = 1;
+                                            $listdoc->NOMBRE1 = $fileName;
+                                            $listdoc->FECHAVENCI1 = $request->input('fechanaci');
+                                            
+                                                //dd('actualizada imagen');
+                                             }
+                                        }
+                                        else{
+                                            //dd('no actualizada');
+                                        }
 
-                    $listdoc = new ListaDoc();
-                    $listdoc->EMP = $request->input('EMP');
-                    $listdoc->TIPONO = $selProceso;
-                    
-                    $acta = $request->file('nacimiento');
-                       if ($acta !== null) {
-                            
-                            $path = $file;
-                            $extension = explode(".",$acta->getClientOriginalName());
-                            $fileName = 'acta.'.$extension[1];
-                            $moved =  $acta->move($path, $fileName);
-                            
-                            if ($moved) {
-                            //     // guarda la liga en la BD
-                            $listdoc->CHECK1 = 1;
-                            $listdoc->NOMBRE1 = $fileName;
-                            $listdoc->FECHAVENCI1 = $request->input('fechanaci');
-                            
-                                //dd('actualizada imagen');
-                             }
-                        }
-                        else{
-                            //dd('no actualizada');
-                        }
+                                    $rfc = $request->file('rfc');
+                                       if ($rfc !== null) {
+                                            
+                                            $path = $file;
+                                            $extension = explode(".",$rfc->getClientOriginalName());
+                                            $fileName2 = 'rfc.'.$extension[1];
+                                            $moved2 =  $rfc->move($path, $fileName);
+                                            
+                                            if ($moved2) {
+                                            //     // guarda la liga en la BD
+                                            $listdoc->CHECK2 = 1;
+                                            $listdoc->NOMBRE2 = $fileName2;
+                                            $listdoc->FECHAVENCI2 = $request->input('fecharfc');
+                                            
+                                                //dd('actualizada imagen');
+                                             }
+                                        }
+                                        else{
+                                            //dd('no actualizada');
+                                        }
 
-                    $rfc = $request->file('rfc');
-                       if ($rfc !== null) {
-                            
-                            $path = $file;
-                            $extension = explode(".",$rfc->getClientOriginalName());
-                            $fileName2 = 'rfc.'.$extension[1];
-                            $moved2 =  $rfc->move($path, $fileName);
-                            
-                            if ($moved2) {
-                            //     // guarda la liga en la BD
-                            $listdoc->CHECK2 = 1;
-                            $listdoc->NOMBRE2 = $fileName2;
-                            $listdoc->FECHAVENCI2 = $request->input('fecharfc');
-                            
-                                //dd('actualizada imagen');
-                             }
-                        }
-                        else{
-                            //dd('no actualizada');
-                        }
+                                    $curp = $request->file('curp');
+                                       if ($curp !== null) {
+                                            
+                                            $path = $file;
+                                            $extension = explode(".",$curp->getClientOriginalName());
+                                            $fileName = 'curp.'.$extension[1];
+                                            $moved3 =  $curp->move($path, $fileName);
+                                            
+                                            if ($moved3) {
+                                            //     // guarda la liga en la BD
+                                            $listdoc->CHECK3 = 1;
+                                            $listdoc->NOMBRE3 = $fileName;
+                                            $listdoc->FECHAVENCI3 = $request->input('fechacurp');
+                                            
+                                                //dd('actualizada imagen');
+                                             }
+                                        }
+                                        else{
+                                            //dd('no actualizada');
+                                        }
 
-                    $curp = $request->file('curp');
-                       if ($curp !== null) {
-                            
-                            $path = $file;
-                            $extension = explode(".",$curp->getClientOriginalName());
-                            $fileName = 'curp.'.$extension[1];
-                            $moved3 =  $curp->move($path, $fileName);
-                            
-                            if ($moved3) {
-                            //     // guarda la liga en la BD
-                            $listdoc->CHECK3 = 1;
-                            $listdoc->NOMBRE3 = $fileName;
-                            $listdoc->FECHAVENCI3 = $request->input('fechacurp');
-                            
-                                //dd('actualizada imagen');
-                             }
-                        }
-                        else{
-                            //dd('no actualizada');
-                        }
+                                    $comprobante = $request->file('comprobante');
+                                       if ($comprobante !== null) {
+                                            
+                                            $path = $file;
+                                            $extension = explode(".",$comprobante->getClientOriginalName());
+                                            $fileName = 'comprobante.'.$extension[1];
+                                            $moved4 =  $comprobante->move($path, $fileName);
+                                            
+                                            if ($moved4) {
+                                            //     // guarda la liga en la BD
+                                            $listdoc->CHECK4 = 1;
+                                            $listdoc->NOMBRE4 = $fileName;
+                                            $listdoc->FECHAVENCI4 = $request->input('fechacompro');
+                                            
+                                                //dd('actualizada imagen');
+                                             }
+                                        }
+                                        else{
+                                            //dd('no actualizada');
+                                        }
 
-                    $comprobante = $request->file('comprobante');
-                       if ($comprobante !== null) {
-                            
-                            $path = $file;
-                            $extension = explode(".",$comprobante->getClientOriginalName());
-                            $fileName = 'comprobante.'.$extension[1];
-                            $moved4 =  $comprobante->move($path, $fileName);
-                            
-                            if ($moved4) {
-                            //     // guarda la liga en la BD
-                            $listdoc->CHECK4 = 1;
-                            $listdoc->NOMBRE4 = $fileName;
-                            $listdoc->FECHAVENCI4 = $request->input('fechacompro');
-                            
-                                //dd('actualizada imagen');
-                             }
-                        }
-                        else{
-                            //dd('no actualizada');
-                        }
+                                    $empleo = $request->file('empleo');
+                                       if ($empleo !== null) {
+                                            
+                                            $path = $file;
+                                            $extension = explode(".",$empleo->getClientOriginalName());
+                                            $fileName = 'solicitud.'.$extension[1];
+                                            $moved5 =  $empleo->move($path, $fileName);
+                                            
+                                            if ($moved5) {
+                                            //     // guarda la liga en la BD
+                                            $listdoc->CHECK5 = 1;
+                                            $listdoc->NOMBRE5 = $fileName;
+                                            $listdoc->FECHAVENCI5 = $request->input('fechaempleo');
+                                            
+                                                //dd('actualizada imagen');
+                                             }
+                                        }
+                                        else{
+                                            //dd('no actualizada');
+                                        }
 
-                    $empleo = $request->file('empleo');
-                       if ($empleo !== null) {
-                            
-                            $path = $file;
-                            $extension = explode(".",$empleo->getClientOriginalName());
-                            $fileName = 'solicitud.'.$extension[1];
-                            $moved5 =  $empleo->move($path, $fileName);
-                            
-                            if ($moved5) {
-                            //     // guarda la liga en la BD
-                            $listdoc->CHECK5 = 1;
-                            $listdoc->NOMBRE5 = $fileName;
-                            $listdoc->FECHAVENCI5 = $request->input('fechaempleo');
-                            
-                                //dd('actualizada imagen');
-                             }
-                        }
-                        else{
-                            //dd('no actualizada');
-                        }
+                                    $ine = $request->file('ine');
+                                       if ($ine !== null) {
+                                            
+                                            $path = $file;
+                                            $extension = explode(".",$ine->getClientOriginalName());
+                                            $fileName = 'ine.'.$extension[1];
+                                            $moved6 =  $ine->move($path, $fileName);
+                                            
+                                            if ($moved6) {
+                                            //     // guarda la liga en la BD
+                                            $listdoc->CHECK6 = 1;
+                                            $listdoc->NOMBRE6 = $fileName;
+                                            $listdoc->FECHAVENCI6 = $request->input('fechaine');
+                                            
+                                                //dd('actualizada imagen');
+                                             }
+                                        }
+                                        else{
+                                            //dd('no actualizada');
+                                        }
 
-                    $ine = $request->file('ine');
-                       if ($ine !== null) {
-                            
-                            $path = $file;
-                            $extension = explode(".",$ine->getClientOriginalName());
-                            $fileName = 'ine.'.$extension[1];
-                            $moved6 =  $ine->move($path, $fileName);
-                            
-                            if ($moved6) {
-                            //     // guarda la liga en la BD
-                            $listdoc->CHECK6 = 1;
-                            $listdoc->NOMBRE6 = $fileName;
-                            $listdoc->FECHAVENCI6 = $request->input('fechaine');
-                            
-                                //dd('actualizada imagen');
-                             }
-                        }
-                        else{
-                            //dd('no actualizada');
-                        }
+                                    $boda = $request->file('boda');
+                                       if ($boda !== null) {
+                                            
+                                            $path = $file;
+                                            $extension = explode(".",$boda->getClientOriginalName());
+                                            $fileName = 'boda.'.$extension[1];
+                                            $moved7 =  $boda->move($path, $fileName);
+                                            
+                                            if ($moved7) {
+                                            //     // guarda la liga en la BD
+                                            $listdoc->CHECK7 = 1;
+                                            $listdoc->NOMBRE7 = $fileName;
+                                            $listdoc->FECHAVENCI7 = $request->input('fechaboda');
+                                            
+                                                //dd('actualizada imagen');
+                                             }
+                                        }
+                                        else{
+                                            //dd('no actualizada');
+                                        }
 
-                    $boda = $request->file('boda');
-                       if ($boda !== null) {
-                            
-                            $path = $file;
-                            $extension = explode(".",$boda->getClientOriginalName());
-                            $fileName = 'boda.'.$extension[1];
-                            $moved7 =  $boda->move($path, $fileName);
-                            
-                            if ($moved7) {
-                            //     // guarda la liga en la BD
-                            $listdoc->CHECK7 = 1;
-                            $listdoc->NOMBRE7 = $fileName;
-                            $listdoc->FECHAVENCI7 = $request->input('fechaboda');
-                            
-                                //dd('actualizada imagen');
-                             }
-                        }
-                        else{
-                            //dd('no actualizada');
-                        }
+                                    $titulo = $request->file('titulo');
+                                       if ($titulo !== null) {
+                                            
+                                            $path = $file;
+                                            $extension = explode(".",$titulo->getClientOriginalName());
+                                            $fileName = 'titulo.'.$extension[1];
+                                            $moved8 =  $titulo->move($path, $fileName);
+                                            
+                                            if ($moved8) {
+                                            //     // guarda la liga en la BD
+                                            $listdoc->CHECK8 = 1;
+                                            $listdoc->NOMBRE8 = $fileName;
+                                            $listdoc->FECHAVENCI8 = $request->input('fechatitulo');
+                                            
+                                                //dd('actualizada imagen');
+                                             }
+                                        }
+                                        else{
+                                            //dd('no actualizada');
+                                        }
 
-                    $titulo = $request->file('titulo');
-                       if ($titulo !== null) {
-                            
-                            $path = $file;
-                            $extension = explode(".",$titulo->getClientOriginalName());
-                            $fileName = 'titulo.'.$extension[1];
-                            $moved8 =  $titulo->move($path, $fileName);
-                            
-                            if ($moved8) {
-                            //     // guarda la liga en la BD
-                            $listdoc->CHECK8 = 1;
-                            $listdoc->NOMBRE8 = $fileName;
-                            $listdoc->FECHAVENCI8 = $request->input('fechatitulo');
-                            
-                                //dd('actualizada imagen');
-                             }
-                        }
-                        else{
-                            //dd('no actualizada');
-                        }
+                                    $antecedentes = $request->file('antecedentes');
+                                       if ($antecedentes !== null) {
+                                            
+                                            $path = $file;
+                                            $extension = explode(".",$antecedentes->getClientOriginalName());
+                                            $fileName = 'antecedentes.'.$extension[1];
+                                            $moved9 =  $antecedentes->move($path, $fileName);
+                                            
+                                            if ($moved9) {
+                                            //     // guarda la liga en la BD
+                                            $listdoc->CHECK9 = 1;
+                                            $listdoc->NOMBRE9 = $fileName;
+                                            $listdoc->FECHAVENCI9 = $request->input('fechaante');
+                                            
+                                                //dd('actualizada imagen');
+                                             }
+                                        }
+                                        else{
+                                            //dd('no actualizada');
+                                        }
 
-                    $antecedentes = $request->file('antecedentes');
-                       if ($antecedentes !== null) {
-                            
-                            $path = $file;
-                            $extension = explode(".",$antecedentes->getClientOriginalName());
-                            $fileName = 'antecedentes.'.$extension[1];
-                            $moved9 =  $antecedentes->move($path, $fileName);
-                            
-                            if ($moved9) {
-                            //     // guarda la liga en la BD
-                            $listdoc->CHECK9 = 1;
-                            $listdoc->NOMBRE9 = $fileName;
-                            $listdoc->FECHAVENCI9 = $request->input('fechaante');
-                            
-                                //dd('actualizada imagen');
-                             }
-                        }
-                        else{
-                            //dd('no actualizada');
-                        }
+                                    $contrato = $request->file('contrato');
+                                       if ($contrato !== null) {
+                                            
+                                            $path = $file;
+                                            $extension = explode(".",$contrato->getClientOriginalName());
+                                            $fileName = 'contrato.'.$extension[1];
+                                            $moved10 =  $contrato->move($path, $fileName);
+                                            
+                                            if ($moved10) {
+                                            //     // guarda la liga en la BD
+                                            $listdoc->CHECK10 = 1;
+                                            $listdoc->NOMBRE10 = $fileName;
+                                            $listdoc->FECHAVENCI10 = $request->input('fechacompro');
+                                            
+                                                //dd('actualizada imagen');
+                                             }
+                                        }
+                                        else{
+                                            //dd('no actualizada');
+                                        }
 
-                    $contrato = $request->file('contrato');
-                       if ($contrato !== null) {
-                            
-                            $path = $file;
-                            $extension = explode(".",$contrato->getClientOriginalName());
-                            $fileName = 'contrato.'.$extension[1];
-                            $moved10 =  $contrato->move($path, $fileName);
-                            
-                            if ($moved10) {
-                            //     // guarda la liga en la BD
-                            $listdoc->CHECK10 = 1;
-                            $listdoc->NOMBRE10 = $fileName;
-                            $listdoc->FECHAVENCI10 = $request->input('fechacompro');
-                            
-                                //dd('actualizada imagen');
-                             }
-                        }
-                        else{
-                            //dd('no actualizada');
-                        }
+                                    $curriculum = $request->file('curriculum');
+                                       if ($curriculum !== null) {
+                                            
+                                            $path = $file;
+                                            $extension = explode(".",$curriculum->getClientOriginalName());
+                                            $fileName = 'curriculum.'.$extension[1];
+                                            $moved11 =  $curriculum->move($path, $fileName);
+                                            
+                                            if ($moved11) {
+                                            //     // guarda la liga en la BD
+                                            $listdoc->CHECK11 = 1;
+                                            $listdoc->NOMBRE11 = $fileName;
+                                            $listdoc->FECHAVENCI11 = $request->input('fechacurri');
+                                            
+                                                //dd('actualizada imagen');
+                                             }
+                                        }
+                                        else{
+                                            //dd('no actualizada');
+                                        }
 
-                    $curriculum = $request->file('curriculum');
-                       if ($curriculum !== null) {
-                            
-                            $path = $file;
-                            $extension = explode(".",$curriculum->getClientOriginalName());
-                            $fileName = 'curriculum.'.$extension[1];
-                            $moved11 =  $curriculum->move($path, $fileName);
-                            
-                            if ($moved11) {
-                            //     // guarda la liga en la BD
-                            $listdoc->CHECK11 = 1;
-                            $listdoc->NOMBRE11 = $fileName;
-                            $listdoc->FECHAVENCI11 = $request->input('fechacurri');
-                            
-                                //dd('actualizada imagen');
-                             }
-                        }
-                        else{
-                            //dd('no actualizada');
-                        }
+                                    $cedula = $request->file('cedula');
+                                       if ($cedula !== null) {
+                                            
+                                            $path = $file;
+                                            $extension = explode(".",$cedula->getClientOriginalName());
+                                            $fileName = 'cedula.'.$extension[1];
+                                            $moved12 =  $cedula->move($path, $fileName);
+                                            
+                                            if ($moved12) {
+                                            //     // guarda la liga en la BD
+                                            $listdoc->CHECK12 = 1;
+                                            $listdoc->NOMBRE12 = $fileName;
+                                            $listdoc->FECHAVENCI12 = $request->input('fechacedula');
+                                            
+                                                //dd('actualizada imagen');
+                                             }
+                                        }
+                                        else{
+                                            //dd('no actualizada');
+                                        }
 
-                    $cedula = $request->file('cedula');
-                       if ($cedula !== null) {
-                            
-                            $path = $file;
-                            $extension = explode(".",$cedula->getClientOriginalName());
-                            $fileName = 'cedula.'.$extension[1];
-                            $moved12 =  $cedula->move($path, $fileName);
-                            
-                            if ($moved12) {
-                            //     // guarda la liga en la BD
-                            $listdoc->CHECK12 = 1;
-                            $listdoc->NOMBRE12 = $fileName;
-                            $listdoc->FECHAVENCI12 = $request->input('fechacedula');
-                            
-                                //dd('actualizada imagen');
-                             }
-                        }
-                        else{
-                            //dd('no actualizada');
-                        }
+                                    $diplomas = $request->file('diplomas');
+                                       if ($diplomas !== null) {
+                                            
+                                            $path = $file;
+                                            $extension = explode(".",$diplomas->getClientOriginalName());
+                                            $fileName = 'diplomas.'.$extension[1];
+                                            $moved13 =  $diplomas->move($path, $fileName);
+                                            
+                                            if ($moved13) {
+                                            //     // guarda la liga en la BD
+                                            $listdoc->CHECK13 = 1;
+                                            $listdoc->NOMBRE13 = $fileName;
+                                            $listdoc->FECHAVENCI13 = $request->input('fechadiplo');
+                                            
+                                                //dd('actualizada imagen');
+                                             }
+                                        }
+                                        else{
+                                            //dd('no actualizada');
+                                        }
 
-                    $diplomas = $request->file('diplomas');
-                       if ($diplomas !== null) {
-                            
-                            $path = $file;
-                            $extension = explode(".",$diplomas->getClientOriginalName());
-                            $fileName = 'diplomas.'.$extension[1];
-                            $moved13 =  $diplomas->move($path, $fileName);
-                            
-                            if ($moved13) {
-                            //     // guarda la liga en la BD
-                            $listdoc->CHECK13 = 1;
-                            $listdoc->NOMBRE13 = $fileName;
-                            $listdoc->FECHAVENCI13 = $request->input('fechadiplo');
-                            
-                                //dd('actualizada imagen');
-                             }
-                        }
-                        else{
-                            //dd('no actualizada');
-                        }
+                                    $certificaciones = $request->file('certificaciones');
+                                       if ($certificaciones !== null) {
+                                            
+                                            $path = $file;
+                                            $extension = explode(".",$certificaciones->getClientOriginalName());
+                                            $fileName = 'certificaciones.'.$extension[1];
+                                            $moved14 =  $certificaciones->move($path, $fileName);
+                                            
+                                            if ($moved14) {
+                                            //     // guarda la liga en la BD
+                                            $listdoc->CHECK14 = 1;
+                                            $listdoc->NOMBRE14 = $fileName;
+                                            $listdoc->FECHAVENCI14 = $request->input('fechacerti');
+                                            
+                                                //dd('actualizada imagen');
+                                             }
+                                        }
+                                        else{
+                                            //dd('no actualizada');
+                                        }
 
-                    $certificaciones = $request->file('certificaciones');
-                       if ($certificaciones !== null) {
-                            
-                            $path = $file;
-                            $extension = explode(".",$certificaciones->getClientOriginalName());
-                            $fileName = 'certificaciones.'.$extension[1];
-                            $moved14 =  $certificaciones->move($path, $fileName);
-                            
-                            if ($moved14) {
-                            //     // guarda la liga en la BD
-                            $listdoc->CHECK14 = 1;
-                            $listdoc->NOMBRE14 = $fileName;
-                            $listdoc->FECHAVENCI14 = $request->input('fechacerti');
-                            
-                                //dd('actualizada imagen');
-                             }
-                        }
-                        else{
-                            //dd('no actualizada');
-                        }
+                                    $licencia = $request->file('licencia');
+                                       if ($licencia !== null) {
+                                            
+                                            $path = $file;
+                                            $extension = explode(".",$licencia->getClientOriginalName());
+                                            $fileName = 'licencia.'.$extension[1];
+                                            $moved15 =  $licencia->move($path, $fileName);
+                                            
+                                            if ($moved15) {
+                                            //     // guarda la liga en la BD
+                                            $listdoc->CHECK15 = 1;
+                                            $listdoc->NOMBRE15 = $fileName;
+                                            $listdoc->FECHAVENCI15 = $request->input('fechalicencia');
+                                            
+                                                //dd('actualizada imagen');
+                                             }
+                                        }
+                                        else{
+                                            //dd('no actualizada');
+                                        }
 
-                    $licencia = $request->file('licencia');
-                       if ($licencia !== null) {
-                            
-                            $path = $file;
-                            $extension = explode(".",$licencia->getClientOriginalName());
-                            $fileName = 'licencia.'.$extension[1];
-                            $moved15 =  $licencia->move($path, $fileName);
-                            
-                            if ($moved15) {
-                            //     // guarda la liga en la BD
-                            $listdoc->CHECK15 = 1;
-                            $listdoc->NOMBRE15 = $fileName;
-                            $listdoc->FECHAVENCI15 = $request->input('fechalicencia');
-                            
-                                //dd('actualizada imagen');
-                             }
-                        }
-                        else{
-                            //dd('no actualizada');
-                        }
-
-                    $listdoc->save();
+                                    $listdoc->save();
                         //dd('listo');
 
         //-----------------------------------Fin de codigo para agregar documentos del empleado-------------------------------------------------------------------------------------------------------------------------------------
 
 
-                   }); 
                     //dd('solo fiscal');
         }
             //fin fiscal?
@@ -1292,129 +1324,137 @@ class EmpleadosController extends Controller
             //fin de las inserciones de fiscal-----------------------------------------------------------------------------
         }else{
             //inicio de las inserciones de asimilados----------------------------------------------------------------------
-            DB::transaction(function () use($request) {
-            $selProceso = Session::get('selProceso');
+            DB::connection('sqlsrv2')->beginTransaction();
+            try{
+                $selProceso = Session::get('selProceso');
+                $emp = new Empleado();
+                $emp->TIPONO = $selProceso;
+                $emp->EMP = $request->input('EMP');
+                $emp->NOMBRE = $request->input('NOMBRES') . ' ' . $request->input('PATERNO') . ' ' . $request->input('MATERNO');
+                $emp->PUESTO = $request->input('PUESTO');
+                $emp->cuenta = $request->input('cuenta');
+                $emp->DEPTO = $request->input('DEPTO');
+                $emp->TIPOTRA = $request->input('TIPOTRA');
+                $emp->c_Estado = $request->input('c_Estado');
+                $emp->DIRIND = $request->input('DIRIND');
+                $emp->TIPOJORNADA = $request->input('TIPOJORNADA');
+                $emp->TIPOREGIMEN = 9;
+                $emp->CHECA = $request->input('CHECA');
+                $emp->SINDIC = $request->input('SINDIC');
+                $emp->TURNO = $request->input('TURNO');
+                $emp->ZONAECO = $request->input('ZONAECO') . "";
+                $emp->ESTATUS = $request->input('ESTATUS');
+                $emp->CLIMSS = $request->input('CLIMSS') . "";
+                $emp->TIPOPAGO = $request->input('TIPOPAGO');
+                $emp->c_TipoContrato = '09 Modalidades de contratacion donde no existe relacion de trabajo';
+                $emp->INGRESO = date('d-m-Y', strtotime($request->input('INGRESO')));
+                $emp->VACACION = date('d-m-Y', strtotime($request->input('VACACION')));
+                $emp->PLANTA = date('d-m-Y', strtotime($request->input('PLANTA')));
+                $emp->VENCIM = date('d-m-Y', strtotime($request->input('VENCIM')));
+                $emp->BAJA = date('d-m-Y', strtotime($request->input('BAJA')));
+                $emp->REGPAT = $request->input('REGPAT');
+                $emp->RFC = $request->input('RFC');
+                $emp->IMSS = '';
+                $emp->GRUIMS = $request->input('GRUIMS');
+                $emp->FONACOT = $request->input('FONACOT') . "";
+                $emp->INFONAVIT = $request->input('INFONAVIT') . "";
+                $emp->OTRACIA = $request->input('OTRACIA');
+                $emp->TAXOTRA = $request->input('TAXOTRA');
+                $emp->CASOTRA = $request->input('CASOTRA');
+                $emp->SAROTR = $request->input('SAROTR') . "";
+                $emp->DESINFO = $request->input('DESINFO');
+                $emp->SUELDO = 0.01;
+                $emp->VARIMSS = 0.01;
+                $emp->INTEG = 0.01;
+                $emp->INTIV = 0.01;
+                $emp->PRESDEC = $request->input('PRESDEC');
+                $emp->NOCRED = $request->input('NOCRED');
+                $emp->save();
 
-            $emp = new Empleado();
-            $emp->TIPONO = $selProceso;
-            $emp->EMP = $request->input('EMP');
-            $emp->NOMBRE = $request->input('NOMBRES') . ' ' . $request->input('PATERNO') . ' ' . $request->input('MATERNO');
-            $emp->PUESTO = $request->input('PUESTO');
-            $emp->cuenta = $request->input('cuenta');
-            $emp->DEPTO = $request->input('DEPTO');
-            $emp->TIPOTRA = $request->input('TIPOTRA');
-            $emp->c_Estado = $request->input('c_Estado');
-            $emp->DIRIND = $request->input('DIRIND');
-            $emp->TIPOJORNADA = $request->input('TIPOJORNADA');
-            $emp->TIPOREGIMEN = 9;
-            $emp->CHECA = $request->input('CHECA');
-            $emp->SINDIC = $request->input('SINDIC');
-            $emp->TURNO = $request->input('TURNO');
-            $emp->ZONAECO = $request->input('ZONAECO') . "";
-            $emp->ESTATUS = $request->input('ESTATUS');
-            $emp->CLIMSS = $request->input('CLIMSS') . "";
-            $emp->TIPOPAGO = $request->input('TIPOPAGO');
-            $emp->c_TipoContrato = "09 Modalidades de contratación donde no existe relación de trabajo";
-            $emp->INGRESO = date('d-m-Y', strtotime($request->input('INGRESO')));
-            $emp->VACACION = date('d-m-Y', strtotime($request->input('VACACION')));
-            $emp->PLANTA = date('d-m-Y', strtotime($request->input('PLANTA')));
-            $emp->VENCIM = date('d-m-Y', strtotime($request->input('VENCIM')));
-            $emp->BAJA = date('d-m-Y', strtotime($request->input('BAJA')));
-            $emp->REGPAT = $request->input('REGPAT');
-            $emp->RFC = $request->input('RFC');
-            $emp->IMSS = '';
-            $emp->GRUIMS = $request->input('GRUIMS');
-            $emp->FONACOT = $request->input('FONACOT') . "";
-            $emp->INFONAVIT = $request->input('INFONAVIT') . "";
-            $emp->OTRACIA = $request->input('OTRACIA');
-            $emp->TAXOTRA = $request->input('TAXOTRA');
-            $emp->CASOTRA = $request->input('CASOTRA');
-            $emp->SAROTR = $request->input('SAROTR') . "";
-            $emp->DESINFO = $request->input('DESINFO');
-            $emp->SUELDO = 0.01;
-            $emp->VARIMSS = 0.01;
-            $emp->INTEG = 0.01;
-            $emp->INTIV = 0.01;
-            $emp->PRESDEC = $request->input('PRESDEC');
-            $emp->NOCRED = $request->input('NOCRED');
-            $emp->save();
-
-            $dage = new DatosGe();
-            $dage->EMP = $request->input('EMP2');
-            $dage->NIVEL = $request->input('NIVEL') . "";
-            $dage->DEPTO = $request->input('DEPTO') . "";
-            $dage->REPORTA = $request->input('REPORTA') . "";
-            $dage->DIRECCION = $request->input('DIRECCION') . "";
-            $dage->PUESTO = $request->input('PUESTO');
-            $dage->Referencia = $request->input('Referencia') . "";
-            $dage->noExterior = $request->input('noExterior') . "";
-            $dage->noInterior = $request->input('noInterior') . "";
-            $dage->Municipio = $request->input('Municipio') . "";
-            $dage->COLONIA = $request->input('COLONIA') . "";
-            $dage->CIUDAD = $request->input('CIUDAD') . "";
-            $dage->ESTADO = $request->input('ESTADO') . "";
-            $dage->TELEFONO = $request->input('TELEFONO') . "";
-            $dage->ZIP = $request->input('ZIP') . "";
-            $dage->CELULAR = $request->input('CELULAR') . "";
-            $dage->EXPERI = $request->input('EXPERI') . "";
-            $dage->SEXO = $request->input('SEXO') . "";
-            $dage->CIVIL = $request->input('CIVIL');
-            $dage->BODA = date('d-m-Y', strtotime($request->input('BODA')));
-            $dage->LICENCIA = $request->input('LICENCIA');
-            $dage->SANGRE = $request->input('SANGRE');
-            $dage->ESCOLAR = $request->input('ESCOLAR');
-            $dage->CAMB_RESID = $request->input('CAMB_RESID');
-            $dage->DISP_VIAJE = $request->input('DISP_VIAJE');
-            $dage->BORN = date('d-m-Y', strtotime($request->input('BORN')));
-            $dage->NACIM = $request->input('NACIM') . "";
-            $dage->TIPONO = $selProceso;
-            $dage->NACIONAL = $request->input('NACIONAL');
-            $dage->DEPENDIENT = $request->input('DEPENDIENT') . "";
-            $dage->MEDIO = $request->input('MEDIO');
-            $dage->FUENTE = $request->input('FUENTE') . "";
-            $dage->Email = $request->input('Email') . "";
-            $file = $request->file('archivo');
-            
-            if ($file !== null) {
+                $dage = new DatosGe();
+                $dage->EMP = $request->input('EMP2');
+                $dage->NIVEL = $request->input('NIVEL') . "";
+                $dage->DEPTO = $request->input('DEPTO') . "";
+                $dage->REPORTA = $request->input('REPORTA') . "";
+                $dage->DIRECCION = $request->input('DIRECCION') . "";
+                $dage->PUESTO = $request->input('PUESTO');
+                $dage->Referencia = $request->input('Referencia') . "";
+                $dage->noExterior = $request->input('noExterior') . "";
+                $dage->noInterior = $request->input('noInterior') . "";
+                $dage->Municipio = $request->input('Municipio') . "";
+                $dage->COLONIA = $request->input('COLONIA') . "";
+                $dage->CIUDAD = $request->input('CIUDAD') . "";
+                $dage->ESTADO = $request->input('ESTADO') . "";
+                $dage->TELEFONO = $request->input('TELEFONO') . "";
+                $dage->ZIP = $request->input('ZIP') . "";
+                $dage->CELULAR = $request->input('CELULAR') . "";
+                $dage->EXPERI = $request->input('EXPERI') . "";
+                $dage->SEXO = $request->input('SEXO') . "";
+                $dage->CIVIL = $request->input('CIVIL');
+                $dage->BODA = date('d-m-Y', strtotime($request->input('BODA')));
+                $dage->LICENCIA = $request->input('LICENCIA');
+                $dage->SANGRE = $request->input('SANGRE');
+                $dage->ESCOLAR = $request->input('ESCOLAR');
+                $dage->CAMB_RESID = $request->input('CAMB_RESID');
+                $dage->DISP_VIAJE = $request->input('DISP_VIAJE');
+                $dage->BORN = date('d-m-Y', strtotime($request->input('BORN')));
+                $dage->NACIM = $request->input('NACIM') . "";
+                $dage->TIPONO = $selProceso;
+                $dage->NACIONAL = $request->input('NACIONAL');
+                $dage->DEPENDIENT = $request->input('DEPENDIENT') . "";
+                $dage->MEDIO = $request->input('MEDIO');
+                $dage->FUENTE = $request->input('FUENTE') . "";
+                $dage->Email = $request->input('Email') . "";
+                $file = $request->file('archivo');
                 
-                $path = public_path(). '/img_emp/';
-                $fileName = uniqid() . $file->getClientOriginalName();
-                $moved =  $file->move($path, $fileName);
-                
-                if ($moved) {
-                //     // guarda la liga en la BD
-                 $dage->FOTO = $fileName;
+                if ($file !== null) {
                     
-                 }
-                 
-            }
-            else{
-                
-            }  
-            $dage->save();
+                    $path = public_path(). '/img_emp/';
+                    $fileName = uniqid() . $file->getClientOriginalName();
+                    $moved =  $file->move($path, $fileName);
+                    
+                    if ($moved) {
+                    //     // guarda la liga en la BD
+                     $dage->FOTO = $fileName;
+                        
+                     }
+                     
+                }
+                else{
+                    
+                }  
+                $dage->save();
 
-            $daafo = new DatosAfo();
-            $daafo->EMP = $request->input('EMP');
-            $daafo->TIPONO = $selProceso;
-            $daafo->CURP = $request->input('CURP');
-            $daafo->IMSS = '';
-            $daafo->NOMBRES = $request->input('NOMBRES');
-            $daafo->PATERNO = $request->input('PATERNO') . "";
-            $daafo->MATERNO = $request->input('MATERNO') . "";
-            $daafo->save();
-           
-            $imss = new Imss();
-            $imss->TIPONO = $selProceso;
-            $imss->EMP = $request->input('EMP');
-            $imss->FECHA = date('d-m-Y', strtotime($request->input('INGRESO')));
-            $imss->CLAVE = 15;
-            $imss->SUELDO = 0.01;
-            $imss->INTEG = 0.01;
-            $imss->INTIV = 0.01;
-            $imss->SUELDONUE = 0.01;
-            $imss->INTEGNUE = 0.01;
-            $imss->INTIVNUE = 0.01;
-            $imss->save();
+                $daafo = new DatosAfo();
+                $daafo->EMP = $request->input('EMP');
+                $daafo->TIPONO = $selProceso;
+                $daafo->CURP = $request->input('CURP');
+                $daafo->IMSS = '';
+                $daafo->NOMBRES = $request->input('NOMBRES');
+                $daafo->PATERNO = $request->input('PATERNO') . "";
+                $daafo->MATERNO = $request->input('MATERNO') . "";
+                $daafo->save();
+               
+                $imss = new Imss();
+                $imss->TIPONO = $selProceso;
+                $imss->EMP = $request->input('EMP');
+                $imss->FECHA = date('d-m-Y', strtotime($request->input('INGRESO')));
+                $imss->CLAVE = 15;
+                $imss->SUELDO = 0.01;
+                $imss->INTEG = 0.01;
+                $imss->INTIV = 0.01;
+                $imss->SUELDONUE = 0.01;
+                $imss->INTEGNUE = 0.01;
+                $imss->INTIVNUE = 0.01;
+                $imss->save();
+            }
+            catch(\Exception $e){       
+               DB::connection('sqlsrv2')->rollBack();
+               //throw $e;
+               return back()->with('danger','No se ha podido dar de alta al empleado, intentelo de nuevo y si los problemas persisten contacte a soporte técnico.');
+            }
+            DB::connection('sqlsrv2')->commit();
+            
         //---------------------------------------------------------Codigo para gregar los documentos del empleado RFCC 29/11/2018---------------------------------------------------------------------------------------
             $emp = $request->input('EMP');
             $rfc_emp = $request->input('RFC');
@@ -1762,14 +1802,12 @@ class EmpleadosController extends Controller
 
         //--------------------------------Fin de codigo para agregar documentos del empleado-------------------------------------------------------------------------------------------------------------------------------------
 
-
-            });
                 //dd('es asimilado');
 
                 //fin de las inserciones de asimilados-------------------------------------------------------------------------
             }
         
-        return redirect('/catalogos/empleados');
+        return redirect('/catalogos/empleados')->with('flash','Se ha dado de alta correctamente el empleado.');
     }
 
     public function edit($emp){
@@ -1796,7 +1834,7 @@ class EmpleadosController extends Controller
     }
 
     public function update(Request $request, $EMP){
-            DB::beginTransaction(); //Start transaction!
+            DB::connection('sqlsrv2')->beginTransaction();
             try{
                 $selProceso = Session::get('selProceso');
                 $EMP = $request->input('EMP');
@@ -1938,30 +1976,37 @@ class EmpleadosController extends Controller
 
                     $emple11 = DatosAfo::where('EMP', $EMP)->get()->first();
                     $emple11->CURP = $request->input('CURP');
-                    $emple11->IMSS = $request->input('IMSS2');
+                    $emple11->IMSS = $request->input('IMSS');
                     $emple11->NOMBRES = $request->input('NOMBRES');
                     $emple11->PATERNO = $request->input('PATERNO') . "";
                     $emple11->MATERNO = $request->input('MATERNO') . "";
-                    $emple11->PADRE = $request->input('PADRE') . "";
-                    $emple11->MADRE = $request->input('MADRE') . "";
                     $emple11->save();
             }
             catch(\Exception $e){       
-               DB::rollback();
-               throw $e;
+               DB::connection('sqlsrv2')->rollBack();
+               //throw $e;
+               echo "no se pudo actualizar la base de datos".$e;
             }
-            DB::commit(); 
+            DB::connection('sqlsrv2')->commit();
             return redirect('/catalogos/empleados');
     }
 
 
     public function documentos($emp)
     {  
+
         session(['emp' => $emp]);
+        $selProceso = Session::get('selProceso');
 
         $perfil = auth()->user()->profile_id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
-        $listdoc = ListaDoc::where('EMP',$emp)->first();
+        $listdoc = ListaDoc::where('EMP',$emp)->where('TIPONO', $selProceso)->first();
+        if ($listdoc==null) {
+            $listdoc = new ListaDoc();
+            $listdoc->EMP = $emp;
+            $listdoc->TIPONO = $selProceso;
+            $listdoc->save();
+        }
         $cliente = Session::get('selCliente');
         $rfc_cliente = Ciasno::first()->RFCCIA;
         $rfc_empleado0 = Empleado::where('EMP',$emp)->first()->RFC;
@@ -1979,13 +2024,14 @@ class EmpleadosController extends Controller
     
      public function visualizar($documento)
     {  
-        $perfil = auth()->user()->profile_id;        
+        $perfil = auth()->user()->profile_id;
+        $selProceso = Session::get('selProceso');        
         $navbar = ProfileController::getNavBar('',0,$perfil);
         $emp = Session::get('emp');
         $listdoc = ListaDoc::where('EMP',$emp)->first();
         $cliente = Session::get('selCliente');
         $rfc_cliente = Ciasno::first()->RFCCIA;
-        $rfc_empleado0 = Empleado::where('EMP',$emp)->first()->RFC;
+        $rfc_empleado0 = Empleado::where('EMP',$emp)->where('TIPONO', $selProceso)->first()->RFC;
         $rfc_empleado1=substr ($rfc_empleado0, 0,4);
         $rfc_empleado2=substr ($rfc_empleado0, 5,6);
         $rfc_empleado3=substr ($rfc_empleado0, 12,3);
@@ -2343,6 +2389,15 @@ class EmpleadosController extends Controller
         $perfil = auth()->user()->profile_id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
         $docsReque = DocsRequeridos::first();
+        if ($docsReque==null) {
+            $docsReque = new DocsRequeridos();
+            $docsReque->REQUERIDO1 = 1;
+            $docsReque->REQUERIDO2 = 1;
+            $docsReque->REQUERIDO3 = 1;
+            $docsReque->REQUERIDO4 = 1;
+            $docsReque->REQUERIDO5 = 1;
+            $docsReque->save();
+        }
         return view('configuracion.documentosemp.index')->with(compact('navbar','docsReque')); 
     }
 

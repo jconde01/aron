@@ -2588,31 +2588,55 @@ class XMLDSigToken
         };
 
         $results = array();
-        $results['isSignatureValid()'] = $this->isSignatureValid() ? 'TRUE' : 'FALSE';
-        $results['isDataEncrypted()'] = $this->isDataEncrypted() ? 'TRUE' : 'FALSE';
-        $results['getTimestamp()'] = $this->getTimestamp();
-        $results['getData()'] = $dumpToString($this->getData());
-        $results['getError()'] = is_null($this->getError()) ? 'NULL' : $this->getError();
-        $results['getAnomalies()'] = $dumpToString($this->getAnomalies());
-        $results['getCertDN()'] = $this->getCertDN();
-        $results['getCertSubject()'] = $dumpToString($this->getCertSubject());
-        $results['getCertIssuer()'] = $dumpToString($this->getCertIssuer());
-        $results['getCertValidFrom()'] = $this->getCertValidFrom();
-        $results['getCertValidTo()'] = $this->getCertValidTo();
-        $results['isCertOutOfDate()'] = $this->isCertOutOfDate() ? 'TRUE' : 'FALSE';
+        // $results['isSignatureValid()'] = $this->isSignatureValid() ? 'TRUE' : 'FALSE';
+        // $results['isDataEncrypted()'] = $this->isDataEncrypted() ? 'TRUE' : 'FALSE';
+        // $results['getTimestamp()'] = $this->getTimestamp();
+        // $results['getData()'] = $dumpToString($this->getData());
+        // $results['getError()'] = is_null($this->getError()) ? 'NULL' : $this->getError();
+        // $results['getAnomalies()'] = $dumpToString($this->getAnomalies());
+        // $results['getCertDN()'] = $this->getCertDN();
+        // $results['getCertSubject()'] = $dumpToString($this->getCertSubject());
+        // $results['getCertIssuer()'] = $dumpToString($this->getCertIssuer());
+        // $results['getCertValidFrom()'] = $this->getCertValidFrom();
+        // $results['getCertValidTo()'] = $this->getCertValidTo();
+        // $results['isCertOutOfDate()'] = $this->isCertOutOfDate() ? 'TRUE' : 'FALSE';
+
+        // $html = '<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>';
+        // $html .= '<table cellpadding="5">';
+        // $html .= '<tr><td colspan="2"><pre class="xdebug-var-dump"><b><span style="color: red">XML Digital Signature</span></b></pre></td></tr>';
+        // $html .= '<tr><td colspan="2"><pre class=\"prettyprint\">' . htmlentities($this->getPrettyXML()) . '</pre></td></tr>';
+        // $html .= '<tr><td width="1%"><pre class="xdebug-var-dump"><b><span style="color: red">METHOD CALLS</span></b></pre></td>';
+        // $html .= '<td valign="top" width="99%"><pre class="xdebug-var-dump"><b><span style="color: red">RESULTS</span></b></pre></td></tr>';
+        // foreach ($results as $key => $value) {
+        //     $html .= '<tr><td valign="top"><pre class="xdebug-var-dump"><b>' . $key . '</b></pre></td>';
+        //     $html .= '<td valign="top"><pre class="xdebug-var-dump">' . $value . '</pre></td></tr>';
+        // }
+        // $html .= '</table>';
+
+        $results['Firma Válida'] = $this->isSignatureValid() ? 'SI' : 'NO';
+        //$results['isDataEncrypted()'] = $this->isDataEncrypted() ? 'SI' : 'NO';
+        $results['Fecha-hora'] = $this->getTimestamp();
+        $results['Datos'] = $dumpToString($this->getData());
+        $results['Errores'] = is_null($this->getError()) ? 'NULL' : $this->getError();
+        $results['Anomalias'] = $dumpToString($this->getAnomalies());
+        $results['Compañia'] = $this->getCertDN();
+        $results['Firmante'] = $dumpToString($this->getCertSubject());
+        $results['Emisor'] = $dumpToString($this->getCertIssuer());
+        $results['Válido desde'] = $this->getCertValidFrom();
+        $results['Válido hasta'] = $this->getCertValidTo();
+        $results['Vencido?'] = $this->isCertOutOfDate() ? 'SI' : 'NO';
 
         $html = '<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>';
         $html .= '<table cellpadding="5">';
-        $html .= '<tr><td colspan="2"><pre class="xdebug-var-dump"><b><span style="color: red">XML Digital Signature</span></b></pre></td></tr>';
-        $html .= '<tr><td colspan="2"><pre class=\"prettyprint\">' . htmlentities($this->getPrettyXML()) . '</pre></td></tr>';
-        $html .= '<tr><td width="1%"><pre class="xdebug-var-dump"><b><span style="color: red">METHOD CALLS</span></b></pre></td>';
-        $html .= '<td valign="top" width="99%"><pre class="xdebug-var-dump"><b><span style="color: red">RESULTS</span></b></pre></td></tr>';
+        $html .= '<tr><td colspan="2"><pre class="xdebug-var-dump"><b><span style="color: red">Datos firmados</span></b></pre></td></tr>';
+        // $html .= '<tr><td colspan="2"><pre class=\"prettyprint\">' . htmlentities($this->getPrettyXML()) . '</pre></td></tr>';
+        $html .= '<tr><td width="1%"><pre class="xdebug-var-dump"><b><span style="color: red">CONCEPTO</span></b></pre></td>';
+        $html .= '<td valign="top" width="99%"><pre class="xdebug-var-dump"><b><span style="color: red">VALOR</span></b></pre></td></tr>';
         foreach ($results as $key => $value) {
             $html .= '<tr><td valign="top"><pre class="xdebug-var-dump"><b>' . $key . '</b></pre></td>';
             $html .= '<td valign="top"><pre class="xdebug-var-dump">' . $value . '</pre></td></tr>';
         }
         $html .= '</table>';
-
         return $html;
     }
 }

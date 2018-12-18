@@ -134,7 +134,7 @@
 				renderTo: 'graficaCircular'
 			},
 			title: {
-				text: 'Distribución de plazas'
+				text: 'Distribución de Departamentos'
 			},
 			subtitle: {
 				text: 'Vally.com'

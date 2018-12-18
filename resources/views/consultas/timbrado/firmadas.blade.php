@@ -32,29 +32,12 @@
   </div>
 <br><br><br style="height: ">
 <!-- Modal -->
-<div class="modal fade" id="consulta" role="dialog" data-backdrop="static" data-keyboard="false">
+<div class="modal fade" id="consulta" role="dialog">
     <div class="modal-dialog">
-
-        <form action="#">
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Contenido del documento firmado</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="input-data">
-                        <div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;">
-                            <label class="label-left" style="font-size: 14px;">Contraseña</label>
-                            <input type="password" id="pkey_pwd" name="pkey_pwd" value="">
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-default">OK</button>
-                </div>
-            </div>
-        </form>            
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Contenido del documento firmado</h4>
+        <div class="modal-body">
+        </div>
     </div>
 </div>
 @include('includes.footer')
@@ -65,10 +48,14 @@
 
     $(".consultar").click(function(){
         var id = $(this).attr('id');
-        //$("#consulta").modal();
-        $.post("get-signed-data", { file: id, signature:'12345', _token: token }, function( data ) {
-            signedData = Object.values(data);
-            alert(signedData);
+        console.log('file: '+ id + ', token: '+token);
+        $.post("get-signed-data", { file: id, _token: token }, function( data ) {
+            //signedData = Object.values(data);
+            //alert('back');
+            console.log(data);
+            //console.log(signedData);
+            $('.modal-body').html(data);
+            $("#consulta").modal(); 
         });        
     });
 

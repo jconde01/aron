@@ -17,10 +17,10 @@ class OptController extends Controller
 
 
     public function index()
-    {
-        $perfil = auth()->user()->profile_id;        
+    {      
         return view('admin.menuItems.index');
     }
+
 
     public function getMenuItems()
     {
@@ -36,10 +36,10 @@ class OptController extends Controller
             $opcion = $x->option();
             $checked = $opcion->activo? 'checked':'';
             if ($opcion->padre == 1) {
-                $JSON .= '{"text": "' . $opcion->nombre . '","href": "#","title": "","children": [' . 
+                $JSON .= '{"text": "'.$opcion->nombre.'", "href": "#", "title": "", "uuid": "'.$opcion->uuid.'", "children": [' . 
                 			self::getOpcionesJSON('', $x->id) . ']},';
             } else {
-            	$JSON .= '{"text": "' . $opcion->nombre . '","href": "' . $opcion->ruta . '","title": "" },';
+            	$JSON .= '{"text": "'.$opcion->nombre.'", "href": "' . $opcion->ruta . '", "title": "", "uuid": "'.$opcion->uuid.'"},';
             } 
         }
         return substr($JSON,0,-1);
@@ -56,6 +56,9 @@ class OptController extends Controller
 	     	$option->nombre = $opt->text;
 	     	$option->activo = 1; //($request->Activo)? 1 : 0;
 	        $option->ruta = $opt->href;
+            if ($option->uuid == "") {
+                $option->uuid = $this::uuid();
+            }
 	    	$option->save();
 	     	$optionXRef = new OptionXRef();
 		    $optionXRef->option_id = $option->id;
@@ -84,5 +87,19 @@ class OptController extends Controller
     	return redirect()->back();    	
     }    
 
+
+    private static function uuid($lenght = 13) {
+        // uniqid gives 13 chars, but you could adjust it to your needs.
+        if (function_exists("random_bytes")) {
+            $bytes = random_bytes(ceil($lenght / 2));
+        } elseif (function_exists("openssl_random_pseudo_bytes")) {
+            $bytes = openssl_random_pseudo_bytes(ceil($lenght / 2));
+        } else {
+            throw new Exception("no cryptographically secure random function available");
+        }
+        return substr(bin2hex($bytes), 0, $lenght);
+    } 
+
 }
+
 

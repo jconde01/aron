@@ -48,9 +48,4 @@ class AppController extends Controller
         return response($procesos);
     }
 
-    public function testajapi()
-    {
-        
-    }
-
 }

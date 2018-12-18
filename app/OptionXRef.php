@@ -2,23 +2,22 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 use App\Auth;
 use App\User;
 use App\Option;
 use App\ProfileOption;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Model;
+
 
 class OptionXRef extends Model
 {
 
 	public function option()
 	{
-		//return $this->hasOne(Option::class,'id');
-        //return DB::table('options')->join('option_x_refs','options.id','=','option_x_refs.option_id')->where('option_x_refs.option_id', '=', $this->option_id)->select('options.*','option_x_refs.parent_id as parent')->first();
-        //return DB::table('options')->where('options.id', '=', $this->option_id)->select('options.*')->first();
         $option = Option::find($this->option_id);
         return $option;
+        //return $this->hasOne(Option::class,'option_id');
 	}
 
 

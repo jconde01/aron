@@ -4,13 +4,16 @@ namespace App\Http\Controllers;
 
 use Session;
 use App\User;
+use App\Ciasno;
 use App\Client;
 use App\Periodo;
 use App\Message;
+use PdfToText;
 use Illuminate\Http\Request;
 use App\Notifications\MessageSent;
+use Illuminate\Support\Facades\Hash;
 use webcoder31\ezxmldsig\XMLDSigToken;
-use PdfToText;
+
 
 class ProcessController extends Controller
 {
@@ -21,6 +24,7 @@ class ProcessController extends Controller
         $this->middleware('database');
     }
 
+
 	public function Nomina()
 	{
 		$selProceso = Session::get('selProceso');
@@ -29,6 +33,7 @@ class ProcessController extends Controller
 		$navbar = ProfileController::getNavBar('',0,$perfil);
 		return view('procesos.nomina')->with(compact('periodo','navbar'));
 	}
+
 
 	// Envia notificación al NOMINISTA de la célula para el pre-proceso de la nómina
 	public function requestNomina(Request $data)
@@ -60,16 +65,12 @@ class ProcessController extends Controller
 		require dirname(__DIR__) . '/../../vendor/autoload.php';
 
 		// Asymmetric cryptographic key pair for signing (in PEM format).
-		//$signKey = public_path() . '/keys/my-key.pem';
-		//$signCert = public_path() . '/keys/my-cert.pem';
-		//$signKeyPassword = '12345678'; // Use null if it is not needed.
 		$rutaCert = Client::getRutaCertificado($celula, $rfc);
 		$signKey = $rutaCert.'/'.$rfc.'-priv.key';
         $signCert = $rutaCert.'/'.$rfc.'-cert.pem';
 		$signKeyPassword = $passphrase;
 
 		// User data.
-		//$values = $this->getPDFText();
 		$values = explode("|",$cadena);
 		foreach ($values as $key => $value) {
 			$data['valor'.$key] = $value;
@@ -80,7 +81,7 @@ class ProcessController extends Controller
 
 		// Get the XML Digital Signature. 
 		$sig = $token->getXML();
-
+		return $sig;
 		// Now, verify the token
 
 		//$sig = base64_decode($sig);
@@ -169,29 +170,32 @@ class ProcessController extends Controller
 		//echo "\nsello: \n";
 		//var_dump($sig); 
 		//die();
-		return $sig;		
+		
 	}
 
 
-	public function getSignedData(Request $XMLfile, $passphrase) {
+	public function getSignedData(Request $request) {
 
-		return response($XMLfile);
-		
-		// $myfile = simplexml_load_file($XMLfile);
-		// return response($myfile);
-		// $sig = $myfile->SignatureValue;
-		// return response($sig);
+        $cliente = Session::get('selCliente');
+        $celula = $cliente->cell_id;
+        $rfc_cliente = Ciasno::first()->RFCCTE;
+        $ruta = Client::getRutaAutorizados($celula,$rfc_cliente);
+        $xmlFile = $ruta.'/'.$request->file;
+        if (file_exists($xmlFile)) {
+            //$xml = simplexml_load_file($xmlFile);
+            $file = fopen($xmlFile,"r");
+            $xmlString = fread($file, filesize($xmlFile));
+        } else {
+            return back()->with('error','No pude abrir el archivo: '.$xmlFile);
+        }
 
-		// verify the token
+        $token = XMLDSigToken::analyzeXMLToken($xmlString);
+        if (!$token->isSignatureValid()) 
+        {
+            return back()->with('error','Firma digital inválida: '.$token->getError());
+        }
 
-		//$sig = base64_decode($sig);
-		//var_dump(htmlentities($sig));
-		//die();
-
-		// Private key (and eventualy its passphrase) to be used 
-		// to decrypt token (required if user data is encrypted).
-		//$cryptKey = 'path/to/crypting/private/key';
-		//$cryptKeyPassword = 'crypting-key-password'; // Use null if it is not needed.
+        return response($token->getHTMLDump());
 
 		// The issuer information of the sender to which the certificate transmitted
 		// in the XML digital signature should correspond to be declared valid.
