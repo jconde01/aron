@@ -14,8 +14,8 @@
             <ul class="tab horizontal">
               <li class="tab-group-item pestanas" onClick="cambiar_color_over(this)" style="background-color: rgb(179, 215, 243)!important;"><a style="text-decoration: none;padding: 6px;" data-toggle="tab" href="#nomina1">Nomina 1</a></li>
               <li class="tab-group-item pestanas" onClick="cambiar_color_over(this)"><a style="text-decoration: none;padding: 6px;" data-toggle="tab" href="#nomina2">Nomina 2</a></li>
-              <li class="tab-group-item pestanas" onClick="cambiar_color_over(this)" style="width: 35%;"><a style="text-decoration: none;padding: 6px;" data-toggle="tab" href="#datosg">Datos Generales</a></li>
-              <li class="tab-group-item pestanas" onClick="cambiar_color_over(this)"><a style="text-decoration: none;padding: 6px 3px 6px 3px;" data-toggle="tab" href="#datosa">Datos Afore</a></li>
+              <li class="tab-group-item pestanas" onClick="cambiar_color_over(this)" style="width: 45%;"><a style="text-decoration: none;padding: 6px;" data-toggle="tab" href="#datosg">Datos Generales</a></li>
+              <!-- <li class="tab-group-item pestanas" onClick="cambiar_color_over(this)"><a style="text-decoration: none;padding: 6px 3px 6px 3px;" data-toggle="tab" href="#datosa">Datos Afore</a></li> -->
             </ul>
             <br><br><br>
             <div class="tab-content">
@@ -411,7 +411,7 @@
                                 <option value="08 Modalidad de trabajo por comision laboral" <?php if ($empl->c_TipoContrato=="08 Modalidad de trabajo por comision laboral"):{
                                     echo 'selected="selected"';
                                 } ?> <?php endif ?>>08 Modalidad de trabajo por comisión laboral</option>
-                                <option value="09 Modalidades de contratacion donde no existe relacion de trabajo" <?php if ($empl->c_TipoContrato=="09 Modalidades de contratacion donde no existe relacion de trabajo"):{
+                                <option value="09 Modalidades de contratación donde no existe relación de trabajo" <?php if ($empl->c_TipoContrato=="09 Modalidades de contratacion donde no existe relacion de trabajo"):{
                                     echo 'selected="selected"';
                                 } ?> <?php endif ?>>09 Modalidades de contratación donde no existe relación de trabajo</option>
                                 <option value="10 Jubilacion, pension, retiro" <?php if ($empl->c_TipoContrato=="10 Jubilacion, pension, retiro"):{
@@ -490,7 +490,7 @@
                         </div> 
                     </div>
 
-                    <div class="col-md-4 no-pad" style="border-bottom: 2px #F0F0F0 solid;">
+                    <div class="col-md-4 no-pad" >
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Grupo IMSS:</p></div>
                             
@@ -511,18 +511,33 @@
                         </div> 
                     </div>
 
-                    <div class="col-md-4 no-pad" style="border-bottom: 2px #F0F0F0 solid;">
+                    <div class="col-md-4 no-pad" >
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Crédito FONACOT:</p></div>
                             <input type="text" name="FONACOT" value="{{$empl->FONACOT}}">
                         </div> 
                     </div>
 
-                    <div class="col-md-4 no-pad" style="border-bottom: 2px #F0F0F0 solid;">
+                    <div class="col-md-4 no-pad" >
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Crédito INFONAVIT:</p></div>
                             <input type="text" name="INFONAVIT" value="{{$empl->INFONAVIT}}">
                         </div> 
+                    </div>
+
+                    <div class="col-md-4 no-pad" style="border-bottom: 2px #F0F0F0 solid; height: 70px;">
+                        
+                    </div>
+
+                    <div class="col-md-4 no-pad" style="border-bottom: 2px #F0F0F0 solid;">
+                        <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
+                            <div class="label-left"><p>CURP: </p></div>
+                            <input type="text" name="CURP" value="{{$empl11->CURP}}">
+                        </div> 
+                    </div>
+
+                    <div class="col-md-4 no-pad" style="border-bottom: 2px #F0F0F0 solid; height: 70px;">
+                        
                     </div>
 
                     <div class="col-md-12" style=" text-align: left;">
@@ -1004,12 +1019,7 @@
                         </div> 
                     </div>
 
-                    <div class="col-md-4 no-pad">
-                        <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
-                            <div class="label-left"><p>CURP: </p></div>
-                            <input type="text" name="CURP" value="{{$empl11->CURP}}">
-                        </div> 
-                    </div>
+                    
 
                     <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">

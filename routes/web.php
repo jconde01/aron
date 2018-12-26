@@ -44,7 +44,8 @@ Route::middleware(['auth'])->prefix('sistema')->group(function () {
 	Route::post('/set-session-data','HomeController@setSessionData');
 	Route::get('/graficas', 'HomeController@graficas');
 	Route::post('/home', 'HomeController@update');
-
+	Route::get('/usuarios/{id}/edit','UserController@UserEdit');					// forma para editar usuario
+	Route::post('/usuarios/{id}/edit','UserController@UserUpdate');					// guardar cambios del usuario	
 });
 
 // Rutas para los catálogos

@@ -216,7 +216,8 @@
     	tabla = this.getElementById("captura");
         concepto  = $('#Concepto').val();
         fechaIncidencia = document.getElementById("fecha");
-		console.log('here we are. Concepto: '+ concepto +', token is: ' + token);
+		//console.log('here we are. Concepto: '+ concepto +', token is: ' + token);
+        $('.pdo').change();
     });
 
 

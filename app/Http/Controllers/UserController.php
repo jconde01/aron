@@ -2,22 +2,14 @@
 
 namespace App\Http\Controllers;
 
-
+use Illuminate\Http\Request;
 use App\User;
 use App\Client;
 use App\Profile;
 use App\Graph;
-use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-
-    public function profile() 
-    {
-        return $this->hasOne(Profile::class,'profile_id');
-    }
-
-
     public function index() 
     {
         //$clientes = Client::all();
@@ -91,7 +83,7 @@ class UserController extends Controller
 
     public function update(Request $request, $id) 
     {
-
+        
         $messages = [
             'name.required' => 'El campo "Nombre del usuario" es requerido',
             'name.min'  => 'El campo "Nombre del usuario" debe contener al menos 5 caracteres',
@@ -118,6 +110,47 @@ class UserController extends Controller
         $usuario->client_id = $request->client_id;        
         $usuario->save();
         return redirect('/admin/usuarios'); 
+    }
+    // --------------------------------------Actualizar usuario desde el user-----------------------------------------------------
+    public function UserEdit($id) 
+    {
+        $user = User::find($id);
+        $perfil = auth()->user()->profile_id;        
+        $navbar = ProfileController::getNavBar('',0,$perfil);
+        return view('admin.usuarios.useredit')->with(compact('user','navbar'));    // forma para editar usuario
+    }
+
+    public function UserUpdate(Request $request, $id) 
+    {
+        $usuario = User::find($id);
+        if ($request->name!==null) {
+            $usuario->name = $request->name;
+        }
+        if ($request->email!==null) {
+            $usuario->email = $request->email;
+        }
+        if ($request->password!==null) {
+            $usuario->password =  bcrypt($request->password);
+        }
+        
+        $file = $request->file('archivo');
+                                        
+            if ($file !== null) {                           
+                $path = public_path(). '/img_emp/';
+                $fileName = uniqid() . $file->getClientOriginalName();
+                $moved =  $file->move($path, $fileName);
+                                            
+                 if ($moved) {
+                // guarda la liga en la BD
+                 $usuario->imagen = $fileName;                               
+                 }                                 
+            }
+            else{
+                                           
+            }
+     
+        $usuario->save();
+        return back()->with('flash','Perfil actualizado.');
     }
 
 }
