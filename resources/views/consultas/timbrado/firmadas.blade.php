@@ -21,6 +21,11 @@
                     	echo '<div class="col-lg-5" style="border:1px blue solid; border-radius:10px; margin-right: 80px; height:200px; margin-top: 20px;" > <br> <i class="fas fa-file-alt" style="font-size: 50px;" > </i> <br> <br>
                         <a href="/consultaAutorizados/'.$archivo.'">'.$archivo.'</a><br/><br><br>';
                        	echo '<a class="primario1 separation consultar" id="'.$archivo.'">Consultar datos firmados</a>';
+                    } elseif (strstr($archivo, ".pdf")) {
+                        // Path to the actual file
+                        $ruta_archivo = $ruta . '/' . $archivo;
+                        echo '<div class="col-lg-5" style="border:1px blue solid; border-radius:10px; margin-right: 80px; height:200px; margin-top: 20px;" > <br> <i class="fas fa-file-alt" style="font-size: 50px;" > </i> <br> <br>
+                        <a href="/consultaAutorizados/'.$archivo.'">'.$archivo.'</a>';
                     }
                     echo '</div>';
                 }

@@ -11,6 +11,7 @@ use App\Giro;
 use App\User;
 use App\Graph;
 use App\CellClient;
+use App\DocsRequeridos;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
@@ -79,12 +80,12 @@ class ClientController extends Controller
         $this->validate($request,$rules,$messages);
 
         DB::transaction(function () use($request) {
-            $cliente1 = Client::all()->last();
-            if (!$cliente1) {
-                $cli = 1;
-            } else {
-                $cli = $cliente1->id + 1;
-            }
+            // $cliente1 = Client::all()->last();
+            // if (!$cliente1) {
+            //     $cli = 1;
+            // } else {
+            //     $cli = $cliente1->id + 1;
+            // }
             
         	//dd($request->all());
     	    $cliente = new Client();
@@ -113,7 +114,7 @@ class ClientController extends Controller
             $admin->password =  bcrypt('12345');
             $admin->activo = 1;
             $admin->profile_id = 1;
-            $admin->client_id = $cli;
+            $admin->client_id = $cliente->id;
             $admin->save();
 
             //$user = User::all()->last();
@@ -138,7 +139,7 @@ class ClientController extends Controller
             $nominista->password =  bcrypt('12345');
             $nominista->activo = 1;
             $nominista->profile_id = 3;
-            $nominista->client_id = $cli;
+            $nominista->client_id = $cliente->id;
             $nominista->save();
             //$user2 = User::all()->last();
             $grafica2 = new Graph();
@@ -162,7 +163,7 @@ class ClientController extends Controller
             $fiscalista->password =  bcrypt('12345');
             $fiscalista->activo = 1;
             $fiscalista->profile_id = 2;
-            $fiscalista->client_id = $cli;
+            $fiscalista->client_id = $cliente->id;
             $fiscalista->save();
             //$user3 = User::all()->last();
             $grafica3 = new Graph();
