@@ -36,7 +36,7 @@ class ClientController extends Controller
     public function create() 
     {
     	$empresas = Company::all();
-        $tisanom_cias = Empresa::all();
+        $tisanom_cias = Empresa::orderBy('NOMCIA')->get();
         $giros = Giro::all();
         $celulas = Cell::all();
     	return view('admin.clientes.create')->with(compact('tisanom_cias','empresas','giros', 'celulas'));	// insertar nuevo cliente
