@@ -23,20 +23,12 @@
             <input type="hidden" name="minimoDF" value="{{ \Cache::get('minimoDF') }}">
 
           <div class="" style="">
-         
-            <ul class="tab horizontal" style="width: 70%; padding-left: 24%;">
-              <li class="tab-group-item pestanas" onClick="cambiar_color_over(this)" style="background-color: rgb(179, 215, 243)!important;"><a style="text-decoration: none; padding: 6px;" data-toggle="tab" href="#nomina1">Nómina 1</a></li>
-              <li class="tab-group-item pestanas" onClick="cambiar_color_over(this)"><a style="text-decoration: none;padding: 6px;" data-toggle="tab" href="#nomina2">Nómina 2</a></li>
-              <li class="tab-group-item pestanas" style="width: 16%;" onClick="cambiar_color_over(this)"><a style="text-decoration: none;padding: 6px;" data-toggle="tab" href="#datosg">Datos Generales</a></li>
-            
-               <li class="tab-group-item pestanas" onClick="cambiar_color_over(this)"><a style="text-decoration: none;padding: 6px;" data-toggle="tab" href="#documentos">Documentos</a></li>
-            </ul>
 
             <br><br><br>
             <div class="tab-content">
             
 
-              <div id="nomina1" class="tab-pane fade in active" style="">
+              
             <div class="row">
 
                     <div class="col-md-1 no-pad">
@@ -313,9 +305,9 @@
                     </div>
 
                 </div>
-              </div>
+              
 
-              <div id="nomina2" class="tab-pane fade" style="">
+              
                     <div class="row">
                     <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
@@ -472,11 +464,11 @@
                             </div>                           
                     </div>
                     </div>
-                </div>
+                
 
 
 
-            <div id="datosg" class="tab-pane fade">
+            
                 <div class="row">
                     <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
@@ -762,9 +754,9 @@
                         </div> 
                     </div>
                 </div>
-            </div>
+            
 
-              <div id="datosa" class="tab-pane fade">
+             
                 <div class="row">
                     <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
@@ -783,10 +775,10 @@
 
 
                 </div>
-              </div>
+             
 
 
-    <div id="documentos" class="tab-pane fade">
+    
             <div class="row">
                         <style type="text/css">
                           .files input {
@@ -1109,7 +1101,7 @@
             </div>
 
             </div>
-    </div>
+    
 
               <button class="mediano separation">Registrar</button> 
             <a href="{{url('catalogos/empleados')}}" class="primario1">Cancelar</a>

@@ -101,16 +101,6 @@
     				<label class="label-left" style="font-size: 14px;">Ref. IMSS</label>
     				<input type="text" id="refIMSS" name="RefIMSS" pattern="[A-Za-z]{2}[0-9]{6}" title="Formato: AA999999" value="">
 				</div>
-			<!--Grid.Columns.Item("tipinc").ValueList.Add "EG", "EG"
-			    Grid.Columns.Item("tipinc").ValueList.Add "AT", "AT"
-			    Grid.Columns.Item("tipinc").ValueList.Add "MA", "MA"
-			    Grid.Columns.Item("tipinc").ValueList.Add "MD", "MD"
-			    Grid.Columns.Item("tipinc").ValueList.Add "TR", "TR"
-			    Grid.Columns.Item("tipinc").ValueList.Add "EP", "EP" -->				
-			<!--<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;">
-            		<label class="label-left" style="font-size: 14px;">Tipo</label>
-            		<input type="text" id="tipo" name="Tipo" value="">
-        		</div> -->
             	<div class="form-group label-floating">
                 	<label class="control-label">Tipo de Incapacidad:</label>        		
 	                <select class="form-control" id="tipo" name="Tipo">
@@ -159,7 +149,7 @@
 				</div>
 				<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;">
     				<label class="label-left" style="font-size: 14px;">Ref. IMSS</label>
-    				<input type="text" id="ed_refIMSS" name="RefIMSS" value="">
+    				<input type="text" id="ed_refIMSS" name="RefIMSS" pattern="[A-Za-z]{2}[0-9]{6}" value="">
 				</div>
             	<div class="form-group label-floating">
                 	<label class="control-label">Tipo de Incapacidad:</label>        		

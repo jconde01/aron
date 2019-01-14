@@ -35,13 +35,13 @@ class ProcessController extends Controller
 	}
 
 
-	// Envia notificación al NOMINISTA de la célula para el pre-proceso de la nómina
+	// Envia notificación al GENERALISTA de la célula para el pre-proceso de la nómina
 	public function requestNomina(Request $data)
 	{
 		
     	$selCliente = Session::get('selCliente');
     	$celula = $selCliente->cell_id;
-  		$recipient = User::where('profile_id',User::PERFILES_CELULA['NOMINISTA'])->where('cell_id',$celula)->first();  
+  		$recipient = User::where('profile_id',User::PERFILES_CELULA['GENERALISTA'])->where('cell_id',$celula)->first();  
 
         // crea el mensaje
     	$message = Message::create([

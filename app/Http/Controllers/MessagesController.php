@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Session;
 use App\User;
+use App\Client;
 use App\Message;
+use Illuminate\Http\Request;
 use App\Notifications\MessageSent;
 
 class MessagesController extends Controller
@@ -21,13 +23,23 @@ class MessagesController extends Controller
     }
 
 
-    public function create($value='')
+    public function create()
     {
-    	$users = User::where('id','!=',auth()->id())->where('client_id','!=',0)->get();
+        $selCliente = Session::get('selCliente');
+        $cell_id = auth()->user()->cell_id;
+        if ($selCliente != null) {
+    	   $users = User::where('cell_id','=',$cell_id)
+                        ->whereIn('profile_id', [env("CELL_DIRECTOR_ID",4), env("CELL_QC_ID",6)])->get();  // ->where('id','!=',auth()->id())
+        } else {
+            $clientes = Client::where('cell_id',auth()->user()->cell_id)->select('id')->get();
+            $users = User::whereIn('client_id',$clientes)->get();
+        }
+
         $perfil = auth()->user()->profile_id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
-		return view('messages.create')->with(compact('users', 'navbar'));    // forma para insertar nuevo mensaje
+		return view('messages.create')->with(compact('selCliente','users', 'navbar'));    // forma para insertar nuevo mensaje
     }
+
 
     public function store(Request $request)
     {

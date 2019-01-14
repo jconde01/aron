@@ -12,9 +12,7 @@ class User extends Authenticatable
     use Notifiable;
 
     // Esto no me gusta... Deberia de consultarse los perfiles y buscar sus ID's
-    public const NOMINISTA_CELULA = 6;
-    public const FISCALISTA_CELULA = 7;
-    public const PERFILES_CELULA = array('NOMINISTA' => 6, 'FISCALISTA' => 7);
+    public const PERFILES_CELULA = array('DIRECTOR' => 4, 'GENERALISTA' => 5, 'QC' => 6, 'FISCALISTA' => 7, 'SOPORTE' => 8);
 
 
     /**
@@ -36,7 +34,7 @@ class User extends Authenticatable
     ];
 
     public function client() {
-        return $this->belongsTo(Client::class);
+        return $this->belongsTo(Client::class,'client_id');
     }    
 
     public function profile() {

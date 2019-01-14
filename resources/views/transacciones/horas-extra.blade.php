@@ -52,7 +52,7 @@
         			<th style="width:40%;text-align: center;">Nombre</th>
         			<!-- <th style="width:12%;text-align: center;">Suplencia</th> -->
         			<th style="width:12%;">Fecha</th>
-        			<th style="width:12%;text-align: center;">Unidades</th>
+        			<th style="width:12%;text-align: center;">Cantidad</th>
         			<th style="width:14%;">Cuenta</th>
                     <th style="width:10%;text-align: center;">Acciones</th>
         		</tr>
@@ -97,13 +97,13 @@
         			<input type="date" id="fecha" name="Fecha" value="">
         		</div>
 				<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;">
-    				<label class="label-left" style="font-size: 14px;">Unidades</label>
+    				<label class="label-left" style="font-size: 14px;">Cantidad</label>
     				<input type="text" id="unidades" name="Unidades" value="">
 				</div>
-				<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;">
+<!-- 				<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;">
     				<label class="label-left" style="font-size: 14px;">Cuenta</label>
     				<input type="text" id="cuenta" name="Cuenta" value="">
-				</div>
+				</div> -->
         	</div>
         </div>
         <div class="modal-footer">
@@ -143,13 +143,13 @@
                     <input type="date" id="ed_fecha" name="Fecha" value="">
                 </div>
                 <div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;">
-                    <label class="label-left" style="font-size: 14px;">Unidades</label>
+                    <label class="label-left" style="font-size: 14px;">Cantidad</label>
                     <input type="text" id="ed_unidades" name="Unidades" value="">
                 </div>
-                <div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;">
+<!--                 <div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;">
                     <label class="label-left" style="font-size: 14px;">Cuenta</label>
                     <input type="text" id="ed_cuenta" name="Cuenta" value="">
-                </div>
+                </div> -->
             </div>
         </div>
         <div class="modal-footer">

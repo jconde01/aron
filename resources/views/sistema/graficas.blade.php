@@ -15,12 +15,9 @@
                 <form method="post" action="{{ url('/sistema/home') }}">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <table class="table" style="width: 400px; margin: auto;">
-                         <tr>
-                            <th>Mensaje de Bienvenida</th>
-                            <td class="text-center"><input type="hidden" name="mensaje" value="0"><input type="checkbox" name="mensaje" value="1" {{ $graficas->mensaje? 'checked':'' }}></td>    
-                        </tr>
+                        
                         <tr>
-                            <th>Indicadores</th>
+                            <th>Faltas y Horas Extras</th>
                             <td class="text-center"><input type="hidden" name="grafica1" value="0"><input type="checkbox" name="grafica1" value="1" {{ $graficas->grafica1? 'checked':'' }}></td>    
                         </tr>
                                                      

@@ -5,8 +5,8 @@
     <nav class="navbar navbar-expand navbar-dark flex-column flex-md-row bd-navbar" style="margin-top: 10px; margin: auto; margin-bottom: 10px;  border-radius: 0px!important; width: 100%!important; ">  
       <div class="container" id="cabecera" style="width: 84%;">
           <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-main">
-                  <span class="sr-only">Toggle navigation</span>
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-main" style="color: black!important;">
+                  <i class="fas fa-bars" style="font-size: 35px;"></i>
               </button>
               <a class="navbar-brand" href="{{ url('/home') }}"><img src="{{ asset('img/Aron-pegado2.png') }}" style="width:127px;height:30px;"></a>
           </div>
@@ -14,7 +14,7 @@
           <div class="collapse navbar-collapse border navvar cabecera" id="navigation-main" >            
               <ul class="nav navbar-nav navbar-right">
                   @guest
-                      <li><a class="nav-link" href="{{ route('login') }}">{{ __('Ingresar') }}</a></li>
+                      <li><a class="nav-link" href=""data-toggle="modal" data-target="#login">{{ __('Ingresar') }}</a></li>
                   @else
                       <li style="border-right: 1px rgb(179, 215, 243) solid;" rel="tooltip" title="Notificaciones">
                         <a href="{{ url('/notificaciones') }}">

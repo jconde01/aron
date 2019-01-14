@@ -22,6 +22,12 @@
 	    			{{ csrf_field() }}
 		    		<div class="panel-body">
 		    			<div class="form-group {{ $errors->has('recipient_id')? 'has-error':'' }} " >
+		    			@if ($selCliente != null) 
+
+		    				<input type="hidden" name="recipient_id" value="{{ $users[0]->id }}">
+
+		    			 @else 
+
 		    				<select name="recipient_id" class="form-control">
 		    					<option value="">Selecciona el usuario</option>
 		    					@foreach($users as $user)
@@ -29,6 +35,8 @@
 		    					@endforeach
 		    				</select>
 			    			{!! $errors->first('recipient_id',"<span class=help-block>:message</span>"); !!} 
+
+			    		@endif
 		    			</div>
 		    			<div class="form-group {{ $errors->has('body')? 'has-error':'' }} " >
 			    			<textarea name="body" class="form-control" placeholder="escribe aqui tu mensaje"></textarea>
