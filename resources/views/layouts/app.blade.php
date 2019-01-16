@@ -52,8 +52,10 @@
     </head>
 
     <body class="@yield('body-class')">
-        @include('includes.header')
-        @yield('content')
+        <div id="aron-container" style="margin-left: 225px;">
+            @include('includes.header')
+            @yield('content')
+        </div>
     </body>     
 
     
@@ -73,31 +75,38 @@
 
     <!--  Plugin for the Datepicker, full documentation here: http://www.eyecon.ro/bootstrap-datepicker/ -->
     <script type="text/javascript" src="{{ asset('/js/bootstrap-datepicker.js') }}"></script>
+    <!--  Plugin for the sidebar menu -->    
     <script type="text/javascript" src="{{ asset('/js/hc-offcanvas-nav.js') }}"></script>
-<script type="text/javascript">
-    $(document).ready( function () {
-        $('#table_id').DataTable();
-    });
+    <script type="text/javascript">
+        $(document).ready( function () {
+            $('#table_id').DataTable();
+        });
 
-    (function($) {
-        var $main_nav = $('#main-nav');
-        var $toggle = $('.toggle');
+        (function($) {
+            var $main_nav = $('#main-nav');
+            var $toggle = $('.toggle');
+            var $cntn = $('#aron-container');
 
-        var defaultData = {
-            maxWidth: false,
-            customToggle: $toggle,
-            labelClose: 'Salir',
-            levelTitles: true,
-            levelOpen:'expand', 
-            levelSpacing:10,
-            pushContent: '#container'
-        };
+            var defaultData = {
+                navTitle : '<a href="/home" style="padding: 0px;"><img src="/img/Aron-pegado2.png" style="width:80%;height:100%;"></a>',
+                closeOnClick : false,
+                customToggle: '.toggle',                
+                maxWidth: false,
+                labelClose: 'Salir',
+                levelTitles: true,
+                levelOpen: 'expand', 
+                levelSpacing: 20,
+                disableBody: false,
+                insertClose : false,
+                pushContent: false
+            };
 
-        // call plugin
-        var Nav = $main_nav.hcOffcanvasNav(defaultData);
-      })(jQuery);    
+            // call plugin
+            var Nav = $main_nav.hcOffcanvasNav(defaultData);
+            Nav.open();
+          })(jQuery);    
 
-</script> 
+    </script> 
     @yield('jscript')    
 </html>
 

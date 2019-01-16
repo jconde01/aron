@@ -6,20 +6,13 @@
     <div>
       <div class="section text-center">
         <h2 class="titulo">Editar Info del Empleado</h2>
-        <br>
         
         <form method="POST" action=" {{url('/catalogos/empleados/'.$empl->EMP.'/edit')}} " enctype="multipart/form-data"> 
             {{ csrf_field() }}
           <div class="" style="">           
-            <ul class="tab horizontal">
-              <li class="tab-group-item pestanas" onClick="cambiar_color_over(this)" style="background-color: rgb(179, 215, 243)!important;"><a style="text-decoration: none;padding: 6px;" data-toggle="tab" href="#nomina1">Nomina 1</a></li>
-              <li class="tab-group-item pestanas" onClick="cambiar_color_over(this)"><a style="text-decoration: none;padding: 6px;" data-toggle="tab" href="#nomina2">Nomina 2</a></li>
-              <li class="tab-group-item pestanas" onClick="cambiar_color_over(this)" style="width: 45%;"><a style="text-decoration: none;padding: 6px;" data-toggle="tab" href="#datosg">Datos Generales</a></li>
-              <!-- <li class="tab-group-item pestanas" onClick="cambiar_color_over(this)"><a style="text-decoration: none;padding: 6px 3px 6px 3px;" data-toggle="tab" href="#datosa">Datos Afore</a></li> -->
-            </ul>
-            <br><br><br>
+            <br><br>
             <div class="tab-content">
-              <div id="nomina1" class="tab-pane fade in active" style="">
+              
             <div class="row">
 
                     <div class="col-md-1 no-pad">
@@ -465,9 +458,9 @@
                     </div>
 
                 </div>
-              </div>
+              
 
-              <div id="nomina2" class="tab-pane fade" style="">
+              
                     <div class="row">
                     <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
@@ -585,8 +578,15 @@
 
                     <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
-                            <div class="label-left"><p>Sueldo:</p></div>
+                            <div class="label-left"><p>Sueldo Diario:</p></div>
                             <input type="number" name="SUELDO" value="{{ number_format($empl->SUELDO, 2, '.', '') }}" readonly="readonly" class="bloqueado">
+                        </div> 
+                    </div>
+
+                    <div class="col-md-4 no-pad">
+                        <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
+                            <div class="label-left"><p>Sueldo Integro Mensual:</p></div>
+                            <input type="number" id="SueldoIn" step="0.01" name="NetoMensual" max="999999999" value="{{ number_format($empl->NetoMensual, 2, '.', '') }}">
                         </div> 
                     </div>
 
@@ -631,9 +631,9 @@
                             </div>               
                     </div>
                     </div>
-                </div>
+                
 
-            <div id="datosg" class="tab-pane fade">
+            
                 <div class="row">
                     <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
@@ -781,7 +781,7 @@
                 
                     
 
-                    <div class="col-md-12 no-pad" style="border-top: 2px #F0F0F0 solid; margin-bottom: 10px;">                   
+                    <div class="col-md-12 no-pad" style="border-top: 2px #F0F0F0 solid; margin-bottom: 15px; margin-top: 15px;">                   
                     </div>
 
                     <div class="col-md-4 no-pad" style="">
@@ -1008,9 +1008,9 @@
                         </div> 
                     </div>
                 </div>
-            </div>
+            
 
-              <div id="datosa" class="tab-pane fade">
+              
                 <div class="row">
                     <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
@@ -1029,7 +1029,7 @@
                     </div>
 
                 </div>
-            </div>
+            
               <button class="mediano separation">Actualizar</button> 
             <a href="{{url('catalogos/empleados')}}" class="primario1">Cancelar</a>
             </form>

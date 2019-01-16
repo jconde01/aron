@@ -29,8 +29,176 @@ h6{
     text-align-last: right;
 
 }
+#tab1
+{
+  width: 20%;
+  border-radius: 0px;  
+  background-color: white!important; 
+  border-bottom: 0px;
+  border-left: 2px rgb(179, 215, 243) solid; 
+  border-right: 2px rgb(179, 215, 243) solid;
+  border-top: 2px rgb(179, 215, 243) solid;
+}
+#a1
+{
+  text-decoration: none; 
+  padding: 7px 46px 7px 46px!important; 
+}
+#tab2
+{
+  width: 20%; 
+  border-top: 0px; 
+  border-left: 0px; 
+  border-right: 0px; 
+  border-bottom: 2px rgb(179, 215, 243) solid;
+  border-radius: 0px; 
+  background-color: white!important;
+}
+#a2
+{
+  text-decoration: none;
+  padding: 7px 10px 7px 10px!important;  
+}
+#tab3
+{
+  width: 20%;
+  background-color: white!important; 
+  border-top: 0px; 
+  border-left: 0px; 
+  border-right: 0px; 
+  border-bottom: 2px rgb(179, 215, 243) solid;
+  border-radius: 0px; 
+}
+#a3
+{
+  text-decoration: none;
+  padding: 7px 60px 7px 60px!important;  
+}
+#tab4
+{
+  width: 20%; 
+  border-top: 0px; 
+  border-left: 0px; 
+  border-right: 0px; 
+  border-bottom: 2px rgb(179, 215, 243) solid;
+  border-radius: 0px; 
+  background-color: white!important; 
+}
+#a4
+{
+  text-decoration: none;
+  padding: 7px 39px 7px 39px!important;  
+}
 table {
   text-align: left;
+}
+
+@media screen and (max-width: 1700px) {
+  .tabmovil{
+    
+  }
+  #a1{
+    padding-left: 15%!important;
+    padding-right: 15%!important;
+  }
+  #a2{
+    padding-left: 0px!important;
+    padding-right: 0px!important;
+
+  }
+  #tab1,#tab2,#tab3,#tab4
+  {
+    width: 30%;
+  }
+  #a3
+  {
+    padding-left: 22%!important;
+    padding-right: 22%!important;
+  }
+  #a4
+  {
+    padding-left: 13%!important;
+    padding-right: 13%!important;
+  }
+
+}
+
+
+@media screen and (max-width: 1300px) {
+  #a1{
+    padding-left: 11%!important;
+    padding-right: 11%!important;
+    font-size: 16px;
+  }
+  #a2{
+    padding-left: 1px!important;
+    padding-right: 1px!important;
+    font-size: 16px;
+
+  }
+  #tab1,#tab2,#tab3,#tab4
+  {
+    width: 30%;
+  }
+  #a3
+  {
+    padding-left: 19%!important;
+    padding-right: 19%!important;
+    font-size: 16px;
+  }
+  #a4
+  {
+    padding-left: 9%!important;
+    padding-right: 9%!important;
+    font-size: 16px;
+  }
+
+}
+
+@media screen and (max-width: 500px) {
+  #a1{
+    padding-left: 0%!important;
+    padding-right: 0%!important;
+    font-size: 11px!important;
+  }
+  #a2{
+    padding-left: 0px!important;
+    padding-right: 0px!important;
+    font-size: 8.7px!important;
+
+  }
+  #tab1,#tab2,#tab3,#tab4
+  {
+    width: 30%;
+  }
+  #a3
+  {
+    padding-left: 14%!important;
+    padding-right: 14%!important;
+    font-size: 10px!important;
+  }
+  #a4
+  {
+    padding-left: 7%!important;
+    padding-right: 7%!important;
+    font-size: 9px!important;
+  }
+  .lis
+  {
+    
+    padding-left: 40%!important;
+    padding-right: 44%!important;
+  }
+
+}
+
+@media screen and (max-width: 767px) {
+  .lis
+  {
+   
+    padding-left: 43%;
+    padding-right: 44%;
+  }
 }
  
 @media screen and (max-width: 1200px) {
@@ -44,13 +212,11 @@ table {
   }
 }
  
+ 
 @media only screen and (min-width: 992px) and (max-width: 1172px){
     #cabecera{
         
         max-width: 800px !important;
-    }
-    .border{
-        border: 1px blue solid!important;
     }
     .navvar{
         margin: auto !important;

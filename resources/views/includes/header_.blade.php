@@ -8,15 +8,15 @@
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-main" style="color: black!important;">
                   <i class="fas fa-bars" style="font-size: 35px;"></i>
               </button>
-              <a class="navbar-brand" href="{{ url('/home') }}"><img src="{{ asset('img/Aron-pegado2.png') }}" style="width:127px;height:30px;"></a>
+<!--               <a class="navbar-brand" href="{{ url('/home') }}"><img src="{{ asset('img/Aron-pegado2.png') }}" style="width:127px;height:30px;"></a> -->
           </div>
 
           <div class="collapse navbar-collapse border navvar cabecera" id="navigation-main" >            
-              <ul class="nav navbar-nav navbar-right border">
+              <ul class="nav navbar-nav navbar-right">
                   @guest
                       <li><a class="nav-link" href=""data-toggle="modal" data-target="#login">{{ __('Ingresar') }}</a></li>
                   @else
-                      <li style="border-right: 1px rgb(179, 215, 243) solid;"  rel="tooltip" title="Notificaciones">
+                      <li style="border-right: 1px rgb(179, 215, 243) solid;" rel="tooltip" title="Notificaciones">
                         <a href="{{ url('/notificaciones') }}">
                           <i class="fas fa-bell" style="font-size: 27px;"></i> 
                           @if ($count = Auth::user()->unreadnotifications()->count())
@@ -25,7 +25,7 @@
                         </a>
                       </li>
 
-                      <li class="dropdown lis" style="border-right: 1px rgb(179, 215, 243) solid;" rel="tooltip" title="Perfil">
+                      <li class="dropdown" style="border-right: 1px rgb(179, 215, 243) solid;" rel="tooltip" title="Perfil">
                           <a id="navbarDropdown" class="nav-link dropdown-toggle" href="{{ url('/sistema/usuarios/'.Auth::user()->id.'/edit') }}" role="button" aria-haspopup="true" aria-expanded="false" v-pre style="width: 170px; padding-top: 7px; height: 58px;">
                             
                             <?php 
@@ -41,7 +41,7 @@
                       </li>
 
 
-                        <li class="dropdown lis" style="border-right: 1px rgb(179, 215, 243) solid;" rel="tooltip" title="Preferencias">
+                        <li class="dropdown" style="border-right: 1px rgb(179, 215, 243) solid;" rel="tooltip" title="Preferencias">
                             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre style="width: 90px;">
                               <i class="fas fa-cogs" style="font-size: 27px;"></i>
                               <span class="caret"></span>

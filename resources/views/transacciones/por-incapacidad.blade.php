@@ -6,7 +6,7 @@
 @section('content')
 <!-- {!! Session::get("message", '') !!} -->
 <div class="container" style="border:1px grey solid;">
-	<h3>Inciencias por incapacidad</h3>
+	<h3>Incidencias por incapacidad</h3>
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
@@ -101,18 +101,10 @@
     				<label class="label-left" style="font-size: 14px;">Ref. IMSS</label>
     				<input type="text" id="refIMSS" name="RefIMSS" pattern="[A-Za-z]{2}[0-9]{6}" title="Formato: AA999999" value="">
 				</div>
-            	<div class="form-group label-floating">
-                	<label class="control-label">Tipo de Incapacidad:</label>        		
-	                <select class="form-control" id="tipo" name="Tipo">
-		                <option value="0" selected>Seleccione...</option>
-		                <option value="EG">EG</option>
-		                <option value="AT">AT</option>
-		                <option value="MA">MA</option>
-		                <option value="MD">MD</option>
-		                <option value="TR">TR</option>
-		                <option value="EP">EP</option>	                
-	                </select>
-	            </div>
+				<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;">
+    				<label class="label-left" style="font-size: 14px;">Tipo de Incapacidad</label>
+    				<input type="text" id="tipo" name="Tipo" readonly value="">
+				</div>				
         	</div>
         </div>
         <div class="modal-footer">
@@ -151,18 +143,10 @@
     				<label class="label-left" style="font-size: 14px;">Ref. IMSS</label>
     				<input type="text" id="ed_refIMSS" name="RefIMSS" pattern="[A-Za-z]{2}[0-9]{6}" value="">
 				</div>
-            	<div class="form-group label-floating">
-                	<label class="control-label">Tipo de Incapacidad:</label>        		
-	                <select class="form-control" id="ed_tipo" name="Tipo">
-		                <option value="0" selected>Seleccione...</option>
-		                <option value="EG">EG</option>
-		                <option value="AT">AT</option>
-		                <option value="MA">MA</option>
-		                <option value="MD">MD</option>
-		                <option value="TR">TR</option>
-		                <option value="EP">EP</option>	                
-	                </select>
-	            </div>
+				<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;">
+    				<label class="label-left" style="font-size: 14px;">Tipo de Incapacidad</label>
+    				<input type="text" id="ed_tipo" name="Tipo" readonly value="">
+				</div>	
         	</div>
         </div>
         <div class="modal-footer">
@@ -183,7 +167,12 @@
 		}
 	});
 
+	// INCAPACIDADES
 	const MATERNIDAD = "400";
+	const TRANSITO = "401";
+	const ENFERMEDAD_PROF = "402";
+	const ACCIDENTE = "403";
+	const ENFERMEDAD_GRAL = "404";
 	const CONINCAP1 = "400";
 	const CONINCAP2 = "401";
 	const CONINCAP3 = "402";
@@ -216,7 +205,7 @@
 	var varClave;
 	var totUnidades;
 	var fechaIncidencia;
-	var pideFolioIMMS = [CONINCAP1, CONINCAP2, CONINCAP3, CONINCAP4, CONINCAP5];
+	var pideFolioIMMS = [MATERNIDAD, TRANSITO, ENFERMEDAD_PROF, ACCIDENTE, ENFERMEDAD_GRAL];
 
 	// function compare_dates(date1,date2,date3){
 	// 	if (date3 >= date1 && date3 <= date2) return false
@@ -293,17 +282,34 @@
     	if ( concepto != 0 && periodo != 0 ) {
     		$('#empleado').val(0);
     		$('#dias').val(0);
+    		$('#refIMSS').val('');
+    		$('#tipo').val('');
     		// Toma la fecha inicial del período
 			var fechaIni = $('.pdo>option:selected').data('fi');
 			fechaIncidencia.value = fechaIni;
-			if (concepto == MATERNIDAD) {
-				$('#tipo').val('MA');
-			}
 			// Si no es una Incapacidad, 
 			// Elimina del modal de captura los camps de RefIMSS y Tipo
 			if (!pideFolioIMMS.includes(concepto)) {
 				$("#nuevo .input-data .form-group")[2].innerHTML = '';
 				$("#nuevo .input-data .form-group")[3].innerHTML = '';
+			} else {
+				switch (concepto) {
+					case MATERNIDAD:
+						$('#tipo').val('MA');
+						break;
+					case TRANSITO:
+						$('#tipo').val('TR');
+						break;
+					case ENFERMEDAD_PROF:
+						$('#tipo').val('EP');
+						break;
+					case ACCIDENTE:
+						$('#tipo').val('AT');
+						break;
+					case ENFERMEDAD_GRAL:
+						$('#tipo').val('EG');
+						break;
+				}			
 			}			
         	$("#nuevo").modal();
         } else {
@@ -327,7 +333,8 @@
 		tipo = '';
 		if (pideFolioIMMS.includes(concepto)) {
 			refIMSS = $('#refIMSS').val();
-			tipo = $('#tipo>option:selected').val();
+			//tipo = $('#tipo>option:selected').val();
+			tipo = $('#tipo').val();
 		}
 
 		if (validaNuevo()) {
@@ -376,11 +383,11 @@
 				case CONINCAP12:
 					varClave = 5;
 					break;
-				case CONINCAP1:
-				case CONINCAP2:
-				case CONINCAP3:
-				case CONINCAP4:
-				case CONINCAP5:
+				case MATERNIDAD:
+				case TRANSITO:
+				case ENFERMEDAD_PROF:
+				case ACCIDENTE:
+				case ENFERMEDAD_GRAL:
 				case CONINCAP10:
 				case CONINCAP11:
 					varClave = 12;
@@ -450,7 +457,8 @@
 		var dias = $('#ed_dias').val();
 		var fecha = $('#ed_fecha').val();
 		var refIMSS = $('#ed_refIMSS').val();
-		var tipo = $('#ed_tipo>option:selected').val();
+		//var tipo = $('#ed_tipo>option:selected').val();
+		var tipo = $('#ed_tipo').val();
 		var row_index = rowElem.index();
 		//console.log(row_index);
 
@@ -585,7 +593,7 @@
         return bOK;
 	}
 
-	function validaEdicion(rowNum) {
+	function validaEdicion(rowNum, emp, dias, fecha, refIMSS) {
 		var bOK = true;
 		var rowLength = tabla.rows.length;
 
@@ -603,7 +611,7 @@
 					}
 				}
 			}
-		    if (row.cells[0].firstChild.value == empleado) {
+		    if (row.cells[0].firstChild.value == emp) {
 
 		    	if (rowNum != i) {
 					var fechaStr = date2Str(fecha);

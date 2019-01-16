@@ -1,5 +1,5 @@
 @extends('layouts.app')
- 
+  
 @section('title','Aron | Menú')
 @section('body-class','')
 
@@ -25,19 +25,19 @@
 		<div class="col-md-8 col-md-offset-2" style="">  
             <ul class="tab horizontal" style=" width: 100%; display: flex; justify-content: center;">
             @if ($graficas->grafica1==1)
-              <li class="tab-group-item pestanas" onClick="cambiar_color_over(this)" style="width: 20%; border-radius: 0px;  background-color: white!important; border-bottom: 0px;border-left: 2px rgb(179, 215, 243) solid; border-right: 2px rgb(179, 215, 243) solid;border-top: 2px rgb(179, 215, 243) solid; "><a style="text-decoration: none; padding: 7px 46px 7px 46px!important; " data-toggle="tab" href="#nomina1">Faltas y Horas Extras</a></li>
+              <li class="tab-group-item pestanas" onClick="cambiar_color_over(this)" id="tab1"><a class="tabmovil" data-toggle="tab" id="a1" href="#nomina1">Faltas y Horas Extras</a></li>
             @endif
 
             @if ($graficas->grafica2==1)
-              <li class="tab-group-item pestanas" onClick="cambiar_color_over(this)" style="width: 20%; border-top: 0px; border-left: 0px; border-right: 0px; border-bottom: 2px rgb(179, 215, 243) solid;border-radius: 0px; background-color: white!important;{{ $graficas->grafica1!==1? 'border-bottom: 0px;border-left: 2px rgb(179, 215, 243) solid; border-right: 2px rgb(179, 215, 243) solid;border-top: 2px rgb(179, 215, 243) solid;':'' }}"><a style="text-decoration: none;padding: 7px 10px 7px 10px!important;  " data-toggle="tab" href="#nomina2">Distribución de Departamentos</a></li>
+              <li class="tab-group-item pestanas" onClick="cambiar_color_over(this)" id="tab2" style="{{ $graficas->grafica1!==1? 'border-bottom: 0px;border-left: 2px rgb(179, 215, 243) solid; border-right: 2px rgb(179, 215, 243) solid;border-top: 2px rgb(179, 215, 243) solid;':'' }}"><a class="tabmovil" id="a2" data-toggle="tab" href="#nomina2">Distribución Departamentos</a></li>
             @endif
 
             @if ($graficas->grafica3==1)
-              <li class="tab-group-item pestanas" style="width: 20%;background-color: white!important; border-top: 0px; border-left: 0px; border-right: 0px; border-bottom: 2px rgb(179, 215, 243) solid;border-radius: 0px; {{ $graficas->grafica1!==1 && $graficas->grafica2!==1? 'border-bottom: 0px;border-left: 2px rgb(179, 215, 243) solid; border-right: 2px rgb(179, 215, 243) solid;border-top: 2px rgb(179, 215, 243) solid;':'' }}" onClick="cambiar_color_over(this)"><a style="text-decoration: none;padding: 7px 60px 7px 60px!important;  " data-toggle="tab" href="#datosg">Costo de Nómina</a></li>
+              <li class="tab-group-item pestanas" id="tab3" style="{{ $graficas->grafica1!==1 && $graficas->grafica2!==1? 'border-bottom: 0px;border-left: 2px rgb(179, 215, 243) solid; border-right: 2px rgb(179, 215, 243) solid;border-top: 2px rgb(179, 215, 243) solid;':'' }}" onClick="cambiar_color_over(this)"><a class="tabmovil" id="a3" data-toggle="tab" href="#datosg">Costo de Nómina</a></li>
             @endif
 
             @if ($graficas->grafica4==1)
-               <li class="tab-group-item pestanas" style="width: 20%; border-top: 0px; border-left: 0px; border-right: 0px; border-bottom: 2px rgb(179, 215, 243) solid;border-radius: 0px; background-color: white!important; {{ $graficas->grafica1!==1 && $graficas->grafica2!==1 && $graficas->grafica3!==1? 'border-bottom: 0px;border-left: 2px rgb(179, 215, 243) solid; border-right: 2px rgb(179, 215, 243) solid;border-top: 2px rgb(179, 215, 243) solid;':'' }}" onClick="cambiar_color_over(this)"><a style="text-decoration: none;padding: 7px 39px 7px 39px!important;  " data-toggle="tab" href="#datosa">Distribucion de Edades</a></li>
+               <li class="tab-group-item pestanas" id="tab4" style="{{ $graficas->grafica1!==1 && $graficas->grafica2!==1 && $graficas->grafica3!==1? 'border-bottom: 0px;border-left: 2px rgb(179, 215, 243) solid; border-right: 2px rgb(179, 215, 243) solid;border-top: 2px rgb(179, 215, 243) solid;':'' }}" onClick="cambiar_color_over(this)"><a class="tabmovil" id="a4" data-toggle="tab" href="#datosa">Distribucion de Edades</a></li>
             </ul>
             @endif
 

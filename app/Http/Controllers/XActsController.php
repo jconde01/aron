@@ -267,7 +267,7 @@ class XActsController extends Controller
 	            //     End If
 	            // End If
 
-				if ($data->RefIMSS != null) {
+				if ($data->refIMSS[$key] != null) {
 					try {
 						$incapa = Incapa::where('EMP',$emp)
 									->where('REFIMSS',$data->refIMSS[$key])

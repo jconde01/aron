@@ -273,6 +273,7 @@
     $("#btnNuevo").click(function(){
 		concepto = $('.cpto').val();
 		if (concepto != 0) {
+    		$('#empleado').val(0);
 			if (document.getElementById("pdo").disabled) {
 				periodo = 0;
 				$("#nuevo").modal();	

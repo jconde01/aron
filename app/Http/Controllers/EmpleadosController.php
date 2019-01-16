@@ -243,6 +243,7 @@ class EmpleadosController extends Controller
                                         $emp->DESINFO = $request->input('DESINFO');
                                         $emp->SUELDO = $request->input('SUELDO');
                                         $emp->VARIMSS = $request->input('VARIMSS');
+                                        $emp->NetoMensual = $request->input('NetoMensual');
                                         $emp->INTEG = $request->input('INTEG');
                                         $emp->INTIV = $request->input('INTIV');
                                         $emp->PRESDEC = $request->input('PRESDEC');
@@ -878,6 +879,7 @@ class EmpleadosController extends Controller
                                         $emp->DESINFO = $request->input('DESINFO');
                                         $emp->SUELDO = $request->input('SUELDO');
                                         $emp->VARIMSS = $request->input('VARIMSS');
+                                        $emp->NetoMensual = $request->input('NetoMensual');
                                         $emp->INTEG = $request->input('INTEG');
                                         $emp->INTIV = $request->input('INTIV');
                                         $emp->PRESDEC = $request->input('PRESDEC');
@@ -1368,6 +1370,7 @@ class EmpleadosController extends Controller
                 $emp->VARIMSS = 0.01;
                 $emp->INTEG = 0.01;
                 $emp->INTIV = 0.01;
+                $emp->NetoMensual = $request->input('NetoMensual');
                 $emp->PRESDEC = $request->input('PRESDEC');
                 $emp->NOCRED = $request->input('NOCRED');
                 $emp->save();
@@ -2010,6 +2013,7 @@ class EmpleadosController extends Controller
         }
         $cliente = Session::get('selCliente');
         $rfc_cliente = CiasNo::first()->RFCCIA;
+        $nombre_emp = Empleado::where('EMP', $emp)->get()->first()->NOMBRE;
         $rfc_empleado0 = Empleado::where('EMP',$emp)->first()->RFC;
         $rfc_empleado1=substr ($rfc_empleado0, 0,4);
         $rfc_empleado2=substr ($rfc_empleado0, 5,6);
@@ -2020,7 +2024,7 @@ class EmpleadosController extends Controller
         //$ruta = '/utilerias/Nominas/'.$celula_empresa.'/'.$rfc_cliente.'/empleados/'.$rfc_empleado.'/documentos/curriculum.pdf';
         //dd($ruta); 
 
-        return view('catalogos.empleados.documentos')->with(compact('navbar','emp','listdoc','docsReque')); 
+        return view('catalogos.empleados.documentos')->with(compact('navbar','emp','listdoc','docsReque','nombre_emp')); 
     }
     
      public function visualizar($documento)

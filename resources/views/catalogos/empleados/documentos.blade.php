@@ -7,7 +7,7 @@
 <div class="main main-raised"> 
     <div class="">   
       <div class="section text-center">
-        <h2 class="titulo">Documentos del Empleado</h2>
+        <h2 class="titulo">Documentos de {{$nombre_emp}}</h2>
         <style type="text/css">
           .files input {
             outline: 2px dashed #92b0b3;

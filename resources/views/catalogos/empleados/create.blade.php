@@ -8,7 +8,6 @@
  
       <div class="section text-center">
         <h2 class="titulo">Registrar Nuevo Empleado</h2>
-        <br>
         @if ($errors->any())
             <div class="alert alert-danger">
                 <ul>
@@ -24,7 +23,7 @@
 
           <div class="" style="">
 
-            <br><br><br>
+            <br><br>
             <div class="tab-content">
             
 
@@ -418,14 +417,14 @@
                         </div> 
                     </div>
 
-                    @if ($AsimiFiscal==1)
+                    
                      <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Sueldo Integro Mensual:</p></div>
                             <input type="number" id="SueldoIn" step="0.01" name="NetoMensual" max="999999999" value="{{ old('NetoMensual') }}">
                         </div> 
                     </div>
-                    @endif
+                   
 
                     <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
@@ -594,7 +593,7 @@
                         
                     </div>
 
-                    <div class="col-md-12 no-pad" style="border-top: 2px #F0F0F0 solid; margin-bottom: 10px;">                     
+                    <div class="col-md-12 no-pad" style="border-top: 2px #F0F0F0 solid; margin-bottom: 15px;margin-top: 13px;">                     
                     </div>
 
                     <div class="col-md-4 no-pad" style="">
@@ -833,10 +832,10 @@
                           }
                         </style>
 
-                        <div style=" height: 2400px;  width: 100%">
-            
-                  <div class="col-md-6" style="margin-bottom: 0px;  height: 310px;">
-                            <div style="width: 51%; float: left;">
+                        <div style="   width: 100%">
+                @if($docsReque->REQUERIDO1==1)
+                  <div class="col-md-4" style="margin-bottom: 0px;  height: 310px;">
+                            <div style="width: 100%; float: left;">
                             <div class="form-group files">
                               <label>Sube el documento de acta de nacimiento</label>
                               <input type="file" class="form-control cargador" name="nacimiento" multiple="" @if($docsReque->REQUERIDO1==1) {{'required'}}@endif>
@@ -844,15 +843,14 @@
                             @if ($docsReque->FECHAREQUE1==1)        
                             <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechanaci" required>
                             @endif
-                          </div>
-                         
-                           <div style="width: 49%; float: right;"><img src="{{asset('/img/acta.jpg')}}" width="200" height="250"><br><br>
-                            </div> 
+                          </div>     
+                           
                   </div>
-
-                   <div class="col-md-6" style="margin-bottom: 0px;  height: 310px;">
+                @endif 
+                @if($docsReque->REQUERIDO2==1)
+                   <div class="col-md-4" style="margin-bottom: 0px;  height: 310px;">
                       
-                             <div style="width: 51%; float: left;">
+                             <div style="width: 100%; float: left;">
                             <div class="form-group files">
                               <label>Sube el documento de RFC</label>
                               <input type="file" class="form-control cargador" name="rfc" multiple="" @if($docsReque->REQUERIDO2==1) {{'required'}}@endif>
@@ -861,14 +859,13 @@
                             <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fecharfc" required>
                            @endif
                           </div>
-                         
-                           <div style="width: 49%; float: right;"><br><br><img src="{{asset('/img/rfc.jpg')}}" width="250" height="190"><br><br><br>
-                            </div> 
-                  </div> 
-
-                   <div class="col-md-6" style="margin-bottom: 0px;  height: 310px;">
+                        
+                  </div>
+                @endif 
+                @if($docsReque->REQUERIDO3==1)
+                   <div class="col-md-4" style="margin-bottom: 0px;  height: 310px;">
                       
-                             <div style="width: 51%; float: left;">
+                             <div style="width: 100%; float: left;">
                             <div class="form-group files">
                               <label>Sube el documento de CURP</label>
                               <input type="file" class="form-control cargador" name="curp" multiple="" @if($docsReque->REQUERIDO3==1) {{'required'}}@endif>
@@ -877,13 +874,12 @@
                             <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechacurp" required>
                             @endif
                           </div>
-                           <div style="width: 49%; float: right;"><br><br><img src="{{asset('/img/curp.jpg')}}" width="250" height="150"><br><br>
-                            </div> 
-                          
+                                 
                   </div> 
-
-                    <div class="col-md-6" style="margin-bottom: 0px;  height: 310px;">  
-                      <div style="width: 51%; float: left;">
+                @endif
+                @if($docsReque->REQUERIDO4==1)
+                    <div class="col-md-4" style="margin-bottom: 0px;  height: 310px;">  
+                      <div style="width: 100%; float: left;">
                         <div class="form-group files">
                           <label>Sube el documento de Comprobante Domiciliario</label>
                           <input type="file" class="form-control cargador" name="comprobante" multiple=""@if($docsReque->REQUERIDO4==1) {{'required'}}@endif>
@@ -891,18 +887,14 @@
                         @if ($docsReque->FECHAREQUE4==1)        
                           <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechacompro" required>
                         @endif
-                      </div>
-                     
-                        <div style="width: 49%; float: right;"><img src="{{asset('/img/cfe.jpg')}}" width="200" height="250">
-                          <br><br>
-                          
-                        </div> 
+                      </div>     
                      
                     </div>
+                @endif
 
-
-                    <div class="col-md-6" style="margin-bottom: 0px;  height: 310px;">  
-                      <div style="width: 51%; float: left;">
+                @if($docsReque->REQUERIDO5==1)
+                    <div class="col-md-4" style="margin-bottom: 0px;  height: 310px;">  
+                      <div style="width: 100%; float: left;">
                         <div class="form-group files">
                           <label>Sube el documento de Solicitud de Empleo</label>
                           <input type="file" class="form-control cargador" name="empleo" multiple=""@if($docsReque->REQUERIDO5==1) {{'required'}}@endif>
@@ -911,16 +903,12 @@
                           <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechaempleo" required>
                         @endif
                       </div>
-                      
-                        <div style="width: 49%; float: right;"><img src="{{asset('/img/solicitud.jpg')}}" width="200" height="250">
-                          <br><br>
-                          
-                        </div> 
-                      
+                        
                     </div>
-
-                    <div class="col-md-6" style="margin-bottom: 0px;  height: 310px;">  
-                      <div style="width: 51%; float: left;">
+                @endif
+                @if($docsReque->REQUERIDO6==1)
+                    <div class="col-md-4" style="margin-bottom: 0px;  height: 310px;">  
+                      <div style="width: 100%; float: left;">
                         <div class="form-group files">
                           <label>Sube el documento de IFE o INE</label>
                           <input type="file" class="form-control cargador" name="ine" multiple=""@if($docsReque->REQUERIDO6==1) {{'required'}}@endif>
@@ -930,15 +918,11 @@
                         @endif
                       </div>
                       
-                        <div style="width: 49%; float: right;"><img src="{{asset('/img/ine.jpg')}}" width="240" height="250">
-                          <br><br>
-                         
-                        </div> 
-                      
                     </div>
-
-                    <div class="col-md-6" style="margin-bottom: 0px;  height: 310px;">  
-                      <div style="width: 51%; float: left;">
+                @endif
+                @if($docsReque->REQUERIDO7==1)
+                    <div class="col-md-4" style="margin-bottom: 0px;  height: 310px;">  
+                      <div style="width: 100%; float: left;">
                         <div class="form-group files">
                           <label>Sube el documento de Acta de Boda</label>
                           <input type="file" class="form-control cargador" name="boda" multiple=""@if($docsReque->REQUERIDO7==1) {{'required'}}@endif>
@@ -948,15 +932,11 @@
                         @endif
                       </div>
                      
-                        <div style="width: 49%; float: right;"><img src="{{asset('/img/actaboda.jpg')}}" width="200" height="250">
-                          <br><br>
-                         
-                        </div> 
-                     
                     </div>
-
-                    <div class="col-md-6" style="margin-bottom: 0px;  height: 310px;">  
-                      <div style="width: 51%; float: left;">
+                @endif
+                @if($docsReque->REQUERIDO8==1)
+                    <div class="col-md-4" style="margin-bottom: 0px;  height: 310px;">  
+                      <div style="width: 100%; float: left;">
                         <div class="form-group files">
                           <label>Sube el documento de Titulo</label>
                           <input type="file" class="form-control cargador" name="titulo" multiple=""@if($docsReque->REQUERIDO8==1) {{'required'}}@endif>
@@ -966,15 +946,11 @@
                         @endif
                       </div>
                      
-                        <div style="width: 49%; float: right;"><img src="{{asset('/img/titulo.jpg')}}" width="200" height="250">
-                          <br><br>
-                          
-                        </div> 
-                     
                     </div>
-
-                    <div class="col-md-6" style="margin-bottom: 0px;  height: 310px;">  
-                      <div style="width: 51%; float: left;">
+                @endif
+                @if($docsReque->REQUERIDO9==1)
+                    <div class="col-md-4" style="margin-bottom: 0px;  height: 310px;">  
+                      <div style="width: 100%; float: left;">
                         <div class="form-group files">
                           <label>Sube el documento de Carta de Atecedentes no Penales</label>
                           <input type="file" class="form-control cargador" name="antecedentes" multiple=""@if($docsReque->REQUERIDO9==1) {{'required'}}@endif>
@@ -983,16 +959,12 @@
                           <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechaante" required>
                         @endif
                       </div>
-                      
-                        <div style="width: 49%; float: right;"><img src="{{asset('/img/antecedentes.jpg')}}" width="200" height="250">
-                          <br><br>
-                          
-                        </div> 
                      
                     </div>
-
-                    <div class="col-md-6" style="margin-bottom: 0px;  height: 310px;">  
-                      <div style="width: 51%; float: left;">
+                @endif
+                @if($docsReque->REQUERIDO10==1)
+                    <div class="col-md-4" style="margin-bottom: 0px;  height: 310px;">  
+                      <div style="width: 100%; float: left;">
                         <div class="form-group files">
                           <label>Sube el documento de Contrato</label>
                           <input type="file" class="form-control cargador" name="contrato" multiple=""@if($docsReque->REQUERIDO10==1) {{'required'}}@endif>
@@ -1001,16 +973,12 @@
                           <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechacontrato" required>
                         @endif
                       </div>
-                      
-                        <div style="width: 49%; float: right;"><img src="{{asset('/img/contrato.jpg')}}" width="200" height="250">
-                          <br><br>
-                          
-                        </div> 
                      
                     </div>
-
-                    <div class="col-md-6" style="margin-bottom: 0px;  height: 310px;">  
-                      <div style="width: 51%; float: left;">
+                @endif
+                @if($docsReque->REQUERIDO11==1)
+                    <div class="col-md-4" style="margin-bottom: 0px;  height: 310px;">  
+                      <div style="width: 100%; float: left;">
                         <div class="form-group files">
                           <label>Sube el documento de Curriculum</label>
                           <input type="file" class="form-control cargador" name="curriculum" multiple=""@if($docsReque->REQUERIDO11==1) {{'required'}}@endif>
@@ -1020,15 +988,11 @@
                         @endif
                       </div>
                      
-                        <div style="width: 49%; float: right;"><img src="{{asset('/img/curriculum.jpg')}}" width="200" height="250">
-                          <br><br>
-                          
-                        </div> 
-                     
                     </div>
-
-                    <div class="col-md-6" style="margin-bottom: 0px;  height: 310px;">  
-                      <div style="width: 51%; float: left;">
+                @endif
+                @if($docsReque->REQUERIDO12==1)
+                    <div class="col-md-4" style="margin-bottom: 0px;  height: 310px;">  
+                      <div style="width: 100%; float: left;">
                         <div class="form-group files">
                           <label>Sube el documento de Cedula Profesional</label>
                           <input type="file" class="form-control cargador" name="cedula" multiple=""@if($docsReque->REQUERIDO12==1) {{'required'}}@endif>
@@ -1037,16 +1001,12 @@
                           <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechacedula" required>
                         @endif
                       </div>
-                      
-                        <div style="width: 49%; float: right;"><img src="{{asset('/img/cedula.jpg')}}" width="270" height="230">
-                          <br><br>
-                         
-                        </div> 
                      
                     </div>
-
-                    <div class="col-md-6" style="margin-bottom: 0px;  height: 310px;">  
-                      <div style="width: 51%; float: left;">
+                @endif
+                @if($docsReque->REQUERIDO13==1)
+                    <div class="col-md-4" style="margin-bottom: 0px;  height: 310px;">  
+                      <div style="width: 100%; float: left;">
                         <div class="form-group files">
                           <label>Sube el documento de Diplomas, Seminarios u Otros</label>
                           <input type="file" class="form-control cargador" name="diplomas" multiple=""@if($docsReque->REQUERIDO13==1) {{'required'}}@endif>
@@ -1055,16 +1015,12 @@
                           <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechadiplo" required>
                         @endif
                       </div>
-                      
-                        <div style="width: 49%; float: right;"><img src="{{asset('/img/diploma.jpg')}}" width="200" height="250">
-                          <br><br>
-                          
-                        </div> 
                      
                     </div>
-
-                    <div class="col-md-6" style="margin-bottom: 0px;  height: 310px;">  
-                      <div style="width: 51%; float: left;">
+                @endif
+                @if($docsReque->REQUERIDO14==1)
+                    <div class="col-md-4" style="margin-bottom: 0px;  height: 310px;">  
+                      <div style="width: 100%; float: left;">
                         <div class="form-group files">
                           <label>Sube el documento de Certificaciones</label>
                           <input type="file" class="form-control cargador" name="certificaciones" multiple=""@if($docsReque->REQUERIDO14==1) {{'required'}}@endif>
@@ -1074,15 +1030,11 @@
                         @endif
                       </div>
                      
-                        <div style="width: 49%; float: right;"><img src="{{asset('/img/certificado.jpg')}}" width="280" height="240">
-                          <br><br>
-                          
-                        </div> 
-                     
                     </div>
-
-                    <div class="col-md-6" style="margin-bottom: 0px;  height: 310px;">  
-                      <div style="width: 51%; float: left;">
+                @endif
+                @if($docsReque->REQUERIDO15==1)
+                    <div class="col-md-4" style="margin-bottom: 0px;  height: 310px;">  
+                      <div style="width: 100%; float: left;">
                         <div class="form-group files">
                           <label>Sube el documento de Licencia</label>
                           <input type="file" class="form-control cargador" name="licencia" multiple=""@if($docsReque->REQUERIDO15==1) {{'required'}}@endif>
@@ -1091,13 +1043,9 @@
                           <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechalicencia" required>
                         @endif
                       </div>
-                      
-                        <div style="width: 49%; float: right;"><img src="{{asset('/img/licencia.jpg')}}" width="270" height="200" style="margin-top: 15px;">
-                       
-                          
-                        </div> 
                      
                     </div>
+                @endif
             </div>
 
             </div>

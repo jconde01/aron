@@ -3,25 +3,25 @@
 namespace App\Http\Controllers;
 
 //use Symfony\Component\Console\Output as Output;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\AppController;
-use App\Profilew;
+
+use DB;
+use Auth;
+use Session;
+use App\Depto;
 use App\Client;
 use App\Empresa;
 use App\Nomina;
 use App\Graph;
-use Auth;
-use Session;
 use App\Movtos;
 use App\ca2018;
 use App\Control;
-use DB;
-use App\Depto;
 use App\Empleado;
 use App\DatosGe;
-
+use App\Profilew;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AppController;
 
 
 class HomeController extends Controller
@@ -59,8 +59,17 @@ class HomeController extends Controller
                 $navbar = ProfileController::getNavBar('',0,$perfil);
                 return view('home')->with(compact('navbar', 'graficas'));
             } else {
-                // Usuario normal de un cliente
                 $cliente = auth()->user()->client;
+                // Es el usuario administrador del cliente?
+                if ($perfil == env('APP_CLIENT_ADMIN',1)) {
+                    $tipos = Client::select('fiscal','asimilado')->find($cliente->id);
+                    If ($tipos->fiscal != 0) {
+                        $this::setConn('fiscal');
+                    } else {
+                        $this::setConn('asimilado');
+                    }
+                }
+                // Usuario normal de un cliente
                 if (Auth::check()){
                     session(['selCliente' => $cliente]);
                 }
@@ -78,27 +87,23 @@ class HomeController extends Controller
                     $contador = 0;
                     $guardador = array();  
                     foreach ($prueba as $prueba2) {
-                                    $contador = $contador+1;
-                                    $periano = $prueba2->PERIANO;
-                                    $sumaunidades=0;
-                                   // echo '-------------------------------------------------------------------<br>';
-                                    if ($periano!=$periano2) {
-                                          $sumaunidades2=0;                                         
-                                      }
-                                    foreach ($ca2018 as $ca) {
-                                         if ($ca->PERIODO==$prueba2->PERIODO) {
-                                           
-                                              $sumaunidades = $sumaunidades+($ca->UNIDADES*-1);
-                                              $sumaunidades2 = $sumaunidades2+$ca->UNIDADES;
-                                              $periano2 = $prueba2->PERIANO;
-                                          }    
-                                        
-                                    }       
-
-                                  $info = array_push($guardador,$sumaunidades2);                                
-                                }
+                        $contador = $contador+1;
+                        $periano = $prueba2->PERIANO;
+                        $sumaunidades=0;
+                        if ($periano!=$periano2) {
+                              $sumaunidades2=0;                                         
+                        }
+                        foreach ($ca2018 as $ca) {
+                            if ($ca->PERIODO==$prueba2->PERIODO) {
+                                  $sumaunidades = $sumaunidades+($ca->UNIDADES*-1);
+                                  $sumaunidades2 = $sumaunidades2+$ca->UNIDADES;
+                                  $periano2 = $prueba2->PERIANO;
+                            }    
+                        }       
+                        $info = array_push($guardador,$sumaunidades2);                                
+                    }
                                 
-                      $data= [$guardador[2]*-1,$guardador[4]*-1,$guardador[6]*-1,$guardador[8]*-1,$guardador[10]*-1,$guardador[12]*-1,$guardador[14]*-1,$guardador[16]*-1,$guardador[18]*-1,$guardador[20]*-1,$guardador[22]*-1,$guardador[24]*-1];
+                    $data= [$guardador[2]*-1,$guardador[4]*-1,$guardador[6]*-1,$guardador[8]*-1,$guardador[10]*-1,$guardador[12]*-1,$guardador[14]*-1,$guardador[16]*-1,$guardador[18]*-1,$guardador[20]*-1,$guardador[22]*-1,$guardador[24]*-1];
 
 //----------------------------------------------------------Fin de grafica de faltas injustificadas-------------------------------------------------------------------------------------------------------------
                     
@@ -375,29 +380,25 @@ class HomeController extends Controller
 
 
 
-                    $cliente = auth()->user()->client;
+                        $cliente = auth()->user()->client;
                         if ($cliente->fiscal==1 && $cliente->asimilado==1){
-                        $selCliente = auth()->user()->client;
+                          $selCliente = auth()->user()->client;
                        
-                        $cia = $selCliente->asimilado_bda; 
-                        $empresaTisanom = Empresa::where('CIA',$cia)->first();
-                        Config::set("database.connections.sqlsrv3", [
-                            "driver" => 'sqlsrv',
-                            "host" => Config::get("database.connections.sqlsrv")["host"],
-                            "port" => Config::get("database.connections.sqlsrv")["port"],                       
-                            "database" => $empresaTisanom->DBNAME,
-                            "username" => $empresaTisanom->USERID,
-                            "password" => $empresaTisanom->PASS
-                            ]);
-                        session(['sqlsrv3' => Config::get("database.connections.sqlsrv3")]);
-                        
+                          $cia = $selCliente->asimilado_bda; 
+                          $empresaTisanom = Empresa::where('CIA',$cia)->first();
+                          Config::set("database.connections.sqlsrv3", [
+                              "driver" => 'sqlsrv',
+                              "host" => Config::get("database.connections.sqlsrv")["host"],
+                              "port" => Config::get("database.connections.sqlsrv")["port"],                       
+                              "database" => $empresaTisanom->DBNAME,
+                              "username" => $empresaTisanom->USERID,
+                              "password" => $empresaTisanom->PASS
+                              ]);
+                          session(['sqlsrv3' => Config::get("database.connections.sqlsrv3")]);
+                        }
                        
-                    }
-                       
-
-                 
-                    $navbar = ProfileController::getNavBar('',0,$perfil);
-                    return view('home')->with(compact('navbar', 'graficas','data','data2','data3','cont20','cont26','cont31', 'cont36','cont41','cont46','cont60','data4'));
+                        $navbar = ProfileController::getNavBar('',0,$perfil);
+                        return view('home')->with(compact('navbar', 'graficas','data','data2','data3','cont20','cont26','cont31', 'cont36','cont41','cont46','cont60','data4'));
                 } else {
                     return view('sistema.chooseTipoYProceso')->with(compact('cliente'));
                 }
@@ -455,5 +456,37 @@ class HomeController extends Controller
         return back()->with('flash','Actualizacion exitosa');
     }
     //termina codigo escrito por Ricardo Cordero.
+
+    private static function setConn($tipo) {
+        $objCliente = auth()->user()->client;
+        if ($tipo == 'fiscal') {
+            $cia = $objCliente->fiscal_bda;     
+        } else {
+            $cia = $objCliente->asimilado_bda;
+        }
+        try {
+            $empresaTisanom = Empresa::where('CIA',$cia)->first();
+        } catch (\Exception $e) {
+            return response('Error');
+        }
+        Config::set("database.connections.sqlsrv2", [
+            "driver" => 'sqlsrv',
+            "host" => Config::get("database.connections.sqlsrv")["host"],
+            "port" => Config::get("database.connections.sqlsrv")["port"],                       
+            "database" => $empresaTisanom->DBNAME,
+            "username" => $empresaTisanom->USERID,
+            "password" => $empresaTisanom->PASS
+            ]);
+        session(['sqlsrv2' => Config::get("database.connections.sqlsrv2")]);
+        $procesos = Nomina::select('TIPONO','NOMBRE')->orderBy('TIPONO')->first();        
+        $selProceso = $procesos->TIPONO;
+        $selProcessObj = Nomina::select('NOMBRE','MINIMODF')->where('TIPONO',$selProceso)->first();
+        $clienteYProceso = auth()->user()->client->Nombre . " - " . $selProcessObj->NOMBRE;
+        session(['tinom' => $tipo]);
+        session(['selProceso' => $selProceso]);
+        session(['minimoDF' => $selProcessObj->MINIMODF]);
+        session(['clienteYProceso' => $clienteYProceso]);        
+        return true;
+    }
 
 }

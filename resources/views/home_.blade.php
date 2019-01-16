@@ -1,62 +1,113 @@
 @extends('layouts.app')
-
+ 
 @section('title','Aron | Menú')
 @section('body-class','')
 
 @section('content')
-@if (!$appAdmin)
-	@if (isset($graficas->mensaje))
-		@if ($graficas->mensaje==1)
-			<h1 align="center" style="color: rgb(0, 190, 239);">Bienvenido a la plataforma en línea ARON!</h1>
-		@endif
-	@endif
-
-	<h1 align="center" style="color: rgb(0, 190, 239);">INDICADORES</h1>
-	<br>
-
-	<div style="max-width:85%; margin: auto;">
-		<div style="max-width: 99%; margin: auto; display: flex; flex-wrap: wrap;">
-			@if ($graficas->grafica1==1)
-			<div style="width: 49%; border:3px rgb(0, 190, 239) solid; border-radius: 5px;margin-right: 12px; margin-bottom: 10px; padding-right: 10px;">
-				<div id="graficaLineal" style="margin: 0 auto">
-				</div>
-			</div>
-			<br>
-			@endif
-
-			@if ($graficas->grafica2==1)
-			<div style="width:49%;border:3px rgb(0, 190, 239) solid; border-radius: 5px;margin-right: 12px; margin-bottom: 10px;">
-				<div id="graficaCircular" style="margin: 0 auto">
-				</div>		
-			</div>
-			<br>
-			@endif
-
-			@if ($graficas->grafica3==1)
-			<div style="width: 49%;border:3px rgb(0, 190, 239) solid; border-radius: 5px;margin-right: 12px; margin-bottom: 10px;">
-				<div id="container" style="margin: 0 auto">
-				</div>
-			</div>
-			<br>
-			@endif
-
-			@if ($graficas->grafica4==1)
-			<div style="width: 49%;border:3px rgb(0, 190, 239) solid; border-radius: 5px;margin-right: 12px; margin-bottom: 10px; padding-right: 10px;">
-				<div id="container2" style="margin: 0 auto">
-				</div>		
-			</div>
-			<br>
-			@endif
-
-		</div>
-	</div>
-	<br>
-	@include('includes.footer');
-@else
-	<h1 style="text-align: center;">Bienvenido Administrador!!!</h1>
+@if (isset($graficas->mensaje))
+@if ($graficas->mensaje==1)<h1 align="center" style="color: rgb(0, 190, 239);">Bienvenido a la plataforma en línea ARON!</h1>@endif
 @endif
-@endsection
-@section('jscript')
+@if (isset($graficas->grafica1))
+@if ($graficas->grafica1==1 || $graficas->grafica2==1 || $graficas->grafica3==1 || $graficas->grafica4==1)
+@endif
+
+
+<h1 align="center" style="color: rgb(0, 190, 239);">INDICADORES</h1>
+<br>
+
+
+
+		
+	
+
+<div class="row">
+	
+		<div class="col-md-8 col-md-offset-2" style="">  
+            <ul class="tab horizontal" style=" width: 100%; display: flex; justify-content: center;">
+            @if ($graficas->grafica1==1)
+              <li class="tab-group-item pestanas" onClick="cambiar_color_over(this)" style="width: 20%; border-radius: 0px;  background-color: white!important; border-bottom: 0px;border-left: 2px rgb(179, 215, 243) solid; border-right: 2px rgb(179, 215, 243) solid;border-top: 2px rgb(179, 215, 243) solid; "><a style="text-decoration: none; padding: 7px 46px 7px 46px!important; " data-toggle="tab" href="#nomina1">Faltas y Horas Extras</a></li>
+            @endif
+
+            @if ($graficas->grafica2==1)
+              <li class="tab-group-item pestanas" onClick="cambiar_color_over(this)" style="width: 20%; border-top: 0px; border-left: 0px; border-right: 0px; border-bottom: 2px rgb(179, 215, 243) solid;border-radius: 0px; background-color: white!important;{{ $graficas->grafica1!==1? 'border-bottom: 0px;border-left: 2px rgb(179, 215, 243) solid; border-right: 2px rgb(179, 215, 243) solid;border-top: 2px rgb(179, 215, 243) solid;':'' }}"><a style="text-decoration: none;padding: 7px 10px 7px 10px!important;  " data-toggle="tab" href="#nomina2">Distribución de Departamentos</a></li>
+            @endif
+
+            @if ($graficas->grafica3==1)
+              <li class="tab-group-item pestanas" style="width: 20%;background-color: white!important; border-top: 0px; border-left: 0px; border-right: 0px; border-bottom: 2px rgb(179, 215, 243) solid;border-radius: 0px; {{ $graficas->grafica1!==1 && $graficas->grafica2!==1? 'border-bottom: 0px;border-left: 2px rgb(179, 215, 243) solid; border-right: 2px rgb(179, 215, 243) solid;border-top: 2px rgb(179, 215, 243) solid;':'' }}" onClick="cambiar_color_over(this)"><a style="text-decoration: none;padding: 7px 60px 7px 60px!important;  " data-toggle="tab" href="#datosg">Costo de Nómina</a></li>
+            @endif
+
+            @if ($graficas->grafica4==1)
+               <li class="tab-group-item pestanas" style="width: 20%; border-top: 0px; border-left: 0px; border-right: 0px; border-bottom: 2px rgb(179, 215, 243) solid;border-radius: 0px; background-color: white!important; {{ $graficas->grafica1!==1 && $graficas->grafica2!==1 && $graficas->grafica3!==1? 'border-bottom: 0px;border-left: 2px rgb(179, 215, 243) solid; border-right: 2px rgb(179, 215, 243) solid;border-top: 2px rgb(179, 215, 243) solid;':'' }}" onClick="cambiar_color_over(this)"><a style="text-decoration: none;padding: 7px 39px 7px 39px!important;  " data-toggle="tab" href="#datosa">Distribucion de Edades</a></li>
+            </ul>
+            @endif
+
+            
+            
+    	</div>
+	    <div class="col-md-8 col-md-offset-2">
+		            <div class="tab-content">
+		        
+			            <div id="nomina1" class="tab-pane fade in active" style="">
+			            	@if ($graficas->grafica1==1)
+							<div style=" ">
+								<div id="graficaLineal" style="margin: 0 auto">
+								</div>
+							</div>
+							<br>
+							 @endif
+			            </div>
+			           
+
+			            <div id="nomina2" class="tab-pane fade{{ $graficas->grafica1!==1? 'in active':'' }}" style="">
+			            	@if ($graficas->grafica2==1)
+							<div style="">
+								<div id="graficaCircular" style="margin: 0 auto">
+								</div>		
+							</div>
+							<br>
+							@endif
+			            </div>
+			            <div id="datosg" class="tab-pane fade{{ $graficas->grafica1!==1 && $graficas->grafica2!==1? 'in active':'' }}">
+			            	@if ($graficas->grafica3==1)
+							<div style="">
+								<div id="container" style="margin: 0 auto">
+								</div>
+							</div>
+							<br>
+							@endif
+			            </div>
+
+			            <div id="datosa" class="tab-pane fade{{ $graficas->grafica1!==1 && $graficas->grafica2!==1 && $graficas->grafica3!==1? 'in active':'' }}">
+			            	@if ($graficas->grafica4==1)
+							<div style="">
+								<div id="container2" style="margin: 0 auto">
+								</div>		
+							</div>
+							<br>
+							@endif
+			            </div>
+
+
+					    <div id="documentos" class="tab-pane fade">
+					    	<h1>5</h1>
+					    </div>
+		            </div>
+		</div>
+	<style type="text/css">
+		a{
+			bor
+		}
+	</style>
+    
+</div> 
+
+
+<br>
+@include('includes.footer');
+@else
+
+@endif
+</html>
 <script type="text/javascript">
 	var chart;
 	$(document).ready(function() {
@@ -67,14 +118,15 @@
 				defaultSeriesType: 'line'	// Pongo que tipo de gráfica es
 			},
 			title: {
-				text: 'Indicadores'	// Titulo (Opcional)
+				text: 'Faltas y Horas Extras'	// Titulo (Opcional)
 			},
 			subtitle: {
 				text: 'Vally.com'		// Subtitulo (Opcional)
 			},
 			// Pongo los datos en el eje de las 'X'
 			xAxis: {
-				categories: ['Ene18','Feb18','Mar18','Abr18','May18','Jun18','Jul18','Ago18','Sep18','Oct18','Nov18','Dic18'],
+				categories: ['Ene18','Feb18','Mar18','Abr18','May18','Jun18','Jul18','Ago18','Sep18','Oct18',
+	'Nov18','Dic18'],
 					// Pongo el título para el eje de las 'X'
 					title: {
 						text: 'Meses'
@@ -116,14 +168,18 @@
 			                }?>]
 			            }],
 			});	
-			
+		});				
+</script>
 
+<script type="text/javascript">
+	var chart;
+	$(document).ready(function() {
 		chart = new Highcharts.Chart({
 			chart: {
 				renderTo: 'graficaCircular'
 			},
 			title: {
-				text: 'Distribución de plazas'
+				text: 'Distribución de Departamentos'
 			},
 			subtitle: {
 				text: 'Vally.com'
@@ -167,77 +223,85 @@
 					  ]
 			}]
 		});
+	});			
+</script>
 
-		chart = new Highcharts.chart('container', {
-		    chart: {
-		        type: 'area'
-		    	},
-		    title: {
-		        	text: 'COSTO DE NÓMINA'
-		    	},
-		    xAxis: {
-		        categories: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
-		    },
-		    yAxis: {
+<script type="text/javascript">
+	Highcharts.chart('container', {
+    chart: {
+        type: 'area'
+    },
+    title: {
+        text: 'COSTO DE NÓMINA'
+    },
+    xAxis: {
+        categories: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
+    },
+    yAxis: {
 					// Pongo el título para el eje de las 'Y'
 					title: {
 						text: 'Valor en pesos'
 					}
 				},
-    		credits: {
-        		enabled: false
-    		},
-    		series: [{
-        		name: '2018',
-        		data: [<?php if (isset($data4)) {
-        		print_r($data4[0]);echo ",";print_r($data4[1]);echo ",";print_r($data4[2]);echo ",";print_r($data4[3]);echo ",";print_r($data4[4]);echo ",";print_r($data4[5]);echo ",";print_r($data4[6]);echo ",";print_r($data4[7]);echo ",";print_r($data4[8]);echo ",";print_r($data4[9]);echo ",";print_r($data4[10]);echo ",";print_r($data4[11]);
-        		} ?>]
-	    		}, {
-	        	name: '2019',
-	        	data: [0,0 ,0 ,0 ,0, 0,0 ,0 ,0 ,0,0,0]
-	    		}, {
-	        	name: '2020',
-	        	data: [0,0 ,0 ,0 ,0, 0,0 ,0 ,0 ,0,0,0]
-	    	}]
-		});
+    credits: {
+        enabled: false
+    },
+    series: [{
+        name: '2018',
+        data: [<?php if (isset($data4)) {
+        	print_r($data4[0]);echo ",";print_r($data4[1]);echo ",";print_r($data4[2]);echo ",";print_r($data4[3]);echo ",";print_r($data4[4]);echo ",";print_r($data4[5]);echo ",";print_r($data4[6]);echo ",";print_r($data4[7]);echo ",";print_r($data4[8]);echo ",";print_r($data4[9]);echo ",";print_r($data4[10]);echo ",";print_r($data4[11]);
+        } ?>]
+    }, {
+        name: '2019',
+        data: [0,0 ,0 ,0 ,0, 0,0 ,0 ,0 ,0,0,0]
+    }, {
+        name: '2020',
+        data: [0,0 ,0 ,0 ,0, 0,0 ,0 ,0 ,0,0,0]
+    }]
+});
+</script>
 
-		// Create the chart
-		chart = new Highcharts.chart('container2', {
-	    	chart: {
-	        	type: 'column'
-	    	},
-	    	title: {
-	        	text: 'Edades'
-	    	},
-	    	subtitle: {
-	        	text: 'Click en las columnas para ver edades. Fuente: <a href="#" target="_blank">Aron</a>'
-	    	},
-	    	xAxis: {
-	        	type: 'categoria'
-	    	},
-	    	yAxis: {
-	        	title: {
-	            	text: 'No. de empleados'
-	        	}
-	    	},
-	    	legend: {
-	        	enabled: false
-	    	},
-	    	plotOptions: {
-	        	series: {
-	            	borderWidth: 0,
-	            	dataLabels: {
-	                	enabled: true,
+<script type="text/javascript">
+	
+	// Create the chart
+	Highcharts.chart('container2', {
+	    chart: {
+	        type: 'column'
+	    },
+	    title: {
+	        text: 'Edades'
+	    },
+	    subtitle: {
+	        text: 'Click en las columnas para ver edades. Fuente: <a href="#" target="_blank">Aron</a>'
+	    },
+	    xAxis: {
+	        type: 'categoria'
+	    },
+	    yAxis: {
+	        title: {
+	            text: 'No. de empleados'
+	        }
+
+	    },
+	    legend: {
+	        enabled: false
+	    },
+	    plotOptions: {
+	        series: {
+	            borderWidth: 0,
+	            dataLabels: {
+	                enabled: true,
 	                format: '{point.y:.1f} en total'
 	            }
 	        }
-	    	},
-	    	tooltip: {
-	        	headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-	        	pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}</b> del total<br/>'
-	    	},
+	    },
 
-	    	"series": [
+	    tooltip: {
+	        headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+	        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}</b> del total<br/>'
+	    },
+
+	    "series": [
 	        {
 	            "name": "Edades",
 	            "colorByPoint": true,
@@ -279,9 +343,9 @@
 	                }
 	            ]
 	        }
-	    	],
-	    	"drilldown": {
-	       		"series": [
+	    ],
+	    "drilldown": {
+	        "series": [
 	            {
 	                "name": "Chrome",
 	                "id": "Chrome",
@@ -500,8 +564,28 @@
 	            }
 	        ]
 	    }
-	});		
-
 	});
 </script>
+<!-- ----- cambio de color pestañas---------------- -->
+<script type="text/javascript">
+    function cambiar_color_over(pestana){ 
+    var x= document.getElementsByClassName("pestanas");
+    var i;
+    for (i = 0; i < x.length; i++) {
+        x[i].style.backgroundColor = "white";
+        x[i].style.borderTop = "0px";
+        x[i].style.borderLeft = "0px";
+        x[i].style.borderRight = "0px";
+         x[i].style.borderBottom = "2px rgb(179, 215, 243) solid";
+        }
+    // pestana.style.backgroundColor="rgb(179, 215, 243)";
+    pestana.style.borderBottom="0px";
+    pestana.style.borderTop = "2px rgb(179, 215, 243) solid";
+    pestana.style.borderLeft = "2px rgb(179, 215, 243) solid";
+    pestana.style.borderRight = "2px rgb(179, 215, 243) solid";
+    pestana.style.borderRadius = "0px";
+    pestana.style.color = "rgb(179, 215, 243)";
+    } 
+</script>
+<!-- ----------- fin de cambio de color pestañas------------------ -->
 @endsection

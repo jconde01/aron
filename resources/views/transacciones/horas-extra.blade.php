@@ -242,6 +242,8 @@
     	if ( periodo != 0 ) {
 			// alert(periodo + ' - ' + fechaIni + fechaIncidencia.value);
 			fechaIncidencia.value = $('.pdo>option:selected').data('fi');
+            $('#empleado').val(0);
+            $('#unidades').val(0);
         	$("#nuevo").modal();
         } else {
            alert('No ha seleccionado un concepto o período!');
@@ -257,6 +259,9 @@
 		sueldo =  Number($('.emp').find(':selected').data('sueldo'));
         unidades = parseInt($('#unidades').val());
         fecha = $('#fecha').val();
+        var fechaParts = fecha.substr(0,10).split('-');
+        var theDate = new Date(fechaParts[0], fechaParts[1] - 1, fechaParts[2]);
+        var fechaStr = fechaParts[2] + '-' + fechaParts[1] + '-' + fechaParts[0];        
         cuenta = $('#cuenta').val();
         //suplencia = $('#suplencia').is(':checked');
 
@@ -274,7 +279,7 @@
 			col1.innerHTML = '<td><input type="text" class="emp" name="emp[]" value="'+empleado+'"/></td>'; col1.style.display = 'none'; 
             col2.innerHTML = '<td style="text-align:left!important;">' + nombre + '</td>';
 			// col3.innerHTML = '<td><input type="checkbox" class="suplencia" name="suplencia[]" '+_checked+' style="border:0px;width:150px!important;" value="'+suplencia+'"/></td>'; 
-			col3.innerHTML = '<td><input type="text" name="fecha[]" class="fecha" style="border:0px;width:150px!important;" value="'+fecha+'"/></td>'; 
+			col3.innerHTML = '<td><input type="text" name="fecha[]" class="fecha" style="border:0px;width:150px!important;" value="'+fechaStr+'"/></td>'; 
 			col4.innerHTML = '<td><input type="text" class="unidades" name="unidades[]" style="text-align:center;border:0px;width:150px!important;" value="'+unidades+'"/></td>'; 
 			col5.innerHTML = '<td><input type="text" class="cuenta" name="cuenta[]" style="border:0px;width:150px!important;" value="'+cuenta+'"/></td>';
             col6.innerHTML = '<td class="td-actions text-center">'+
@@ -294,7 +299,8 @@
 
         if (validaEdicion(row_index, empleado, fecha, unidades)) {
             //rowElem.find('td .suplencia').checked = suplencia;
-            rowElem.find('td .fecha').val(fecha);
+            //rowElem.find('td .fecha').val(fecha);
+            rowElem.find('td .fecha').val(date2Str(fecha));
             rowElem.find('td .unidades').val(unidades);            
             rowElem.find('td .cuenta').val(cuenta);         
         }
@@ -304,14 +310,14 @@
     // EDITA el renglón
     $('#captura').on('click', '.btn-success', function () {
         rowElem = $(this).closest("tr");
-
         // asigna valores a los campos del modal de edicion
         document.getElementById("ed_emp").value = rowElem.find('td .emp').val();
         document.getElementById("ed_empleado").value = rowElem.find('td:eq(1)').text();
         //document.getElementById("ed_suplencia").value = rowElem.find('td .suplencia').val();
-        document.getElementById("ed_fecha").value = rowElem.find('td .fecha').val();
+        //var fechaIncid = stringToDate(rowElem.find('td .fecha').val(),"dd-mm-yyyy","-");
+        document.getElementById("ed_fecha").value = date2Str(rowElem.find('td .fecha').val());
         document.getElementById("ed_unidades").value = rowElem.find('td .unidades').val();
-        document.getElementById("ed_cuenta").value = rowElem.find('td .cuenta').val();
+        //document.getElementById("ed_cuenta").value = rowElem.find('td .cuenta').val();
         $("#edit").modal();
     });
 
@@ -390,7 +396,7 @@
     }
 
     // valida datos editados
-    function validaEdicion(rowNum) {
+    function validaEdicion(rowNum, empleado, fecha, unidades) {
         var bOK = true;
         var rowLength = tabla.rows.length;
 
