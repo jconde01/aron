@@ -272,12 +272,12 @@ table {
   #a1{
     padding-left: 0%!important;
     padding-right: 0%!important;
-    font-size: 9px!important;
+    font-size: 7px!important;
   }
   #a2{
     padding-left: 0px!important;
     padding-right: 0px!important;
-    font-size: 7.5px!important;
+    font-size: 5px!important;
 
   }
   #tab1,#tab2,#tab3,#tab4
@@ -288,13 +288,13 @@ table {
   {
     padding-left: 10%!important;
     padding-right: 10%!important;
-    font-size: 10px!important;
+    font-size: 8px!important;
   }
   #a4
   {
     padding-left: 2%!important;
     padding-right: 2%!important;
-    font-size: 9px!important;
+    font-size: 6px!important;
   }
   .lis
   {
