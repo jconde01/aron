@@ -137,7 +137,7 @@ table {
 }
 
 
-@media screen and (max-width: 1300px) {
+@media screen and (max-width: 1366px) {
   #a1{
     padding-left: 3%!important;
     padding-right: 3%!important;
@@ -168,7 +168,7 @@ table {
 
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 600px) {
   #a1{
     padding-left: 0%!important;
     padding-right: 0%!important;
