@@ -76,7 +76,7 @@
                                   <div class="modal-body" style="text-align: center;">
                                     <a href="" data-toggle="modal" data-target="#GSCCModal2"><i class="fas fa-address-card"></i>&nbsp;Datos Generales</a>
                                     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                                    <a href="" id="curri"><i class="fas fa-book"></i>&nbsp;Curriculum</a>
+                                    
                                   </div>
                                   <div class="modal-footer">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Aceptar</button>                  

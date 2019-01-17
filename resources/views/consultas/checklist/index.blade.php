@@ -4,7 +4,7 @@
 @section('body-class','')
 
 @section('content')
-<div class="main main-raised" style="">
+<div class="main main-raised" style="margin-left: 225px;">
     <div class="container" style=" width: 100%;">
         <div class="section text-center" style=" width: 100%;">
             <h2 class="titulo">CheckList</h2>

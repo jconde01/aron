@@ -4,11 +4,11 @@
     <!-- nav class="navbar navbar-transparent navbar-default" style="margin-top: 10px; margin: auto; margin-bottom: 10px;" -->
     <nav class="navbar navbar-expand navbar-dark flex-column flex-md-row bd-navbar" style="margin-top: 10px; margin: auto; margin-bottom: 10px;  border-radius: 0px!important; width: 100%!important; ">  
       <div class="container" id="cabecera" style="width: 84%;">
-          <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-main" style="color: black!important;">
+          <div class="navbar-header" id="tipomovil" >
+                <button type="button" class="navbar-toggle"  data-toggle="collapse" data-target="#navigation-main" style="color: black!important;">
                   <i class="fas fa-bars" style="font-size: 35px;"></i>
               </button>
-              <a class="navbar-brand" href="{{ url('/home') }}"><img src="{{ asset('img/Aron-pegado2.png') }}" style="width:127px;height:30px;"></a>
+              <!-- <a class="navbar-brand" href="{{ url('/home') }}"><img src="{{ asset('img/Aron-pegado2.png') }}" style="width:127px;height:30px;"></a> -->
           </div>
 
           <div class="collapse navbar-collapse border navvar cabecera" id="navigation-main" >            

@@ -50,9 +50,12 @@
         <link rel="stylesheet" href="{{ asset('css/hc-offcanvas-nav.css') }}" />
         <!-- <link rel="stylesheet" href="{{ asset('css/demo.css') }}" /> -->
     </head>
-
+<?php 
+ 
+ $proc = session('selProceso');
+ ?>
     <body class="@yield('body-class')">
-        <div id="aron-container" style="margin-left: 225px;">
+        <div id="aron-container" style="{{ $proc!=null? ' margin-left: 225px;':'' }}" class="movil">
             @include('includes.header')
             @yield('content')
         </div>
@@ -88,7 +91,7 @@
             var $cntn = $('#aron-container');
 
             var defaultData = {
-                navTitle : '<a href="/home" style="padding: 0px;"><img src="/img/Aron-pegado2.png" style="width:80%;height:100%;"></a>',
+                navTitle : '<a href="/home" style="padding: 0px;"><img src="/img/Aron-pegado2.png" style="width:80%;"></a>',
                 closeOnClick : false,
                 customToggle: '.toggle',                
                 maxWidth: false,
@@ -104,7 +107,28 @@
             // call plugin
             var Nav = $main_nav.hcOffcanvasNav(defaultData);
             Nav.open();
-          })(jQuery);    
+            var $window = $(window),
+                $html = $('html');
+
+            function resize() {
+                if ($window.width() < 500) {
+                    Nav.close();
+                }else{
+                  Nav.open();  
+                }
+                
+                
+            }
+
+            $window
+                .resize(resize)
+                .trigger('resize');
+          })(jQuery); 
+
+
+          (function($) {
+            
+        })(jQuery);   
 
     </script> 
     @yield('jscript')    

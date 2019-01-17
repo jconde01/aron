@@ -16,6 +16,11 @@ h6{
   align-items: center;
   padding: 0 10px;
 }
+
+.toggle-open
+  {
+   display: none!important;
+  }
  
 #dt-table_wrapper {
   width: 35%;
@@ -27,8 +32,12 @@ h6{
 }
 .inderecha{
     text-align-last: right;
+    direction: ltr;
+    text-align: -webkit-right;
+    text-align: right !important;
 
 }
+
 #tab1
 {
   width: 20%;
@@ -41,8 +50,9 @@ h6{
 }
 #a1
 {
+  
   text-decoration: none; 
-  padding: 7px 46px 7px 46px!important; 
+  padding: 7px 30px 7px 30px!important; 
 }
 #tab2
 {
@@ -56,8 +66,9 @@ h6{
 }
 #a2
 {
+  
   text-decoration: none;
-  padding: 7px 10px 7px 10px!important;  
+  padding: 7px 4px 7px 4px!important;  
 }
 #tab3
 {
@@ -71,8 +82,9 @@ h6{
 }
 #a3
 {
+  
   text-decoration: none;
-  padding: 7px 60px 7px 60px!important;  
+  padding: 7px 43px 7px 43px!important;  
 }
 #tab4
 {
@@ -86,8 +98,9 @@ h6{
 }
 #a4
 {
+  
   text-decoration: none;
-  padding: 7px 39px 7px 39px!important;  
+  padding: 7px 23px 7px 23px!important;  
 }
 table {
   text-align: left;
@@ -126,14 +139,14 @@ table {
 
 @media screen and (max-width: 1300px) {
   #a1{
-    padding-left: 11%!important;
-    padding-right: 11%!important;
+    padding-left: 3%!important;
+    padding-right: 3%!important;
     font-size: 16px;
   }
   #a2{
     padding-left: 1px!important;
     padding-right: 1px!important;
-    font-size: 16px;
+    font-size: 13px;
 
   }
   #tab1,#tab2,#tab3,#tab4
@@ -142,14 +155,14 @@ table {
   }
   #a3
   {
-    padding-left: 19%!important;
-    padding-right: 19%!important;
+    padding-left: 12%!important;
+    padding-right: 12%!important;
     font-size: 16px;
   }
   #a4
   {
-    padding-left: 9%!important;
-    padding-right: 9%!important;
+    padding-left: 0%!important;
+    padding-right: 0%!important;
     font-size: 16px;
   }
 
@@ -189,6 +202,22 @@ table {
     padding-left: 40%!important;
     padding-right: 44%!important;
   }
+  .movil
+  {
+    margin-left: 0px!important;
+  }
+  #tipomovil
+  {
+   
+    
+  }
+  .toggle-open
+  {
+    display: block!important;
+    
+    margin-left: 220px;
+  }
+
 
 }
 
@@ -221,6 +250,8 @@ table {
     .navvar{
         margin: auto !important;
     }
+    
+ 
 }
 
 @media only screen and (min-width: 1300px){
