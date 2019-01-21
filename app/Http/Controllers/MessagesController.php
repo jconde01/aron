@@ -26,7 +26,8 @@ class MessagesController extends Controller
     public function create()
     {
         $selCliente = Session::get('selCliente');
-        $cell_id = auth()->user()->cell_id;
+        $cell_id = $selCliente->cell_id;
+        //dd($selCliente, $cell_id);        
         if ($selCliente != null) {
     	   $users = User::where('cell_id','=',$cell_id)
                         ->whereIn('profile_id', [env("CELL_DIRECTOR_ID",4), env("CELL_QC_ID",6)])->get();  // ->where('id','!=',auth()->id())
