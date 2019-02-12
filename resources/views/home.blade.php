@@ -125,8 +125,8 @@
 			},
 			// Pongo los datos en el eje de las 'X'
 			xAxis: {
-				categories: ['Ene18','Feb18','Mar18','Abr18','May18','Jun18','Jul18','Ago18','Sep18','Oct18',
-	'Nov18','Dic18'],
+				categories: ['Ene19','Feb19','Mar19','Abr19','May19','Jun19','Jul19','Ago19','Sep19','Oct19',
+	'Nov19','Dic19'],
 					// Pongo el título para el eje de las 'X'
 					title: {
 						text: 'Meses'
@@ -253,7 +253,9 @@
         } ?>]
     }, {
         name: '2019',
-        data: [0,0 ,0 ,0 ,0, 0,0 ,0 ,0 ,0,0,0]
+        data: [<?php if (isset($data4)) {
+        	print_r($l9data4[0]);echo ",";print_r($l9data4[1]);echo ",";print_r($l9data4[2]);echo ",";print_r($l9data4[3]);echo ",";print_r($l9data4[4]);echo ",";print_r($l9data4[5]);echo ",";print_r($l9data4[6]);echo ",";print_r($l9data4[7]);echo ",";print_r($l9data4[8]);echo ",";print_r($l9data4[9]);echo ",";print_r($l9data4[10]);echo ",";print_r($l9data4[11]);
+        } ?>]
     }, {
         name: '2020',
         data: [0,0 ,0 ,0 ,0, 0,0 ,0 ,0 ,0,0,0]

@@ -1,7 +1,6 @@
 @extends('layouts.app')
 @section('body-class', 'profile-page sidebar-collapse')
 @section('content')   
-  </div>
   <div class="main main-raised">
     <div>
       <div class="section text-center">
@@ -449,11 +448,11 @@
                             <input type="date" name="VENCIM" value="<?php echo date('Y-m-d', strtotime($empl->VENCIM)) ?>">
                         </div> 
                     </div>
-
+                    
                     <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Baja</p></div>
-                            <input type="date" name="BAJA" value="<?php echo date('Y-m-d', strtotime($empl->BAJA)) ?>">
+                            <input type="date" name="BAJA" value="<?php if($empl->BAJA !== "1969-12-31 00:00:00.000") echo date('Y-m-d', strtotime($empl->BAJA)); if($empl->BAJA==0) echo 0; ?>">
                         </div> 
                     </div>
 
@@ -479,7 +478,8 @@
                     <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>IMSS Empleado:</p></div>
-                            <input type="number" name="IMSS" value="{{$empl->IMSS}}">
+                            <input type="text" name="IMSS" value="{{$empl->IMSS}}">
+                            
                         </div> 
                     </div>
 

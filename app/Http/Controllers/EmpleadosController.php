@@ -210,7 +210,7 @@ class EmpleadosController extends Controller
                                         $emp->EMP = $request->input('EMP');
                                         $emp->NOMBRE = $request->input('NOMBRES') . ' ' . $request->input('PATERNO') . ' ' . $request->input('MATERNO');
                                         $emp->PUESTO = $request->input('PUESTO');
-                                        $emp->cuenta = $request->input('cuenta');
+                                        $emp->cuenta = $request->input('cuenta')."";
                                         $emp->DEPTO = $request->input('DEPTO');
                                         $emp->TIPOTRA = $request->input('TIPOTRA');
                                         $emp->c_Estado = $request->input('c_Estado');
@@ -229,8 +229,10 @@ class EmpleadosController extends Controller
                                         $emp->VACACION = date('d-m-Y', strtotime($request->input('VACACION')));
                                         $emp->PLANTA = date('d-m-Y', strtotime($request->input('PLANTA')));
                                         $emp->VENCIM = date('d-m-Y', strtotime($request->input('VENCIM')));
-                                        $emp->BAJA = date('d-m-Y', strtotime($request->input('BAJA')));
-                                        $emp->REGPAT = $request->input('REGPAT');
+                                        if (date('d-m-Y', strtotime($request->input('BAJA')))!=="31-12-1969") {
+                                        $emple->BAJA = date('d-m-Y', strtotime($request->input('BAJA')));
+                                        }
+                                        $emp->REGPAT = $request->input('REGPAT')."";
                                         $emp->RFC = $request->input('RFC');
                                         $emp->IMSS = $request->input('IMSS');
                                         $emp->GRUIMS = $request->input('GRUIMS');
@@ -363,7 +365,7 @@ class EmpleadosController extends Controller
                                             $empAsimi->EMP = $ultimo3;
                                             $empAsimi->NOMBRE = $request->input('NOMBRES') . ' ' . $request->input('PATERNO') . ' ' . $request->input('MATERNO');
                                             $empAsimi->PUESTO = $request->input('PUESTO');
-                                            $empAsimi->cuenta = $request->input('cuenta');
+                                            $empAsimi->cuenta = $request->input('cuenta')."";
                                             $empAsimi->DEPTO = $request->input('DEPTO');
                                             $empAsimi->TIPOTRA = $request->input('TIPOTRA');
                                             $empAsimi->c_Estado = $request->input('c_Estado');
@@ -382,8 +384,10 @@ class EmpleadosController extends Controller
                                             $empAsimi->VACACION = date('d-m-Y', strtotime($request->input('VACACION')));
                                             $empAsimi->PLANTA = date('d-m-Y', strtotime($request->input('PLANTA')));
                                             $empAsimi->VENCIM = date('d-m-Y', strtotime($request->input('VENCIM')));
-                                            $empAsimi->BAJA = date('d-m-Y', strtotime($request->input('BAJA')));
-                                            $empAsimi->REGPAT = $request->input('REGPAT');
+                                            if (date('d-m-Y', strtotime($request->input('BAJA')))!=="31-12-1969") {
+                                            $emple->BAJA = date('d-m-Y', strtotime($request->input('BAJA')));
+                                        }
+                                            $empAsimi->REGPAT = $request->input('REGPAT')."";
                                             $empAsimi->RFC = $request->input('RFC');
                                             $empAsimi->IMSS = '';
                                             $empAsimi->GRUIMS = $request->input('GRUIMS');
@@ -846,7 +850,7 @@ class EmpleadosController extends Controller
                                         $emp->EMP = $request->input('EMP');
                                         $emp->NOMBRE = $request->input('NOMBRES') . ' ' . $request->input('PATERNO') . ' ' . $request->input('MATERNO');
                                         $emp->PUESTO = $request->input('PUESTO');
-                                        $emp->cuenta = $request->input('cuenta');
+                                        $emp->cuenta = $request->input('cuenta')."";
                                         $emp->DEPTO = $request->input('DEPTO');
                                         $emp->TIPOTRA = $request->input('TIPOTRA');
                                         $emp->c_Estado = $request->input('c_Estado');
@@ -865,8 +869,10 @@ class EmpleadosController extends Controller
                                         $emp->VACACION = date('d-m-Y', strtotime($request->input('VACACION')));
                                         $emp->PLANTA = date('d-m-Y', strtotime($request->input('PLANTA')));
                                         $emp->VENCIM = date('d-m-Y', strtotime($request->input('VENCIM')));
-                                        $emp->BAJA = date('d-m-Y', strtotime($request->input('BAJA')));
-                                        $emp->REGPAT = $request->input('REGPAT');
+                                        if (date('d-m-Y', strtotime($request->input('BAJA')))!=="31-12-1969") {
+                                        $emple->BAJA = date('d-m-Y', strtotime($request->input('BAJA')));
+                                    }
+                                        $emp->REGPAT = $request->input('REGPAT')."";
                                         $emp->RFC = $request->input('RFC');
                                         $emp->IMSS = $request->input('IMSS');
                                         $emp->GRUIMS = $request->input('GRUIMS');
@@ -1335,7 +1341,7 @@ class EmpleadosController extends Controller
                 $emp->EMP = $request->input('EMP');
                 $emp->NOMBRE = $request->input('NOMBRES') . ' ' . $request->input('PATERNO') . ' ' . $request->input('MATERNO');
                 $emp->PUESTO = $request->input('PUESTO');
-                $emp->cuenta = $request->input('cuenta');
+                $emp->cuenta = $request->input('cuenta')."";
                 $emp->DEPTO = $request->input('DEPTO');
                 $emp->TIPOTRA = $request->input('TIPOTRA');
                 $emp->c_Estado = $request->input('c_Estado');
@@ -1354,8 +1360,10 @@ class EmpleadosController extends Controller
                 $emp->VACACION = date('d-m-Y', strtotime($request->input('VACACION')));
                 $emp->PLANTA = date('d-m-Y', strtotime($request->input('PLANTA')));
                 $emp->VENCIM = date('d-m-Y', strtotime($request->input('VENCIM')));
-                $emp->BAJA = date('d-m-Y', strtotime($request->input('BAJA')));
-                $emp->REGPAT = $request->input('REGPAT');
+                if (date('d-m-Y', strtotime($request->input('BAJA')))!=="31-12-1969") {
+                        $emple->BAJA = date('d-m-Y', strtotime($request->input('BAJA')));
+                    }
+                $emp->REGPAT = $request->input('REGPAT')."";
                 $emp->RFC = $request->input('RFC');
                 $emp->IMSS = '';
                 $emp->GRUIMS = $request->input('GRUIMS');
@@ -1885,7 +1893,7 @@ class EmpleadosController extends Controller
                     $emple->EMP = $request->input('EMP');
                     $emple->NOMBRE = $request->input('NOMBRES') . ' ' . $request->input('PATERNO') . ' ' . $request->input('MATERNO');
                     $emple->PUESTO = $request->input('PUESTO');
-                    $emple->cuenta = $request->input('cuenta');
+                    $emple->cuenta = $request->input('cuenta')."";
                     $emple->DEPTO = $request->input('DEPTO');
                     $emple->TIPOTRA = $request->input('TIPOTRA');
                     $emple->c_Estado = $request->input('c_Estado');
@@ -1904,10 +1912,13 @@ class EmpleadosController extends Controller
                     $emple->VACACION = date('d-m-Y', strtotime($request->input('VACACION'))); 
                     $emple->PLANTA = date('d-m-Y', strtotime($request->input('PLANTA')));
                     $emple->VENCIM = date('d-m-Y', strtotime($request->input('VENCIM')));
-                    $emple->BAJA = date('d-m-Y', strtotime($request->input('BAJA')));
-                    $emple->REGPAT = $request->input('REGPAT');
+                    if (date('d-m-Y', strtotime($request->input('BAJA')))!=="31-12-1969") {
+                        $emple->BAJA = date('d-m-Y', strtotime($request->input('BAJA')));
+                    }
+                    
+                    $emple->REGPAT = $request->input('REGPAT')."";
                     $emple->RFC = $request->input('RFC');
-                    $emple->IMSS = $request->input('IMSS');
+                    $emple->IMSS = $request->input('IMSS')."";
                     $emple->GRUIMS = $request->input('GRUIMS');
                     $emple->FONACOT = $request->input('FONACOT') . "";
                     $emple->INFONAVIT = $request->input('INFONAVIT') . "";
@@ -1917,11 +1928,13 @@ class EmpleadosController extends Controller
                     $emple->SAROTR = $request->input('SAROTR') . "";
                     $emple->DESINFO = $request->input('DESINFO');
                     $emple->SUELDO = $request->input('SUELDO');
+                    $emple->NetoMensual = $request->input('NetoMensual');
                     $emple->VARIMSS = $request->input('VARIMSS');
                     $emple->INTEG = $request->input('INTEG');
                     $emple->INTIV = $request->input('INTIV');
                     $emple->PRESDEC = $request->input('PRESDEC');
                     $emple->NOCRED = $request->input('NOCRED');
+                   
                     $emple->save();
               
                     $emple1 = DatosGe::where('EMP', $EMP)->get()->first();

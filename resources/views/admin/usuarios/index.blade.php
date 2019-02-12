@@ -13,7 +13,7 @@
                     <a href="{{ url('/admin/usuarios/create')}}" class="btn btn-primary btn-round">Nuevo usuario</a>
                     <br>
                     <br>
-                    <table class="table">
+                    <table class="table" id="table_id">
                         <thead>
                             <tr>
                                 <th class="text-center">#</th>
