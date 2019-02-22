@@ -34,10 +34,11 @@ class XActsController extends Controller
 		$perfil = auth()->user()->profile_id; 
         $navbar = ProfileController::getNavBar('',0,$perfil);
 		$selProceso = Session::get('selProceso');
+		$periCalc = Nomina::where('TIPONO',$selProceso)->first()->PERICALC;		
 		$conceptos = Concepto::where('TIPONO',$selProceso)->where('TIPCAPT','<>','0')->whereNotIn('CONCEPTO',$this::conIncap)->orderBy('NOMBRE')->get();
 		$periodos = Periodo::where('TIPONO',$selProceso)->where('SWCIERRE','0')->limit(3)->get();
 		$empleados = Empleado::where('TIPONO',$selProceso)->where('ESTATUS','A')->get();
-		return view('transacciones.por-concepto')->with(compact('navbar','conceptos','periodos','empleados'));
+		return view('transacciones.por-concepto')->with(compact('navbar','conceptos','periCalc','periodos','empleados'));
 	}
 
 
