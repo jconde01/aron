@@ -76,6 +76,7 @@ Route::middleware(['auth','basic'])->prefix('catalogos')->group(function () {
 	Route::get('/empleados/{EMP}/documentos', 'EmpleadosController@documentos');
 	Route::get('/documentos/empleados/{documento}', 'EmpleadosController@visualizar');
 	Route::post('/documentos/empleados/actualizar','EmpleadosController@UpDocs');
+	Route::post('/empleados/getRFCempleado','EmpleadosController@GetRFC');
 
 });
 

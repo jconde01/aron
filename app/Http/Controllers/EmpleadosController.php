@@ -10,6 +10,7 @@ use App\DatosGe;
 use App\DatosAfo;
 use App\Imss;
 use Session;
+use App\ListaN;
 use App\Empleado;
 use App\Empresa;
 use App\EmpleadoAsimi;
@@ -2459,6 +2460,23 @@ class EmpleadosController extends Controller
         return view('configuracion.documentosemp.index')->with(compact('navbar','docsReque')); 
     }
 
+     public function GetRFC(Request $data) {
+        
+        $rfc= $data->rfc;
+        $empleado = ListaN::where('RFC',$rfc)->first();
+        
+        $data = array(
+            "rfc" => $empleado->RFC,
+            "motivo" => $empleado->MOTIVO,
+            "fecha" => $empleado->FECHA_BAJA
+            
+        );
+         
+        // echo json_encode($data);
+       return response($data);
+        // $data2 = $data->fldide;
+        // return response($data2);
+    }
     
 }
 //fin del codigo escrito por Ricardo Cordero.

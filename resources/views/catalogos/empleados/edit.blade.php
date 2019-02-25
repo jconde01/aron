@@ -286,13 +286,17 @@
                                   </div>
                                   <div class="modal-body" style="text-align: center;">
                                     <label>Si: &nbsp;</label>
-                                    <input type="radio" name="BajaImss" value="1" data-toggle="modal" data-target="#GSCCModal2">
+                                    <input type="radio" class="BajaImss" name="BajaImss" value="1" data-toggle="modal" data-target="#GSCCModal2" onclick="aceptar.disabled = false">
                                     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                                     <label>No: &nbsp;</label>
-                                    <input type="radio" name="BajaImss" value="2">
+                                    <input type="radio" class="BajaImss" name="BajaImss" value="2" onclick="aceptar.disabled = false">
+                                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                                    <label>Termino desfavorable : &nbsp;</label>
+                                    <input type="checkbox" name="maltermino" data-toggle="modal" data-target="#maltermino" value="1">
+
                                   </div>
                                   <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Aceptar</button>                  
+                                    <button type="button" class="btn btn-default" id="aceptar" data-dismiss="modal">Aceptar</button>                  
                                   </div>
                                 </div>
                               </div>
@@ -306,22 +310,38 @@
                                   </div>
                                   <div class="modal-body" style="text-align: center;">
                                     <label>1- Termino de Contrato: &nbsp;&nbsp;&nbsp;</label>
-                                    <input type="radio" name="CAUSA" value="1">
+                                    <input type="radio" name="CAUSA" value="1" onclick="aceptar2.disabled = false">
                                     <br>
                                     <label>2- Separación Voluntaria: &nbsp;</label>
                                     <input type="radio" name="CAUSA" value="2">
                                     <br>
                                     <label>3- Abandono de Empleo: &nbsp;&nbsp;</label>
-                                    <input type="radio" name="CAUSA" value="3">
+                                    <input type="radio" name="CAUSA" value="3" onclick="aceptar2.disabled = false">
                                     <br>
                                     <label>4- Defunción: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                                    <input type="radio" name="CAUSA" value="4">
+                                    <input type="radio" name="CAUSA" value="4" onclick="aceptar2.disabled = false">
                                     <br>
                                     <label>5- Clausura: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                                    <input type="radio" name="CAUSA" value="5">
+                                    <input type="radio" name="CAUSA" value="5" onclick="aceptar2.disabled = false">
                                     <br>
                                     <label>6- Otra: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                                    <input type="radio" name="CAUSA" value="6">    
+                                    <input type="radio" name="CAUSA" value="6" onclick="aceptar2.disabled = false">    
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" id="aceptar2" name="aceptar2" class="btn btn-default" data-dismiss="modal">Aceptar</button>     
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div style="" id="maltermino" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+                             <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h4 class="modal-title" id="myModalLabel">Introdusca los motivos.</h4>
+                                  </div>
+                                  <div class="modal-body" style="text-align: center;">
+                                    <textarea rows="5" cols="60" type="textarea" name="motivos"></textarea>
                                   </div>
                                   <div class="modal-footer">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Aceptar</button>     
@@ -452,7 +472,7 @@
                     <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Baja</p></div>
-                            <input type="date" name="BAJA" value="<?php if($empl->BAJA !== "1969-12-31 00:00:00.000") echo date('Y-m-d', strtotime($empl->BAJA)); if($empl->BAJA==0) echo 0; ?>">
+                            <input type="date" id="baja1" name="BAJA" value="<?php if($empl->BAJA !== "1969-12-31 00:00:00.000") echo date('Y-m-d', strtotime($empl->BAJA)); if($empl->BAJA==0) echo 0; ?>">
                         </div> 
                     </div>
 
@@ -1119,11 +1139,20 @@ document.getElementById("EMP2").value = document.getElementById("EMP").value;
 
 function activa_boton(campo,boton){
         if (campo.value == "B"){
-           $("#GSCCModal").modal()
+           $("#GSCCModal").modal();
+           document.getElementById("baja1").required = true;
+           document.getElementById("aceptar").disabled = true;
+           document.getElementById("aceptar2").disabled = true;
+            document.getElementsByName("BajaImss")[0].required = true;
         } else {
-            
+            document.getElementById("baja1").required = false;
         }
     }
+
+function aceptar(){
+    document.getElementById("aceptar").disabled = false;
+           document.getElementById("aceptar2").disabled = false;
+}
 </script>
 <!-- ----- cambio de color pestañas---------------- -->
 <script type="text/javascript">

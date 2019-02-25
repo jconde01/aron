@@ -318,7 +318,7 @@
                     <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Reg. Fed. de C.:</p></div>
-                            <input type="text" name="RFC" value="{{ old('RFC') }}" required="" maxlength="15" onkeyup="javascript:this.value=this.value.toUpperCase(); Rfc(event, this);">
+                            <input type="text" name="RFC" value="{{ old('RFC') }}" id="rfc" required="" maxlength="15" onkeyup="javascript:this.value=this.value.toUpperCase(); Rfc(event, this);">
                         </div> 
                     </div>
 
@@ -1227,6 +1227,17 @@ $("#checkbox1").on('change', function() {
             eym.value = data['integrado'];
             iv.value = data['integrado2'];
             //alert('regreso con: ' + data['integrado'] + data['integrado2'] + data['ingreso']);
+        });     
+    });
+
+    $('#rfc').change(function() {
+        var token = $('input[name=_token]').val();                                   
+        var rfc  =  $('#rfc').val();
+         
+        $.post("getRFCempleado", { rfc: rfc, _token: token }, function( data ) {
+            alert('El empleado: '+data['rfc']+' ha sido dado de baja por: '+data['motivo']+' en la fecha: '+data['fecha']);
+            
+            
         });     
     });
 </script>
