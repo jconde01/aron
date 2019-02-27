@@ -4,13 +4,23 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\User;
+use App\Ciasno;
 
 class Client extends Model
 {
 
     public static function getRutaBase($celula, $rfc)
     {
-        return '../utilerias/Nominas/Celula'.$celula.'/'.$rfc;
+        $sucursal = Ciasno::first()->Agrupador;
+        // dd($sucursal);
+        if ($sucursal == null) {
+
+            return '../utilerias/Nominas/Celula'.$celula.'/'.$rfc;
+        }else{
+            
+            return '../utilerias/Nominas/Celula'.$celula.'/'.$rfc.'/'.$sucursal;
+        }
+        
     }
 
     public static function getRutaCertificado($celula, $rfc)
