@@ -1,17 +1,19 @@
 <?php
- 
+  
 namespace App\Http\Controllers;
 
 //use Symfony\Component\Console\Output as Output;
 
 use DB;
 use Auth;
+use App\User;
 use Session;
 use App\Depto;
 use App\Client;
 use App\Empresa;
 use App\Nomina;
 use App\Graph;
+use App\Message;
 use App\Movtos;
 use App\ca2018;
 use App\ca2019;
@@ -20,9 +22,12 @@ use App\Empleado;
 use App\DatosGe;
 use App\Profilew;
 use App\ListaDoc;
+use App\Checklist;
 use Illuminate\Database\Schema;
 use Illuminate\Http\Request;
+use App\Notifications\MessageSent;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AppController;
 
@@ -51,16 +56,56 @@ class HomeController extends Controller
         $perfil = auth()->user()->profile_id;
         $id_usuario = auth()->user()->id;
         $graficas = Graph::where('usuario_id', $id_usuario)->first();
-        // $documentos = DB::connection('sqlsrv2')->table('LISTADOCUMENTOS')
-        //             ->join('EMPLEADO','LISTADOCUMENTOS.EMP','=','EMPLEADO.EMP')
-        //             ->get();
-        // $hoy = date_create();
+        // $checks = Checklist::check;
+        // dd($checks);
+//         $notificado = '';
 
-        // foreach ($documentos as $documento) {
-        //   dd('ya');
-        // }
-        // dd($documentos);
-        
+//         $documentos = DB::connection('sqlsrv2')->table('LISTADOCUMENTOS')
+//                     ->join('EMPLEADO','LISTADOCUMENTOS.EMP','=','EMPLEADO.EMP')
+//                     ->get();
+//         $hoy = date_create();
+//         $pre2 = '';
+//         $pre3 = '';
+//         foreach ($documentos as $documento) 
+//         {
+           
+//            $notificado = ' ';
+//           for ($i=1; $i <16 ; $i++) 
+//           { 
+//             $nombre = 'FECHAVENCI'.$i;
+//             $fecha = date_create($documento->$nombre);
+//             $tiempo = date_diff($fecha, $hoy);
+//             $checks = Checklist::check;
+//             if ($documento->$nombre !== null)
+//             {
+//               if ($tiempo->m<=1) {
+            
+//                 $notificado = $notificado.'Documento '.$checks['CHECK'.$i].'<br>';
+              
+//               }
+ 
+//             }
+
+//             $pre = $notificado;
+
+//           }
+//           // echo $pre;
+//           // dd(0);
+//           if ($pre !== ' ') {
+//             $pre2 = 'Los siguientes documentos del empleado: '. $documento->EMP.' estan por vencer.<br> '.$pre.'<br>';
+//           }
+          
+
+//           // echo $pre2;
+//           $pre3 = $pre3.$pre2;
+//           $pre2 = '';
+//           // echo $pre3;
+//           // echo "--------------------------------------------------------------------";
+//           // dd('1');
+
+//         }
+// echo $pre3;
+//   dd('.');      
         if ($perfil == env('APP_ADMIN_PROFILE')) {
             $data= [1,2,3,4,5,6,7,8,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24];
             $data2= [1,2,3,4,5,6,7,8,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24];
@@ -74,14 +119,11 @@ class HomeController extends Controller
                 $cliente = auth()->user()->client;
                 // Es el usuario administrador del cliente?
                 if ($perfil == env('APP_CLIENT_ADMIN',1)) {
-                    $selProceso = Session::get('selProceso');
-                    if (!$selProceso) {
-                      $tipos = Client::select('fiscal','asimilado')->find($cliente->id);
-                      If ($tipos->fiscal != 0) {
-                          $this::setConn('fiscal');
-                      } else {
-                          $this::setConn('asimilado');
-                      }
+                    $tipos = Client::select('fiscal','asimilado')->find($cliente->id);
+                    If ($tipos->fiscal != 0) {
+                        $this::setConn('fiscal');
+                    } else {
+                        $this::setConn('asimilado');
                     }
                 }
                 // Usuario normal de un cliente
@@ -667,7 +709,58 @@ class HomeController extends Controller
         session(['tinom' => $tipo]);
         session(['selProceso' => $selProceso]);
         session(['minimoDF' => $selProcessObj->MINIMODF]);
-        session(['clienteYProceso' => $clienteYProceso]);        
+        session(['clienteYProceso' => $clienteYProceso]);
+
+//--------------------------Notificaciones de documentos vencidos al administrador del cliente-----------------------------------
+        $id = auth()->id();
+        $usuario_mensaje = $id.'administrador'.$id;
+        if (Cache::get( $usuario_mensaje)!==1) {
+           
+            Cache::put($usuario_mensaje, 1, 2880);
+           
+            $notificado = '';
+            $documentos = DB::connection('sqlsrv2')->table('LISTADOCUMENTOS')
+                        ->join('EMPLEADO','LISTADOCUMENTOS.EMP','=','EMPLEADO.EMP')
+                        ->get();
+            $hoy = date_create();
+            $pre2 = '';
+            $pre3 = '';
+            foreach ($documentos as $documento) 
+            {
+               
+               $notificado = ' ';
+              for ($i=1; $i <16 ; $i++) 
+              { 
+                $nombre = 'FECHAVENCI'.$i;
+                $fecha = date_create($documento->$nombre);
+                $tiempo = date_diff($fecha, $hoy);
+                $lista = ListaDoc::documentos;
+                if ($documento->$nombre !== null)
+                {
+                  if ($tiempo->m<=1) {           
+                    $notificado = $notificado.'Documento '.$lista[$i].' &nbsp; '."<br />";              
+                  }
+                }
+                $pre = $notificado;
+              }
+              if ($pre !== ' ') {
+                $pre2 = 'Los siguientes documentos del empleado: '. $documento->EMP.' estan por vencer.'."<br />".$pre."<br />";
+              }
+
+              $pre3 = $pre3.$pre2;
+              $pre2 = '';
+            }
+              $recipient = User::where('id',auth()->id())->first();          
+                  $message = Message::create([
+                  'sender_id' => auth()->id(),
+                  'recipient_id' =>  auth()->id(),
+                  'body' => $pre3
+                  ]);
+                  $recipient->notify(new MessageSent($message));
+        }
+        
+//--------------------------FIN Notificaciones de documentos vencidos al administrador del cliente-----------------------------------
+          
         return true;
     }
 
