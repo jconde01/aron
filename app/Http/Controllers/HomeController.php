@@ -56,56 +56,7 @@ class HomeController extends Controller
         $perfil = auth()->user()->profile_id;
         $id_usuario = auth()->user()->id;
         $graficas = Graph::where('usuario_id', $id_usuario)->first();
-        // $checks = Checklist::check;
-        // dd($checks);
-//         $notificado = '';
-
-//         $documentos = DB::connection('sqlsrv2')->table('LISTADOCUMENTOS')
-//                     ->join('EMPLEADO','LISTADOCUMENTOS.EMP','=','EMPLEADO.EMP')
-//                     ->get();
-//         $hoy = date_create();
-//         $pre2 = '';
-//         $pre3 = '';
-//         foreach ($documentos as $documento) 
-//         {
-           
-//            $notificado = ' ';
-//           for ($i=1; $i <16 ; $i++) 
-//           { 
-//             $nombre = 'FECHAVENCI'.$i;
-//             $fecha = date_create($documento->$nombre);
-//             $tiempo = date_diff($fecha, $hoy);
-//             $checks = Checklist::check;
-//             if ($documento->$nombre !== null)
-//             {
-//               if ($tiempo->m<=1) {
-            
-//                 $notificado = $notificado.'Documento '.$checks['CHECK'.$i].'<br>';
-              
-//               }
- 
-//             }
-
-//             $pre = $notificado;
-
-//           }
-//           // echo $pre;
-//           // dd(0);
-//           if ($pre !== ' ') {
-//             $pre2 = 'Los siguientes documentos del empleado: '. $documento->EMP.' estan por vencer.<br> '.$pre.'<br>';
-//           }
-          
-
-//           // echo $pre2;
-//           $pre3 = $pre3.$pre2;
-//           $pre2 = '';
-//           // echo $pre3;
-//           // echo "--------------------------------------------------------------------";
-//           // dd('1');
-
-//         }
-// echo $pre3;
-//   dd('.');      
+    
         if ($perfil == env('APP_ADMIN_PROFILE')) {
             $data= [1,2,3,4,5,6,7,8,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24];
             $data2= [1,2,3,4,5,6,7,8,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24];
@@ -716,7 +667,7 @@ class HomeController extends Controller
         $usuario_mensaje = $id.'administrador'.$id;
         if (Cache::get( $usuario_mensaje)!==1) {
            
-            Cache::put($usuario_mensaje, 1, 2880);
+            Cache::put($usuario_mensaje, 1, 60); //2880
            
             $notificado = '';
             $documentos = DB::connection('sqlsrv2')->table('LISTADOCUMENTOS')
