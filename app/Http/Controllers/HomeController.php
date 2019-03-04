@@ -665,9 +665,9 @@ class HomeController extends Controller
 //--------------------------Notificaciones de documentos vencidos al administrador del cliente-----------------------------------
         $id = auth()->id();
         $usuario_mensaje = $id.'administrador'.$id;
-        if (Cache::get( $usuario_mensaje)!==1) {
+         if (Cache::get( $usuario_mensaje)!==1) {
            
-            Cache::put($usuario_mensaje, 1, 60); //2880
+            Cache::put($usuario_mensaje, 1, 30); //2880
            
             $notificado = '';
             $documentos = DB::connection('sqlsrv2')->table('LISTADOCUMENTOS')
@@ -701,14 +701,20 @@ class HomeController extends Controller
               $pre3 = $pre3.$pre2;
               $pre2 = '';
             }
-              $recipient = User::where('id',auth()->id())->first();          
+            
+            if ($pre3!=="") {
+                  
+                  $recipient = User::where('id',auth()->id())->first();          
                   $message = Message::create([
                   'sender_id' => auth()->id(),
                   'recipient_id' =>  auth()->id(),
                   'body' => $pre3
                   ]);
                   $recipient->notify(new MessageSent($message));
-        }
+            }
+            
+              
+         }
         
 //--------------------------FIN Notificaciones de documentos vencidos al administrador del cliente-----------------------------------
           
