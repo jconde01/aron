@@ -9,8 +9,8 @@ use App\Estados;
 use App\DatosGe;
 use App\DatosAfo;
 use App\Imss;
-use Session;
 use App\ListaN;
+use Session;
 use App\Empleado;
 use App\Empresa;
 use App\EmpleadoAsimi;
@@ -69,8 +69,6 @@ class EmpleadosController extends Controller
         $depto2 = $depto1->DESCRIP;
         $localidad = $empleado2->CIUDAD;
         $telefono = $empleado2->TELEFONO;
-        $curri =ListaDoc::where('EMP', $emp)->get()->first();
-        $curriculum = $curri->NOMBRE11;
         $data = array(
             "nombre" => $nombre,
             "puesto" => $puesto2,
@@ -79,8 +77,7 @@ class EmpleadosController extends Controller
             "telefono" => $telefono,
             "foto" => $foto,
             "sangre" => $sangre,
-            "imss" => $imss,
-            "curriculum" => $curriculum
+            "imss" => $imss
 
         );
          
@@ -1847,6 +1844,7 @@ class EmpleadosController extends Controller
     }
 
     public function update(Request $request, $EMP){
+        
             DB::connection('sqlsrv2')->beginTransaction();
             try{
                 $selProceso = Session::get('selProceso');
@@ -1871,7 +1869,7 @@ class EmpleadosController extends Controller
                         $imss->SUELDONUE = $request->input('SUELDO');
                         $imss->INTEGNUE = $request->input('INTEG');
                         $imss->INTIVNUE = $request->input('INTIV');
-                        $imss->save();
+                        //$imss->save();
                     }
                     if (($estatus=='B') && ($BajaImss==1)) {
                         $imss = new Imss();
@@ -1886,9 +1884,18 @@ class EmpleadosController extends Controller
                         $imss->SUELDONUE = $request->input('SUELDO');
                         $imss->INTEGNUE = $request->input('INTEG');
                         $imss->INTIVNUE = $request->input('INTIV');
-                        $imss->save();
+                        //$imss->save();
                     }
                 }  
+                if (($estatus=='B') && ($request->input('maltermino')==1)) {
+                    $listaN = new ListaN();
+                    $listaN->RFC = $request->input('RFC');
+                    $listaN->MOTIVO = $request->input('motivos');
+                    $listaN->FECHA_BAJA = date('d-m-Y', strtotime($request->input('BAJA')));
+                    $listaN->save();
+                    
+                }
+
                     $emple = Empleado::where('EMP', $EMP)->get()->first();
                     $emple->TIPONO = $selProceso;
                     $emple->EMP = $request->input('EMP');
@@ -2460,7 +2467,7 @@ class EmpleadosController extends Controller
         return view('configuracion.documentosemp.index')->with(compact('navbar','docsReque')); 
     }
 
-     public function GetRFC(Request $data) {
+    public function GetRFC(Request $data) {
         
         $rfc= $data->rfc;
         $empleado = ListaN::where('RFC',$rfc)->first();
@@ -2472,11 +2479,11 @@ class EmpleadosController extends Controller
             
         );
          
-        // echo json_encode($data);
+        
        return response($data);
-        // $data2 = $data->fldide;
-        // return response($data2);
+        
     }
+
     
 }
 //fin del codigo escrito por Ricardo Cordero.

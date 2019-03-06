@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Listado de departamentos')
+@section('title', 'Listado de Empleados')
 @section('body-class', 'profile-page')
 @section('content') 
   <div class="main main-raised"> 
@@ -189,9 +189,6 @@
             imss.value = data['imss'];
             var foto = data['foto'];
             var img = '/img_emp/'+foto;
-            var curriculum = data['curriculum'];
-            var curri = '/catalogos/documentos/empleados/'+curriculum;
-            //alert('dir: ' + curri); 
             if (data['foto']) {
               $('#ima').removeAttr('scr');
               $('#ima').attr('src',img);
