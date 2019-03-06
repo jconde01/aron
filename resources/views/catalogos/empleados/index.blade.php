@@ -28,7 +28,7 @@
                     <tbody>@foreach ($emps as $emp)
                         <tr>
                             <td class="parrafo">{{$emp->EMP}}</td>
-                            <td class="parrafo" ><a href=""data-toggle="modal" data-target="#GSCCModal" id="{{$emp->EMP}}" rel="tooltip" title="Consulta rapida" name="nom">{{$emp->NOMBRE}} <input type="hidden" name="{{$emp->EMP}}" value="{{$emp->EMP}}"> </a></td>
+                            <td class="parrafo" ><a href=""data-toggle="modal" data-target="#GSCCModal2" id="{{$emp->EMP}}" rel="tooltip" title="Consulta rapida" name="nom">{{$emp->NOMBRE}} <input type="hidden" name="{{$emp->EMP}}" value="{{$emp->EMP}}"> </a></td>
                             <td class="parrafo"> @foreach ($jobs as $job)
                                 <?php if ($emp->PUESTO==$job->PUESTO) {
                                     echo "$job->NOMBRE";
@@ -143,7 +143,7 @@
 
                                   </div>
                                   <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Aceptar</button>     
+                                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="limpiar_inputs()">Aceptar</button>     
                                   </div>
                                 </div>
                               </div>
@@ -208,10 +208,23 @@
               $('#curri').attr('href',"#");
             }
 
-        });
-        
+        });        
             
     });
+
+      function limpiar_inputs(){
+        document.getElementById("numbre").value = " "; 
+        document.getElementById("pue").value = " ";
+        document.getElementById("depa").value = " ";
+        document.getElementById("loca").value = " ";
+        document.getElementById("tele").value = " ";
+        document.getElementById("ima").value = " ";
+        document.getElementById("san").value = " "; 
+        document.getElementById("imss").value = " ";
+        $('#ima').removeAttr('scr');
+        $('#ima').attr('src',"{{ asset('/img/Ideatisa.ico')}}"); 
+      }
+      
   </script>
   @endforeach
 @endsection
