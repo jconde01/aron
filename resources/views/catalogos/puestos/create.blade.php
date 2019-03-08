@@ -2,7 +2,6 @@
 @section('body-class', 'profile-page sidebar-collapse') <!-- Paso la clase class="login-page sidebar-collapse" por medio de una seccion en el lugar que se llama body-class, en la pagina donde quiero que funcione la clase -->
 @section('content')
     
-  </div>
   <div class="main main-raised">
     <div>
  
