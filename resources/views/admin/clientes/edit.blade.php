@@ -102,7 +102,7 @@
                             <select class="form-control" readonly name="Fiscal_BDA">
                                 <OPTION value="0">No asignado</OPTION>
                                 @foreach ($tisanom_cias as $cia)
-                                    <option value="{{ $cia->CIA }}" {{ ($cliente->fiscal_bda == $cia->CIA)? 'selected':'' }}>{{ $cia->NOMCIA }}</option>
+                                    <option value="{{ $cia->CIA }}" {{ ($cliente->fiscal_bda == $cia->CIA)? 'selected':'' }}>{{ $cia->NOMCIA . ' - ' . $cia->DBNAME }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -125,13 +125,13 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </div>                    
+                        </div>                     
                         <div class="col-sm-5">
                             <div class="form-group label-floating">
                                 <select class="form-control" readonly name="Asimilado_BDA">
                                     <OPTION value="0">No asignado</OPTION>
                                     @foreach ($tisanom_cias as $cia)
-                                        <option value="{{ $cia->CIA }}" {{ ($cliente->asimilado_bda == $cia->CIA)? 'selected':'' }}>{{ $cia->NOMCIA }}</option>
+                                        <option value="{{ $cia->CIA }}" {{ ($cliente->asimilado_bda == $cia->CIA)? 'selected':'' }}>{{ $cia->NOMCIA . ' - ' . $cia->DBNAME }}</option>
                                     @endforeach
                                 </select>
                             </div>
