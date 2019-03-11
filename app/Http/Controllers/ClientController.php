@@ -242,6 +242,14 @@ class ClientController extends Controller
             }
         }
 
+        $docsRequeridosEmp = new DocsRequeridos();
+        $docsRequeridosEmp->REQUERIDO1 = 1;
+        $docsRequeridosEmp->REQUERIDO2 = 1;
+        $docsRequeridosEmp->REQUERIDO3 = 1;
+        $docsRequeridosEmp->REQUERIDO4 = 1;
+        $docsRequeridosEmp->REQUERIDO5 = 1;
+        $docsRequeridosEmp->save();
+
         // Crea y almacena las llaves y certificado
         if ($request->Fiscal_BDA > 0) {
             $email = 'administrador' . $request->Administrador;
@@ -252,13 +260,7 @@ class ClientController extends Controller
             $this::makeCert($request->Nombre, $ciaAsim->RFCCTE, $rutaCertAsim, $request->passwd, $email);
         }
 
-        $docsRequeridosEmp = new DocsRequeridos();
-        $docsRequeridosEmp->REQUERIDO1 = 1;
-        $docsRequeridosEmp->REQUERIDO2 = 1;
-        $docsRequeridosEmp->REQUERIDO3 = 1;
-        $docsRequeridosEmp->REQUERIDO4 = 1;
-        $docsRequeridosEmp->REQUERIDO5 = 1;
-        $docsRequeridosEmp->save();
+        
 
     	return redirect('/admin/clientes'); 
     }
