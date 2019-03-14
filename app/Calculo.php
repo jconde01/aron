@@ -2,10 +2,12 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-use App\Empleado;
 use App\Movtos;
 use App\Concepto;
+use App\Empleado;
+use App\MovtosAsimi;
+use App\EmpleadoAsimi;
+use Illuminate\Database\Eloquent\Model;
 
 class Calculo extends Model
 {
@@ -187,5 +189,31 @@ class Calculo extends Model
 		}
 		return $result;
 	}
+
+	public static function perPrimAsimi(EmpleadoAsimi $emp, MovtosAsimi &$movto, $cpto)
+	{
+		switch ($cpto->METODO) {
+			case '02':
+				$result = ($emp->SUELDO / $cpto->PARAM2) * $cpto->PARAM1 * $movto->UNIDADES;
+				break;
+
+			case '11':
+				$var1 = -1 * abs($movto->UNIDADES);
+				$var2 = $emp->SUELDO * $cpto->PARAM1 / 100;
+				$result = $var1 * $var2;
+				$movto->UNIDADES = $var1;
+				break;
+			
+			case '13':
+				$result = ($emp->SUELDO + $emp->PROMED) * $cpto->PARAM1 / 100 * $movto->UNIDADES;
+	            $afe100 = "3";
+	            break;
+
+			default:
+				$result = 0;
+				break;
+		}
+		return $result;
+	}	
 
 }

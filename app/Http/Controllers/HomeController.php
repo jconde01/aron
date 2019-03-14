@@ -68,8 +68,9 @@ class HomeController extends Controller
                 return view('home')->with(compact('navbar', 'graficas'));
             } else {
                 $cliente = auth()->user()->client;
-                // Es el usuario administrador del cliente?
-                if ($perfil == env('APP_CLIENT_ADMIN',1)) {
+                // Es el usuario administrador del cliente y no ha seleccionado un proceso?
+                // asume FISCAL (si está activo) y en su defecto, ASIMILADOS.
+                if ($perfil == env('APP_CLIENT_ADMIN',1) && Session::get('selProceso') == null) {
                     $tipos = Client::select('fiscal','asimilado')->find($cliente->id);
                     If ($tipos->fiscal != 0) {
                         $this::setConn('fiscal');
@@ -632,6 +633,7 @@ class HomeController extends Controller
     }
     //termina codigo escrito por Ricardo Cordero.
 
+
     private static function setConn($tipo) {
         $objCliente = auth()->user()->client;
         if ($tipo == 'fiscal') {
@@ -639,11 +641,13 @@ class HomeController extends Controller
         } else {
             $cia = $objCliente->asimilado_bda;
         }
+
         try {
             $empresaTisanom = Empresa::where('CIA',$cia)->first();
         } catch (\Exception $e) {
             return response('Error');
         }
+
         Config::set("database.connections.sqlsrv2", [
             "driver" => 'sqlsrv',
             "host" => Config::get("database.connections.sqlsrv")["host"],

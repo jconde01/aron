@@ -84,7 +84,7 @@
                 <select class="form-control emp" id="empleado" name="Empleado">
                     <option value="0" selected>Seleccione un empleado...</option>
                     @foreach ($empleados as $emp)
-                        <option value="{{ $emp->EMP }}" data-sexo="{{ $emp->SEXO }}" data-sueldo="{{ $emp->SUELDO }}" data-promed="{{ $emp->PROMED }}" >{{ $emp->NOMBRE }}</option>
+                        <option value="{{ $emp->RFC }}" data-sexo="{{ $emp->SEXO }}" data-sueldo="{{ $emp->SUELDO }}" data-promed="{{ $emp->PROMED }}" >{{ $emp->NOMBRE }}</option>
                     @endforeach
                 </select>
             </div>
@@ -207,12 +207,6 @@
 	var fechaIncidencia;
 	var pideFolioIMMS = [MATERNIDAD, TRANSITO, ENFERMEDAD_PROF, ACCIDENTE, ENFERMEDAD_GRAL];
 
-	// function compare_dates(date1,date2,date3){
-	// 	if (date3 >= date1 && date3 <= date2) return false
-	//      if (date1>date2) return ("Date1 > Date2");
-	//    else if (date1<date2) return ("Date2 > Date1");
-	//    else return ("Date1 = Date2"); 
-	//   }
 
 	function date2Str(fecha) {
 		// fecha en formato YYYY-MM-DD
@@ -245,7 +239,8 @@
 	    fechaIncidencia = document.getElementById("fecha");
 	    // refIMSS = document.getElementById("refIMSS");
 
-
+	    // evento que se dispara al presionar el boton de 'Editar' un renglon
+	    // obtiene loa datos de la tabla, los inserta en el modal y lo despliega 
 		$('#captura tbody').on('click', '.btn-success', function () {
 		    rowElem = $(this).closest("tr");
 		    //var row_index = rowElem.index();
@@ -268,7 +263,7 @@
 	     	$("#edit").modal();
 		});
 
-
+		// evento para borrar un renglon al presionar el boton de 'eliminar'
 		$('#captura tbody').on('click', '.btn-danger', function () {
 		    rowElem = $(this).closest("tr");
 		    tabla.deleteRow(rowElem.index());
@@ -276,11 +271,13 @@
 	});
 
 
+	// Evento disparado al presionar el boton de 'Agregar empleado'
+	// prepara el modal para capturar los datos y lo despliega
 	$("#btnNuevo").click(function(){
 		concepto  = $('.cpto').val();
 		periodo   = $('.pdo').val(); 
     	if ( concepto != 0 && periodo != 0 ) {
-    		$('#empleado').val(0);
+    		$('#empleado').val('');
     		$('#dias').val(0);
     		$('#refIMSS').val('');
     		$('#tipo').val('');
@@ -338,7 +335,6 @@
 		}
 
 		if (validaNuevo()) {
-			//var tipo = ($('#tipo').val() == 0)? '':$('#tipo').text();
 			var fechaStr = date2Str(fecha);			
         	var row = tabla.insertRow(tabla.rows.length);
         	var col1 = row.insertCell(0);
@@ -362,6 +358,8 @@
     });
 
 
+    // evento disparado cuando se selecciona un concepto de ausentismo o incapacidad
+    // ejecuta un Ajax para obtener los parametros pertinentes al concepto
 	$('.cpto').change(function() {
 		var conceptData;
 		var tipoCaptura;
@@ -406,6 +404,8 @@
 	});
 
 	// período change
+	// ejecuta un ajax para obtener los datos de los empleados guardados
+	// para este concepto y periodo
 	$('.pdo').change(function() {
 		concepto  =  $('.cpto').val();
 		periodo = $('.pdo').val();
@@ -419,7 +419,7 @@
 		    while (tabla.rows.length > 1) {
 		        tabla.deleteRow(tabla.rows.length-1);
     		}
-    		// Aqui los despliega !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    		// Aqui los despliega 
     	    for (var i = 0; i < movtos.length; i++) {
 				var fechaParts = movtos[i]["FECHA"].substr(0,10).split('-');
 				var theDate = new Date(fechaParts[0], fechaParts[1] - 1, fechaParts[2]);
@@ -438,7 +438,7 @@
 	        	var col6 = row.insertCell(5);
 	        	var col7 = row.insertCell(6);
 
-				col1.innerHTML = '<td><input type="text" class="emp" name="emp[]" value="'+movtos[i]["EMP"]+'"/></td>'; col1.style.display = 'none';
+				col1.innerHTML = '<td><input type="text" class="emp" name="emp[]" value="'+movtos[i]["RFC"]+'"/></td>'; col1.style.display = 'none';
 				col2.innerHTML = '<td style="text-align:left!important;">' + movtos[i]["NOMBRE"] + '</td>';
 				col3.innerHTML = '<td><input type="text" class="fecha" name="fecha[]" style="border:0px;width:150px!important;" readonly value="'+fechaStr+'"/></td>'; 
 				col4.innerHTML = '<td><input type="text" class="dias" name="dias[]" style="border:0px;width:100px!important;text-align:right!important;" readonly value="'+movtos[i]["DIAS"]+'"/></td>';
@@ -470,41 +470,6 @@
 		}
 	});
 
-	// Public Function ValidaDias(ByVal Fecha As Date, dias As Integer) As Boolean
-	// Dim BimActual As Integer, DiasPasados As Integer
-	// Dim FinBim As Date
-	// ValidaDias = True
-	// BimActual = Int((Month(Fecha) - 1) / 2) + 1
-	// DiasPasados = Fecha - IniBim(BimActual)
-	// FinBim = IniBim(BimActual) + DiasBim(BimActual) - 1
-	// If dias + DiasPasados > DiasBim(BimActual) Then
-	//     MsgBox "El total de dias capturado, excede el total de dias disponibles del bimestre " & BimActual & vbCrLf & "a partir de la fecha indicada, debe desglosar los dias" & vbCrLf & " " & vbCrLf & "Inicio de Bimestre=" & Format(IniBim(BimActual), "dd/mm/yyyy") & "; Fin del Bimestre=" & Format(FinBim, "dd/mm/yyyy") & vbCrLf & "Fecha Capturada=" & Format(Fecha, "dd/mm/yyyy") & vbCrLf & "Dias Trancurridos=" & DiasPasados & ";  Dias Disponobles=" & DiasBim(BimActual) - DiasPasados, vbInformation, Me.Caption
-	//     ValidaDias = False
-	// End If
-
-	// End Function
-
-	// Valida dias
-	// $('#dias').change(function() {
-	// 	fecha  =  $('#fecha').val();
-	// 	var parts =fecha.split('/');
-	// 	// Please pay attention to the month (parts[1]); JavaScript counts months from 0:
-	// 	// January - 0, February - 1, etc.
-	// 	var mydate = new Date(parts[0], parts[1] - 1, parts[2]); 
-	// 	alert(fecha + ' - ' + mydate);
-	// 	//bimActual = Int((fecha.getMonth() -1) / 2) + 1;
-
-	// 	//periodo = $('.pdo').val();
- //    	// checa si hay movimientos capturados del período en cuyo caso los despliega
- //      //   $.post("get-movtos", { concepto: concepto, periodo: periodo, _token: token }, function( data ) {
- //      //       var movtos = Object.values(data);
- //    		// //console.log(movtos);	
-	// 	    // while (tabla.rows.length > 1) {
-	// 	    //     tabla.deleteRow(tabla.rows.length-1);
- //    		// }
- //      //   });		
-	// });
-
 
 	function creaPantalla() {
     	//console.log(numPantalla);
@@ -533,7 +498,7 @@
 		var bOK = true;
 		var rowLength = tabla.rows.length;
 
-    	if ( empleado != 0 ) {
+    	if ( empleado != '' ) {
 			// Checa si ya existe el empleado con la misma fecha
 			for(var i=1; i<rowLength; i+=1){
 			    var row = tabla.rows[i];
