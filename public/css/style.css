@@ -51,6 +51,7 @@ h6{
 #a1
 {
   
+  font-size: 13px;
   text-decoration: none; 
   padding: 7px 30px 7px 30px!important; 
 }
@@ -66,7 +67,7 @@ h6{
 }
 #a2
 {
-  
+  font-size: 13px;
   text-decoration: none;
   padding: 7px 4px 7px 4px!important;  
 }
@@ -82,7 +83,8 @@ h6{
 }
 #a3
 {
-  
+ 
+  font-size: 13px;
   text-decoration: none;
   padding: 7px 43px 7px 43px!important;  
 }
@@ -98,7 +100,7 @@ h6{
 }
 #a4
 {
-  
+  font-size: 13px;
   text-decoration: none;
   padding: 7px 23px 7px 23px!important;  
 }
@@ -139,9 +141,10 @@ table {
 
 @media screen and (max-width: 1366px) {
   #a1{
+     
     padding-left: 3%!important;
     padding-right: 3%!important;
-    font-size: 16px;
+    font-size: 13px;
   }
   #a2{
     padding-left: 1px!important;
@@ -261,10 +264,16 @@ table {
   }
   #tipomovil
   {
-   
+  
     
   }
-  
+  .toggle-open
+  {
+    display: block!important;
+    
+    margin-left: 220px;
+  }
+
 
 }
 
@@ -286,14 +295,14 @@ table {
   }
   #a3
   {
-    padding-left: 10%!important;
-    padding-right: 10%!important;
+    padding-left: 0%!important;
+    padding-right: 0%!important;
     font-size: 8px!important;
   }
   #a4
   {
-    padding-left: 2%!important;
-    padding-right: 2%!important;
+    padding-left: 0%!important;
+    padding-right: 0%!important;
     font-size: 6px!important;
   }
   .lis
@@ -308,10 +317,15 @@ table {
   }
   #tipomovil
   {
-   
+  
     
   }
-  
+  .toggle-open
+  {
+    display: block!important;
+    
+    margin-left: 220px;
+  }
 
 
 }
@@ -323,6 +337,7 @@ table {
     padding-left: 43%;
     padding-right: 44%;
   }
+
 }
  
 @media screen and (max-width: 1200px) {
@@ -385,7 +400,11 @@ table {
     }
 }
 
-@media only screen and (min-width: 320px) and (max-width: 480px){
+@media only screen and (min-width: 320px) and (max-width: 700px){
+  body{
+    
+    
+  }
   #jumbotron2{
   border-radius: 10px !important;
   padding: 0px 0px 0px 0px !important;

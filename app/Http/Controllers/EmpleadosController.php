@@ -1844,7 +1844,11 @@ class EmpleadosController extends Controller
     }
 
     public function update(Request $request, $EMP){
-        
+        $nomina = session('tinom');
+
+        if ($nomina == 'fiscal') {
+            //--------------inicia el update de fiscal-------------
+  
             DB::connection('sqlsrv2')->beginTransaction();
             try{
                 $selProceso = Session::get('selProceso');
@@ -2013,7 +2017,372 @@ class EmpleadosController extends Controller
                echo "no se pudo actualizar la base de datos".$e;
             }
             DB::connection('sqlsrv2')->commit();
-            return redirect('/catalogos/empleados');
+            //--------termina el update de fiscal------------------
+
+            //--------update de asimilado con fiscal si es que tiene---------
+            $cliente = auth()->user()->client;
+                if ($cliente->asimilado==1){
+                    DB::connection('sqlsrv3')->beginTransaction();
+                    try{
+                    
+                            $empleAsimi = EmpleadoAsimi::where('RFC', $emple->RFC)->get()->first();                          
+                            $empleAsimi->NetoMensual = $request->input('NetoMensual');
+                            $empleAsimi->save();  
+                    }
+                    catch(\Exception $e){       
+                       DB::connection('sqlsrv3')->rollBack();
+                       //throw $e;
+                       echo "no se pudo actualizar la base de datos de asimilados ya que no se encuentra el empleado";
+                    }
+                    DB::connection('sqlsrv3')->commit();
+
+                }
+            //--------fin update asimilado con fiscal si es que tiene---------
+        }else{
+
+            //------------inicia update de asimilados-------------
+            DB::connection('sqlsrv2')->beginTransaction();
+            try{
+                $selProceso = Session::get('selProceso');
+                $EMP = $request->input('EMP');
+                $BajaImss = $request->input('BajaImss');
+                //actualizar estado de empleado en la tabla imss por movimiento de status
+                $estatus = $request->input('ESTATUS');
+                $emps = Empleado::where('EMP', $EMP)->get()->first();
+                if ($emps->ESTATUS==$estatus) {
+                     echo "No hubo cambio";
+                    } 
+                else{   
+                    if (($estatus=='A') && ($emps->ESTATUS!=='M')) {
+                        $imss = new Imss();
+                        $imss->TIPONO = $selProceso;
+                        $imss->EMP = $request->input('EMP');
+                        $imss->FECHA = date('d-m-Y', strtotime($request->input('INGRESO')));
+                        $imss->CLAVE = 8;
+                        $imss->SUELDO = $request->input('SUELDO');
+                        $imss->INTEG = $request->input('INTEG');
+                        $imss->INTIV = $request->input('INTIV');
+                        $imss->SUELDONUE = $request->input('SUELDO');
+                        $imss->INTEGNUE = $request->input('INTEG');
+                        $imss->INTIVNUE = $request->input('INTIV');
+                        //$imss->save();
+                    }
+                    if (($estatus=='B') && ($BajaImss==1)) {
+                        $imss = new Imss();
+                        $imss->TIPONO = $selProceso;
+                        $imss->EMP = $request->input('EMP');
+                        $imss->FECHA = date('d-m-Y', strtotime($request->input('BAJA')));
+                        $imss->CLAVE = 2;
+                        $imss->SUELDO = $request->input('SUELDO');
+                        $imss->INTEG = $request->input('INTEG');
+                        $imss->INTIV = $request->input('INTIV');
+                        $imss->CAUSA = $request->input('CAUSA');
+                        $imss->SUELDONUE = $request->input('SUELDO');
+                        $imss->INTEGNUE = $request->input('INTEG');
+                        $imss->INTIVNUE = $request->input('INTIV');
+                        //$imss->save();
+                    }
+                }  
+                if (($estatus=='B') && ($request->input('maltermino')==1)) {
+                    $listaN = new ListaN();
+                    $listaN->RFC = $request->input('RFC');
+                    $listaN->MOTIVO = $request->input('motivos');
+                    $listaN->FECHA_BAJA = date('d-m-Y', strtotime($request->input('BAJA')));
+                    $listaN->save();
+                    
+                }
+
+                    $emple = Empleado::where('EMP', $EMP)->get()->first();
+                    $emple->TIPONO = $selProceso;
+                    $emple->EMP = $request->input('EMP');
+                    $emple->NOMBRE = $request->input('NOMBRES') . ' ' . $request->input('PATERNO') . ' ' . $request->input('MATERNO');
+                    $emple->PUESTO = $request->input('PUESTO');
+                    $emple->cuenta = $request->input('cuenta')."";
+                    $emple->DEPTO = $request->input('DEPTO');
+                    $emple->TIPOTRA = $request->input('TIPOTRA');
+                    $emple->c_Estado = $request->input('c_Estado');
+                    $emple->DIRIND = $request->input('DIRIND');
+                    $emple->TIPOJORNADA = $request->input('TIPOJORNADA');
+                    $emple->TIPOREGIMEN = $request->input('TIPOREGIMEN');
+                    $emple->CHECA = $request->input('CHECA');
+                    $emple->SINDIC = $request->input('SINDIC');
+                    $emple->TURNO = $request->input('TURNO');
+                    $emple->ZONAECO = $request->input('ZONAECO') . "";
+                    $emple->ESTATUS = $request->input('ESTATUS');
+                    $emple->CLIMSS = $request->input('CLIMSS') . "";
+                    $emple->TIPOPAGO = $request->input('TIPOPAGO');
+                    $emple->c_TipoContrato = $request->input('c_TipoContrato');
+                    $emple->INGRESO = date('d-m-Y', strtotime($request->input('INGRESO')));
+                    $emple->VACACION = date('d-m-Y', strtotime($request->input('VACACION'))); 
+                    $emple->PLANTA = date('d-m-Y', strtotime($request->input('PLANTA')));
+                    $emple->VENCIM = date('d-m-Y', strtotime($request->input('VENCIM')));
+                    if (date('d-m-Y', strtotime($request->input('BAJA')))!=="31-12-1969") {
+                        $emple->BAJA = date('d-m-Y', strtotime($request->input('BAJA')));
+                    }
+                    
+                    $emple->REGPAT = $request->input('REGPAT')."";
+                    $emple->RFC = $request->input('RFC');
+                    $emple->IMSS = $request->input('IMSS')."";
+                    $emple->GRUIMS = $request->input('GRUIMS');
+                    $emple->FONACOT = $request->input('FONACOT') . "";
+                    $emple->INFONAVIT = $request->input('INFONAVIT') . "";
+                    $emple->OTRACIA = $request->input('OTRACIA');
+                    $emple->TAXOTRA = $request->input('TAXOTRA');
+                    $emple->CASOTRA = $request->input('CASOTRA');
+                    $emple->SAROTR = $request->input('SAROTR') . "";
+                    $emple->DESINFO = $request->input('DESINFO');
+                    $emple->SUELDO = $request->input('SUELDO');
+                    $emple->NetoMensual = $request->input('NetoMensual');
+                    $emple->VARIMSS = $request->input('VARIMSS');
+                    $emple->INTEG = $request->input('INTEG');
+                    $emple->INTIV = $request->input('INTIV');
+                    $emple->PRESDEC = $request->input('PRESDEC');
+                    $emple->NOCRED = $request->input('NOCRED');
+                   
+                    $emple->save();
+              
+                    $emple1 = DatosGe::where('EMP', $EMP)->get()->first();
+                    $emple1->NIVEL = $request->input('NIVEL') . "";
+                    $emple1->DEPTO = $request->input('DEPTO') . "";
+                    $emple1->REPORTA = $request->input('REPORTA') . "";
+                    $emple1->DIRECCION = $request->input('DIRECCION') . "";
+                    $emple1->PUESTO = $request->input('PUESTO');
+                    $emple1->Referencia = $request->input('Referencia') . "";
+                    $emple1->noExterior = $request->input('noExterior') . "";
+                    $emple1->noInterior = $request->input('noInterior') . "";
+                    $emple1->Municipio = $request->input('Municipio') . "";
+                    $emple1->COLONIA = $request->input('COLONIA') . "";
+                    $emple1->CIUDAD = $request->input('CIUDAD') . "";
+                    $emple1->ESTADO = $request->input('ESTADO') . "";
+                    $emple1->TELEFONO = $request->input('TELEFONO') . "";
+                    $emple1->ZIP = $request->input('ZIP') . "";
+                    $emple1->CELULAR = $request->input('CELULAR') . "";
+                    $emple1->EXPERI = $request->input('EXPERI') . "";
+                    $emple1->SEXO = $request->input('SEXO') . "";
+                    $emple1->CIVIL = $request->input('CIVIL');
+                    $emple1->BODA = date('d-m-Y', strtotime($request->input('BODA')));
+                    $emple1->LICENCIA = $request->input('LICENCIA');
+                    $emple1->SANGRE = $request->input('SANGRE');
+                    $emple1->ESCOLAR = $request->input('ESCOLAR');
+                    $emple1->CAMB_RESID = $request->input('CAMB_RESID');
+                    $emple1->DISP_VIAJE = $request->input('DISP_VIAJE');
+                    $emple1->BORN = date('d-m-Y', strtotime($request->input('BORN')));
+                    $emple1->NACIM = $request->input('NACIM') . "";
+                    $emple1->NACIONAL = $request->input('NACIONAL');
+                    $emple1->DEPENDIENT = $request->input('DEPENDIENT') . "";
+                    $emple1->MEDIO = $request->input('MEDIO');
+                    $emple1->FUENTE = $request->input('FUENTE') . "";
+                    $emple1->Email = $request->input('Email') . "";
+                    $file = $request->file('archivo');
+                    if ($file !== null) { 
+                        // $cliente = Session::get('selCliente');
+                        // $rfc_cliente = CiasNo::first()->RFCCIA;
+                        // $rfc_empleado0 = $request->input('RFC');
+                        // $rfc_empleado1=substr ($rfc_empleado0, 0,4);
+                        // $rfc_empleado2=substr ($rfc_empleado0, 5,6);
+                        // $rfc_empleado3=substr ($rfc_empleado0, 12,3);
+                        // $rfc_empleado= $rfc_empleado1.$rfc_empleado2.$rfc_empleado3;
+                        // $rutaEmpleados = Client::getRutaEmpleados($cliente->cell_id,  $rfc_cliente);
+                        $path = public_path(). '/img_emp/';
+                        $fileName = uniqid() . $file->getClientOriginalName();
+                        $moved =  $file->move($path, $fileName);
+                        if ($moved) {
+                            $emple1->FOTO = $fileName;
+                        }
+                    }
+                    else{
+                        //dd('no actualizada');
+                    }
+                    $emple1->save();
+
+                    $emple11 = DatosAfo::where('EMP', $EMP)->get()->first();
+                    $emple11->CURP = $request->input('CURP');
+                    $emple11->IMSS = $request->input('IMSS');
+                    $emple11->NOMBRES = $request->input('NOMBRES');
+                    $emple11->PATERNO = $request->input('PATERNO') . "";
+                    $emple11->MATERNO = $request->input('MATERNO') . "";
+                    $emple11->save();
+            }
+            catch(\Exception $e){       
+               DB::connection('sqlsrv2')->rollBack();
+               //throw $e;
+               echo "no se pudo actualizar la base de datos".$e;
+            }
+            DB::connection('sqlsrv2')->commit();
+           
+            //---------termina update de asimilados---------------
+        }
+        
+                    // DB::connection('sqlsrv2')->beginTransaction();
+                    // try{
+                    //     $selProceso = Session::get('selProceso');
+                    //     $EMP = $request->input('EMP');
+                    //     $BajaImss = $request->input('BajaImss');
+                    //     //actualizar estado de empleado en la tabla imss por movimiento de status
+                    //     $estatus = $request->input('ESTATUS');
+                    //     $emps = Empleado::where('EMP', $EMP)->get()->first();
+                    //     if ($emps->ESTATUS==$estatus) {
+                    //          echo "No hubo cambio";
+                    //         } 
+                    //     else{   
+                    //         if (($estatus=='A') && ($emps->ESTATUS!=='M')) {
+                    //             $imss = new Imss();
+                    //             $imss->TIPONO = $selProceso;
+                    //             $imss->EMP = $request->input('EMP');
+                    //             $imss->FECHA = date('d-m-Y', strtotime($request->input('INGRESO')));
+                    //             $imss->CLAVE = 8;
+                    //             $imss->SUELDO = $request->input('SUELDO');
+                    //             $imss->INTEG = $request->input('INTEG');
+                    //             $imss->INTIV = $request->input('INTIV');
+                    //             $imss->SUELDONUE = $request->input('SUELDO');
+                    //             $imss->INTEGNUE = $request->input('INTEG');
+                    //             $imss->INTIVNUE = $request->input('INTIV');
+                    //             //$imss->save();
+                    //         }
+                    //         if (($estatus=='B') && ($BajaImss==1)) {
+                    //             $imss = new Imss();
+                    //             $imss->TIPONO = $selProceso;
+                    //             $imss->EMP = $request->input('EMP');
+                    //             $imss->FECHA = date('d-m-Y', strtotime($request->input('BAJA')));
+                    //             $imss->CLAVE = 2;
+                    //             $imss->SUELDO = $request->input('SUELDO');
+                    //             $imss->INTEG = $request->input('INTEG');
+                    //             $imss->INTIV = $request->input('INTIV');
+                    //             $imss->CAUSA = $request->input('CAUSA');
+                    //             $imss->SUELDONUE = $request->input('SUELDO');
+                    //             $imss->INTEGNUE = $request->input('INTEG');
+                    //             $imss->INTIVNUE = $request->input('INTIV');
+                    //             //$imss->save();
+                    //         }
+                    //     }  
+                    //     if (($estatus=='B') && ($request->input('maltermino')==1)) {
+                    //         $listaN = new ListaN();
+                    //         $listaN->RFC = $request->input('RFC');
+                    //         $listaN->MOTIVO = $request->input('motivos');
+                    //         $listaN->FECHA_BAJA = date('d-m-Y', strtotime($request->input('BAJA')));
+                    //         $listaN->save();
+                            
+                    //     }
+
+                    //         $emple = Empleado::where('EMP', $EMP)->get()->first();
+                    //         $emple->TIPONO = $selProceso;
+                    //         $emple->EMP = $request->input('EMP');
+                    //         $emple->NOMBRE = $request->input('NOMBRES') . ' ' . $request->input('PATERNO') . ' ' . $request->input('MATERNO');
+                    //         $emple->PUESTO = $request->input('PUESTO');
+                    //         $emple->cuenta = $request->input('cuenta')."";
+                    //         $emple->DEPTO = $request->input('DEPTO');
+                    //         $emple->TIPOTRA = $request->input('TIPOTRA');
+                    //         $emple->c_Estado = $request->input('c_Estado');
+                    //         $emple->DIRIND = $request->input('DIRIND');
+                    //         $emple->TIPOJORNADA = $request->input('TIPOJORNADA');
+                    //         $emple->TIPOREGIMEN = $request->input('TIPOREGIMEN');
+                    //         $emple->CHECA = $request->input('CHECA');
+                    //         $emple->SINDIC = $request->input('SINDIC');
+                    //         $emple->TURNO = $request->input('TURNO');
+                    //         $emple->ZONAECO = $request->input('ZONAECO') . "";
+                    //         $emple->ESTATUS = $request->input('ESTATUS');
+                    //         $emple->CLIMSS = $request->input('CLIMSS') . "";
+                    //         $emple->TIPOPAGO = $request->input('TIPOPAGO');
+                    //         $emple->c_TipoContrato = $request->input('c_TipoContrato');
+                    //         $emple->INGRESO = date('d-m-Y', strtotime($request->input('INGRESO')));
+                    //         $emple->VACACION = date('d-m-Y', strtotime($request->input('VACACION'))); 
+                    //         $emple->PLANTA = date('d-m-Y', strtotime($request->input('PLANTA')));
+                    //         $emple->VENCIM = date('d-m-Y', strtotime($request->input('VENCIM')));
+                    //         if (date('d-m-Y', strtotime($request->input('BAJA')))!=="31-12-1969") {
+                    //             $emple->BAJA = date('d-m-Y', strtotime($request->input('BAJA')));
+                    //         }
+                            
+                    //         $emple->REGPAT = $request->input('REGPAT')."";
+                    //         $emple->RFC = $request->input('RFC');
+                    //         $emple->IMSS = $request->input('IMSS')."";
+                    //         $emple->GRUIMS = $request->input('GRUIMS');
+                    //         $emple->FONACOT = $request->input('FONACOT') . "";
+                    //         $emple->INFONAVIT = $request->input('INFONAVIT') . "";
+                    //         $emple->OTRACIA = $request->input('OTRACIA');
+                    //         $emple->TAXOTRA = $request->input('TAXOTRA');
+                    //         $emple->CASOTRA = $request->input('CASOTRA');
+                    //         $emple->SAROTR = $request->input('SAROTR') . "";
+                    //         $emple->DESINFO = $request->input('DESINFO');
+                    //         $emple->SUELDO = $request->input('SUELDO');
+                    //         $emple->NetoMensual = $request->input('NetoMensual');
+                    //         $emple->VARIMSS = $request->input('VARIMSS');
+                    //         $emple->INTEG = $request->input('INTEG');
+                    //         $emple->INTIV = $request->input('INTIV');
+                    //         $emple->PRESDEC = $request->input('PRESDEC');
+                    //         $emple->NOCRED = $request->input('NOCRED');
+                           
+                    //         $emple->save();
+                      
+                    //         $emple1 = DatosGe::where('EMP', $EMP)->get()->first();
+                    //         $emple1->NIVEL = $request->input('NIVEL') . "";
+                    //         $emple1->DEPTO = $request->input('DEPTO') . "";
+                    //         $emple1->REPORTA = $request->input('REPORTA') . "";
+                    //         $emple1->DIRECCION = $request->input('DIRECCION') . "";
+                    //         $emple1->PUESTO = $request->input('PUESTO');
+                    //         $emple1->Referencia = $request->input('Referencia') . "";
+                    //         $emple1->noExterior = $request->input('noExterior') . "";
+                    //         $emple1->noInterior = $request->input('noInterior') . "";
+                    //         $emple1->Municipio = $request->input('Municipio') . "";
+                    //         $emple1->COLONIA = $request->input('COLONIA') . "";
+                    //         $emple1->CIUDAD = $request->input('CIUDAD') . "";
+                    //         $emple1->ESTADO = $request->input('ESTADO') . "";
+                    //         $emple1->TELEFONO = $request->input('TELEFONO') . "";
+                    //         $emple1->ZIP = $request->input('ZIP') . "";
+                    //         $emple1->CELULAR = $request->input('CELULAR') . "";
+                    //         $emple1->EXPERI = $request->input('EXPERI') . "";
+                    //         $emple1->SEXO = $request->input('SEXO') . "";
+                    //         $emple1->CIVIL = $request->input('CIVIL');
+                    //         $emple1->BODA = date('d-m-Y', strtotime($request->input('BODA')));
+                    //         $emple1->LICENCIA = $request->input('LICENCIA');
+                    //         $emple1->SANGRE = $request->input('SANGRE');
+                    //         $emple1->ESCOLAR = $request->input('ESCOLAR');
+                    //         $emple1->CAMB_RESID = $request->input('CAMB_RESID');
+                    //         $emple1->DISP_VIAJE = $request->input('DISP_VIAJE');
+                    //         $emple1->BORN = date('d-m-Y', strtotime($request->input('BORN')));
+                    //         $emple1->NACIM = $request->input('NACIM') . "";
+                    //         $emple1->NACIONAL = $request->input('NACIONAL');
+                    //         $emple1->DEPENDIENT = $request->input('DEPENDIENT') . "";
+                    //         $emple1->MEDIO = $request->input('MEDIO');
+                    //         $emple1->FUENTE = $request->input('FUENTE') . "";
+                    //         $emple1->Email = $request->input('Email') . "";
+                    //         $file = $request->file('archivo');
+                    //         if ($file !== null) { 
+                    //             // $cliente = Session::get('selCliente');
+                    //             // $rfc_cliente = CiasNo::first()->RFCCIA;
+                    //             // $rfc_empleado0 = $request->input('RFC');
+                    //             // $rfc_empleado1=substr ($rfc_empleado0, 0,4);
+                    //             // $rfc_empleado2=substr ($rfc_empleado0, 5,6);
+                    //             // $rfc_empleado3=substr ($rfc_empleado0, 12,3);
+                    //             // $rfc_empleado= $rfc_empleado1.$rfc_empleado2.$rfc_empleado3;
+                    //             // $rutaEmpleados = Client::getRutaEmpleados($cliente->cell_id,  $rfc_cliente);
+                    //             $path = public_path(). '/img_emp/';
+                    //             $fileName = uniqid() . $file->getClientOriginalName();
+                    //             $moved =  $file->move($path, $fileName);
+                    //             if ($moved) {
+                    //                 $emple1->FOTO = $fileName;
+                    //             }
+                    //         }
+                    //         else{
+                    //             //dd('no actualizada');
+                    //         }
+                    //         $emple1->save();
+
+                    //         $emple11 = DatosAfo::where('EMP', $EMP)->get()->first();
+                    //         $emple11->CURP = $request->input('CURP');
+                    //         $emple11->IMSS = $request->input('IMSS');
+                    //         $emple11->NOMBRES = $request->input('NOMBRES');
+                    //         $emple11->PATERNO = $request->input('PATERNO') . "";
+                    //         $emple11->MATERNO = $request->input('MATERNO') . "";
+                    //         $emple11->save();
+                    // }
+                    // catch(\Exception $e){       
+                    //    DB::connection('sqlsrv2')->rollBack();
+                    //    //throw $e;
+                    //    echo "no se pudo actualizar la base de datos".$e;
+                    // }
+                    // DB::connection('sqlsrv2')->commit();
+                    // return redirect('/catalogos/empleados');
+    return redirect('/catalogos/empleados')->with('flash','Se ha actualizado correctamente el empleado.');
     }
 
 

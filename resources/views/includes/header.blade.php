@@ -92,7 +92,7 @@
       <!-- </ul> -->
     @endauth
 
-    <?php $cli = session('selCliente'); $proc = session('selProceso'); ?> 
+    <?php $cli = session('selCliente'); $proc = session('selProceso'); $nomina = session('tinom');?> 
     <!-- <?php $conn2 = \Config::get('database.connections.sqlsrv2'); ?> -->
     @if ($cli)
       @if ($proc)
@@ -101,6 +101,7 @@
       @else
         <span><p class="etiqueta" style="background-color: rgb(179, 215, 243); color: blue; height: 22px !important; float: right;font-size: 8px;">{{ $cli->Nombre }}</p></span>   
       @endif
+      <span><p class="etiqueta" style="background-color: rgb(179, 215, 243); color: blue; height: 22px !important; float: right;font-size: 8px;">Tipo de nómina: {{ $nomina }}</p></span>
     @endif
     @if (session()->has('flash'))
       <div class="container">
