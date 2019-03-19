@@ -6,7 +6,7 @@
 @section('content')
 {!! Session::get("message", '') !!}
 <div class="container" style="border:1px red solid;">
-	<h3>Inciencias por concepto</h3>
+	<h3>Incidencias por Concepto</h3>
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
@@ -43,11 +43,10 @@
                 <div class="form-group label-floating">
                     <label class="control-label">Período:</label>
                     <select class="form-control pdo" id="pdo" name="Pdo">
+                        <option value="0" selected>Seleccione el período...</option>
                         @foreach ($periodos as $pdo)
-                            <option value="{{ $pdo->PERIODO }}" data-fi="{{ date('Y-m-d',strtotime($pdo->FECINI)) }}" 
-                            	{{ ($pdo->PERIODO == $periCalc)? 'selected':'' }} >
-                            	{{ $pdo->PERIODO . ' - Inicia: ' . date('d-m-Y',strtotime($pdo->FECINI)) . ' - Finaliza: ' . date('d-m-Y',strtotime($pdo->FECFIN)) }}</option>
-                        @endforeach                        
+                            <option value="{{ $pdo->PERIODO }}">{{ $pdo->PERIODO . ' - Inicia: ' . date('d-m-Y',strtotime($pdo->FECINI)) . ' - Finaliza: ' . date('d-m-Y',strtotime($pdo->FECFIN)) }}</option>
+                        @endforeach
                     </select>
                 </div>
             </div>
@@ -254,7 +253,6 @@
 	$(document).ready(function() {
 		token = $('input[name=_token]').val();
     	tabla = this.getElementById("captura");
-        $('.pdo').change();    	
 	});
 
 

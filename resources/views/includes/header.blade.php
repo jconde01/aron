@@ -96,12 +96,12 @@
     <!-- <?php $conn2 = \Config::get('database.connections.sqlsrv2'); ?> -->
     @if ($cli)
       @if ($proc)
-        <span><p class="etiqueta" style="background-color: rgb(179, 215, 243); color: blue; height: 22px !important; float: right;font-size: 8px;">{{ session('clienteYProceso') }}</p></span>
+        <span><p class="etiqueta" style="background-color: rgb(179, 215, 243); color: blue; height: 26px !important; float: right;font-size: 12px;">{{ session('clienteYProceso') }}</p></span>
         <!-- <span><p class="etiqueta" style="background-color: rgb(179, 215, 243); color: blue; height: 22px !important; float: right; font-size: 8px;">{{ $conn2["host"] . ' - ' . $conn2["database"] }}</p></span>  -->
       @else
         <span><p class="etiqueta" style="background-color: rgb(179, 215, 243); color: blue; height: 22px !important; float: right;font-size: 8px;">{{ $cli->Nombre }}</p></span>   
       @endif
-      <span><p class="etiqueta" style="background-color: rgb(179, 215, 243); color: blue; height: 22px !important; float: right;font-size: 8px;">Tipo de nómina: {{ $nomina }}</p></span>
+      <span><p class="etiqueta" style="background-color: rgb(179, 215, 243); color: blue; height: 26px !important; float: right;font-size: 12px;">Tipo de nómina: {{ $nomina }}</p></span>
     @endif
     @if (session()->has('flash'))
       <div class="container">
