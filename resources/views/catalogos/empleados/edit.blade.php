@@ -423,7 +423,7 @@
                                 <option value="08 Modalidad de trabajo por comision laboral" <?php if ($empl->c_TipoContrato=="08 Modalidad de trabajo por comision laboral"):{
                                     echo 'selected="selected"';
                                 } ?> <?php endif ?>>08 Modalidad de trabajo por comisión laboral</option>
-                                <option value="09 Modalidades de contratación donde no existe relación de trabajo" <?php if ($empl->c_TipoContrato=="09 Modalidades de contratacion donde no existe relacion de trabajo"):{
+                                <option value="09 Modalidades de contratación donde no existe relación de trabajo" <?php if ($empl->c_TipoContrato=="09 Modalidades de contratación donde no existe relación de trabajo"):{
                                     echo 'selected="selected"';
                                 } ?> <?php endif ?>>09 Modalidades de contratación donde no existe relación de trabajo</option>
                                 <option value="10 Jubilacion, pension, retiro" <?php if ($empl->c_TipoContrato=="10 Jubilacion, pension, retiro"):{
