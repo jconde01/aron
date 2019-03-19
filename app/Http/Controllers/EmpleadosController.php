@@ -377,7 +377,7 @@ class EmpleadosController extends Controller
                                             $empAsimi->ESTATUS = $request->input('ESTATUS');
                                             $empAsimi->CLIMSS = $request->input('CLIMSS') . "";
                                             $empAsimi->TIPOPAGO = $request->input('TIPOPAGO');
-                                            $empAsimi->c_TipoContrato = '09 Modalidades de contratacion donde no existe relacion de trabajo';
+                                            $empAsimi->c_TipoContrato = '09 Modalidades de contratación donde no existe relación de trabajo';
                                             $empAsimi->INGRESO = date('d-m-Y', strtotime($request->input('INGRESO')));
                                             $empAsimi->VACACION = date('d-m-Y', strtotime($request->input('VACACION')));
                                             $empAsimi->PLANTA = date('d-m-Y', strtotime($request->input('PLANTA')));
@@ -1353,7 +1353,7 @@ class EmpleadosController extends Controller
                 $emp->ESTATUS = $request->input('ESTATUS');
                 $emp->CLIMSS = $request->input('CLIMSS') . "";
                 $emp->TIPOPAGO = $request->input('TIPOPAGO');
-                $emp->c_TipoContrato = '09 Modalidades de contratacion donde no existe relacion de trabajo';
+                $emp->c_TipoContrato = '09 Modalidades de contratación donde no existe relación de trabajo';
                 $emp->INGRESO = date('d-m-Y', strtotime($request->input('INGRESO')));
                 $emp->VACACION = date('d-m-Y', strtotime($request->input('VACACION')));
                 $emp->PLANTA = date('d-m-Y', strtotime($request->input('PLANTA')));
