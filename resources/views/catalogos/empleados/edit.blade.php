@@ -367,7 +367,7 @@
                                 <option value="02 Cheque nominativo" <?php if ($empl->TIPOPAGO=="02 Cheque nominativo"):{
                                     echo 'selected="selected"';
                                 } ?> <?php endif ?>>02 Cheque nominativo</option>
-                                <option value="03 Transferencia Electronica" <?php if ($empl->TIPOPAGO=="03 Transferencia Electronica"):{
+                                <option value="03 Transferencia Electrónica de fondos" <?php if ($empl->TIPOPAGO=="03 Transferencia Electrónica de fondos"):{
                                     echo 'selected="selected"';
                                 } ?> <?php endif ?>>03 Transferencia Electrónica</option>
                                 <option value="04 Tarjeta de Credito" <?php if ($empl->TIPOPAGO=="04 Tarjeta de Credito"):{
