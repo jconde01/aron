@@ -232,7 +232,7 @@
                             <select style="width: 340px; height: 40px; border-radius: 10px; text-align: right; padding-right: 20px;" name="TIPOPAGO" required class="inderecha">
                                 <option value="01 Efectivo" {{ (old("TIPOPAGO") == '01 Efectivo' ? "selected":"") }}>01 Efectivo</option>
                                 <option value="02 Cheque nominativo" {{ (old("TIPOPAGO") == '02 Cheque nominativo' ? "selected":"") }}>02 Cheque nominativo</option>
-                                <option value="03 Transferencia Electronica" {{ (old("TIPOPAGO") == '03 Transferencia Electronica' ? "selected":"") }}>03 Transferencia Electrónica de fondos</option>
+                                <option value="03 Transferencia Electrónica de fondos" {{ (old("TIPOPAGO") == '03 Transferencia Electrónica de fondos' ? "selected":"") }}>03 Transferencia Electrónica de fondos</option>
                                 <option value="04 Tarjeta de Credito" {{ (old("TIPOPAGO") == '04 Tarjeta de Credito' ? "selected":"") }}>04 Tarjeta de Crédito</option>
                                 <option value="05 Monedero Electronico" {{ (old("TIPOPAGO") == '05 Monedero Electronico' ? "selected":"") }}>05 Monedero Electrónico</option>
                                 <option value="06 Dinero Electronico" {{ (old("TIPOPAGO") == '06 Dinero Electronico' ? "selected":"") }}>06 Dinero Electrónico</option>
