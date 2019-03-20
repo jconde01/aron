@@ -4,14 +4,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\User;
-use App\Ciasno;
+use App\CiasNo;
 
 class Client extends Model
 {
 
     public static function getRutaBase($celula, $rfc)
     {
-        $sucursal = Ciasno::first()->Agrupador;
+        $sucursal = CiasNo::first()->Agrupador;
         // dd($sucursal);
         if ($sucursal == null) {
 
