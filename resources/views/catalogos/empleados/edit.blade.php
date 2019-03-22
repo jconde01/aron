@@ -367,9 +367,9 @@
                                 <option value="02 Cheque nominativo" <?php if ($empl->TIPOPAGO=="02 Cheque nominativo"):{
                                     echo 'selected="selected"';
                                 } ?> <?php endif ?>>02 Cheque nominativo</option>
-                                <option value="03 Transferencia Electronica" <?php if ($empl->TIPOPAGO=="03 Transferencia Electronica"):{
+                                <option value="03 Transferencia Electrónica de fondos" <?php if ($empl->TIPOPAGO=="03 Transferencia Electrónica de fondos"):{
                                     echo 'selected="selected"';
-                                } ?> <?php endif ?>>03 Transferencia Electrónica</option>
+                                } ?> <?php endif ?>>03 Transferencia Electrónica de fondos</option>
                                 <option value="04 Tarjeta de Credito" <?php if ($empl->TIPOPAGO=="04 Tarjeta de Credito"):{
                                     echo 'selected="selected"';
                                 } ?> <?php endif ?>>04 Tarjeta de Crédito</option>
@@ -423,7 +423,7 @@
                                 <option value="08 Modalidad de trabajo por comision laboral" <?php if ($empl->c_TipoContrato=="08 Modalidad de trabajo por comision laboral"):{
                                     echo 'selected="selected"';
                                 } ?> <?php endif ?>>08 Modalidad de trabajo por comisión laboral</option>
-                                <option value="09 Modalidades de contratación donde no existe relación de trabajo" <?php if ($empl->c_TipoContrato=="09 Modalidades de contratacion donde no existe relacion de trabajo"):{
+                                <option value="09 Modalidades de contratación donde no existe relación de trabajo" <?php if ($empl->c_TipoContrato=="09 Modalidades de contratación donde no existe relación de trabajo"):{
                                     echo 'selected="selected"';
                                 } ?> <?php endif ?>>09 Modalidades de contratación donde no existe relación de trabajo</option>
                                 <option value="10 Jubilacion, pension, retiro" <?php if ($empl->c_TipoContrato=="10 Jubilacion, pension, retiro"):{

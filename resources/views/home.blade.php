@@ -105,7 +105,7 @@
 <br>
 @include('includes.footer');
 @else
-
+@include('includes.footer');
 @endif
 </html>
 <script type="text/javascript">

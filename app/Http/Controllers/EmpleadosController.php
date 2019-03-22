@@ -19,6 +19,7 @@ use App\DatosAfoAsimi;
 use App\ImssAsimi;
 use Illuminate\Validation\Rule;
 use App\ListaDoc;
+use App\ListaDocAsimi;
 use App\CiasNo;
 use App\Cell;
 use App\DocsRequeridos;
@@ -196,7 +197,7 @@ class EmpleadosController extends Controller
         if ($AsimiFiscal == 'fiscal') {
             //inicio de las inserciones de fiscal--------------------------------------------------------------------------
 
-                                    //Estas n fiscar y aparte tienes asimilados inserta en los dos
+                                    //Estas en fiscal y aparte tienes asimilados inserta en los dos
                                 if ($cliente->fiscal==1 && $cliente->asimilado==1)
                                 {
                                         
@@ -331,12 +332,21 @@ class EmpleadosController extends Controller
                                         catch(\Exception $e){       
                                            DB::connection('sqlsrv2')->rollBack();
                                            //throw $e;
-                                           return back()->with('danger','No se puedo dar de alta al empleado, intente de nuevo y si el problema persiste contacte a soporte técnico.');
+                                           return back()->with('danger','No se puede dar de alta al empleado, intente de nuevo y si el problema persiste contacte a soporte técnico.');
                                         }
                                         DB::connection('sqlsrv2')->commit();
                                        // --------------------------fin de la insercion de la parte de fiscal cuando tienes fiscal y asimilados-------------------
                                    
-
+                                            $emps = EmpleadoAsimi::where('TIPONO', $selProceso)->get()->last();
+                                                    if ($emps==null){
+                                                        $ultimo = 1;
+                                                        $add = str_pad($selProceso,2, "0", STR_PAD_LEFT);
+                                                    $ultimo2 = str_pad($ultimo,5, "0", STR_PAD_LEFT);
+                                                    $ultimo3 =  $add.$ultimo2;
+                                                    }else{
+                                                         $ultimo = $emps->EMP + 1;
+                                                         $ultimo3 = str_pad($ultimo,7, "0", STR_PAD_LEFT);
+                                                    }
                                         
                                         // -----------------------------inicia insercion de asimilados que pertenece a fiscal y asimilado----------------------------------
                                         DB::connection('sqlsrv3')->beginTransaction();
@@ -377,7 +387,7 @@ class EmpleadosController extends Controller
                                             $empAsimi->ESTATUS = $request->input('ESTATUS');
                                             $empAsimi->CLIMSS = $request->input('CLIMSS') . "";
                                             $empAsimi->TIPOPAGO = $request->input('TIPOPAGO');
-                                            $empAsimi->c_TipoContrato = '09 Modalidades de contratacion donde no existe relacion de trabajo';
+                                            $empAsimi->c_TipoContrato = '09 Modalidades de contratación donde no existe relación de trabajo';
                                             $empAsimi->INGRESO = date('d-m-Y', strtotime($request->input('INGRESO')));
                                             $empAsimi->VACACION = date('d-m-Y', strtotime($request->input('VACACION')));
                                             $empAsimi->PLANTA = date('d-m-Y', strtotime($request->input('PLANTA')));
@@ -489,13 +499,13 @@ class EmpleadosController extends Controller
                                         }
                                         DB::connection('sqlsrv3')->commit();
                                         
-            //------------------------------------------------------------------Codigo para gregar los documentos del empleado RFCC 29/11/2018---------------------------------------------------------------------------------------
+            //------------------------------------------------------------------Codigo para gregar los documentos del empleado RFCC 29/11/2018-------------------------------------------------------
                                         $emp = $request->input('EMP');
                                         $rfc_emp = $request->input('RFC');
                                         //$rutabase = Empleado::Rutas['Documentos'] .'/';
                                         $cliente = Session::get('selCliente');
                                         $celula_empresa = Cell::where('id', $cliente->cell_id)->first()->nombre;
-                                        $rfc_cliente = CiasNo::first()->RFCCIA;
+                                        $rfc_cliente = CiasNo::first()->RFCCTE;
                                         $rfc_empleado0 = Empleado::where('EMP',$emp)->first()->RFC;
                                         $rfc_empleado1=substr ($rfc_empleado0, 0,4);
                                         $rfc_empleado2=substr ($rfc_empleado0, 5,6);
@@ -541,13 +551,13 @@ class EmpleadosController extends Controller
                                                 
                                                 $path = $file;
                                                 $extension = explode(".",$rfc->getClientOriginalName());
-                                                $fileName2 = 'rfc.'.$extension[1];
+                                                $fileName = 'rfc.'.$extension[1];
                                                 $moved2 =  $rfc->move($path, $fileName);
                                                 
                                                 if ($moved2) {
                                                 //     // guarda la liga en la BD
                                                 $listdoc->CHECK2 = 1;
-                                                $listdoc->NOMBRE2 = $fileName2;
+                                                $listdoc->NOMBRE2 = $fileName;
                                                 $listdoc->FECHAVENCI2 = $request->input('fecharfc');
                                                 
                                                     //dd('actualizada imagen');
@@ -830,10 +840,238 @@ class EmpleadosController extends Controller
                                                 //dd('no actualizada');
                                             }
 
+                                        $listdoc->RFC = $request->input('RFC');
+
                                         $listdoc->save();
+
+                                      
+
+                                        if ($AsimiFiscal=='fiscal') {
+                                            if ($cliente->asimilado==1) {
+                                                $listdocasimi = new ListaDocAsimi();
+                                                $listdocasimi->EMP = $ultimo3;
+                                                $listdocasimi->TIPONO = $selProceso;
+                                                $acta = $request->file('nacimiento');
+                                                   if ($acta !== null) {
+                                                        
+                                                        $path = $file;
+                                                        $extension = explode(".",$acta->getClientOriginalName());
+                                                        $fileName = 'acta.'.$extension[1];
+                                                        $listdocasimi->CHECK1 = 1;
+                                                        $listdocasimi->NOMBRE1 = $fileName;
+                                                        $listdocasimi->FECHAVENCI1 = $request->input('fechanaci');                    
+                                                    }
+                                                    else{
+                                                        
+                                                    }
+
+                                                $rfc = $request->file('rfc');
+                                                   if ($rfc !== null) {
+                                                        
+                                                        $path = $file;
+                                                        $extension = explode(".",$rfc->getClientOriginalName());
+                                                        $fileName2 = 'rfc.'.$extension[1];                    
+                                                        $listdocasimi->CHECK2 = 1;
+                                                        $listdocasimi->NOMBRE2 = $fileName2;
+                                                        $listdocasimi->FECHAVENCI2 = $request->input('fecharfc');
+                                                    }
+                                                    else{
+                                                        
+                                                    }
+
+                                                $curp = $request->file('curp');
+                                                   if ($curp !== null) {
+                                                        
+                                                        $path = $file;
+                                                        $extension = explode(".",$curp->getClientOriginalName());
+                                                        $fileName = 'curp.'.$extension[1];
+                                                        $listdocasimi->CHECK3 = 1;
+                                                        $listdocasimi->NOMBRE3 = $fileName;
+                                                        $listdocasimi->FECHAVENCI3 = $request->input('fechacurp');
+                                                    }
+                                                    else{
+                                                       
+                                                    }
+
+                                                $comprobante = $request->file('comprobante');
+                                                   if ($comprobante !== null) {
+                                                        
+                                                        $path = $file;
+                                                        $extension = explode(".",$comprobante->getClientOriginalName());
+                                                        $fileName = 'comprobante.'.$extension[1];
+                                                        $listdocasimi->CHECK4 = 1;
+                                                        $listdocasimi->NOMBRE4 = $fileName;
+                                                        $listdocasimi->FECHAVENCI4 = $request->input('fechacompro');
+                                                    }
+                                                    else{
+                                                        
+                                                    }
+
+                                                $empleo = $request->file('empleo');
+                                                   if ($empleo !== null) {
+                                                        
+                                                        $path = $file;
+                                                        $extension = explode(".",$empleo->getClientOriginalName());
+                                                        $fileName = 'solicitud.'.$extension[1];
+                                                        $listdocasimi->CHECK5 = 1;
+                                                        $listdocasimi->NOMBRE5 = $fileName;
+                                                        $listdocasimi->FECHAVENCI5 = $request->input('fechaempleo');
+                                                    }
+                                                    else{
+                                                        
+                                                    }
+
+                                                $ine = $request->file('ine');
+                                                   if ($ine !== null) {
+                                                        
+                                                        $path = $file;
+                                                        $extension = explode(".",$ine->getClientOriginalName());
+                                                        $fileName = 'ine.'.$extension[1];
+                                                        $listdocasimi->CHECK6 = 1;
+                                                        $listdocasimi->NOMBRE6 = $fileName;
+                                                        $listdocasimi->FECHAVENCI6 = $request->input('fechaine');
+                                                    }
+                                                    else{
+                                                        
+                                                    }
+
+                                                $boda = $request->file('boda');
+                                                   if ($boda !== null) {
+                                                        
+                                                        $path = $file;
+                                                        $extension = explode(".",$boda->getClientOriginalName());
+                                                        $fileName = 'boda.'.$extension[1];
+                                                        $listdocasimi->CHECK7 = 1;
+                                                        $listdocasimi->NOMBRE7 = $fileName;
+                                                        $listdocasimi->FECHAVENCI7 = $request->input('fechaboda');
+                                                    }
+                                                    else{
+                                                        
+                                                    }
+
+                                                $titulo = $request->file('titulo');
+                                                   if ($titulo !== null) {
+                                                        
+                                                        $path = $file;
+                                                        $extension = explode(".",$titulo->getClientOriginalName());
+                                                        $fileName = 'titulo.'.$extension[1];
+                                                        $listdocasimi->CHECK8 = 1;
+                                                        $listdocasimi->NOMBRE8 = $fileName;
+                                                        $listdocasimi->FECHAVENCI8 = $request->input('fechatitulo');
+                                                    }
+                                                    else{
+                                                       
+                                                    }
+
+                                                $antecedentes = $request->file('antecedentes');
+                                                   if ($antecedentes !== null) {
+                                                        
+                                                        $path = $file;
+                                                        $extension = explode(".",$antecedentes->getClientOriginalName());
+                                                        $fileName = 'antecedentes.'.$extension[1];
+                                                        $listdocasimi->CHECK9 = 1;
+                                                        $listdocasimi->NOMBRE9 = $fileName;
+                                                        $listdocasimi->FECHAVENCI9 = $request->input('fechaante');
+                                                    }
+                                                    else{
+                                                        
+                                                    }
+
+                                                $contrato = $request->file('contrato');
+                                                   if ($contrato !== null) {
+                                                        
+                                                        $path = $file;
+                                                        $extension = explode(".",$contrato->getClientOriginalName());
+                                                        $fileName = 'contrato.'.$extension[1];
+                                                        $listdocasimi->CHECK10 = 1;
+                                                        $listdocasimi->NOMBRE10 = $fileName;
+                                                        $listdocasimi->FECHAVENCI10 = $request->input('fechacompro');
+                                                    }
+                                                    else{
+                                                        
+                                                    }
+
+                                                $curriculum = $request->file('curriculum');
+                                                   if ($curriculum !== null) {
+                                                        
+                                                        $path = $file;
+                                                        $extension = explode(".",$curriculum->getClientOriginalName());
+                                                        $fileName = 'curriculum.'.$extension[1];
+                                                        $listdocasimi->CHECK11 = 1;
+                                                        $listdocasimi->NOMBRE11 = $fileName;
+                                                        $listdocasimi->FECHAVENCI11 = $request->input('fechacurri');
+                                                    }
+                                                    else{
+                                                       
+                                                    }
+
+                                                $cedula = $request->file('cedula');
+                                                   if ($cedula !== null) {
+                                                        
+                                                        $path = $file;
+                                                        $extension = explode(".",$cedula->getClientOriginalName());
+                                                        $fileName = 'cedula.'.$extension[1];
+                                                        $listdocasimi->CHECK12 = 1;
+                                                        $listdocasimi->NOMBRE12 = $fileName;
+                                                        $listdocasimi->FECHAVENCI12 = $request->input('fechacedula');
+                                                    }
+                                                    else{
+                                                        
+                                                    }
+
+                                                $diplomas = $request->file('diplomas');
+                                                   if ($diplomas !== null) {
+                                                        
+                                                        $path = $file;
+                                                        $extension = explode(".",$diplomas->getClientOriginalName());
+                                                        $fileName = 'diplomas.'.$extension[1];
+                                                        $listdocasimi->CHECK13 = 1;
+                                                        $listdocasimi->NOMBRE13 = $fileName;
+                                                        $listdocasimi->FECHAVENCI13 = $request->input('fechadiplo');
+                                                    }
+                                                    else{
+                                                        
+                                                    }
+
+                                                $certificaciones = $request->file('certificaciones');
+                                                   if ($certificaciones !== null) {
+                                                        
+                                                        $path = $file;
+                                                        $extension = explode(".",$certificaciones->getClientOriginalName());
+                                                        $fileName = 'certificaciones.'.$extension[1];
+                                                        $listdocasimi->CHECK14 = 1;
+                                                        $listdocasimi->NOMBRE14 = $fileName;
+                                                        $listdocasimi->FECHAVENCI14 = $request->input('fechacerti');
+                                                    }
+                                                    else{
+                                                        
+                                                    }
+
+                                                $licencia = $request->file('licencia');
+                                                   if ($licencia !== null) {
+                                                        
+                                                        $path = $file;
+                                                        $extension = explode(".",$licencia->getClientOriginalName());
+                                                        $fileName = 'licencia.'.$extension[1];
+                                                        $listdocasimi->CHECK15 = 1;
+                                                        $listdocasimi->NOMBRE15 = $fileName;
+                                                        $listdocasimi->FECHAVENCI15 = $request->input('fechalicencia');
+                                                    }
+                                                    else{
+                                                        
+                                                    }
+
+                                                $listdocasimi->RFC = $request->input('RFC');
+                                                $listdocasimi->save();
+                                                //dd('listo');
+
+
+                                            }
+                                            
+                                        }
                                             //dd('listo');
 
-        //----------------------------------Fin de codigo para agregar documentos del empleado-------------------------------------------------------------------------------------------------------------------------------------
+        //----------------------------------Fin de codigo para agregar documentos del empleado--------------------------------------------------------------------------------
 
                                         //dd('listo fiscal y asimilados');
                                      
@@ -976,13 +1214,13 @@ class EmpleadosController extends Controller
                                     }
                                     DB::connection('sqlsrv2')->commit();
                                     
-                        //---------------------------------------------------------------Codigo para gregar los documentos del empleado RFCC 29/11/2018---------------------------------------------------------------------------------------
+                        //---------------------------------------------------------------Codigo para agregar los documentos del empleado RFCC 29/11/2018----------------------------------------
                                     $emp = $request->input('EMP');
                                     $rfc_emp = $request->input('RFC');
                                     //$rutabase = Empleado::Rutas['Documentos'] .'/';
                                     $cliente = Session::get('selCliente');
                                     $celula_empresa = Cell::where('id', $cliente->cell_id)->first()->nombre;
-                                    $rfc_cliente = CiasNo::first()->RFCCIA;
+                                    $rfc_cliente = CiasNo::first()->RFCCTE;
                                     $rfc_empleado0 = Empleado::where('EMP',$emp)->first()->RFC;
                                     $rfc_empleado1=substr ($rfc_empleado0, 0,4);
                                     $rfc_empleado2=substr ($rfc_empleado0, 5,6);
@@ -1028,7 +1266,7 @@ class EmpleadosController extends Controller
                                             
                                             $path = $file;
                                             $extension = explode(".",$rfc->getClientOriginalName());
-                                            $fileName2 = 'rfc.'.$extension[1];
+                                            $fileName = 'rfc.'.$extension[1];
                                             $moved2 =  $rfc->move($path, $fileName);
                                             
                                             if ($moved2) {
@@ -1317,10 +1555,12 @@ class EmpleadosController extends Controller
                                             //dd('no actualizada');
                                         }
 
+                                    $listdoc->RFC = $request->input('RFC');
+
                                     $listdoc->save();
                         //dd('listo');
 
-        //-----------------------------------Fin de codigo para agregar documentos del empleado-------------------------------------------------------------------------------------------------------------------------------------
+        //-----------------------------------Fin de codigo para agregar documentos del empleado--------------------------------------------------------------------------------------------
 
 
                     //dd('solo fiscal');
@@ -1353,7 +1593,7 @@ class EmpleadosController extends Controller
                 $emp->ESTATUS = $request->input('ESTATUS');
                 $emp->CLIMSS = $request->input('CLIMSS') . "";
                 $emp->TIPOPAGO = $request->input('TIPOPAGO');
-                $emp->c_TipoContrato = '09 Modalidades de contratacion donde no existe relacion de trabajo';
+                $emp->c_TipoContrato = '09 Modalidades de contratación donde no existe relación de trabajo';
                 $emp->INGRESO = date('d-m-Y', strtotime($request->input('INGRESO')));
                 $emp->VACACION = date('d-m-Y', strtotime($request->input('VACACION')));
                 $emp->PLANTA = date('d-m-Y', strtotime($request->input('PLANTA')));
@@ -1465,13 +1705,13 @@ class EmpleadosController extends Controller
             }
             DB::connection('sqlsrv2')->commit();
             
-        //---------------------------------------------------------Codigo para gregar los documentos del empleado RFCC 29/11/2018---------------------------------------------------------------------------------------
+        //---------------------------------------------------------Codigo para gregar los documentos del empleado RFCC 29/11/2018----------------------------------------------------
             $emp = $request->input('EMP');
             $rfc_emp = $request->input('RFC');
             //$rutabase = Empleado::Rutas['Documentos'] .'/';
             $cliente = Session::get('selCliente');
             $celula_empresa = Cell::where('id', $cliente->cell_id)->first()->nombre;
-            $rfc_cliente = CiasNo::first()->RFCCIA;
+            $rfc_cliente = CiasNo::first()->RFCCTE;
             $rfc_empleado0 = Empleado::where('EMP',$emp)->first()->RFC;
             $rfc_empleado1=substr ($rfc_empleado0, 0,4);
             $rfc_empleado2=substr ($rfc_empleado0, 5,6);
@@ -1518,7 +1758,7 @@ class EmpleadosController extends Controller
                     
                     $path = $file;
                     $extension = explode(".",$rfc->getClientOriginalName());
-                    $fileName2 = 'rfc.'.$extension[1];
+                    $fileName = 'rfc.'.$extension[1];
                     $moved2 =  $rfc->move($path, $fileName);
                     
                     if ($moved2) {
@@ -1807,10 +2047,12 @@ class EmpleadosController extends Controller
                     //dd('no actualizada');
                 }
 
+            $listdoc->RFC = $request->input('RFC');
+
             $listdoc->save();
                 //dd('listo');
 
-        //--------------------------------Fin de codigo para agregar documentos del empleado-------------------------------------------------------------------------------------------------------------------------------------
+        //--------------------------------Fin de codigo para agregar documentos del empleado---------------------------------------------------------------------------------
 
                 //dd('es asimilado');
 
@@ -1832,7 +2074,7 @@ class EmpleadosController extends Controller
         $perfil = auth()->user()->profile_id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
         $cliente = Session::get('selCliente');
-        $rfc_cliente = CiasNo::first()->RFCCIA;
+        $rfc_cliente = CiasNo::first()->RFCCTE;
         $rfc_empleado0 = $empl->RFC;
         $rfc_empleado1=substr ($rfc_empleado0, 0,4);
         $rfc_empleado2=substr ($rfc_empleado0, 5,6);
@@ -1844,7 +2086,11 @@ class EmpleadosController extends Controller
     }
 
     public function update(Request $request, $EMP){
-        
+        $nomina = session('tinom');
+
+        if ($nomina == 'fiscal') {
+            //--------------inicia el update de fiscal-------------
+  
             DB::connection('sqlsrv2')->beginTransaction();
             try{
                 $selProceso = Session::get('selProceso');
@@ -1980,7 +2226,7 @@ class EmpleadosController extends Controller
                     $file = $request->file('archivo');
                     if ($file !== null) { 
                         // $cliente = Session::get('selCliente');
-                        // $rfc_cliente = CiasNo::first()->RFCCIA;
+                        // $rfc_cliente = CiasNo::first()->RFCCTE;
                         // $rfc_empleado0 = $request->input('RFC');
                         // $rfc_empleado1=substr ($rfc_empleado0, 0,4);
                         // $rfc_empleado2=substr ($rfc_empleado0, 5,6);
@@ -2013,7 +2259,209 @@ class EmpleadosController extends Controller
                echo "no se pudo actualizar la base de datos".$e;
             }
             DB::connection('sqlsrv2')->commit();
-            return redirect('/catalogos/empleados');
+            //--------termina el update de fiscal------------------
+
+            //--------update de asimilado con fiscal si es que tiene---------
+            $cliente = auth()->user()->client;
+                if ($cliente->asimilado==1){
+                    DB::connection('sqlsrv3')->beginTransaction();
+                    try{
+                    
+                            $empleAsimi = EmpleadoAsimi::where('RFC', $emple->RFC)->get()->first();                          
+                            $empleAsimi->NetoMensual = $request->input('NetoMensual');
+                            $empleAsimi->save();  
+                    }
+                    catch(\Exception $e){       
+                       DB::connection('sqlsrv3')->rollBack();
+                       //throw $e;
+                       echo "no se pudo actualizar la base de datos de asimilados ya que no se encuentra el empleado";
+                    }
+                    DB::connection('sqlsrv3')->commit();
+
+                }
+            $listdoc = ListaDoc::where('EMP',$EMP)->first();
+            $listdoc->RFC = $request->input('RFC');
+            $listdoc->save();
+            //--------fin update asimilado con fiscal si es que tiene---------
+        }else{
+
+            //------------inicia update de asimilados-------------
+            DB::connection('sqlsrv2')->beginTransaction();
+            try{
+                $selProceso = Session::get('selProceso');
+                $EMP = $request->input('EMP');
+                $BajaImss = $request->input('BajaImss');
+                //actualizar estado de empleado en la tabla imss por movimiento de status
+                $estatus = $request->input('ESTATUS');
+                $emps = Empleado::where('EMP', $EMP)->get()->first();
+                if ($emps->ESTATUS==$estatus) {
+                     echo "No hubo cambio";
+                    } 
+                else{   
+                    if (($estatus=='A') && ($emps->ESTATUS!=='M')) {
+                        $imss = new Imss();
+                        $imss->TIPONO = $selProceso;
+                        $imss->EMP = $request->input('EMP');
+                        $imss->FECHA = date('d-m-Y', strtotime($request->input('INGRESO')));
+                        $imss->CLAVE = 8;
+                        $imss->SUELDO = $request->input('SUELDO');
+                        $imss->INTEG = $request->input('INTEG');
+                        $imss->INTIV = $request->input('INTIV');
+                        $imss->SUELDONUE = $request->input('SUELDO');
+                        $imss->INTEGNUE = $request->input('INTEG');
+                        $imss->INTIVNUE = $request->input('INTIV');
+                        //$imss->save();
+                    }
+                    if (($estatus=='B') && ($BajaImss==1)) {
+                        $imss = new Imss();
+                        $imss->TIPONO = $selProceso;
+                        $imss->EMP = $request->input('EMP');
+                        $imss->FECHA = date('d-m-Y', strtotime($request->input('BAJA')));
+                        $imss->CLAVE = 2;
+                        $imss->SUELDO = $request->input('SUELDO');
+                        $imss->INTEG = $request->input('INTEG');
+                        $imss->INTIV = $request->input('INTIV');
+                        $imss->CAUSA = $request->input('CAUSA');
+                        $imss->SUELDONUE = $request->input('SUELDO');
+                        $imss->INTEGNUE = $request->input('INTEG');
+                        $imss->INTIVNUE = $request->input('INTIV');
+                        //$imss->save();
+                    }
+                }  
+                if (($estatus=='B') && ($request->input('maltermino')==1)) {
+                    $listaN = new ListaN();
+                    $listaN->RFC = $request->input('RFC');
+                    $listaN->MOTIVO = $request->input('motivos');
+                    $listaN->FECHA_BAJA = date('d-m-Y', strtotime($request->input('BAJA')));
+                    $listaN->save();
+                    
+                }
+
+                    $emple = Empleado::where('EMP', $EMP)->get()->first();
+                    $emple->TIPONO = $selProceso;
+                    $emple->EMP = $request->input('EMP');
+                    $emple->NOMBRE = $request->input('NOMBRES') . ' ' . $request->input('PATERNO') . ' ' . $request->input('MATERNO');
+                    $emple->PUESTO = $request->input('PUESTO');
+                    $emple->cuenta = $request->input('cuenta')."";
+                    $emple->DEPTO = $request->input('DEPTO');
+                    $emple->TIPOTRA = $request->input('TIPOTRA');
+                    $emple->c_Estado = $request->input('c_Estado');
+                    $emple->DIRIND = $request->input('DIRIND');
+                    $emple->TIPOJORNADA = $request->input('TIPOJORNADA');
+                    $emple->TIPOREGIMEN = $request->input('TIPOREGIMEN');
+                    $emple->CHECA = $request->input('CHECA');
+                    $emple->SINDIC = $request->input('SINDIC');
+                    $emple->TURNO = $request->input('TURNO');
+                    $emple->ZONAECO = $request->input('ZONAECO') . "";
+                    $emple->ESTATUS = $request->input('ESTATUS');
+                    $emple->CLIMSS = $request->input('CLIMSS') . "";
+                    $emple->TIPOPAGO = $request->input('TIPOPAGO');
+                    $emple->c_TipoContrato = $request->input('c_TipoContrato');
+                    $emple->INGRESO = date('d-m-Y', strtotime($request->input('INGRESO')));
+                    $emple->VACACION = date('d-m-Y', strtotime($request->input('VACACION'))); 
+                    $emple->PLANTA = date('d-m-Y', strtotime($request->input('PLANTA')));
+                    $emple->VENCIM = date('d-m-Y', strtotime($request->input('VENCIM')));
+                    if (date('d-m-Y', strtotime($request->input('BAJA')))!=="31-12-1969") {
+                        $emple->BAJA = date('d-m-Y', strtotime($request->input('BAJA')));
+                    }
+                    
+                    $emple->REGPAT = $request->input('REGPAT')."";
+                    $emple->RFC = $request->input('RFC');
+                    $emple->IMSS = $request->input('IMSS')."";
+                    $emple->GRUIMS = $request->input('GRUIMS');
+                    $emple->FONACOT = $request->input('FONACOT') . "";
+                    $emple->INFONAVIT = $request->input('INFONAVIT') . "";
+                    $emple->OTRACIA = $request->input('OTRACIA');
+                    $emple->TAXOTRA = $request->input('TAXOTRA');
+                    $emple->CASOTRA = $request->input('CASOTRA');
+                    $emple->SAROTR = $request->input('SAROTR') . "";
+                    $emple->DESINFO = $request->input('DESINFO');
+                    $emple->SUELDO = $request->input('SUELDO');
+                    $emple->NetoMensual = $request->input('NetoMensual');
+                    $emple->VARIMSS = $request->input('VARIMSS');
+                    $emple->INTEG = $request->input('INTEG');
+                    $emple->INTIV = $request->input('INTIV');
+                    $emple->PRESDEC = $request->input('PRESDEC');
+                    $emple->NOCRED = $request->input('NOCRED');
+                   
+                    $emple->save();
+              
+                    $emple1 = DatosGe::where('EMP', $EMP)->get()->first();
+                    $emple1->NIVEL = $request->input('NIVEL') . "";
+                    $emple1->DEPTO = $request->input('DEPTO') . "";
+                    $emple1->REPORTA = $request->input('REPORTA') . "";
+                    $emple1->DIRECCION = $request->input('DIRECCION') . "";
+                    $emple1->PUESTO = $request->input('PUESTO');
+                    $emple1->Referencia = $request->input('Referencia') . "";
+                    $emple1->noExterior = $request->input('noExterior') . "";
+                    $emple1->noInterior = $request->input('noInterior') . "";
+                    $emple1->Municipio = $request->input('Municipio') . "";
+                    $emple1->COLONIA = $request->input('COLONIA') . "";
+                    $emple1->CIUDAD = $request->input('CIUDAD') . "";
+                    $emple1->ESTADO = $request->input('ESTADO') . "";
+                    $emple1->TELEFONO = $request->input('TELEFONO') . "";
+                    $emple1->ZIP = $request->input('ZIP') . "";
+                    $emple1->CELULAR = $request->input('CELULAR') . "";
+                    $emple1->EXPERI = $request->input('EXPERI') . "";
+                    $emple1->SEXO = $request->input('SEXO') . "";
+                    $emple1->CIVIL = $request->input('CIVIL');
+                    $emple1->BODA = date('d-m-Y', strtotime($request->input('BODA')));
+                    $emple1->LICENCIA = $request->input('LICENCIA');
+                    $emple1->SANGRE = $request->input('SANGRE');
+                    $emple1->ESCOLAR = $request->input('ESCOLAR');
+                    $emple1->CAMB_RESID = $request->input('CAMB_RESID');
+                    $emple1->DISP_VIAJE = $request->input('DISP_VIAJE');
+                    $emple1->BORN = date('d-m-Y', strtotime($request->input('BORN')));
+                    $emple1->NACIM = $request->input('NACIM') . "";
+                    $emple1->NACIONAL = $request->input('NACIONAL');
+                    $emple1->DEPENDIENT = $request->input('DEPENDIENT') . "";
+                    $emple1->MEDIO = $request->input('MEDIO');
+                    $emple1->FUENTE = $request->input('FUENTE') . "";
+                    $emple1->Email = $request->input('Email') . "";
+                    $file = $request->file('archivo');
+                    if ($file !== null) { 
+                        // $cliente = Session::get('selCliente');
+                        // $rfc_cliente = CiasNo::first()->RFCCTE;
+                        // $rfc_empleado0 = $request->input('RFC');
+                        // $rfc_empleado1=substr ($rfc_empleado0, 0,4);
+                        // $rfc_empleado2=substr ($rfc_empleado0, 5,6);
+                        // $rfc_empleado3=substr ($rfc_empleado0, 12,3);
+                        // $rfc_empleado= $rfc_empleado1.$rfc_empleado2.$rfc_empleado3;
+                        // $rutaEmpleados = Client::getRutaEmpleados($cliente->cell_id,  $rfc_cliente);
+                        $path = public_path(). '/img_emp/';
+                        $fileName = uniqid() . $file->getClientOriginalName();
+                        $moved =  $file->move($path, $fileName);
+                        if ($moved) {
+                            $emple1->FOTO = $fileName;
+                        }
+                    }
+                    else{
+                        //dd('no actualizada');
+                    }
+                    $emple1->save();
+
+                    $emple11 = DatosAfo::where('EMP', $EMP)->get()->first();
+                    $emple11->CURP = $request->input('CURP');
+                    $emple11->IMSS = $request->input('IMSS');
+                    $emple11->NOMBRES = $request->input('NOMBRES');
+                    $emple11->PATERNO = $request->input('PATERNO') . "";
+                    $emple11->MATERNO = $request->input('MATERNO') . "";
+                    $emple11->save();
+            }
+            catch(\Exception $e){       
+               DB::connection('sqlsrv2')->rollBack();
+               //throw $e;
+               echo "no se pudo actualizar la base de datos".$e;
+            }
+            DB::connection('sqlsrv2')->commit();
+            $listdoc = ListaDoc::where('EMP',$EMP)->first();
+            $listdoc->RFC = $request->input('RFC');
+            $listdoc->save();
+           
+            //---------termina update de asimilados---------------
+        }
+        
+    return redirect('/catalogos/empleados')->with('flash','Se ha actualizado correctamente el empleado.');
     }
 
 
@@ -2026,16 +2474,36 @@ class EmpleadosController extends Controller
         $perfil = auth()->user()->profile_id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
         $listdoc = ListaDoc::where('EMP',$emp)->where('TIPONO', $selProceso)->first();
+        $cliente = Session::get('selCliente');
+        $rfc_empleado0 = Empleado::where('EMP',$emp)->first()->RFC;
+        $AsimiFiscal = Session::get('tinom');
+        //dd($rfc_empleado0);
         if ($listdoc==null) {
             $listdoc = new ListaDoc();
             $listdoc->EMP = $emp;
             $listdoc->TIPONO = $selProceso;
+            $listdoc->RFC = $rfc_empleado0;
             $listdoc->save();
         }
-        $cliente = Session::get('selCliente');
-        $rfc_cliente = CiasNo::first()->RFCCIA;
+
+        if ($AsimiFiscal=='fiscal') {
+            if ($cliente->asimilado==1) {
+                $empleadoasimi = EmpleadoAsimi::where('RFC',$rfc_empleado0)->first();
+                $listdocasimi = ListaDocAsimi::where('EMP',$empleadoasimi->EMP)->first();
+                if ($listdocasimi==null) {
+
+                    $listdocasimi = new ListaDocAsimi();
+                    $listdocasimi->EMP = $empleadoasimi->EMP;
+                    $listdocasimi->TIPONO = $selProceso;
+                    $listdocasimi->RFC = $rfc_empleado0;
+                    $listdocasimi->save();
+                }
+            }
+        }
+        
+        $rfc_cliente = CiasNo::first()->RFCCTE;
         $nombre_emp = Empleado::where('EMP', $emp)->get()->first()->NOMBRE;
-        $rfc_empleado0 = Empleado::where('EMP',$emp)->first()->RFC;
+        
         $rfc_empleado1=substr ($rfc_empleado0, 0,4);
         $rfc_empleado2=substr ($rfc_empleado0, 5,6);
         $rfc_empleado3=substr ($rfc_empleado0, 12,3);
@@ -2056,7 +2524,7 @@ class EmpleadosController extends Controller
         $emp = Session::get('emp');
         $listdoc = ListaDoc::where('EMP',$emp)->first();
         $cliente = Session::get('selCliente');
-        $rfc_cliente = CiasNo::first()->RFCCIA;
+        $rfc_cliente = CiasNo::first()->RFCCTE;
         $rfc_empleado0 = Empleado::where('EMP',$emp)->where('TIPONO', $selProceso)->first()->RFC;
         $rfc_empleado1=substr ($rfc_empleado0, 0,4);
         $rfc_empleado2=substr ($rfc_empleado0, 5,6);
@@ -2075,7 +2543,7 @@ class EmpleadosController extends Controller
         //$rutabase = Empleado::Rutas['Documentos'] .'/';
         $cliente = Session::get('selCliente');
         $celula_empresa = Cell::where('id', $cliente->cell_id)->first()->nombre;
-        $rfc_cliente = CiasNo::first()->RFCCIA;
+        $rfc_cliente = CiasNo::first()->RFCCTE;
         $rfc_empleado0 = Empleado::where('EMP',$emp)->first()->RFC;
         $rfc_empleado1=substr ($rfc_empleado0, 0,4);
         $rfc_empleado2=substr ($rfc_empleado0, 5,6);
@@ -2407,11 +2875,237 @@ class EmpleadosController extends Controller
             //dd('listo');
 
 
+        $cliente = auth()->user()->client;
+        $AsimiFiscal = Session::get('tinom');
+        if ($AsimiFiscal=='fiscal') {
+            if ($cliente->asimilado==1) {
+                $empasimi = EmpleadoAsimi::where('RFC',$rfc_empleado0)->first();
+                
+                $listdocasimi = ListaDocAsimi::where('EMP',$empasimi->EMP)->first();
+                //dd($rfc_empleado0);
+                $acta = $request->file('nacimiento');
+                   if ($acta !== null) {
+                        
+                        $path = $file;
+                        $extension = explode(".",$acta->getClientOriginalName());
+                        $fileName = 'acta.'.$extension[1];
+                        $listdocasimi->CHECK1 = 1;
+                        $listdocasimi->NOMBRE1 = $fileName;
+                        $listdocasimi->FECHAVENCI1 = $request->input('fechanaci');                    
+                    }
+                    else{
+                        
+                    }
+
+                $rfc = $request->file('rfc');
+                   if ($rfc !== null) {
+                        
+                        $path = $file;
+                        $extension = explode(".",$rfc->getClientOriginalName());
+                        $fileName2 = 'rfc.'.$extension[1];                    
+                        $listdocasimi->CHECK2 = 1;
+                        $listdocasimi->NOMBRE2 = $fileName2;
+                        $listdocasimi->FECHAVENCI2 = $request->input('fecharfc');
+                    }
+                    else{
+                        
+                    }
+
+                $curp = $request->file('curp');
+                   if ($curp !== null) {
+                        
+                        $path = $file;
+                        $extension = explode(".",$curp->getClientOriginalName());
+                        $fileName = 'curp.'.$extension[1];
+                        $listdocasimi->CHECK3 = 1;
+                        $listdocasimi->NOMBRE3 = $fileName;
+                        $listdocasimi->FECHAVENCI3 = $request->input('fechacurp');
+                    }
+                    else{
+                       
+                    }
+
+                $comprobante = $request->file('comprobante');
+                   if ($comprobante !== null) {
+                        
+                        $path = $file;
+                        $extension = explode(".",$comprobante->getClientOriginalName());
+                        $fileName = 'comprobante.'.$extension[1];
+                        $listdocasimi->CHECK4 = 1;
+                        $listdocasimi->NOMBRE4 = $fileName;
+                        $listdocasimi->FECHAVENCI4 = $request->input('fechacompro');
+                    }
+                    else{
+                        
+                    }
+
+                $empleo = $request->file('empleo');
+                   if ($empleo !== null) {
+                        
+                        $path = $file;
+                        $extension = explode(".",$empleo->getClientOriginalName());
+                        $fileName = 'solicitud.'.$extension[1];
+                        $listdocasimi->CHECK5 = 1;
+                        $listdocasimi->NOMBRE5 = $fileName;
+                        $listdocasimi->FECHAVENCI5 = $request->input('fechaempleo');
+                    }
+                    else{
+                        
+                    }
+
+                $ine = $request->file('ine');
+                   if ($ine !== null) {
+                        
+                        $path = $file;
+                        $extension = explode(".",$ine->getClientOriginalName());
+                        $fileName = 'ine.'.$extension[1];
+                        $listdocasimi->CHECK6 = 1;
+                        $listdocasimi->NOMBRE6 = $fileName;
+                        $listdocasimi->FECHAVENCI6 = $request->input('fechaine');
+                    }
+                    else{
+                        
+                    }
+
+                $boda = $request->file('boda');
+                   if ($boda !== null) {
+                        
+                        $path = $file;
+                        $extension = explode(".",$boda->getClientOriginalName());
+                        $fileName = 'boda.'.$extension[1];
+                        $listdocasimi->CHECK7 = 1;
+                        $listdocasimi->NOMBRE7 = $fileName;
+                        $listdocasimi->FECHAVENCI7 = $request->input('fechaboda');
+                    }
+                    else{
+                        
+                    }
+
+                $titulo = $request->file('titulo');
+                   if ($titulo !== null) {
+                        
+                        $path = $file;
+                        $extension = explode(".",$titulo->getClientOriginalName());
+                        $fileName = 'titulo.'.$extension[1];
+                        $listdocasimi->CHECK8 = 1;
+                        $listdocasimi->NOMBRE8 = $fileName;
+                        $listdocasimi->FECHAVENCI8 = $request->input('fechatitulo');
+                    }
+                    else{
+                       
+                    }
+
+                $antecedentes = $request->file('antecedentes');
+                   if ($antecedentes !== null) {
+                        
+                        $path = $file;
+                        $extension = explode(".",$antecedentes->getClientOriginalName());
+                        $fileName = 'antecedentes.'.$extension[1];
+                        $listdocasimi->CHECK9 = 1;
+                        $listdocasimi->NOMBRE9 = $fileName;
+                        $listdocasimi->FECHAVENCI9 = $request->input('fechaante');
+                    }
+                    else{
+                        
+                    }
+
+                $contrato = $request->file('contrato');
+                   if ($contrato !== null) {
+                        
+                        $path = $file;
+                        $extension = explode(".",$contrato->getClientOriginalName());
+                        $fileName = 'contrato.'.$extension[1];
+                        $listdocasimi->CHECK10 = 1;
+                        $listdocasimi->NOMBRE10 = $fileName;
+                        $listdocasimi->FECHAVENCI10 = $request->input('fechacompro');
+                    }
+                    else{
+                        
+                    }
+
+                $curriculum = $request->file('curriculum');
+                   if ($curriculum !== null) {
+                        
+                        $path = $file;
+                        $extension = explode(".",$curriculum->getClientOriginalName());
+                        $fileName = 'curriculum.'.$extension[1];
+                        $listdocasimi->CHECK11 = 1;
+                        $listdocasimi->NOMBRE11 = $fileName;
+                        $listdocasimi->FECHAVENCI11 = $request->input('fechacurri');
+                    }
+                    else{
+                       
+                    }
+
+                $cedula = $request->file('cedula');
+                   if ($cedula !== null) {
+                        
+                        $path = $file;
+                        $extension = explode(".",$cedula->getClientOriginalName());
+                        $fileName = 'cedula.'.$extension[1];
+                        $listdocasimi->CHECK12 = 1;
+                        $listdocasimi->NOMBRE12 = $fileName;
+                        $listdocasimi->FECHAVENCI12 = $request->input('fechacedula');
+                    }
+                    else{
+                        
+                    }
+
+                $diplomas = $request->file('diplomas');
+                   if ($diplomas !== null) {
+                        
+                        $path = $file;
+                        $extension = explode(".",$diplomas->getClientOriginalName());
+                        $fileName = 'diplomas.'.$extension[1];
+                        $listdocasimi->CHECK13 = 1;
+                        $listdocasimi->NOMBRE13 = $fileName;
+                        $listdocasimi->FECHAVENCI13 = $request->input('fechadiplo');
+                    }
+                    else{
+                        
+                    }
+
+                $certificaciones = $request->file('certificaciones');
+                   if ($certificaciones !== null) {
+                        
+                        $path = $file;
+                        $extension = explode(".",$certificaciones->getClientOriginalName());
+                        $fileName = 'certificaciones.'.$extension[1];
+                        $listdocasimi->CHECK14 = 1;
+                        $listdocasimi->NOMBRE14 = $fileName;
+                        $listdocasimi->FECHAVENCI14 = $request->input('fechacerti');
+                    }
+                    else{
+                        
+                    }
+
+                $licencia = $request->file('licencia');
+                   if ($licencia !== null) {
+                        
+                        $path = $file;
+                        $extension = explode(".",$licencia->getClientOriginalName());
+                        $fileName = 'licencia.'.$extension[1];
+                        $listdocasimi->CHECK15 = 1;
+                        $listdocasimi->NOMBRE15 = $fileName;
+                        $listdocasimi->FECHAVENCI15 = $request->input('fechalicencia');
+                    }
+                    else{
+                        
+                    }
+
+                $listdocasimi->save();
+                    //dd('listo');
+
+
+            }
+            
+        }
+
         return back()->with('flash','Documentos Actualizados');
     }
 
     public function configuracion()
-    {  
+    {
         $perfil = auth()->user()->profile_id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
         $docsReque = DocsRequeridos::first();

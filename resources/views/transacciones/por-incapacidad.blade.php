@@ -6,7 +6,7 @@
 @section('content')
 <!-- {!! Session::get("message", '') !!} -->
 <div class="container" style="border:1px grey solid;">
-	<h3>Incidencias por incapacidad</h3>
+	<h3>Incidencias por Ausentismo</h3>
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
