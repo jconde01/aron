@@ -384,6 +384,7 @@ class ClientController extends Controller
         //     "emailAddress" => "wez@example.com"
         // );
 
+        $rfcCia = trim($rfcCia);
         $dn = array(
             "countryName" => "MX",
             "organizationName" => $nomCia,

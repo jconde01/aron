@@ -99,7 +99,7 @@
 				</div>
 				<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;">
     				<label class="label-left" style="font-size: 14px;">Ref. IMSS</label>
-    				<input type="text" id="refIMSS" name="RefIMSS" pattern="[A-Za-z]{2}[0-9]{6}" title="Formato: AA999999" value="">
+    				<input type="text" id="refIMSS" name="RefIMSS" pattern="[A-Za-z]{2}[0-9]{6}" title="Formato: AA999999" value="" maxlength="9">
 				</div>
 				<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;">
     				<label class="label-left" style="font-size: 14px;">Tipo de Incapacidad</label>
@@ -141,7 +141,7 @@
 				</div>
 				<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;">
     				<label class="label-left" style="font-size: 14px;">Ref. IMSS</label>
-    				<input type="text" id="ed_refIMSS" name="RefIMSS" pattern="[A-Za-z]{2}[0-9]{6}" value="">
+    				<input type="text" id="ed_refIMSS" name="RefIMSS" pattern="[A-Za-z]{2}[0-9]{6}" value=""  maxlength="9">
 				</div>
 				<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;">
     				<label class="label-left" style="font-size: 14px;">Tipo de Incapacidad</label>
