@@ -44,9 +44,9 @@ class ConsultasController extends Controller
         $rfc_empleado= $rfc_empleado1.$rfc_empleado2.$rfc_empleado3;
         $cliente = Session::get('selCliente');
         $celula_empresa = Cell::where('id', $cliente->cell_id)->first()->nombre;
-        $ruta = Client::getRutaEmpleados($cliente->cell_id,$rfc_cliente) . '/' . $rfc_empleado . '/recibos';
+        $ruta = Client::getRutaBase($cliente->cell_id,$rfc_cliente) . '/Recibos';
         if (is_dir($ruta)){
-            echo "si se pudo";
+            
         }else{
             try {
             mkdir($ruta,0755,true);
@@ -99,13 +99,13 @@ class ConsultasController extends Controller
     	return view('consultas.contratos.consulta')->with(compact('navbar','ruta')); 
     }
 
-     public function descarga($archivo)
+     public function descarga($sub, $archivo)
     {
         
         $cliente = Session::get('selCliente');
         $celula_empresa = Cell::where('id', $cliente->cell_id)->first()->nombre;
         $rfc_cliente = Session::get('rfc_cliente');
-        $file= Client::getRutaAutorizados($cliente->cell_id,$rfc_cliente) . '/'.$archivo;
+        $file= Client::getRutaBase($cliente->cell_id,$rfc_cliente) . '/Recibos/'.$sub.'/'.$archivo;
         return Response::download($file);
     }
 
@@ -145,13 +145,40 @@ class ConsultasController extends Controller
         return view('consultas.documentos.index')->with(compact('navbar', 'ruta_documentos', 'rfc_cliente', 'celula_empresa'));
     }
 
-     public function descargaDoc($archivo) 
+    public function subCarpetas($subcarpeta) 
+    {
+        
+        $rfc_cliente = CiasNo::first()->RFCCTE;
+        session(['rfc_cliente' => $rfc_cliente]);
+        $cliente = Session::get('selCliente');
+        $celula_empresa = Cell::where('id', $cliente->cell_id)->first()->nombre;
+        $ruta_documentos = Client::getRutaDocumentos($cliente->cell_id,$rfc_cliente);
+        $ruta_documentos = $ruta_documentos.'/'.$subcarpeta;
+        
+         if (is_dir($ruta_documentos)){
+            
+        }else{
+            try {
+            mkdir($ruta_documentos,0755,true);
+            } catch (Exception $e) {
+                echo "no se pudo crear los directorios para este empleado";
+            }
+
+        }
+        $perfil = auth()->user()->profile->id;        
+        $navbar = ProfileController::getNavBar('',0,$perfil);
+       
+        
+        return view('consultas.documentos.documentos')->with(compact('navbar', 'ruta_documentos', 'rfc_cliente', 'celula_empresa','subcarpeta'));
+    }
+
+     public function descargaDoc($subcarpeta,$archivo) 
     {
         
         $cliente = Session::get('selCliente');
         $celula_empresa = Cell::where('id', $cliente->cell_id)->first()->nombre;
         $rfc_cliente = Session::get('rfc_cliente');
-        $file = Client::getRutaDocumentos($cliente->cell_id,$rfc_cliente).'/'.$archivo;
+        $file = Client::getRutaDocumentos($cliente->cell_id,$rfc_cliente).'/'.$subcarpeta.'/'.$archivo;
         return Response()->file($file);
         //return Response::download($file);
     }    
@@ -183,6 +210,7 @@ class ConsultasController extends Controller
     {
         $list = Checklist::where('id',$request->id)->first();
         foreach ($request->CHECK as $valores) {
+           //dd($request->CHECK);
            echo $valores.'<br>';
            $elemento = 'CHECK'.$valores;
            $list->$elemento = 1;

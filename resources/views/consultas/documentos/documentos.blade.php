@@ -16,8 +16,8 @@
             {
                 if (!is_dir($archivo))//verificamos si es o no un directorio
                 {
-                    echo '<a href="/consultas/documentos/'.$archivo.'" ><div class="col-lg-5" style="border:1px blue solid; border-radius:10px; margin-right: 80px; height:170px; margin-top: 20px;" > <br> <i class="fas fa-folder" style="font-size: 50px;" > </i> <br> <br> Periodo '.$archivo.' <br/><br><br>';
-                    echo '</div></a>';
+                    echo '<div class="col-lg-5" style="border:1px blue solid; border-radius:10px; margin-right: 80px; height:170px; margin-top: 20px;" > <br> <i class="fas fa-file-alt" style="font-size: 50px;" > </i> <br> <br> <a href="/consultas/descargaDocumentos/'.$subcarpeta.'/'.$archivo.'" > '.$archivo.' </a><br/><br><br>';
+                    echo '</div>';
                 }
             }
         ?>               
