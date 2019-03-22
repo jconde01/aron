@@ -17,7 +17,9 @@ use App\Message;
 use App\Movtos;
 use App\ca2018;
 use App\ca2019;
+use App\ca2019Asimi;
 use App\Control;
+use App\ControlAsimi;
 use App\Empleado;
 use App\DatosGe;
 use App\Profilew;
@@ -43,6 +45,7 @@ class HomeController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('database');
+        $this->middleware('databaseAsimi');
     }
 
     /**
@@ -68,8 +71,7 @@ class HomeController extends Controller
                 return view('home')->with(compact('navbar', 'graficas'));
             } else {
                 $cliente = auth()->user()->client;
-                // Es el usuario administrador del cliente y no ha seleccionado un proceso?
-                // asume FISCAL (si está activo) y en su defecto, ASIMILADOS.
+                // Es el usuario administrador del cliente?
                 if ($perfil == env('APP_CLIENT_ADMIN',1) && Session::get('selProceso') == null) {
                     $tipos = Client::select('fiscal','asimilado')->find($cliente->id);
                     If ($tipos->fiscal != 0) {
@@ -84,74 +86,9 @@ class HomeController extends Controller
                 }
                 // Checa si ya se seleccionó el Tipo y Proceso de Nomina
                 $selProceso = Session::get('selProceso');
-                if ($selProceso != '') {
-                    //inicia codigo agregado por Ricardo Cordero 28/10/2018-------------------------------------------
-//-------------------------------------------Inicio de graficas de faltas injustificadas---------------------------------------------------------------------------------
-                    $prueba = Control::get();
-                    $ca2018 = ca2019::where('CONCEPTO', 408)->get();
-                    $periano = 0;
-                    $periano2 = 0;
-                    $sumaunidades2=0;
-                    $sumadesuma = 0;
-                    $contador = 0;
-                    $guardador = array();  
-                    foreach ($prueba as $prueba2) {
-                        $contador = $contador+1;
-                        $periano = $prueba2->PERIANO;
-                        $sumaunidades=0;
-                        if ($periano!=$periano2) {
-                              $sumaunidades2=0;                                         
-                        }
-                        foreach ($ca2018 as $ca) {
-                            if ($ca->PERIODO==$prueba2->PERIODO) {
-                                  $sumaunidades = $sumaunidades+($ca->UNIDADES*-1);
-                                  $sumaunidades2 = $sumaunidades2+$ca->UNIDADES;
-                                  $periano2 = $prueba2->PERIANO;
-                            }    
-                        }       
-                        $info = array_push($guardador,$sumaunidades2);                                
-                    }
-                                
-                    $data= [$guardador[2]*-1,$guardador[4]*-1,$guardador[6]*-1,$guardador[8]*-1,$guardador[10]*-1,$guardador[12]*-1,$guardador[14]*-1,$guardador[16]*-1,$guardador[18]*-1,$guardador[20]*-1,$guardador[22]*-1,$guardador[24]*-1];
+                if ($selProceso != '') {                    
 
-//----------------------------------------------------------Fin de grafica de faltas injustificadas-------------------------------------------------------------------------------------------------------------
-                    
-//-------------------------------------------------------grafica de horas extra-----------------------------------------------------------------------------------------------------------------------------------
-                    $prueba = Control::get();
-                    $ca2018 = ca2019::whereBetween('CONCEPTO', [200,201])->get();
-                    $periano = 0;
-                    $periano2 = 0;
-                    $sumaunidades2=0;
-                    $sumadesuma = 0;
-                    $contador = 0;
-                    $guardador2 = array();  
-       
-                                foreach ($prueba as $prueba2) {
-                                    $contador = $contador+1;
-                                    $periano = $prueba2->PERIANO;
-                                    $sumaunidades=0;
-                                   // echo '-------------------------------------------------------------------<br>';
-                                    if ($periano!=$periano2) {
-                                          $sumaunidades2=0;                                         
-                                      }
-                                    foreach ($ca2018 as $ca) {
-                                         if ($ca->PERIODO==$prueba2->PERIODO) {
-                                             
-                                              $sumaunidades = $sumaunidades+$ca->UNIDADES;
-                                              $sumaunidades2 = $sumaunidades2+$ca->UNIDADES;
-                                              $periano2 = $prueba2->PERIANO;
-                                          }    
-                                        
-                                    }       
-
-                                  $info = array_push($guardador2,$sumaunidades2);                                
-                                }
-                                // echo '<br><br><br>-------------------------------------------------------------------<br>';
-                      $data2= [$guardador2[2],$guardador2[4],$guardador2[6],$guardador2[8],$guardador2[10],$guardador2[12],$guardador2[14],$guardador2[16],$guardador2[18],$guardador2[20],$guardador2[22],$guardador2[24]];
-                    
-//------------------------------------------------------------Fin de grafica de horas extras---------------------------------------------------------------------------------------------------------------------
-
-//---------------------------------------------------------------inicio de graficas de departamentos ocupados----------------------------------------------------------------------------------------------------
+    //-------------------------------------inicio de graficas de departamentos ocupados----------------------------------------
                     $dep = Depto::get();
                     $deptos = Empleado::where('ESTATUS','!=','B')->get();
                     $contador = 0;
@@ -160,7 +97,6 @@ class HomeController extends Controller
                     $igualador=0;
                     $igualador2=0;  
                     $cont=0;
-
                     foreach ($dep as $dep1) {
                         $igualador = $dep1->DEPTO;
                         if ( $igualador!=$igualador2) {
@@ -174,18 +110,15 @@ class HomeController extends Controller
                        }
                        $info = array_push($guardador3,$dep1->DESCRIP);
                        $info = array_push($guardador3,$contador);
-
                     }
-                  foreach ($guardador3 as $guar3) {
-                    $cont=$cont+1;
-                     $data3[$cont]=$guar3;
-
-                  }
-                   
-//-------------------------------------------------------fin de grafica de departamentos-------------------------------------------------------------------------------------------------------------------------
+                    foreach ($guardador3 as $guar3) {
+                      $cont=$cont+1;
+                       $data3[$cont]=$guar3;
+                    }                   
+    //---------------------------------------------------fin de grafica de departamentos---------------------------------------
 
 
-//----------------------------------------------------------inicio de grafica de edades--------------------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------inicio de grafica de edades------------------------------------------------
                   $empleadoG = DatosGe::select('BORN')->get();
                   $hoy = date_create();
                   $cont20=0;
@@ -218,17 +151,13 @@ class HomeController extends Controller
                      }
                      if ($anios>60) {
                          $cont60=$cont60+1;
-                     }
-                    
+                     }                    
                   }
+    //-------------------------------------------fin de grafica de edades------------------------------------------------------
 
-//---------------------------------------------------------fin de grafica de edades------------------------------------------------------------------------------------------------------------------------------
-
-//---------------------------------------------------------inicio grafica cosoto de nomina 2018-----------------------------------------------------------------------------------------------------------------------
+    //-------------------------------------inicio grafica cosoto de nomina 2018------------------------------------------------
                     $control2 = Control::get();
-                    $ca18 = ca2018::where('CONCEPTO', '<', 500)->get();
-                   
-                    
+                    $ca18 = ca2018::where('CONCEPTO', '<', 500)->get();                                      
                     $suma = 0;
                     $total = 0;
                     $peri = 0;
@@ -244,8 +173,7 @@ class HomeController extends Controller
                     $total10 = 0;
                     $total11 = 0;
                     $total12 = 0;
-                    foreach ($control2 as $conl) {
-                        
+                    foreach ($control2 as $conl) {                       
                         $suma = 0;
                         foreach ($ca18 as $ca) {
                             
@@ -288,16 +216,9 @@ class HomeController extends Controller
                                    if ($conl->PERIANO== 201812) {
                                        $total12=$total12 + $ca->IMPORTE;
                                    }
-                               }
-                               
-                            
-                            
-                        }
-                       
+                               }                           
+                        }                      
                     }
-
-                   
-
                     $control = Control::get();
                     $ca18 = ca2018::where('CONCEPTO', '>', 499)->get();
                     $suma = 0;
@@ -319,8 +240,7 @@ class HomeController extends Controller
                         $suma = 0;
                         if ($conl->PERIANO != $peri) {
                             $total = 0;
-                        }
-                       
+                        }                     
                         foreach ($ca18 as $ca) {
                             if ($ca->PERIODO== $conl->PERIODO) {
                                $suma=$suma +$ca->IMPORTE;
@@ -362,12 +282,9 @@ class HomeController extends Controller
                                if ($conl->PERIANO == 201812) {
                                    $total122 = $total122+$ca->IMPORTE;
                                }
-                            }
-                            
-                        }
-                        
+                            }                           
+                        }                       
                     }
-
                     $enero=$total1-$tota111;
                     $febrero=$total2-$total22;
                     $marzo=$total3-$total33;
@@ -382,175 +299,9 @@ class HomeController extends Controller
                     $diciembre=$total12-$total122;
                    
                     $data4=[$enero,$febrero,$marzo,$abril,$mayo,$junio,$julio,$agosto,$septiembre,$octubre,$noviembre,$diciembre];
+    //----------------------------------------Fin de la grafica costo de nomina2018--------------------------------------------
 
-
-
-//---------------------------------------------------------Fin de la grafica costo de nomina2018---------------------------------------------------------------------------------------------------------------------
-
-//---------------------------------------------------------inicio grafica cosoto de nomina 2019-----------------------------------------------------------------------------------------------------------------------
-                  
-
-                    $l9control2 = Control::get();
-                    $l9ca18 = ca2019::where('CONCEPTO', '<', 500)->get();
-                   
-                    
-                    $l9suma = 0;
-                    $l9total = 0;
-                    $l9peri = 0;
-                    $l9total1 = 0;
-                    $l9total2 = 0;
-                    $l9total3 = 0;
-                    $l9total4 = 0;
-                    $l9total5 = 0;
-                    $l9total6 = 0;
-                    $l9total7 = 0;
-                    $l9total8 = 0;
-                    $l9total9 = 0;
-                    $l9total10 = 0;
-                    $l9total11 = 0;
-                    $l9total12 = 0;
-                    foreach ($l9control2 as $l9conl) {
-                        
-                        $l9suma = 0;
-                        foreach ($l9ca18 as $l9ca) {
-                            
-                               if ($l9ca->PERIODO == $l9conl->PERIODO) {
-                               
-                                   $l9suma = $l9suma + $l9ca->IMPORTE;
-                                   if ($l9conl->PERIANO== 201901) {
-                                       $l9total1=$l9total1 + $l9ca->IMPORTE;
-                                   }
-                                   if ($l9conl->PERIANO== 201902) {
-                                       $l9total2=$l9total2 + $l9ca->IMPORTE;
-                                   }
-                                   if ($l9conl->PERIANO== 201903) {
-                                       $l9total3=$l9total3 + $l9ca->IMPORTE;
-                                   }
-                                   if ($l9conl->PERIANO== 201904) {
-                                       $l9total4=$l9total4 + $l9ca->IMPORTE;
-                                   }
-                                   if ($l9conl->PERIANO== 201905) {
-                                       $l9total5=$l9total5 + $l9ca->IMPORTE;
-                                   }
-                                   if ($l9conl->PERIANO== 201906) {
-                                       $l9total6=$l9total6 + $l9ca->IMPORTE;
-                                   }
-                                   if ($l9conl->PERIANO== 201907) {
-                                       $l9total7=$l9total7 + $l9ca->IMPORTE;
-                                   }
-                                   if ($l9conl->PERIANO== 201908) {
-                                       $l9total8=$l9total8 + $l9ca->IMPORTE;
-                                   }
-                                   if ($l9conl->PERIANO== 201909) {
-                                       $l9total9=$l9total9 + $l9ca->IMPORTE;
-                                   }
-                                   if ($l9conl->PERIANO== 201910) {
-                                       $l9total10=$l9total10 + $l9ca->IMPORTE;
-                                   }
-                                   if ($l9conl->PERIANO== 201911) {
-                                       $l9total11=$l9total11 + $l9ca->IMPORTE;
-                                   }
-                                   if ($l9conl->PERIANO== 201912) {
-                                       $l9total12=$l9total12 + $l9ca->IMPORTE;
-                                   }
-                               }
-                               
-                            
-                            
-                        }
-                       
-                    }
-
-                   
-
-                    $l9control = Control::get();
-                    $l9ca18 = ca2019::where('CONCEPTO', '>', 499)->get();
-                    $l9suma = 0;
-                    $l9total = 0;
-                    $l9peri = 0;
-                    $l9tota111 = 0;
-                    $l9total22 = 0;
-                    $l9total33 = 0;
-                    $l9total44 = 0;
-                    $l9total55 = 0;
-                    $l9total66 = 0;
-                    $l9total77 = 0;
-                    $l9total88 = 0;
-                    $l9total99 = 0;
-                    $l9total100 = 0;
-                    $l9total111 = 0;
-                    $l9total122 = 0;
-                    foreach ($l9control as $l9conl) {
-                        $l9suma = 0;
-                        if ($l9conl->PERIANO != $l9peri) {
-                            $l9total = 0;
-                        }
-                       
-                        foreach ($l9ca18 as $l9ca) {
-                            if ($l9ca->PERIODO== $l9conl->PERIODO) {
-                               $l9suma=$l9suma +$l9ca->IMPORTE;
-                               $l9total = $l9total+$l9ca->IMPORTE;
-                               $l9peri=$l9conl->PERIANO;
-                               if ($l9conl->PERIANO == 201901) {
-                                   $l9tota111 = $l9tota111+$l9ca->IMPORTE;
-                               }
-                               if ($l9conl->PERIANO == 201902) {
-                                   $l9total22 = $l9total22+$l9ca->IMPORTE;
-                               }
-                               if ($l9conl->PERIANO == 201903) {
-                                   $l9total33 = $l9total33+$l9ca->IMPORTE;
-                               }
-                               if ($l9conl->PERIANO == 201904) {
-                                   $l9total44 = $l9total44+$l9ca->IMPORTE;
-                               }
-                               if ($l9conl->PERIANO == 201905) {
-                                   $l9total55 = $l9total55+$l9ca->IMPORTE;
-                               }
-                               if ($l9conl->PERIANO == 201906) {
-                                   $l9total66 = $l9total66+$l9ca->IMPORTE;
-                               }
-                               if ($l9conl->PERIANO == 201907) {
-                                   $l9total77 = $l9total77+$l9ca->IMPORTE;
-                               }
-                               if ($l9conl->PERIANO == 201908) {
-                                   $l9total88 = $l9total88+$l9ca->IMPORTE;
-                               }
-                               if ($l9conl->PERIANO == 201909) {
-                                   $l9total99 = $l9total99+$l9ca->IMPORTE;
-                               }
-                               if ($l9conl->PERIANO == 201910) {
-                                   $l9total100 = $l9total100+$l9ca->IMPORTE;
-                               }
-                               if ($l9conl->PERIANO == 201911) {
-                                   $l9total111 = $l9total111+$l9ca->IMPORTE;
-                               }
-                               if ($l9conl->PERIANO == 201912) {
-                                   $l9total122 = $l9total122+$l9ca->IMPORTE;
-                               }
-                            }
-                            
-                        }
-                        
-                    }
-
-                    $l9enero=$l9total1-$l9tota111;
-                    $l9febrero=$l9total2-$l9total22;
-                    $l9marzo=$l9total3-$l9total33;
-                    $l9abril=$l9total4-$l9total44;
-                    $l9mayo=$l9total5-$l9total55;
-                    $l9junio=$l9total6-$l9total66;
-                    $l9julio=$l9total7-$l9total77;
-                    $l9agosto=$l9total8-$l9total88;
-                    $l9septiembre=$l9total9-$l9total99;
-                    $l9octubre=$l9total10-$l9total100;
-                    $l9noviembre=$l9total11-$l9total111;
-                    $l9diciembre=$l9total12-$l9total122;
-                   
-                    $l9data4=[$l9enero,$l9febrero,$l9marzo,$l9abril,$l9mayo,$l9junio,$l9julio,$l9agosto,$l9septiembre,$l9octubre,$l9noviembre,$l9diciembre];
-              
-                   
-
-//---------------------------------------------------------Fin de la grafica costo de nomina2019---------------------------------------------------------------------------------------------------------------------
+    
 
 
 
@@ -570,6 +321,458 @@ class HomeController extends Controller
                               ]);
                           session(['sqlsrv3' => Config::get("database.connections.sqlsrv3")]);
                         }
+
+    //---------------------------------------inicio grafica cosoto de nomina 2019----------------------------------------------
+                                        $l9control2 = Control::get();
+                                        $l9ca18 = ca2019::where('CONCEPTO', '<', 500)->get();                                    
+                                        $l9suma = 0;
+                                        $l9total = 0;
+                                        $l9peri = 0;
+                                        $l9total1 = 0;
+                                        $l9total2 = 0;
+                                        $l9total3 = 0;
+                                        $l9total4 = 0;
+                                        $l9total5 = 0;
+                                        $l9total6 = 0;
+                                        $l9total7 = 0;
+                                        $l9total8 = 0;
+                                        $l9total9 = 0;
+                                        $l9total10 = 0;
+                                        $l9total11 = 0;
+                                        $l9total12 = 0;
+                                        foreach ($l9control2 as $l9conl) {                       
+                                            $l9suma = 0;
+                                            foreach ($l9ca18 as $l9ca) {                           
+                                                   if ($l9ca->PERIODO == $l9conl->PERIODO) {                              
+                                                       $l9suma = $l9suma + $l9ca->IMPORTE;
+                                                       if ($l9conl->PERIANO== 201901) {
+                                                           $l9total1=$l9total1 + $l9ca->IMPORTE;
+                                                       }
+                                                       if ($l9conl->PERIANO== 201902) {
+                                                           $l9total2=$l9total2 + $l9ca->IMPORTE;
+                                                       }
+                                                       if ($l9conl->PERIANO== 201903) {
+                                                           $l9total3=$l9total3 + $l9ca->IMPORTE;
+                                                       }
+                                                       if ($l9conl->PERIANO== 201904) {
+                                                           $l9total4=$l9total4 + $l9ca->IMPORTE;
+                                                       }
+                                                       if ($l9conl->PERIANO== 201905) {
+                                                           $l9total5=$l9total5 + $l9ca->IMPORTE;
+                                                       }
+                                                       if ($l9conl->PERIANO== 201906) {
+                                                           $l9total6=$l9total6 + $l9ca->IMPORTE;
+                                                       }
+                                                       if ($l9conl->PERIANO== 201907) {
+                                                           $l9total7=$l9total7 + $l9ca->IMPORTE;
+                                                       }
+                                                       if ($l9conl->PERIANO== 201908) {
+                                                           $l9total8=$l9total8 + $l9ca->IMPORTE;
+                                                       }
+                                                       if ($l9conl->PERIANO== 201909) {
+                                                           $l9total9=$l9total9 + $l9ca->IMPORTE;
+                                                       }
+                                                       if ($l9conl->PERIANO== 201910) {
+                                                           $l9total10=$l9total10 + $l9ca->IMPORTE;
+                                                       }
+                                                       if ($l9conl->PERIANO== 201911) {
+                                                           $l9total11=$l9total11 + $l9ca->IMPORTE;
+                                                       }
+                                                       if ($l9conl->PERIANO== 201912) {
+                                                           $l9total12=$l9total12 + $l9ca->IMPORTE;
+                                                       }
+                                                   }                           
+                                            }                     
+                                        }
+                                        
+                                        $l9control = Control::get();
+                                        $l9ca18 = ca2019::where('CONCEPTO', '>', 499)->get();
+                                        $l9suma = 0;
+                                        $l9total = 0;
+                                        $l9peri = 0;
+                                        $l9tota111 = 0;
+                                        $l9total22 = 0;
+                                        $l9total33 = 0;
+                                        $l9total44 = 0;
+                                        $l9total55 = 0;
+                                        $l9total66 = 0;
+                                        $l9total77 = 0;
+                                        $l9total88 = 0;
+                                        $l9total99 = 0;
+                                        $l9total100 = 0;
+                                        $l9total111 = 0;
+                                        $l9total122 = 0;
+                                        foreach ($l9control as $l9conl) {
+                                            $l9suma = 0;
+                                            if ($l9conl->PERIANO != $l9peri) {
+                                                $l9total = 0;
+                                            }                     
+                                            foreach ($l9ca18 as $l9ca) {
+                                                if ($l9ca->PERIODO== $l9conl->PERIODO) {
+                                                   $l9suma=$l9suma +$l9ca->IMPORTE;
+                                                   $l9total = $l9total+$l9ca->IMPORTE;
+                                                   $l9peri=$l9conl->PERIANO;
+                                                   if ($l9conl->PERIANO == 201901) {
+                                                       $l9tota111 = $l9tota111+$l9ca->IMPORTE;
+                                                   }
+                                                   if ($l9conl->PERIANO == 201902) {
+                                                       $l9total22 = $l9total22+$l9ca->IMPORTE;
+                                                   }
+                                                   if ($l9conl->PERIANO == 201903) {
+                                                       $l9total33 = $l9total33+$l9ca->IMPORTE;
+                                                   }
+                                                   if ($l9conl->PERIANO == 201904) {
+                                                       $l9total44 = $l9total44+$l9ca->IMPORTE;
+                                                   }
+                                                   if ($l9conl->PERIANO == 201905) {
+                                                       $l9total55 = $l9total55+$l9ca->IMPORTE;
+                                                   }
+                                                   if ($l9conl->PERIANO == 201906) {
+                                                       $l9total66 = $l9total66+$l9ca->IMPORTE;
+                                                   }
+                                                   if ($l9conl->PERIANO == 201907) {
+                                                       $l9total77 = $l9total77+$l9ca->IMPORTE;
+                                                   }
+                                                   if ($l9conl->PERIANO == 201908) {
+                                                       $l9total88 = $l9total88+$l9ca->IMPORTE;
+                                                   }
+                                                   if ($l9conl->PERIANO == 201909) {
+                                                       $l9total99 = $l9total99+$l9ca->IMPORTE;
+                                                   }
+                                                   if ($l9conl->PERIANO == 201910) {
+                                                       $l9total100 = $l9total100+$l9ca->IMPORTE;
+                                                   }
+                                                   if ($l9conl->PERIANO == 201911) {
+                                                       $l9total111 = $l9total111+$l9ca->IMPORTE;
+                                                   }
+                                                   if ($l9conl->PERIANO == 201912) {
+                                                       $l9total122 = $l9total122+$l9ca->IMPORTE;
+                                                   }
+                                                }                        
+                                            }                       
+                                        }
+
+                                        $l9enero=$l9total1-$l9tota111;
+                                        $l9febrero=$l9total2-$l9total22;
+                                        $l9marzo=$l9total3-$l9total33;
+                                        $l9abril=$l9total4-$l9total44;
+                                        $l9mayo=$l9total5-$l9total55;
+                                        $l9junio=$l9total6-$l9total66;
+                                        $l9julio=$l9total7-$l9total77;
+                                        $l9agosto=$l9total8-$l9total88;
+                                        $l9septiembre=$l9total9-$l9total99;
+                                        $l9octubre=$l9total10-$l9total100;
+                                        $l9noviembre=$l9total11-$l9total111;
+                                        $l9diciembre=$l9total12-$l9total122;
+
+                                        //---------------------consulta de costo de enomina 2019 asimlado----------------
+                                        $cliente = auth()->user()->client;
+                                        $AsimiFiscal = Session::get('tinom');
+                                        if ($AsimiFiscal=='fiscal') {
+                                          if ($cliente->asimilado==1) {
+                                            $l9control2Asimi = ControlAsimi::get();
+                                            $l9ca18Asimi = ca2019Asimi::where('CONCEPTO', '<', 500)->get();                                    
+                                            $l9sumaAsimi = 0;
+                                            $l9totalAsimi = 0;
+                                            $l9periAsimi = 0;
+                                            $l9total1Asimi = 0;
+                                            $l9total2Asimi = 0;
+                                            $l9total3Asimi = 0;
+                                            $l9total4Asimi = 0;
+                                            $l9total5Asimi = 0;
+                                            $l9total6Asimi = 0;
+                                            $l9total7Asimi = 0;
+                                            $l9total8Asimi = 0;
+                                            $l9total9Asimi = 0;
+                                            $l9total10Asimi = 0;
+                                            $l9total11Asimi = 0;
+                                            $l9total12Asimi = 0;
+                                            foreach ($l9control2Asimi as $l9conlAsimi) {                       
+                                                $l9sumaAsimi = 0;
+                                                foreach ($l9ca18Asimi as $l9caAsimi) {                           
+                                                       if ($l9caAsimi->PERIODO == $l9conlAsimi->PERIODO) {                              
+                                                           $l9sumaAsimi = $l9sumaAsimi + $l9caAsimi->IMPORTE;
+                                                           if ($l9conlAsimi->PERIANO== 201901) {
+                                                               $l9total1Asimi=$l9total1Asimi + $l9caAsimi->IMPORTE;
+                                                           }
+                                                           if ($l9conlAsimi->PERIANO== 201902) {
+                                                               $l9total2Asimi=$l9total2Asimi + $l9caAsimi->IMPORTE;
+                                                           }
+                                                           if ($l9conlAsimi->PERIANO== 201903) {
+                                                               $l9total3Asimi=$l9total3Asimi + $l9caAsimi->IMPORTE;
+                                                           }
+                                                           if ($l9conlAsimi->PERIANO== 201904) {
+                                                               $l9total4Asimi=$l9total4Asimi + $l9caAsimi->IMPORTE;
+                                                           }
+                                                           if ($l9conlAsimi->PERIANO== 201905) {
+                                                               $l9total5Asimi=$l9total5Asimi + $l9caAsimi->IMPORTE;
+                                                           }
+                                                           if ($l9conlAsimi->PERIANO== 201906) {
+                                                               $l9total6Asimi=$l9total6Asimi + $l9caAsimi->IMPORTE;
+                                                           }
+                                                           if ($l9conlAsimi->PERIANO== 201907) {
+                                                               $l9total7Asimi=$l9total7Asimi + $l9caAsimi->IMPORTE;
+                                                           }
+                                                           if ($l9conlAsimi->PERIANO== 201908) {
+                                                               $l9total8Asimi=$l9total8Asimi + $l9caAsimi->IMPORTE;
+                                                           }
+                                                           if ($l9conlAsimi->PERIANO== 201909) {
+                                                               $l9total9Asimi=$l9total9Asimi + $l9caAsimi->IMPORTE;
+                                                           }
+                                                           if ($l9conlAsimi->PERIANO== 201910) {
+                                                               $l9total10Asimi=$l9total10Asimi + $l9caAsimi->IMPORTE;
+                                                           }
+                                                           if ($l9conlAsimi->PERIANO== 201911) {
+                                                               $l9total11Asimi=$l9total11Asimi + $l9caAsimi->IMPORTE;
+                                                           }
+                                                           if ($l9conlAsimi->PERIANO== 201912) {
+                                                               $l9total12Asimi=$l9total12Asimi + $l9caAsimi->IMPORTE;
+                                                           }
+                                                       }                           
+                                                }                     
+                                            }
+                                            $l9controlAsimi = ControlAsimi::get();
+                                            $l9ca18Asimi = ca2019Asimi::where('CONCEPTO', '>', 499)->get();
+                                            $l9sumaAsimi = 0;
+                                            $l9totalAsimi = 0;
+                                            $l9periAsimi = 0;
+                                            $l9tota111Asimi = 0;
+                                            $l9total22Asimi = 0;
+                                            $l9total33Asimi = 0;
+                                            $l9total44Asimi = 0;
+                                            $l9total55Asimi = 0;
+                                            $l9total66Asimi = 0;
+                                            $l9total77Asimi = 0;
+                                            $l9total88Asimi = 0;
+                                            $l9total99Asimi = 0;
+                                            $l9total100Asimi = 0;
+                                            $l9total111Asimi = 0;
+                                            $l9total122Asimi = 0;
+                                            foreach ($l9controlAsimi as $l9conlAsimi) {
+                                                $l9sumaAsimi = 0;
+                                                if ($l9conlAsimi->PERIANO != $l9periAsimi) {
+                                                    $l9totalAsimi = 0;
+                                                }                     
+                                                foreach ($l9ca18Asimi as $l9caAsimi) {
+                                                    if ($l9caAsimi->PERIODO== $l9conlAsimi->PERIODO) {
+                                                       $l9sumaAsimi=$l9sumaAsimi +$l9caAsimi->IMPORTE;
+                                                       $l9totalAsimi = $l9totalAsimi+$l9caAsimi->IMPORTE;
+                                                       $l9periAsimi=$l9conlAsimi->PERIANO;
+                                                       if ($l9conlAsimi->PERIANO == 201901) {
+                                                           $l9tota111Asimi = $l9tota111Asimi+$l9caAsimi->IMPORTE;
+                                                       }
+                                                       if ($l9conlAsimi->PERIANO == 201902) {
+                                                           $l9total22Asimi = $l9total22Asimi+$l9caAsimi->IMPORTE;
+                                                       }
+                                                       if ($l9conlAsimi->PERIANO == 201903) {
+                                                           $l9total33Asimi = $l9total33Asimi+$l9caAsimi->IMPORTE;
+                                                       }
+                                                       if ($l9conlAsimi->PERIANO == 201904) {
+                                                           $l9total44Asimi = $l9total44Asimi+$l9caAsimi->IMPORTE;
+                                                       }
+                                                       if ($l9conlAsimi->PERIANO == 201905) {
+                                                           $l9total55Asimi = $l9total55Asimi+$l9caAsimi->IMPORTE;
+                                                       }
+                                                       if ($l9conlAsimi->PERIANO == 201906) {
+                                                           $l9total66Asimi = $l9total66Asimi+$l9caAsimi->IMPORTE;
+                                                       }
+                                                       if ($l9conlAsimi->PERIANO == 201907) {
+                                                           $l9total77Asimi = $l9total77Asimi+$l9caAsimi->IMPORTE;
+                                                       }
+                                                       if ($l9conlAsimi->PERIANO == 201908) {
+                                                           $l9total88Asimi = $l9total88Asimi+$l9caAsimi->IMPORTE;
+                                                       }
+                                                       if ($l9conlAsimi->PERIANO == 201909) {
+                                                           $l9total99Asimi = $l9total99Asimi+$l9caAsimi->IMPORTE;
+                                                       }
+                                                       if ($l9conlAsimi->PERIANO == 201910) {
+                                                           $l9total100Asimi = $l9total100Asimi+$l9caAsimi->IMPORTE;
+                                                       }
+                                                       if ($l9conlAsimi->PERIANO == 201911) {
+                                                           $l9total111Asimi = $l9total111Asimi+$l9caAsimi->IMPORTE;
+                                                       }
+                                                       if ($l9conlAsimi->PERIANO == 201912) {
+                                                           $l9total122Asimi = $l9total122Asimi+$l9caAsimi->IMPORTE;
+                                                       }
+                                                    }                        
+                                                }                       
+                                            }
+                                            $l9eneroAsimi=$l9total1Asimi-$l9tota111Asimi;
+                                            $l9febreroAsimi=$l9total2Asimi-$l9total22Asimi;
+                                            $l9marzoAsimi=$l9total3Asimi-$l9total33Asimi;
+                                            $l9abrilAsimi=$l9total4Asimi-$l9total44Asimi;
+                                            $l9mayoAsimi=$l9total5Asimi-$l9total55Asimi;
+                                            $l9junioAsimi=$l9total6Asimi-$l9total66Asimi;
+                                            $l9julioAsimi=$l9total7Asimi-$l9total77Asimi;
+                                            $l9agostoAsimi=$l9total8Asimi-$l9total88Asimi;
+                                            $l9septiembreAsimi=$l9total9Asimi-$l9total99Asimi;
+                                            $l9octubreAsimi=$l9total10Asimi-$l9total100Asimi;
+                                            $l9noviembreAsimi=$l9total11Asimi-$l9total111Asimi;
+                                            $l9diciembreAsimi=$l9total12Asimi-$l9total122Asimi;
+                                        //---------------------fin consulta de costo de enomina 2019 asimlado----------------
+                                            $l9enero = $l9enero +  $l9eneroAsimi;
+                                            $l9febrero = $l9febrero + $l9febreroAsimi;
+                                            $l9marzo = $l9marzo + $l9marzoAsimi;
+                                            $l9abril = $l9abril + $l9abrilAsimi;
+                                            $l9mayo = $l9mayo + $l9mayoAsimi;
+                                            $l9junio = $l9junio + $l9junioAsimi;
+                                            $l9julio = $l9julio + $l9julioAsimi;
+                                            $l9agosto = $l9agosto + $l9agostoAsimi;
+                                            $l9septiembre = $l9septiembre + $l9septiembreAsimi;
+                                            $l9octubre = $l9octubre + $l9octubreAsimi;
+                                            $l9noviembre = $l9noviembre + $l9noviembreAsimi;
+                                            $l9diciembre = $l9diciembre + $l9diciembreAsimi;
+                                          }
+                                        }
+
+                                        
+                                       
+                                        $l9data4=[$l9enero,$l9febrero,$l9marzo,$l9abril,$l9mayo,$l9junio,$l9julio,$l9agosto,$l9septiembre,$l9octubre,$l9noviembre,$l9diciembre];
+                                        //dd($l9data4);
+    //---------------------------------------Fin de la grafica costo de nomina2019---------------------------------------------
+
+    //----------------------------------------------grafica de horas extra 2019------------------------------------------------
+                    $prueba = Control::get();
+                    $ca2018 = ca2019::whereBetween('CONCEPTO', [200,201])->get();
+                    $periano = 0;
+                    $periano2 = 0;
+                    $sumaunidades2=0;
+                    $sumadesuma = 0;
+                    $contador = 0;
+                    $guardador2 = array();         
+                                foreach ($prueba as $prueba2) {
+                                    $contador = $contador+1;
+                                    $periano = $prueba2->PERIANO;
+                                    $sumaunidades=0;                    
+                                    if ($periano!=$periano2) {
+                                          $sumaunidades2=0;                                         
+                                      }
+                                    foreach ($ca2018 as $ca) {
+                                         if ($ca->PERIODO==$prueba2->PERIODO) {
+                                             
+                                              $sumaunidades = $sumaunidades+$ca->UNIDADES;
+                                              $sumaunidades2 = $sumaunidades2+$ca->UNIDADES;
+                                              $periano2 = $prueba2->PERIANO;
+                                          }                                           
+                                    }       
+                                  $info = array_push($guardador2,$sumaunidades2);                                
+                                }
+                      //-----------------Asimilados 2019 horas extra----------------
+                      if ($AsimiFiscal=='fiscal') {
+                          if ($cliente->asimilado==1) {
+                            $pruebaAsimi = ControlAsimi::get();
+                            $ca2018Asimi = ca2019Asimi::whereBetween('CONCEPTO', [200,201])->get();
+                            $perianoAsimi = 0;
+                            $periano2Asimi = 0;
+                            $sumaunidades2Asimi=0;
+                            $sumadesumaAsimi = 0;
+                            $contadorAsimi = 0;
+                            $guardador2Asimi = array();         
+                                        foreach ($pruebaAsimi as $prueba2Asimi) {
+                                            $contadorAsimi = $contadorAsimi+1;
+                                            $perianoAsimi = $prueba2Asimi->PERIANO;
+                                            $sumaunidadesAsimi=0;                    
+                                            if ($perianoAsimi!=$periano2Asimi) {
+                                                  $sumaunidades2Asimi=0;                                         
+                                              }
+                                            foreach ($ca2018Asimi as $caAsimi) {
+                                                 if ($caAsimi->PERIODO==$prueba2Asimi->PERIODO) {
+                                                     
+                                                      $sumaunidadesAsimi = $sumaunidadesAsimi+$caAsimi->UNIDADES;
+                                                      $sumaunidades2Asimi = $sumaunidades2Asimi+$caAsimi->UNIDADES;
+                                                      $periano2Asimi = $prueba2Asimi->PERIANO;
+                                                  }                                           
+                                            }       
+                                          $infoAsimi = array_push($guardador2Asimi,$sumaunidades2Asimi);                                
+                                        }
+                          $guardador2[2] = $guardador2[2] + $guardador2Asimi[2];
+                          $guardador2[4] = $guardador2[4] + $guardador2Asimi[4];
+                          $guardador2[6] = $guardador2[6] + $guardador2Asimi[6];
+                          $guardador2[8] = $guardador2[8] + $guardador2Asimi[8];
+                          $guardador2[10] = $guardador2[10] + $guardador2Asimi[10];
+                          $guardador2[12] = $guardador2[12] + $guardador2Asimi[12];
+                          $guardador2[14] = $guardador2[14] + $guardador2Asimi[14];
+                          $guardador2[16] = $guardador2[16] + $guardador2Asimi[16];
+                          $guardador2[18] = $guardador2[18] + $guardador2Asimi[18];
+                          $guardador2[20] = $guardador2[20] + $guardador2Asimi[20];
+                          $guardador2[22] = $guardador2[22] + $guardador2Asimi[22];
+                          $guardador2[24] = $guardador2[24] + $guardador2Asimi[24];
+                          }
+                      }       
+                      //-----------------Fin  Asimilados 2019 horas extra----------------
+
+                      $data2= [$guardador2[2],$guardador2[4],$guardador2[6],$guardador2[8],$guardador2[10],$guardador2[12],$guardador2[14],$guardador2[16],$guardador2[18],$guardador2[20],$guardador2[22],$guardador2[24]];                   
+    //--------------------------------------------------------Fin de grafica de horas extras 2019------------------------------
+
+    //-------------------------------------------Inicio de graficas de faltas injustificadas 2019------------------------------
+                    $prueba = Control::get();
+                    $ca2018 = ca2019::where('CONCEPTO', 408)->get();
+                    $periano = 0;
+                    $periano2 = 0;
+                    $sumaunidades2=0;
+                    $sumadesuma = 0;
+                    $contador = 0;
+                    $guardador = array();  
+                    foreach ($prueba as $prueba2) {
+                        $contador = $contador+1;
+                        $periano = $prueba2->PERIANO;
+                        $sumaunidades=0;
+                        if ($periano!=$periano2) {
+                              $sumaunidades2=0;                                         
+                        }
+                        foreach ($ca2018 as $ca) {
+                            if ($ca->PERIODO==$prueba2->PERIODO) {
+                                  $sumaunidades = $sumaunidades+($ca->UNIDADES*-1);
+                                  $sumaunidades2 = $sumaunidades2+$ca->UNIDADES;
+                                  $periano2 = $prueba2->PERIANO;
+                            }    
+                        }       
+                        $info = array_push($guardador,$sumaunidades2);                                
+                    }
+                    //-------------Asimilados---------------------------------------------
+                    if ($AsimiFiscal=='fiscal') {
+                      if ($cliente->asimilado==1) {
+                        $pruebaAsimi = ControlAsimi::get();
+                        $ca2018Asimi = ca2019Asimi::where('CONCEPTO', 408)->get();
+                        $perianoAsimi = 0;
+                        $periano2Asimi = 0;
+                        $sumaunidades2Asimi=0;
+                        $sumadesumaAsimi = 0;
+                        $contadorAsimi = 0;
+                        $guardadorAsimi = array();  
+                        foreach ($pruebaAsimi as $prueba2Asimi) {
+                            $contadorAsimi = $contadorAsimi+1;
+                            $perianoAsimi = $prueba2Asimi->PERIANO;
+                            $sumaunidadesAsimi=0;
+                            if ($perianoAsimi!=$periano2Asimi) {
+                                  $sumaunidades2Asimi=0;                                         
+                            }
+                            foreach ($ca2018Asimi as $caAsimi) {
+                                if ($caAsimi->PERIODO==$prueba2Asimi->PERIODO) {
+                                      $sumaunidadesAsimi = $sumaunidadesAsimi+($caAsimi->UNIDADES*-1);
+                                      $sumaunidades2Asimi = $sumaunidades2Asimi+$caAsimi->UNIDADES;
+                                      $periano2Asimi = $prueba2Asimi->PERIANO;
+                                }    
+                            }       
+                            $infoAsimi = array_push($guardadorAsimi,$sumaunidades2Asimi);                                
+                        }
+                        $guardador[2] = $guardador[2] + $guardadorAsimi[2];
+                        $guardador[4] = $guardador[4] + $guardadorAsimi[4];
+                        $guardador[6] = $guardador[6] + $guardadorAsimi[6];
+                        $guardador[8] = $guardador[8] + $guardadorAsimi[8];
+                        $guardador[10] = $guardador[10] + $guardadorAsimi[10];
+                        $guardador[12] = $guardador[12] + $guardadorAsimi[12];
+                        $guardador[14] = $guardador[14] + $guardadorAsimi[14];
+                        $guardador[16] = $guardador[16] + $guardadorAsimi[16];
+                        $guardador[18] = $guardador[18] + $guardadorAsimi[18];
+                        $guardador[20] = $guardador[20] + $guardadorAsimi[20];
+                        $guardador[22] = $guardador[22] + $guardadorAsimi[22];
+                        $guardador[24] = $guardador[24] + $guardadorAsimi[24];
+                      }
+                    }
+                    //-------------------------fin asimilados                                
+                    $data= [$guardador[2]*-1,$guardador[4]*-1,$guardador[6]*-1,$guardador[8]*-1,$guardador[10]*-1,$guardador[12]*-1,$guardador[14]*-1,$guardador[16]*-1,$guardador[18]*-1,$guardador[20]*-1,$guardador[22]*-1,$guardador[24]*-1];
+    //------------------------------------------------Fin de grafica de faltas injustificadas 2019-----------------------------
                        
                         $navbar = ProfileController::getNavBar('',0,$perfil);
                         $documentos = ListaDoc::get();
@@ -633,7 +836,6 @@ class HomeController extends Controller
     }
     //termina codigo escrito por Ricardo Cordero.
 
-
     private static function setConn($tipo) {
         $objCliente = auth()->user()->client;
         if ($tipo == 'fiscal') {
@@ -641,13 +843,11 @@ class HomeController extends Controller
         } else {
             $cia = $objCliente->asimilado_bda;
         }
-
         try {
             $empresaTisanom = Empresa::where('CIA',$cia)->first();
         } catch (\Exception $e) {
             return response('Error');
         }
-
         Config::set("database.connections.sqlsrv2", [
             "driver" => 'sqlsrv',
             "host" => Config::get("database.connections.sqlsrv")["host"],
@@ -671,7 +871,7 @@ class HomeController extends Controller
         $usuario_mensaje = $id.'administrador'.$id;
          if (Cache::get( $usuario_mensaje)!==1) {
            
-            Cache::put($usuario_mensaje, 1, 30); //2880
+            Cache::put($usuario_mensaje, 1, 2880); //2880
            
             $notificado = '';
             $documentos = DB::connection('sqlsrv2')->table('LISTADOCUMENTOS')
