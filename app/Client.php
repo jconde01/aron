@@ -15,10 +15,10 @@ class Client extends Model
         // dd($sucursal);
         if ($sucursal == null) {
 
-            return '../utilerias/Nominas/Celula'.$celula.'/'.$rfc;
+            return '../utilerias/Nominas/Celula'.$celula.'/'.trim($rfc);
         }else{
             
-            return '../utilerias/Nominas/Celula'.$celula.'/'.$rfc.'/'.$sucursal;
+            return '../utilerias/Nominas/Celula'.$celula.'/'.trim($rfc).'/'.$sucursal;
         }
         
     }
