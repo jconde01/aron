@@ -31,7 +31,7 @@ class Client extends Model
 
     public static function getRutaAutorizados($celula, $rfc)
     {
-        return self::getRutaBase($celula,$rfc) . '/autorizados';
+        return self::getRutaBase($celula,$rfc) . '/facturacion';
     }
 
 

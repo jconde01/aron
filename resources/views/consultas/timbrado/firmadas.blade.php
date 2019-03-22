@@ -7,7 +7,7 @@
 <div class="main main-raised"> 
     <div class="container">   
       <div class="section text-center">
-        <h5 class="titulo">Nóminas autorizadas</h5> 
+        <h5 class="titulo">FACTURACIÓN</h5> 
 		<input type="hidden" name="_token" value="{{ csrf_token() }}">        	
 		<?php
             $directorio = opendir($ruta);
