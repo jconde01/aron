@@ -2279,9 +2279,9 @@ class EmpleadosController extends Controller
                     DB::connection('sqlsrv3')->commit();
 
                 }
-            $listdoc = ListaDoc::where('EMP',$EMP)->first();
-            $listdoc->RFC = $request->input('RFC');
-            $listdoc->save();
+            // $listdoc = ListaDoc::where('EMP',$EMP)->first();
+            // $listdoc->RFC = $request->input('RFC');
+            // $listdoc->save();
             //--------fin update asimilado con fiscal si es que tiene---------
         }else{
 
