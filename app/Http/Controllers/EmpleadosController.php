@@ -2489,15 +2489,18 @@ class EmpleadosController extends Controller
         if ($AsimiFiscal=='fiscal') {
             if ($cliente->asimilado==1) {
                 $empleadoasimi = EmpleadoAsimi::where('RFC',$rfc_empleado0)->first();
-                $listdocasimi = ListaDocAsimi::where('EMP',$empleadoasimi->EMP)->first();
-                if ($listdocasimi==null) {
+                if ($empleadoasimi!==null) {
+                    $listdocasimi = ListaDocAsimi::where('EMP',$empleadoasimi->EMP)->first();
+                    if ($listdocasimi==null) {
 
-                    $listdocasimi = new ListaDocAsimi();
-                    $listdocasimi->EMP = $empleadoasimi->EMP;
-                    $listdocasimi->TIPONO = $selProceso;
-                    $listdocasimi->RFC = $rfc_empleado0;
-                    $listdocasimi->save();
+                        $listdocasimi = new ListaDocAsimi();
+                        $listdocasimi->EMP = $empleadoasimi->EMP;
+                        $listdocasimi->TIPONO = $selProceso;
+                        $listdocasimi->RFC = $rfc_empleado0;
+                        $listdocasimi->save();
+                    }
                 }
+                
             }
         }
         
@@ -2510,6 +2513,16 @@ class EmpleadosController extends Controller
         $rfc_empleado= $rfc_empleado1.$rfc_empleado2.$rfc_empleado3;
         session(['rfc_emp' => $rfc_empleado]);
         $docsReque = DocsRequeridos::first();
+        if ($docsReque==null) {
+            $docsRequeridosEmp = new DocsRequeridos();
+            $docsRequeridosEmp->REQUERIDO1 = 1;
+            $docsRequeridosEmp->REQUERIDO2 = 1;
+            $docsRequeridosEmp->REQUERIDO3 = 1;
+            $docsRequeridosEmp->REQUERIDO4 = 1;
+            $docsRequeridosEmp->REQUERIDO5 = 1;
+            $docsRequeridosEmp->save();
+        }
+       
         //$ruta = '/utilerias/Nominas/'.$celula_empresa.'/'.$rfc_cliente.'/empleados/'.$rfc_empleado.'/documentos/curriculum.pdf';
         //dd($ruta); 
 
