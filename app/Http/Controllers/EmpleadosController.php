@@ -2101,6 +2101,7 @@ class EmpleadosController extends Controller
                 $emps = Empleado::where('EMP', $EMP)->get()->first();
                 if ($emps->ESTATUS==$estatus) {
                      echo "No hubo cambio";
+                    
                     } 
                 else{   
                     if (($estatus=='A') && ($emps->ESTATUS!=='M')) {
@@ -2115,7 +2116,7 @@ class EmpleadosController extends Controller
                         $imss->SUELDONUE = $request->input('SUELDO');
                         $imss->INTEGNUE = $request->input('INTEG');
                         $imss->INTIVNUE = $request->input('INTIV');
-                        //$imss->save();
+                        $imss->save();
                     }
                     if (($estatus=='B') && ($BajaImss==1)) {
                         $imss = new Imss();
@@ -2130,7 +2131,7 @@ class EmpleadosController extends Controller
                         $imss->SUELDONUE = $request->input('SUELDO');
                         $imss->INTEGNUE = $request->input('INTEG');
                         $imss->INTIVNUE = $request->input('INTIV');
-                        //$imss->save();
+                        $imss->save();
                     }
                 }  
                 if (($estatus=='B') && ($request->input('maltermino')==1)) {
@@ -2310,7 +2311,7 @@ class EmpleadosController extends Controller
                         $imss->SUELDONUE = $request->input('SUELDO');
                         $imss->INTEGNUE = $request->input('INTEG');
                         $imss->INTIVNUE = $request->input('INTIV');
-                        //$imss->save();
+                        $imss->save();
                     }
                     if (($estatus=='B') && ($BajaImss==1)) {
                         $imss = new Imss();
@@ -2325,7 +2326,7 @@ class EmpleadosController extends Controller
                         $imss->SUELDONUE = $request->input('SUELDO');
                         $imss->INTEGNUE = $request->input('INTEG');
                         $imss->INTIVNUE = $request->input('INTIV');
-                        //$imss->save();
+                        $imss->save();
                     }
                 }  
                 if (($estatus=='B') && ($request->input('maltermino')==1)) {
@@ -2893,222 +2894,223 @@ class EmpleadosController extends Controller
         if ($AsimiFiscal=='fiscal') {
             if ($cliente->asimilado==1) {
                 $empasimi = EmpleadoAsimi::where('RFC',$rfc_empleado0)->first();
-                
-                $listdocasimi = ListaDocAsimi::where('EMP',$empasimi->EMP)->first();
-                //dd($rfc_empleado0);
-                $acta = $request->file('nacimiento');
-                   if ($acta !== null) {
-                        
-                        $path = $file;
-                        $extension = explode(".",$acta->getClientOriginalName());
-                        $fileName = 'acta.'.$extension[1];
-                        $listdocasimi->CHECK1 = 1;
-                        $listdocasimi->NOMBRE1 = $fileName;
-                        $listdocasimi->FECHAVENCI1 = $request->input('fechanaci');                    
-                    }
-                    else{
-                        
-                    }
+                if ($empasimi!==null) {
 
-                $rfc = $request->file('rfc');
-                   if ($rfc !== null) {
-                        
-                        $path = $file;
-                        $extension = explode(".",$rfc->getClientOriginalName());
-                        $fileName2 = 'rfc.'.$extension[1];                    
-                        $listdocasimi->CHECK2 = 1;
-                        $listdocasimi->NOMBRE2 = $fileName2;
-                        $listdocasimi->FECHAVENCI2 = $request->input('fecharfc');
-                    }
-                    else{
-                        
-                    }
+                    $listdocasimi = ListaDocAsimi::where('EMP',$empasimi->EMP)->first();
+                    //dd($rfc_empleado0);
+                    $acta = $request->file('nacimiento');
+                       if ($acta !== null) {
+                            
+                            $path = $file;
+                            $extension = explode(".",$acta->getClientOriginalName());
+                            $fileName = 'acta.'.$extension[1];
+                            $listdocasimi->CHECK1 = 1;
+                            $listdocasimi->NOMBRE1 = $fileName;
+                            $listdocasimi->FECHAVENCI1 = $request->input('fechanaci');                    
+                        }
+                        else{
+                            
+                        }
 
-                $curp = $request->file('curp');
-                   if ($curp !== null) {
-                        
-                        $path = $file;
-                        $extension = explode(".",$curp->getClientOriginalName());
-                        $fileName = 'curp.'.$extension[1];
-                        $listdocasimi->CHECK3 = 1;
-                        $listdocasimi->NOMBRE3 = $fileName;
-                        $listdocasimi->FECHAVENCI3 = $request->input('fechacurp');
-                    }
-                    else{
-                       
-                    }
+                    $rfc = $request->file('rfc');
+                       if ($rfc !== null) {
+                            
+                            $path = $file;
+                            $extension = explode(".",$rfc->getClientOriginalName());
+                            $fileName2 = 'rfc.'.$extension[1];                    
+                            $listdocasimi->CHECK2 = 1;
+                            $listdocasimi->NOMBRE2 = $fileName2;
+                            $listdocasimi->FECHAVENCI2 = $request->input('fecharfc');
+                        }
+                        else{
+                            
+                        }
 
-                $comprobante = $request->file('comprobante');
-                   if ($comprobante !== null) {
-                        
-                        $path = $file;
-                        $extension = explode(".",$comprobante->getClientOriginalName());
-                        $fileName = 'comprobante.'.$extension[1];
-                        $listdocasimi->CHECK4 = 1;
-                        $listdocasimi->NOMBRE4 = $fileName;
-                        $listdocasimi->FECHAVENCI4 = $request->input('fechacompro');
-                    }
-                    else{
-                        
-                    }
+                    $curp = $request->file('curp');
+                       if ($curp !== null) {
+                            
+                            $path = $file;
+                            $extension = explode(".",$curp->getClientOriginalName());
+                            $fileName = 'curp.'.$extension[1];
+                            $listdocasimi->CHECK3 = 1;
+                            $listdocasimi->NOMBRE3 = $fileName;
+                            $listdocasimi->FECHAVENCI3 = $request->input('fechacurp');
+                        }
+                        else{
+                           
+                        }
 
-                $empleo = $request->file('empleo');
-                   if ($empleo !== null) {
-                        
-                        $path = $file;
-                        $extension = explode(".",$empleo->getClientOriginalName());
-                        $fileName = 'solicitud.'.$extension[1];
-                        $listdocasimi->CHECK5 = 1;
-                        $listdocasimi->NOMBRE5 = $fileName;
-                        $listdocasimi->FECHAVENCI5 = $request->input('fechaempleo');
-                    }
-                    else{
-                        
-                    }
+                    $comprobante = $request->file('comprobante');
+                       if ($comprobante !== null) {
+                            
+                            $path = $file;
+                            $extension = explode(".",$comprobante->getClientOriginalName());
+                            $fileName = 'comprobante.'.$extension[1];
+                            $listdocasimi->CHECK4 = 1;
+                            $listdocasimi->NOMBRE4 = $fileName;
+                            $listdocasimi->FECHAVENCI4 = $request->input('fechacompro');
+                        }
+                        else{
+                            
+                        }
 
-                $ine = $request->file('ine');
-                   if ($ine !== null) {
-                        
-                        $path = $file;
-                        $extension = explode(".",$ine->getClientOriginalName());
-                        $fileName = 'ine.'.$extension[1];
-                        $listdocasimi->CHECK6 = 1;
-                        $listdocasimi->NOMBRE6 = $fileName;
-                        $listdocasimi->FECHAVENCI6 = $request->input('fechaine');
-                    }
-                    else{
-                        
-                    }
+                    $empleo = $request->file('empleo');
+                       if ($empleo !== null) {
+                            
+                            $path = $file;
+                            $extension = explode(".",$empleo->getClientOriginalName());
+                            $fileName = 'solicitud.'.$extension[1];
+                            $listdocasimi->CHECK5 = 1;
+                            $listdocasimi->NOMBRE5 = $fileName;
+                            $listdocasimi->FECHAVENCI5 = $request->input('fechaempleo');
+                        }
+                        else{
+                            
+                        }
 
-                $boda = $request->file('boda');
-                   if ($boda !== null) {
-                        
-                        $path = $file;
-                        $extension = explode(".",$boda->getClientOriginalName());
-                        $fileName = 'boda.'.$extension[1];
-                        $listdocasimi->CHECK7 = 1;
-                        $listdocasimi->NOMBRE7 = $fileName;
-                        $listdocasimi->FECHAVENCI7 = $request->input('fechaboda');
-                    }
-                    else{
-                        
-                    }
+                    $ine = $request->file('ine');
+                       if ($ine !== null) {
+                            
+                            $path = $file;
+                            $extension = explode(".",$ine->getClientOriginalName());
+                            $fileName = 'ine.'.$extension[1];
+                            $listdocasimi->CHECK6 = 1;
+                            $listdocasimi->NOMBRE6 = $fileName;
+                            $listdocasimi->FECHAVENCI6 = $request->input('fechaine');
+                        }
+                        else{
+                            
+                        }
 
-                $titulo = $request->file('titulo');
-                   if ($titulo !== null) {
-                        
-                        $path = $file;
-                        $extension = explode(".",$titulo->getClientOriginalName());
-                        $fileName = 'titulo.'.$extension[1];
-                        $listdocasimi->CHECK8 = 1;
-                        $listdocasimi->NOMBRE8 = $fileName;
-                        $listdocasimi->FECHAVENCI8 = $request->input('fechatitulo');
-                    }
-                    else{
-                       
-                    }
+                    $boda = $request->file('boda');
+                       if ($boda !== null) {
+                            
+                            $path = $file;
+                            $extension = explode(".",$boda->getClientOriginalName());
+                            $fileName = 'boda.'.$extension[1];
+                            $listdocasimi->CHECK7 = 1;
+                            $listdocasimi->NOMBRE7 = $fileName;
+                            $listdocasimi->FECHAVENCI7 = $request->input('fechaboda');
+                        }
+                        else{
+                            
+                        }
 
-                $antecedentes = $request->file('antecedentes');
-                   if ($antecedentes !== null) {
-                        
-                        $path = $file;
-                        $extension = explode(".",$antecedentes->getClientOriginalName());
-                        $fileName = 'antecedentes.'.$extension[1];
-                        $listdocasimi->CHECK9 = 1;
-                        $listdocasimi->NOMBRE9 = $fileName;
-                        $listdocasimi->FECHAVENCI9 = $request->input('fechaante');
-                    }
-                    else{
-                        
-                    }
+                    $titulo = $request->file('titulo');
+                       if ($titulo !== null) {
+                            
+                            $path = $file;
+                            $extension = explode(".",$titulo->getClientOriginalName());
+                            $fileName = 'titulo.'.$extension[1];
+                            $listdocasimi->CHECK8 = 1;
+                            $listdocasimi->NOMBRE8 = $fileName;
+                            $listdocasimi->FECHAVENCI8 = $request->input('fechatitulo');
+                        }
+                        else{
+                           
+                        }
 
-                $contrato = $request->file('contrato');
-                   if ($contrato !== null) {
-                        
-                        $path = $file;
-                        $extension = explode(".",$contrato->getClientOriginalName());
-                        $fileName = 'contrato.'.$extension[1];
-                        $listdocasimi->CHECK10 = 1;
-                        $listdocasimi->NOMBRE10 = $fileName;
-                        $listdocasimi->FECHAVENCI10 = $request->input('fechacompro');
-                    }
-                    else{
-                        
-                    }
+                    $antecedentes = $request->file('antecedentes');
+                       if ($antecedentes !== null) {
+                            
+                            $path = $file;
+                            $extension = explode(".",$antecedentes->getClientOriginalName());
+                            $fileName = 'antecedentes.'.$extension[1];
+                            $listdocasimi->CHECK9 = 1;
+                            $listdocasimi->NOMBRE9 = $fileName;
+                            $listdocasimi->FECHAVENCI9 = $request->input('fechaante');
+                        }
+                        else{
+                            
+                        }
 
-                $curriculum = $request->file('curriculum');
-                   if ($curriculum !== null) {
-                        
-                        $path = $file;
-                        $extension = explode(".",$curriculum->getClientOriginalName());
-                        $fileName = 'curriculum.'.$extension[1];
-                        $listdocasimi->CHECK11 = 1;
-                        $listdocasimi->NOMBRE11 = $fileName;
-                        $listdocasimi->FECHAVENCI11 = $request->input('fechacurri');
-                    }
-                    else{
-                       
-                    }
+                    $contrato = $request->file('contrato');
+                       if ($contrato !== null) {
+                            
+                            $path = $file;
+                            $extension = explode(".",$contrato->getClientOriginalName());
+                            $fileName = 'contrato.'.$extension[1];
+                            $listdocasimi->CHECK10 = 1;
+                            $listdocasimi->NOMBRE10 = $fileName;
+                            $listdocasimi->FECHAVENCI10 = $request->input('fechacompro');
+                        }
+                        else{
+                            
+                        }
 
-                $cedula = $request->file('cedula');
-                   if ($cedula !== null) {
-                        
-                        $path = $file;
-                        $extension = explode(".",$cedula->getClientOriginalName());
-                        $fileName = 'cedula.'.$extension[1];
-                        $listdocasimi->CHECK12 = 1;
-                        $listdocasimi->NOMBRE12 = $fileName;
-                        $listdocasimi->FECHAVENCI12 = $request->input('fechacedula');
-                    }
-                    else{
-                        
-                    }
+                    $curriculum = $request->file('curriculum');
+                       if ($curriculum !== null) {
+                            
+                            $path = $file;
+                            $extension = explode(".",$curriculum->getClientOriginalName());
+                            $fileName = 'curriculum.'.$extension[1];
+                            $listdocasimi->CHECK11 = 1;
+                            $listdocasimi->NOMBRE11 = $fileName;
+                            $listdocasimi->FECHAVENCI11 = $request->input('fechacurri');
+                        }
+                        else{
+                           
+                        }
 
-                $diplomas = $request->file('diplomas');
-                   if ($diplomas !== null) {
-                        
-                        $path = $file;
-                        $extension = explode(".",$diplomas->getClientOriginalName());
-                        $fileName = 'diplomas.'.$extension[1];
-                        $listdocasimi->CHECK13 = 1;
-                        $listdocasimi->NOMBRE13 = $fileName;
-                        $listdocasimi->FECHAVENCI13 = $request->input('fechadiplo');
-                    }
-                    else{
-                        
-                    }
+                    $cedula = $request->file('cedula');
+                       if ($cedula !== null) {
+                            
+                            $path = $file;
+                            $extension = explode(".",$cedula->getClientOriginalName());
+                            $fileName = 'cedula.'.$extension[1];
+                            $listdocasimi->CHECK12 = 1;
+                            $listdocasimi->NOMBRE12 = $fileName;
+                            $listdocasimi->FECHAVENCI12 = $request->input('fechacedula');
+                        }
+                        else{
+                            
+                        }
 
-                $certificaciones = $request->file('certificaciones');
-                   if ($certificaciones !== null) {
-                        
-                        $path = $file;
-                        $extension = explode(".",$certificaciones->getClientOriginalName());
-                        $fileName = 'certificaciones.'.$extension[1];
-                        $listdocasimi->CHECK14 = 1;
-                        $listdocasimi->NOMBRE14 = $fileName;
-                        $listdocasimi->FECHAVENCI14 = $request->input('fechacerti');
-                    }
-                    else{
-                        
-                    }
+                    $diplomas = $request->file('diplomas');
+                       if ($diplomas !== null) {
+                            
+                            $path = $file;
+                            $extension = explode(".",$diplomas->getClientOriginalName());
+                            $fileName = 'diplomas.'.$extension[1];
+                            $listdocasimi->CHECK13 = 1;
+                            $listdocasimi->NOMBRE13 = $fileName;
+                            $listdocasimi->FECHAVENCI13 = $request->input('fechadiplo');
+                        }
+                        else{
+                            
+                        }
 
-                $licencia = $request->file('licencia');
-                   if ($licencia !== null) {
-                        
-                        $path = $file;
-                        $extension = explode(".",$licencia->getClientOriginalName());
-                        $fileName = 'licencia.'.$extension[1];
-                        $listdocasimi->CHECK15 = 1;
-                        $listdocasimi->NOMBRE15 = $fileName;
-                        $listdocasimi->FECHAVENCI15 = $request->input('fechalicencia');
-                    }
-                    else{
-                        
-                    }
+                    $certificaciones = $request->file('certificaciones');
+                       if ($certificaciones !== null) {
+                            
+                            $path = $file;
+                            $extension = explode(".",$certificaciones->getClientOriginalName());
+                            $fileName = 'certificaciones.'.$extension[1];
+                            $listdocasimi->CHECK14 = 1;
+                            $listdocasimi->NOMBRE14 = $fileName;
+                            $listdocasimi->FECHAVENCI14 = $request->input('fechacerti');
+                        }
+                        else{
+                            
+                        }
 
-                $listdocasimi->save();
+                    $licencia = $request->file('licencia');
+                       if ($licencia !== null) {
+                            
+                            $path = $file;
+                            $extension = explode(".",$licencia->getClientOriginalName());
+                            $fileName = 'licencia.'.$extension[1];
+                            $listdocasimi->CHECK15 = 1;
+                            $listdocasimi->NOMBRE15 = $fileName;
+                            $listdocasimi->FECHAVENCI15 = $request->input('fechalicencia');
+                        }
+                        else{
+                            
+                        }
+
+                    $listdocasimi->save();
                     //dd('listo');
-
+                }                
 
             }
             
