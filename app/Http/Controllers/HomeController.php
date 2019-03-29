@@ -976,13 +976,13 @@ class HomeController extends Controller
                 if ($documento->$nombre !== null)
                 {
                   if ($tiempo->m<=1) {           
-                    $notificado = $notificado.'Documento '.$lista[$i].' &nbsp; '."<br>";              
+                    $notificado = $notificado.'Documento '.$lista[$i].' &nbsp; '."\n";              
                   }
                 }
                 $pre = $notificado;
               }
               if ($pre !== ' ') {
-                $pre2 = 'Los siguientes documentos del empleado: '. $documento->EMP.' estan por vencer.'."<br>".$pre."<br>";
+                $pre2 = 'Los siguientes documentos del empleado: '. $documento->EMP.' estan por vencer.'."\n".$pre."\n";
               }
 
               $pre3 = $pre3.$pre2;
