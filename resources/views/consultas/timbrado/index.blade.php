@@ -10,6 +10,9 @@
         <h5 class="titulo">Autorizar Nómina</h5>
  	
 		<?php
+        try {
+            
+        
             $directorio = opendir($ruta);
             while ($archivo = readdir($directorio)) //obtenemos un archivo y luego otro sucesivamente
             {
@@ -32,6 +35,9 @@
                     echo '</div>';
                 }
             }
+        } catch (Exception $e) {
+           echo '<span style="color: white;">'.$e->getMessage().'</span>'; 
+        }
           ?>               
          <br>
       </div>

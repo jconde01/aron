@@ -10,6 +10,9 @@
         <h5 class="titulo">FACTURACIÓN</h5> 
 		<input type="hidden" name="_token" value="{{ csrf_token() }}">        	
 		<?php
+        try {
+            
+       
             $directorio = opendir($ruta);
             while ($archivo = readdir($directorio)) {
                 if ($archivo != "." && $archivo != ".." && !is_dir($archivo)) {
@@ -30,6 +33,9 @@
                     echo '</div>';
                 }
             }
+         } catch (Exception $e) {
+           echo '<span style="color: white;">'.$e->getMessage().'</span>'; 
+        }
           ?>               
          <br>
       </div>
