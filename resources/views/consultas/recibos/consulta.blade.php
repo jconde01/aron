@@ -28,42 +28,11 @@
                       while ($archivo2 = readdir($subcarpeta)){
                         if ($archivo2!=="..") {
                           if ($archivo2!==".") {
+                            $coincidencia = strpos($archivo2, $rfc_empleado);
 
-                            $rfc = $rfc_empleado;
-                            $pdf = '.pdf';
-                            $xml = '.xml';                  
-                            $restar=substr ($archivo2, 9,-15 );
-                            $ext=substr ($archivo2, -4);
-                           
-                            if ($rfc==$restar){                            
+                            if ($coincidencia==true){                            
                                echo '<div class="col-lg-5" style="border:1px blue solid; border-radius:10px; margin-right: 80px; margin-top: 20px;"><br><i class="fas fa-file-alt" style="font-size: 50px;"></i><br><br><a href="/descarga/'.$subdirectorio.'/'.$archivo2.'">'.$archivo2.'</a>' . "<br/><br></div>";
                             }
-                            
-                            if ($rfc==$restar && $ext == $xml){
-                               echo '<div class="col-lg-5" style="border:1px blue solid; border-radius:10px;margin-right: 80px; margin-top: 20px;"><br><i class="fas fa-file-alt" style="font-size: 50px;"></i><br><br><a href="/descarga/'.$archivo.'">'.$archivo.'</a>' . "<br /><br></div>"; 
-                            }
-
-                            $rfcpequeño=substr ($archivo2, 8,-15 );
-                           //dd($rfc,$restar);
-                            if ($rfc==$rfcpequeño){                                                          
-                               echo '<div class="col-lg-5" style="border:1px blue solid; border-radius:10px; margin-right: 80px; margin-top: 20px;"><br><i class="fas fa-file-alt" style="font-size: 50px;"></i><br><br><a href="/descarga/'.$subdirectorio.'/'.$archivo2.'">'.$archivo2.'</a>' . "<br/><br></div>";        
-                            }
-                            //---------------rfc con una letra mas al final-----------------------------------------------------
-                            $extraido=substr ($archivo2, 8,-17 );
-                           // dd($rfc,$extraido);
-                            if ($rfc==$extraido){                            
-                               echo '<div class="col-lg-5" style="border:1px blue solid; border-radius:10px; margin-right: 80px; margin-top: 20px;"><br><i class="fas fa-file-alt" style="font-size: 50px;"></i><br><br><a href="/descarga/'.$subdirectorio.'/'.$archivo2.'">'.$archivo2.'</a>' . "<br/><br></div>";
-                            }
-                            
-                            $rfcpequeño2=substr ($archivo2, 7,-17 );
-                           //dd($rfc,$restar);
-                            if ($rfc==$rfcpequeño2){                                                          
-                               echo '<div class="col-lg-5" style="border:1px blue solid; border-radius:10px; margin-right: 80px; margin-top: 20px;"><br><i class="fas fa-file-alt" style="font-size: 50px;"></i><br><br><a href="/descarga/'.$subdirectorio.'/'.$archivo2.'">'.$archivo2.'</a>' . "<br/><br></div>";        
-                            }
-
-
-
-
                             
                       }
                       }
