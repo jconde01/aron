@@ -11,6 +11,9 @@
         <br>
         
         <?php
+        try {
+          
+       
             $directorio = opendir($ruta); 
             //dd($ruta);
             while ($archivo = readdir($directorio)) //obtenemos un archivo y luego otro sucesivamente
@@ -97,6 +100,10 @@
                    
                 }
             }
+
+             } catch (Exception $e) {
+          echo '<span style="color: white;">'.$e->getMessage().'</span>';
+        }
          ?>                           
          
          
