@@ -33,7 +33,8 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" /> 
 
          <!-- datatables -->
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+        <!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css"> -->
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/jquery.dataTables.css')}}">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script type="text/javascript" charset="utf8" src="{{ asset('js/jquery.dataTables.js')}}"></script>
         <!-- fin datatables -->         
@@ -91,7 +92,7 @@
             var $cntn = $('#aron-container');
 
             var defaultData = {
-                navTitle : '<a href="/home" style="padding: 0px;"><img src="/img/Aron-pegado2.png" style="width:80%;"></a>',
+                navTitle : '<a href="/home" style="padding: 0px;width:100%;background-color: #336ca6!important;"><img src="/img/Aron-pegado2.png" style="width:100%;"></a>',
                 closeOnClick : false,
                 customToggle: '.toggle',                
                 maxWidth: false,
@@ -111,7 +112,7 @@
                 $html = $('html');
 
             function resize() {
-                if ($window.width() < 500) {
+                if ($window.width() < 700) {
                     Nav.close();
                 }else{
                   Nav.open();  
