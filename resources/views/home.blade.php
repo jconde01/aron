@@ -11,21 +11,15 @@
 @if ($graficas->grafica1==1 || $graficas->grafica2==1 || $graficas->grafica3==1 || $graficas->grafica4==1)
 @endif
 
-
 <h1 align="center" style="color: rgb(0, 190, 239);">INDICADORES</h1>
 <br>
-
-
-
-		
-	
 
 <div class="row">
 	
 		<div class="col-md-8 col-md-offset-2" style="">  
             <ul class="tab horizontal" style=" width: 100%; display: flex; justify-content: center;">
             @if ($graficas->grafica1==1)
-              <li class="tab-group-item pestanas" onClick="cambiar_color_over(this)" id="tab1"><a class="tabmovil" data-toggle="tab" id="a1" href="#nomina1">Faltas y Horas Extras</a></li>
+              <li class="tab-group-item pestanas" onClick="cambiar_color_over(this)" id="tab1"><a class="tabmovil" data-toggle="tab" id="a1" href="#nomina1">Costo de Nómina</a></li>
             @endif
 
             @if ($graficas->grafica2==1)
@@ -33,7 +27,7 @@
             @endif
 
             @if ($graficas->grafica3==1)
-              <li class="tab-group-item pestanas" id="tab3" style="{{ $graficas->grafica1!==1 && $graficas->grafica2!==1? 'border-bottom: 0px;border-left: 2px rgb(179, 215, 243) solid; border-right: 2px rgb(179, 215, 243) solid;border-top: 2px rgb(179, 215, 243) solid;':'' }}" onClick="cambiar_color_over(this)"><a class="tabmovil" id="a3" data-toggle="tab" href="#datosg">Costo de Nómina</a></li>
+              <li class="tab-group-item pestanas" id="tab3" style="{{ $graficas->grafica1!==1 && $graficas->grafica2!==1? 'border-bottom: 0px;border-left: 2px rgb(179, 215, 243) solid; border-right: 2px rgb(179, 215, 243) solid;border-top: 2px rgb(179, 215, 243) solid;':'' }}" onClick="cambiar_color_over(this)"><a class="tabmovil" id="a3" data-toggle="tab" href="#datosg">Faltas y Horas Extras</a></li>
             @endif
 
             @if ($graficas->grafica4==1)
@@ -50,7 +44,8 @@
 			            <div id="nomina1" class="tab-pane fade in active" style="">
 			            	@if ($graficas->grafica1==1)
 							<div style=" ">
-								<div id="graficaLineal" style="margin: 0 auto">
+								
+								<div id="container" style="margin: 0 auto">
 								</div>
 							</div>
 							<br>
@@ -70,7 +65,7 @@
 			            <div id="datosg" class="tab-pane fade{{ $graficas->grafica1!==1 && $graficas->grafica2!==1? 'in active':'' }}">
 			            	@if ($graficas->grafica3==1)
 							<div style="">
-								<div id="container" style="margin: 0 auto">
+								<div id="graficaLineal" style="margin: 0 auto">
 								</div>
 							</div>
 							<br>
