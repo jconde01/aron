@@ -98,7 +98,7 @@
     				<input type="text" id="dias" name="Dias" value="">
 				</div>
 				<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;">
-    				<label class="label-left" style="font-size: 14px;">Ref. IMSS</label>
+    				<label class="label-left" style="font-size: 14px;">Ref. Incapacidad</label>
     				<input type="text" id="refIMSS" name="RefIMSS" pattern="[A-Za-z]{2}[0-9]{6}" title="Formato: AA999999" value="" maxlength="9">
 				</div>
 				<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;">
@@ -140,8 +140,8 @@
     				<input type="text" id="ed_dias" name="Dias" value="">
 				</div>
 				<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;">
-    				<label class="label-left" style="font-size: 14px;">Ref. IMSS</label>
-    				<input type="text" id="ed_refIMSS" name="RefIMSS" pattern="[A-Za-z]{2}[0-9]{6}" value=""  maxlength="9">
+    				<label class="label-left" style="font-size: 14px;">Ref. Incapacidad</label>
+    				<input type="text" id="ed_refIMSS" name="RefIMSS" pattern="[A-Za-z]{2}[0-9]{6}" value="">
 				</div>
 				<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;">
     				<label class="label-left" style="font-size: 14px;">Tipo de Incapacidad</label>
@@ -207,6 +207,7 @@
 	var fechaIncidencia;
 	var pideFolioIMMS = [MATERNIDAD, TRANSITO, ENFERMEDAD_PROF, ACCIDENTE, ENFERMEDAD_GRAL];
 
+	
 
 	function date2Str(fecha) {
 		// fecha en formato YYYY-MM-DD
@@ -239,8 +240,7 @@
 	    fechaIncidencia = document.getElementById("fecha");
 	    // refIMSS = document.getElementById("refIMSS");
 
-	    // evento que se dispara al presionar el boton de 'Editar' un renglon
-	    // obtiene loa datos de la tabla, los inserta en el modal y lo despliega 
+
 		$('#captura tbody').on('click', '.btn-success', function () {
 		    rowElem = $(this).closest("tr");
 		    //var row_index = rowElem.index();
@@ -263,7 +263,7 @@
 	     	$("#edit").modal();
 		});
 
-		// evento para borrar un renglon al presionar el boton de 'eliminar'
+
 		$('#captura tbody').on('click', '.btn-danger', function () {
 		    rowElem = $(this).closest("tr");
 		    tabla.deleteRow(rowElem.index());
@@ -271,8 +271,6 @@
 	});
 
 
-	// Evento disparado al presionar el boton de 'Agregar empleado'
-	// prepara el modal para capturar los datos y lo despliega
 	$("#btnNuevo").click(function(){
 		concepto  = $('.cpto').val();
 		periodo   = $('.pdo').val(); 
@@ -335,6 +333,7 @@
 		}
 
 		if (validaNuevo()) {
+			
 			var fechaStr = date2Str(fecha);			
         	var row = tabla.insertRow(tabla.rows.length);
         	var col1 = row.insertCell(0);
@@ -358,8 +357,6 @@
     });
 
 
-    // evento disparado cuando se selecciona un concepto de ausentismo o incapacidad
-    // ejecuta un Ajax para obtener los parametros pertinentes al concepto
 	$('.cpto').change(function() {
 		var conceptData;
 		var tipoCaptura;
@@ -404,8 +401,6 @@
 	});
 
 	// período change
-	// ejecuta un ajax para obtener los datos de los empleados guardados
-	// para este concepto y periodo
 	$('.pdo').change(function() {
 		concepto  =  $('.cpto').val();
 		periodo = $('.pdo').val();
@@ -419,7 +414,7 @@
 		    while (tabla.rows.length > 1) {
 		        tabla.deleteRow(tabla.rows.length-1);
     		}
-    		// Aqui los despliega 
+    		// Aqui los despliega !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     	    for (var i = 0; i < movtos.length; i++) {
 				var fechaParts = movtos[i]["FECHA"].substr(0,10).split('-');
 				var theDate = new Date(fechaParts[0], fechaParts[1] - 1, fechaParts[2]);
@@ -470,6 +465,7 @@
 		}
 	});
 
+	
 
 	function creaPantalla() {
     	//console.log(numPantalla);
@@ -489,7 +485,7 @@
 		col2.innerHTML = '<th>Nombre</th>'; 	col2.style.width = "50%"; col2.style.backgroundColor="lightgrey";
 		col3.innerHTML = '<th>Fecha</th>'; 		col3.style.width = "10%"; col3.style.backgroundColor="lightgrey";
 		col4.innerHTML = '<th>Dias</th>'; 		col4.style.width = "10%"; col4.style.backgroundColor="lightgrey";
-		col5.innerHTML = '<th>Ref. IMSS</th>'; 	col5.style.width = "10%"; col5.style.backgroundColor="lightgrey";
+		col5.innerHTML = '<th>Ref. Incapacidad</th>'; 	col5.style.width = "10%"; col5.style.backgroundColor="lightgrey";
 		col6.innerHTML = '<th>Tipo</th>'; 		col6.style.width = "10%"; col6.style.backgroundColor="lightgrey";
 		col7.innerHTML = '<th>Opciones</th>';	col7.style.width = "10%"; col7.style.backgroundColor="lightgrey";
 	}

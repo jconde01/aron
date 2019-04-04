@@ -101,7 +101,14 @@
       @else
         <span><p class="etiqueta" style="background-color: rgb(179, 215, 243); color: blue; height: 22px !important; float: right;font-size: 8px;">{{ $cli->Nombre }}</p></span>   
       @endif
-      <span><p class="etiqueta" style="background-color: rgb(179, 215, 243); color: blue; height: 26px !important; float: right;font-size: 12px;">Tipo de nómina: {{ $nomina }}</p></span>
+      <?php if ($nomina=='fiscal') {
+        $nomina= 'FISCAL';
+      }
+      if ($nomina=='asimilado') {
+        $nomina= 'ASIMILADO';
+      }
+       ?>
+      <span><p class="etiqueta" style="background-color: rgb(179, 215, 243); color: blue; height: 27px !important; float: right;font-size: 13px;">TIPO DE NÓMINA: {{ $nomina }}</p></span>
     @endif
     @if (session()->has('flash'))
       <div class="container">

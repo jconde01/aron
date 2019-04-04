@@ -45,12 +45,14 @@ class EmpleadosController extends Controller
 
         $selProceso = Session::get('selProceso');
     	$emps = Empleado::where('TIPONO', $selProceso)->get();
+        $emps_activos = Empleado::where('ESTATUS', '!=','B')->get()->count();
+
         $jobs = Job::all();
         $deps = Depto::all();
         $perfil = auth()->user()->profile_id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
         //mkdir("../utilerias/creado", 0700);
-    	return view('catalogos.empleados.index')->with(compact('navbar','emps', 'jobs', 'deps'));
+    	return view('catalogos.empleados.index')->with(compact('navbar','emps', 'jobs', 'deps','emps_activos'));
     }
 
     public function getDatosEmpleado(Request $data) {
@@ -59,6 +61,7 @@ class EmpleadosController extends Controller
         $empleado = Empleado::where('EMP', $emp)->get()->first();
         $empleado2 = DatosGe::where('EMP', $emp)->get()->first();
         $foto = $empleado2->FOTO;
+        $nacimiento = $empleado2->BORN;
         $sangre = $empleado2->SANGRE;
         $nombre = $empleado->NOMBRE;
         $imss = $empleado->IMSS;
@@ -78,7 +81,8 @@ class EmpleadosController extends Controller
             "telefono" => $telefono,
             "foto" => $foto,
             "sangre" => $sangre,
-            "imss" => $imss
+            "imss" => $imss,
+            "naci" => $nacimiento
 
         );
          
@@ -2421,14 +2425,7 @@ class EmpleadosController extends Controller
                     $emple1->Email = $request->input('Email') . "";
                     $file = $request->file('archivo');
                     if ($file !== null) { 
-                        // $cliente = Session::get('selCliente');
-                        // $rfc_cliente = CiasNo::first()->RFCCTE;
-                        // $rfc_empleado0 = $request->input('RFC');
-                        // $rfc_empleado1=substr ($rfc_empleado0, 0,4);
-                        // $rfc_empleado2=substr ($rfc_empleado0, 5,6);
-                        // $rfc_empleado3=substr ($rfc_empleado0, 12,3);
-                        // $rfc_empleado= $rfc_empleado1.$rfc_empleado2.$rfc_empleado3;
-                        // $rutaEmpleados = Client::getRutaEmpleados($cliente->cell_id,  $rfc_cliente);
+                       
                         $path = public_path(). '/img_emp/';
                         $fileName = uniqid() . $file->getClientOriginalName();
                         $moved =  $file->move($path, $fileName);

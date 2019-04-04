@@ -7,7 +7,7 @@
 <div class="main main-raised"> 
     <div class="container">   
       <div class="section text-center">
-        <h2 class="titulo">Documentos</h2>
+        <h2 class="titulo">Documentos del Período {{$subcarpeta}}</h2>
 	 	
 	
 		    <?php

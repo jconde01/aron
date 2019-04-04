@@ -7,7 +7,7 @@
 <div class="main main-raised"> 
     <div class="container">   
       <div class="section text-center">
-        <h2 class="titulo">Documentos</h2>
+        <h2 class="titulo">Documentos Generales</h2>
 	 	
 	
 		    <?php
@@ -21,7 +21,7 @@
                         $extension = explode(".",$archivo);
                         $extension = count($extension);
                         if ($extension==1) {
-                            echo '<a href="/consultas/documentos/'.$archivo.'" ><div class="col-lg-5" style="border:1px blue solid; border-radius:10px; margin-right: 80px; height:170px; margin-top: 20px;" > <br> <i class="fas fa-folder" style="font-size: 50px;" > </i> <br> <br> Periodo '.$archivo.' <br/><br><br>';
+                            echo '<a href="/consultas/documentos/'.$archivo.'" ><div class="col-lg-5" style="border:1px blue solid; border-radius:10px; margin-right: 80px; height:170px; margin-top: 20px;" > <br> <i class="fas fa-folder" style="font-size: 50px;" > </i> <br> <br> Período '.$archivo.' <br/><br><br>';
                             echo '</div></a>';
                         }
                         

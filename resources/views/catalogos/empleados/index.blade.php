@@ -5,8 +5,9 @@
   <div class="main main-raised"> 
     <div class="container">   
       <div class="section text-center">
-        <h2 class="titulo">Listado de Empleados</h2>
-        <a href=" {{url('catalogos/empleados/create')}} " class="primario1 separation" style="width: 160px;"><i class="fas fas fa-plus-square icon-left"></i> &nbsp;Agregar Empleado</a>
+        <h3 class="titulo">Listado de Empleados</h3>
+        <div style="width: 200px;height: 40px; float: left;"><span>Empleados Activos: {{$emps_activos}}</span><br><span>A la Fecha: <?php $fecha = getdate(); print_r($fecha['mday'].'/'.$fecha['mon'].'/'.$fecha['year']); ?> </span></div>
+        <a href=" {{url('catalogos/empleados/create')}} " class="primario1" style="width: 160px; margin-left: -200px;"><i class="fas fas fa-plus-square icon-left"></i> &nbsp;Agregar Empleado</a>
         <br> <br>
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <table id="table_id" class="display"> 
@@ -24,25 +25,25 @@
                             <th class="parrafo">Acciones</th>
                         </tr>  
                     </thead>                   
-                        
+                         
                     <tbody>@foreach ($emps as $emp)
-                        <tr>
-                            <td class="parrafo">{{$emp->EMP}}</td>
-                            <td class="parrafo" ><a href=""data-toggle="modal" data-target="#GSCCModal2" id="{{$emp->EMP}}" rel="tooltip" title="Consulta rapida" name="nom">{{$emp->NOMBRE}} <input type="hidden" name="{{$emp->EMP}}" value="{{$emp->EMP}}"> </a></td>
-                            <td class="parrafo"> @foreach ($jobs as $job)
+                        <tr class="pruebacolor">
+                            <td class="parrafo columna1">{{$emp->EMP}}</td>
+                            <td class="parrafo columna2" ><a href=""data-toggle="modal" data-target="#GSCCModal2" id="{{$emp->EMP}}" rel="tooltip" title="Consulta rapida" name="nom">{{$emp->NOMBRE}} <input type="hidden" name="{{$emp->EMP}}" value="{{$emp->EMP}}"> </a></td>
+                            <td class="parrafo columna3"> @foreach ($jobs as $job)
                                 <?php if ($emp->PUESTO==$job->PUESTO) {
                                     echo "$job->NOMBRE";
                                 } ?>
                              @endforeach</td>
-                            <td class="parrafo">@foreach ($deps as $dep)
+                            <td class="parrafo columna4">@foreach ($deps as $dep)
                                 <?php if ($emp->DEPTO==$dep->DEPTO) {
                                     echo "$dep->DESCRIP";
                                 } ?>
                              @endforeach</td>
-                            <td class="parrafo">{{$emp->c_Estado}}</td>
+                            <td class="parrafo columna5">{{$emp->c_Estado}}</td>
                             
                           
-                            <td class="parrafo"><?php 
+                            <td class="parrafo columna6"><?php 
                             if ($emp->ESTATUS=='A') {
                                 echo "Activa";
                             }
@@ -54,7 +55,7 @@
                             }
                             ?></td>
                                                  
-                            <td class="parrafo">
+                            <td class="parrafo columna7">
                               <a href="{{url('/catalogos/empleados/'.$emp->EMP.'/edit')}}" rel="tooltip" title="Editar" class="btn btn-success btn-simple btn-xs">
                                 <i class="fa fa-edit"></i>
                               </a>
@@ -91,7 +92,7 @@
                                   <div class="modal-header">
                                     <h4 class="modal-title" id="myModalLabel">Datos del empleado</h4>
                                   </div>
-                                  <div class="modal-body" style=" width: 1000px; text-align: center; height: 250px;" >
+                                  <div class="modal-body" style=" width: 1000px; text-align: center; height: 290px;" >
                                     <div style="float: left;">
                                     <img src="" id="ima" style="width: 210px; border-radius: 5px; border: 1px rgb(179, 215, 243) solid;">
                                    </div>
@@ -137,6 +138,17 @@
                                                 <input type="text" name="MATERNO" style="width: 350px; border: 0px;" id="imss" value="" readonly>
                                             </div> 
 
+                                            <div class="" style="border-bottom: 1px rgb(179, 215, 243) solid; margin-bottom: 7px;">
+                                                <span style="margin-left: 25px;">Fecha de Nacimiento:&nbsp;&nbsp;&nbsp;</span>        
+                                                <input type="date" name="MATERNO" style="width: 350px; border: 0px;" id="naci" value="" readonly>
+                                            </div>
+
+                                            <div class="" style="border-bottom: 1px rgb(179, 215, 243) solid; margin-bottom: 7px;">
+                                                <span style="margin-left: 25px;">Sueldo Bruto Mensual:&nbsp;&nbsp;&nbsp;</span>        
+                                                <input type="text" name="MATERNO" style="width: 350px; border: 0px;" id="sueldo" value="" readonly>
+                                            </div>
+
+
                                         </div>
                                         
                                         
@@ -176,7 +188,8 @@
         var tele = document.getElementById("tele");
         var ima = document.getElementById("ima");
         var sangre = document.getElementById("san"); 
-        var imss = document.getElementById("imss");     
+        var imss = document.getElementById("imss");
+        var naci = document.getElementById("naci");       
         //alert('Empleado: ' + id);        
         $.post("empleados/getDatosEmpleado", {fldide: id, _token: token}, function( data ) {
             
@@ -187,6 +200,9 @@
             tele.value = data['telefono'];
             sangre.value = data['sangre'];
             imss.value = data['imss'];
+            primera = data['naci'].split(' ')[0]
+
+            naci.value = primera;
             var foto = data['foto'];
             var img = '/img_emp/'+foto;
             if (data['foto']) {
@@ -218,6 +234,7 @@
         document.getElementById("ima").value = " ";
         document.getElementById("san").value = " "; 
         document.getElementById("imss").value = " ";
+        document.getElementById("naci").value = " ";
         $('#ima').removeAttr('scr');
         $('#ima').attr('src',"{{ asset('/img/Ideatisa.ico')}}"); 
       }
