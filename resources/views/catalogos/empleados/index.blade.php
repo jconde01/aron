@@ -139,12 +139,12 @@
                                             </div> 
 
                                             <div class="" style="border-bottom: 1px rgb(179, 215, 243) solid; margin-bottom: 7px;">
-                                                <span style="margin-left: 25px;">Fecha de Nacimiento:&nbsp;&nbsp;&nbsp;</span>        
+                                                <span style="margin-left: -77px;">Fecha de Nacimiento:&nbsp;&nbsp;&nbsp;</span>        
                                                 <input type="date" name="MATERNO" style="width: 350px; border: 0px;" id="naci" value="" readonly>
                                             </div>
 
                                             <div class="" style="border-bottom: 1px rgb(179, 215, 243) solid; margin-bottom: 7px;">
-                                                <span style="margin-left: 25px;">Sueldo Bruto Mensual:&nbsp;&nbsp;&nbsp;</span>        
+                                                <span style="margin-left: -83px;">Sueldo Bruto Mensual:&nbsp;&nbsp;&nbsp;</span>        
                                                 <input type="text" name="MATERNO" style="width: 350px; border: 0px;" id="sueldo" value="" readonly>
                                             </div>
 
@@ -189,7 +189,8 @@
         var ima = document.getElementById("ima");
         var sangre = document.getElementById("san"); 
         var imss = document.getElementById("imss");
-        var naci = document.getElementById("naci");       
+        var naci = document.getElementById("naci");
+        var sueldo = document.getElementById("sueldo");       
         //alert('Empleado: ' + id);        
         $.post("empleados/getDatosEmpleado", {fldide: id, _token: token}, function( data ) {
             
@@ -200,7 +201,8 @@
             tele.value = data['telefono'];
             sangre.value = data['sangre'];
             imss.value = data['imss'];
-            primera = data['naci'].split(' ')[0]
+            primera = data['naci'].split(' ')[0];
+            sueldo.value = '$'+data['sueldo'];
 
             naci.value = primera;
             var foto = data['foto'];
@@ -235,6 +237,7 @@
         document.getElementById("san").value = " "; 
         document.getElementById("imss").value = " ";
         document.getElementById("naci").value = " ";
+        document.getElementById("sueldo").value = " ";
         $('#ima').removeAttr('scr');
         $('#ima').attr('src',"{{ asset('/img/Ideatisa.ico')}}"); 
       }

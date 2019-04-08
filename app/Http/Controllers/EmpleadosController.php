@@ -66,6 +66,7 @@ class EmpleadosController extends Controller
         $nombre = $empleado->NOMBRE;
         $imss = $empleado->IMSS;
         $puesto = $empleado->PUESTO;
+        $sueldo = $empleado->BrutoMensual;
         $puesto1 = Job::where('PUESTO', $puesto)->get()->first();
         $puesto2 = $puesto1->NOMBRE;
         $depto = $empleado->DEPTO;
@@ -82,7 +83,8 @@ class EmpleadosController extends Controller
             "foto" => $foto,
             "sangre" => $sangre,
             "imss" => $imss,
-            "naci" => $nacimiento
+            "naci" => $nacimiento,
+            "sueldo" => $sueldo
 
         );
          

@@ -25,26 +25,39 @@
 
             <br><br>
             <div class="tab-content">
-            
+            <style>
+                      .thumb {
+                        height: 100px;
+                        width:  100px;
+                        border: 1px solid #000;                        
+                      }
+                    </style>
+                    <div class="col-md-3" style="padding-left: 50px;">
+                        <h4>Imagen del Empleado: </h4>
+                        <input type="file" id="files" name="archivo"/>
+                        <br/>
+                        <output id="list" style="width: 100px; height: 100px; margin-left: 110px;"><img src="<?php echo "/admon/empleados/Ideatisa.ico"; ?>" style="width: 100px; height: 100px;"></output>
+                        
+                    </div>
 
               
             <div class="row">
 
-                    <div class="col-md-1 no-pad">
+                    <!-- <div class="col-md-1 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em; display: none;">
                             <div class="label-left"><p></p></div>
                             <input type="text"   readonly="readonly" hidden="hidden">
                         </div> 
-                    </div>
+                    </div> -->
 
-                    <div class="col-md-5 no-pad">
+                    <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Tipo Nomina</p></div>
                             <input type="text" name="TIPONO" value="{{ $emp->tipoNo->NOMBRE }}" readonly="readonly" class="bloqueado">
                         </div> 
                     </div>
 
-                    <div class="col-md-5  no-pad">
+                    <div class="col-md-4  no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Empleado</p></div>
                             <input type="number" name="EMP" id="EMP" onkeyup="fAgrega2();" max="9999999" value="{{ $ultimo3}}" required>
@@ -193,7 +206,7 @@
                     </div>
 
                      <div class="col-md-4 no-pad">
-                        <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
+                        <div class="content-descripcion-left-input" style="margin-bottom: 3em;">
                             <div class="label-left"><p>Turno</p></div>
                             <select style="width: 340px; height: 40px; border-radius: 10px; text-align: right; padding-right: 20px;" name="TURNO" class="inderecha">
                                 <option value="1" {{ (old("TURNO") == 1 ? "selected":"") }}>1-Diurno</option>
@@ -257,7 +270,7 @@
                                 <option value="07 Modalidad de contratación por pago de hora laborada" {{ (old("c_TipoContrato") == '07 Modalidad de contratación por pago de hora laborada' ? "selected":"") }}>07 Modalidad de contratación por pago de hora laborada</option>
                                 <option value="08 Modalidad de trabajo por comisión laboral" {{ (old("c_TipoContrato") == '08 Modalidad de trabajo por comisión laboral' ? "selected":"") }}>08 Modalidad de trabajo por comisión laboral</option>
                                 <option value="09 Modalidades de contratación donde no existe relación de trabajo" {{ (old("c_TipoContrato") == '09 Modalidades de contratación donde no existe relación de trabajo' ? "selected":"") }}>09 Modalidades de contratación donde no existe relación de trabajo</option>
-                                <option value="10 Jubilación, pensión, retiro." {{ (old("c_TipoContrato") == '10 Jubilación, pensión, retiro.' ? "selected":"") }}>10 Jubilación, pensión, retiro.</option>
+                                <option value="10 Jubilación, pensión, retiro" {{ (old("c_TipoContrato") == '10 Jubilación, pensión, retiro.' ? "selected":"") }}>10 Jubilación, pensión, retiro</option>
                                 <option value="99 Otro contrato" {{ (old("c_TipoContrato") == '99 Otro contrato' ? "selected":"") }}>99 Otro contrato</option>
                             </select>
                         </div> 
@@ -367,44 +380,7 @@
                         
                     </div>
 
-                    <div class="col-md-12" style=" text-align: left;">
-                      <h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Acumulado Otras Empresas.</h3>
-                    </div>
-
-                    <div class="col-md-4 no-pad">
-                        <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
-                            <div class="label-left"><p>Perce:</p></div>
-                            <input type="number" name="OTRACIA" max="999999999" value="{{ old('OTRACIA', 0) }}">
-                        </div> 
-                    </div>
-
-                    <div class="col-md-4 no-pad">
-                        <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
-                            <div class="label-left"><p>ISPT:</p></div>
-                            <input type="number" name="TAXOTRA" max="999999999" value="{{ old('TAXOTRA', 0) }}">
-                        </div> 
-                    </div>
-
-                    <div class="col-md-4 no-pad">
-                        <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
-                            <div class="label-left"><p>SPE:</p></div>
-                            <input type="number" name="CASOTRA" max="999999999" value="{{ old('CASOTRA',0) }}" required>
-                        </div> 
-                    </div>
-
-                    <div class="col-md-4 no-pad">
-                        <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
-                            <div class="label-left"><p>SAR:</p></div>
-                            <input type="number" name="SAROTR" max="999999999" value="{{ old('SAROTR') }}">
-                        </div> 
-                    </div>
-
-                    <div class="col-md-4 no-pad">
-                        <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
-                            <div class="label-left"><p>INFONAVIT:</p></div>
-                            <input type="number" name="DESINFO" max="999999999" value="{{ old('DESINFO',0) }}">
-                        </div> 
-                    </div>
+                    
 
                     <div class="col-md-12" style=" text-align: left; border-top: 2px #F0F0F0 solid;">
                       <h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sueldos.</h3>
@@ -418,10 +394,17 @@
                     </div>
 
                     
-                     <div class="col-md-4 no-pad">
+                    <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Sueldo Integro Mensual:</p></div>
                             <input type="number" id="SueldoIn" step="0.01" name="NetoMensual" max="999999999" value="{{ old('NetoMensual') }}">
+                        </div> 
+                    </div>
+
+                    <div class="col-md-4 no-pad">
+                        <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
+                            <div class="label-left"><p>Bruto Mensual:</p></div>
+                            <input type="number" id="" step="0.01" name="BrutoMensual" max="999999999" value="{{ old('BrutoMensual',0) }}">
                         </div> 
                     </div>
                    
@@ -578,7 +561,7 @@
                           <textarea class="campo-texto-etiqueta" placeholder="" name="EXPERI" id="" cols="30" rows="5">{{ old('EXPERI') }}</textarea>
                         </div>
                     </div>
-                    <style>
+                    <!-- <style>
                       .thumb {
                         height: 100px;
                         width:  100px;
@@ -589,9 +572,9 @@
                         <h4>Imagen del Empleado: </h4>
                         <input type="file" id="files" name="archivo"/>
                         <br/>
-                        <output id="list" style="width: 100px; height: 100px;"><img src="<?php echo "/admon/empleados/Ideatisa.ico"; ?>" style="width: 100px; height: 100px;"></output>
+                        // <output id="list" style="width: 100px; height: 100px;"><img src="<?php echo "/admon/empleados/Ideatisa.ico"; ?>" style="width: 100px; height: 100px;"></output>
                         
-                    </div>
+                    </div> -->
 
                     <div class="col-md-12 no-pad" style="border-top: 2px #F0F0F0 solid; margin-bottom: 15px;margin-top: 13px;">                     
                     </div>
@@ -769,6 +752,45 @@
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>No. Nuevo del IMSS: </p></div>
                             <input type="number" name="IMSS2" value="{{ old('IMSS2') }}" max="999999999999999">
+                        </div> 
+                    </div>
+
+                    <div class="col-md-12" style=" text-align: left;">
+                      <h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Acumulado Otras Empresas.</h3>
+                    </div>
+
+                    <div class="col-md-4 no-pad">
+                        <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
+                            <div class="label-left"><p>Perce:</p></div>
+                            <input type="number" name="OTRACIA" max="999999999" value="{{ old('OTRACIA', 0) }}">
+                        </div> 
+                    </div>
+
+                    <div class="col-md-4 no-pad">
+                        <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
+                            <div class="label-left"><p>ISPT:</p></div>
+                            <input type="number" name="TAXOTRA" max="999999999" value="{{ old('TAXOTRA', 0) }}">
+                        </div> 
+                    </div>
+
+                    <div class="col-md-4 no-pad">
+                        <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
+                            <div class="label-left"><p>SPE:</p></div>
+                            <input type="number" name="CASOTRA" max="999999999" value="{{ old('CASOTRA',0) }}" required>
+                        </div> 
+                    </div>
+
+                    <div class="col-md-4 no-pad">
+                        <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
+                            <div class="label-left"><p>SAR:</p></div>
+                            <input type="number" name="SAROTR" max="999999999" value="{{ old('SAROTR') }}">
+                        </div> 
+                    </div>
+
+                    <div class="col-md-4 no-pad">
+                        <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
+                            <div class="label-left"><p>INFONAVIT:</p></div>
+                            <input type="number" name="DESINFO" max="999999999" value="{{ old('DESINFO',0) }}">
                         </div> 
                     </div>
 

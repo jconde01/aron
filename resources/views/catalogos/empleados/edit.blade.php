@@ -11,24 +11,49 @@
           <div class="" style="">           
             <br><br>
             <div class="tab-content">
-              
+              <style>
+                      .thumb {
+                        height: 100px;
+                        width:  100px;
+                        border: 1px solid #000;
+                        
+                      }
+                    </style>
+                    <div class="col-md-3" style="padding-left: 50px;">
+                        <h4>Imagen del Empleado: </h4>
+                        
+                       <input type="file" id="files" name="archivo"/>
+                        <br/>
+                       <!--  <img src="<?php //echo "/admon/empleados/empresas/$empl1->EMP/$empl1->FOTO"; ?>" style="width: 150px; height: 150px;"> -->
+                        <output id="list"style="width: 100px; height: 100px; margin-left: 110px;">
+                            <?php 
+                            if ($empl1->FOTO==null) {
+                              echo '<img src="/admon/empleados/Ideatisa.ico" style="width: 100px; height: 100px;">'; 
+                            }else{
+                                echo '<img src="/img_emp/'.$empl1->FOTO.'" style="width: 100px; height: 100px;">';
+                            }
+                            
+                            ?>
+                        </output>
+                        
+                    </div>
             <div class="row">
 
-                    <div class="col-md-1 no-pad">
+                    <!-- <div class="col-md-1 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em; display: none;">
                             <div class="label-left"><p></p></div>
                             <input type="text"   readonly="readonly" hidden="hidden">
                         </div> 
-                    </div>
+                    </div> -->
 
-                    <div class="col-md-5 no-pad">
+                    <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Tipo Nomina</p></div>
                             <input type="text" name="TIPONO" value="{{ $empl->tipoNo->NOMBRE }}" readonly="readonly" class="bloqueado">
                         </div> 
                     </div>
 
-                    <div class="col-md-5 no-pad">
+                    <div class="col-md-4 no-pad">
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Empleado</p></div>
                             <input type="number" name="EMP" id="EMP" onkeyup="fAgrega2();" value="{{$empl->EMP}}" readonly="readonly" class="bloqueado">
@@ -238,7 +263,7 @@
                     </div>
 
                      <div class="col-md-4 no-pad">
-                        <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
+                        <div class="content-descripcion-left-input" style="margin-bottom: 3em;">
                             <div class="label-left"><p>Turno</p></div>
                             <select style="width: 340px; height: 40px; border-radius: 10px; text-align: right; padding-right: 20px;" name="TURNO" value="{{$empl->TURNO}}" class="inderecha">
                                 <option value="1" <?php if ($empl->TURNO==1):{
@@ -553,44 +578,7 @@
                         
                     </div>
 
-                    <div class="col-md-12" style=" text-align: left;">
-                      <h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Acumulado Otras Empresas.</h3>
-                    </div>
-
-                    <div class="col-md-4 no-pad">
-                        <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
-                            <div class="label-left"><p>Perce:</p></div>
-                            <input type="number" name="OTRACIA" value="{{number_format($empl->OTRACIA, 2, '.', '')}}">
-                        </div> 
-                    </div>
-
-                    <div class="col-md-4 no-pad">
-                        <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
-                            <div class="label-left"><p>ISPT:</p></div>
-                            <input type="number" name="TAXOTRA" value="{{number_format($empl->TAXOTRA, 2, '.', '')}}">
-                        </div> 
-                    </div>
-
-                    <div class="col-md-4 no-pad">
-                        <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
-                            <div class="label-left"><p>SPE:</p></div>
-                            <input type="number" name="CASOTRA" required value="{{number_format($empl->CASOTRA, 2, '.', '')}}">
-                        </div> 
-                    </div>
-
-                    <div class="col-md-4 no-pad">
-                        <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
-                            <div class="label-left"><p>SAR:</p></div>
-                            <input type="number" name="SAROTR" value="{{number_format($empl->SAROTR, 2, '.', '')}}">
-                        </div> 
-                    </div>
-
-                    <div class="col-md-4 no-pad">
-                        <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
-                            <div class="label-left"><p>INFONAVIT:</p></div>
-                            <input type="number" name="DESINFO" value="{{number_format($empl->DESINFO, 2, '.', '')}}">
-                        </div> 
-                    </div>
+                    
 
                     <div class="col-md-12" style=" text-align: left; border-top: 2px #F0F0F0 solid;">
                       <h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sueldos.</h3>
@@ -607,6 +595,13 @@
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>Sueldo Integro Mensual:</p></div>
                             <input type="number" id="SueldoIn" step="0.01" name="NetoMensual" max="999999999" value="{{ number_format($empl->NetoMensual, 2, '.', '') }}">
+                        </div> 
+                    </div>
+
+                    <div class="col-md-4 no-pad">
+                        <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
+                            <div class="label-left"><p>Bruto Mensual:</p></div>
+                            <input type="text" name="brutomensual" value="{{ number_format($empl->BrutoMensual, 2, '.', '')}}">
                         </div> 
                     </div>
 
@@ -772,7 +767,7 @@
                           <textarea class="campo-texto-etiqueta" placeholder="" name="EXPERI" id="" cols="30" rows="5" value="<?php echo($empl1->EXPERI) ?>"><?php echo($empl1->EXPERI) ?></textarea>
                         </div>
                     </div>
-                    <style>
+                    <!-- <style>
                       .thumb {
                         height: 100px;
                         width:  100px;
@@ -785,19 +780,19 @@
                         
                        <input type="file" id="files" name="archivo"/>
                         <br/>
-                       <!--  <img src="<?php //echo "/admon/empleados/empresas/$empl1->EMP/$empl1->FOTO"; ?>" style="width: 150px; height: 150px;"> -->
+                       
                         <output id="list">
                             <?php 
-                            if ($empl1->FOTO==null) {
-                              echo '<img src="/admon/empleados/Ideatisa.ico" style="width: 100px; height: 100px;">'; 
-                            }else{
-                                echo '<img src="/img_emp/'.$empl1->FOTO.'" style="width: 150px; height: 150px;">';
-                            }
+                            // if ($empl1->FOTO==null) {
+                              // echo '<img src="/admon/empleados/Ideatisa.ico" style="width: 100px; height: 100px;">'; 
+                            // }else{
+                                // echo '<img src="/img_emp/'.$empl1->FOTO.'" style="width: 150px; height: 150px;">';
+                            //}
                             
                             ?>
                         </output>
                         
-                    </div>
+                    </div> -->
                 
                     
 
@@ -1045,6 +1040,45 @@
                         <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
                             <div class="label-left"><p>No. Nuevo del IMSS: </p></div>
                             <input type="text" name="IMSS2" value="{{$empl11->IMSS2}}">
+                        </div> 
+                    </div>
+
+                    <div class="col-md-12" style=" text-align: left;">
+                      <h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Acumulado Otras Empresas.</h3>
+                    </div>
+
+                    <div class="col-md-4 no-pad">
+                        <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
+                            <div class="label-left"><p>Perce:</p></div>
+                            <input type="number" name="OTRACIA" value="{{number_format($empl->OTRACIA, 2, '.', '')}}">
+                        </div> 
+                    </div>
+
+                    <div class="col-md-4 no-pad">
+                        <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
+                            <div class="label-left"><p>ISPT:</p></div>
+                            <input type="number" name="TAXOTRA" value="{{number_format($empl->TAXOTRA, 2, '.', '')}}">
+                        </div> 
+                    </div>
+
+                    <div class="col-md-4 no-pad">
+                        <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
+                            <div class="label-left"><p>SPE:</p></div>
+                            <input type="number" name="CASOTRA" required value="{{number_format($empl->CASOTRA, 2, '.', '')}}">
+                        </div> 
+                    </div>
+
+                    <div class="col-md-4 no-pad">
+                        <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
+                            <div class="label-left"><p>SAR:</p></div>
+                            <input type="number" name="SAROTR" value="{{number_format($empl->SAROTR, 2, '.', '')}}">
+                        </div> 
+                    </div>
+
+                    <div class="col-md-4 no-pad">
+                        <div class="content-descripcion-left-input" style="margin-bottom: 2em;">
+                            <div class="label-left"><p>INFONAVIT:</p></div>
+                            <input type="number" name="DESINFO" value="{{number_format($empl->DESINFO, 2, '.', '')}}">
                         </div> 
                     </div>
 
