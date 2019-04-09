@@ -31,7 +31,7 @@
 		    				<select name="recipient_id" class="form-control">
 		    					<option value="">Selecciona el usuario</option>
 		    					@foreach($users as $user)
-		    						<option value="{{ $user->id }}">{{ $user->name . ' - ' . $user->client->Nombre }}</option>
+		    						<option value="{{ $user->id }}" @if ($user->id == $id) {{'selected'}}@endif>{{ $user->name . ' - ' . $user->client->Nombre }}</option>
 		    					@endforeach
 		    				</select>
 			    			{!! $errors->first('recipient_id',"<span class=help-block>:message</span>"); !!} 
@@ -39,7 +39,7 @@
 			    		@endif
 		    			</div>
 		    			<div class="form-group {{ $errors->has('body')? 'has-error':'' }} " >
-			    			<textarea name="body" class="form-control" placeholder="escribe aqui tu mensaje"></textarea>
+			    			<textarea name="body" class="form-control" placeholder="escribe aqui tu mensaje">@if ($id!=0) {{'El período ya se encuentra procesado. Favor de verificar la hoja de servicios que se encuentra en el Menú (Consultas->Autorización de la Nómina)'}}@endif</textarea>
 			    			{!! $errors->first('body',"<span class=help-block>:message</span>"); !!} 
 			    		</div>
 		    			<div class="form-group">		    			

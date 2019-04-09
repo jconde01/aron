@@ -23,7 +23,7 @@ Auth::routes();
 Route::middleware(['auth'])->group(function () {
 	Route::get('/home', 'HomeController@index')->name('home');
 	//Route::post('/home','HomeController@getProcesos')->name('home');
-	Route::get('/messages/create', 'MessagesController@create');
+	Route::get('/messages/create/{id}', 'MessagesController@create');
 	Route::post('/messages/store', 'MessagesController@store')->name('messages.store');
 	Route::get('/messages/{id}', 'MessagesController@show')->name('messages.show');
 	Route::get('/notificaciones','NotificationsController@index');

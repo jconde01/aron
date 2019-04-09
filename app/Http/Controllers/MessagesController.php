@@ -23,12 +23,12 @@ class MessagesController extends Controller
     }
 
 
-    public function create()
+    public function create($id)
     {
         $selCliente = Session::get('selCliente');
-        $cell_id = $selCliente->cell_id;
-        //dd($selCliente, $cell_id);        
+        
         if ($selCliente != null) {
+            $cell_id = $selCliente->cell_id;
     	   $users = User::where('cell_id','=',$cell_id)
                         ->whereIn('profile_id', [env("CELL_DIRECTOR_ID",4), env("CELL_QC_ID",6)])->get();  // ->where('id','!=',auth()->id())
         } else {
@@ -38,7 +38,7 @@ class MessagesController extends Controller
 
         $perfil = auth()->user()->profile_id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
-		return view('messages.create')->with(compact('selCliente','users', 'navbar'));    // forma para insertar nuevo mensaje
+		return view('messages.create')->with(compact('selCliente','users', 'navbar','id'));    // forma para insertar nuevo mensaje
     }
 
 
@@ -69,7 +69,7 @@ class MessagesController extends Controller
 
     	$recipient->notify(new MessageSent($message));
 
-    	return back()->with('flash','Tu mensaje ha sido enviado');
+    	return redirect('/notificaciones')->with('flash','Tu mensaje ha sido enviado');
     }
 
     public function show($id)

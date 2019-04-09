@@ -6,7 +6,7 @@
 @section('content')
 	<div class="container">
 		<h1>Notificaciones</h1>
-		<a type="button" class="btn btn-success" href="{{ url('/messages/create') }}"><i class="fa fa-plus"></i> Crear nueva </a>
+		<a type="button" class="btn btn-success" href="{{ url('/messages/create/0') }}"><i class="fa fa-plus"></i> Crear nueva </a>
 		<div class="row">
 			<div class="col-sm-6">
 				<h2 >No leídas</h2>
