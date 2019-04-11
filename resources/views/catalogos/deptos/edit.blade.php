@@ -1,7 +1,6 @@
 @extends('layouts.app')
 @section('body-class', 'profile-page sidebar-collapse') 
 @section('content') 
-  </div>
   <div class="main main-raised" style=""> 
     <div style="">
       <div class="section text-center" style="">
