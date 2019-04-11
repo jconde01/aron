@@ -189,7 +189,7 @@
         				'</div>';
 	importeFld["Add"] =  '<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;"> ' +
             			'	<label class="label-left" style="font-size: 14px;">Importe</label>' +
-            			'	<input type="text" id="unidades" name="Importe" value="">' +
+            			'	<input type="text" id="importe" name="Importe" value="">' +
         				'</div>';
     fechaFld["Add"]	= '<div class="form-group content-descripcion-left-input" style="margin-bottom: 2em;"> ' +
             			'	<label class="label-left" style="font-size: 14px;">Fecha</label>' +
@@ -747,7 +747,7 @@
 					totUnidades = totUnidades + movtos[i]["UNIDADES"];
 					totImporte = totImporte + movtos[i]["CALCULO"];    	    		
 
-					col3.innerHTML = '<td><input type="text" class="unidades" name="unidades[]" style="border:0px;width:150px!important;text-align:right!important;" readonly value="'+movtos[i]["UNIDADES"]+'"/></td>';
+					col3.innerHTML = '<td><input type="text" class="importe" name="unidades[]" style="border:0px;width:150px!important;text-align:right!important;" readonly value="'+movtos[i]["UNIDADES"]+'"/></td>';
 					col4.innerHTML = '<td><input type="text" class="calculo" name="calculo[]"  style="border:0px;width:150px!important;text-align:right!important;" readonly value="'+movtos[i]["CALCULO"]+'" /></td>'; col4.style.display = 'none';
 					col5.innerHTML = '<td class="td-actions text-center">'+
 						'<a href="#" rel="tooltip" title="Editar" class="btn btn-success btn-simple btn-xs"><i class="fa fa-edit"></i></a>'+
@@ -927,6 +927,12 @@
 					bOK = false;
 				}
 				break;
+			case 4:
+		    	if ( unidades <= 0 ) {	
+		           alert('No ha capturado el importe');
+		           bOK = false;
+		        }
+				break;
 			case 5:
 				break;
 		}
@@ -953,6 +959,12 @@
 					alert('El valor de las unidades debe ser igual o mayor que 1');
 					bOK = false;
 				}
+				break;
+			case 4:
+		    	if ( importe <= 0 ) {	
+		           alert('No ha capturado el importe');
+		           bOK = false;
+		        }
 				break;
 			case 5:
 				break;
