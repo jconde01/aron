@@ -92,7 +92,7 @@
                       <input type="file" class="form-control cargador" name="nacimiento" multiple="" >
                     </div>
                     @if ($docsReque->FECHAREQUE1==1)        
-                    <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechanaci" required>
+                    <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechanaci" value="<?php echo date('Y-m-d', strtotime($listdoc->FECHAVENCI1)) ?>" required>
                     @endif
                   </div>
                   @if($listdoc->CHECK1==1)
@@ -100,7 +100,7 @@
                     </div> 
                   @endif
           </div>
-
+ 
            <div class="col-md-6" style="margin-bottom: 0px; height: 310px;">
               
                      <div style="width: 51%; float: left;">
@@ -109,7 +109,7 @@
                       <input type="file" class="form-control cargador" name="rfc" multiple="" >
                     </div>
                       @if ($docsReque->FECHAREQUE2==1)   
-                    <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fecharfc" required>
+                    <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fecharfc" value="<?php echo date('Y-m-d', strtotime($listdoc->FECHAVENCI2)) ?>" required>
                    @endif
                   </div>
                   @if($listdoc->CHECK2==1)
@@ -126,7 +126,7 @@
                       <input type="file" class="form-control cargador" name="curp" multiple="" >
                     </div>
                     @if ($docsReque->FECHAREQUE3==1)        
-                    <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechacurp" required>
+                    <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechacurp" value="<?php echo date('Y-m-d', strtotime($listdoc->FECHAVENCI3)) ?>" required>
                     @endif
                   </div>
                   @if($listdoc->CHECK3==1)
@@ -142,7 +142,7 @@
                   <input type="file" class="form-control cargador" name="comprobante" multiple="">
                 </div>
                 @if ($docsReque->FECHAREQUE4==1)        
-                  <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechacompro" required>
+                  <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechacompro" value="<?php echo date('Y-m-d', strtotime($listdoc->FECHAVENCI4)) ?>" required>
                 @endif
               </div>
               @if($listdoc->CHECK4==1)
@@ -161,7 +161,7 @@
                   <input type="file" class="form-control cargador" name="empleo" multiple="">
                 </div>
                 @if ($docsReque->FECHAREQUE5==1)        
-                  <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechaempleo" required>
+                  <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechaempleo" value="<?php echo date('Y-m-d', strtotime($listdoc->FECHAVENCI5)) ?>" required>
                 @endif
               </div>
               @if($listdoc->CHECK5==1)
@@ -179,7 +179,7 @@
                   <input type="file" class="form-control cargador" name="ine" multiple="">
                 </div>
                 @if ($docsReque->FECHAREQUE6==1)        
-                  <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechaine" required>
+                  <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechaine" value="<?php echo date('Y-m-d', strtotime($listdoc->FECHAVENCI6)) ?>" required>
                 @endif
               </div>
               @if($listdoc->CHECK6==1)
@@ -197,7 +197,7 @@
                   <input type="file" class="form-control cargador" name="boda" multiple="">
                 </div>
                 @if ($docsReque->FECHAREQUE7==1)        
-                  <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechabodaa" required>
+                  <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechabodaa" value="<?php echo date('Y-m-d', strtotime($listdoc->FECHAVENCI7)) ?>" required>
                 @endif
               </div>
               @if($listdoc->CHECK7==1)
@@ -215,7 +215,7 @@
                   <input type="file" class="form-control cargador" name="titulo" multiple="">
                 </div>
                 @if ($docsReque->FECHAREQUE8==1)        
-                  <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechatitulo" required>
+                  <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechatitulo" value="<?php echo date('Y-m-d', strtotime($listdoc->FECHAVENCI8)) ?>" required>
                 @endif
               </div>
               @if($listdoc->CHECK8==1)
@@ -233,7 +233,7 @@
                   <input type="file" class="form-control cargador" name="antecedentes" multiple="">
                 </div>
                 @if ($docsReque->FECHAREQUE9==1)        
-                  <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechaante" required>
+                  <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechaante" value="<?php echo date('Y-m-d', strtotime($listdoc->FECHAVENCI9)) ?>" required>
                 @endif
               </div>
               @if($listdoc->CHECK9==1)
@@ -251,7 +251,7 @@
                   <input type="file" class="form-control cargador" name="contrato" multiple="">
                 </div>
                 @if ($docsReque->FECHAREQUE10==1)        
-                  <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechacontrato" required>
+                  <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechacontrato" value="<?php echo date('Y-m-d', strtotime($listdoc->FECHAVENCI10)) ?>" required>
                 @endif
               </div>
               @if($listdoc->CHECK10==1)
@@ -269,7 +269,7 @@
                   <input type="file" class="form-control cargador" name="curriculum" multiple="">
                 </div>
                 @if ($docsReque->FECHAREQUE11==1)        
-                  <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechacurri" required>
+                  <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechacurri" value="<?php echo date('Y-m-d', strtotime($listdoc->FECHAVENCI11)) ?>" required>
                 @endif
               </div>
               @if($listdoc->CHECK11==1)
@@ -287,7 +287,7 @@
                   <input type="file" class="form-control cargador" name="cedula" multiple="">
                 </div>
                 @if ($docsReque->FECHAREQUE12==1)        
-                  <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechacedula" required>
+                  <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechacedula" value="<?php echo date('Y-m-d', strtotime($listdoc->FECHAVENCI12)) ?>" required>
                 @endif
               </div>
               @if($listdoc->CHECK12==1)
@@ -305,7 +305,7 @@
                   <input type="file" class="form-control cargador" name="diplomas" multiple="">
                 </div>
                 @if ($docsReque->FECHAREQUE13==1)        
-                  <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechadiplo" required>
+                  <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechadiplo" value="<?php echo date('Y-m-d', strtotime($listdoc->FECHAVENCI13)) ?>" required>
                 @endif
               </div>
               @if($listdoc->CHECK13==1)
@@ -323,7 +323,7 @@
                   <input type="file" class="form-control cargador" name="certificaciones" multiple="">
                 </div>
                 @if ($docsReque->FECHAREQUE14==1)        
-                  <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechacerti" required>
+                  <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechacerti" value="<?php echo date('Y-m-d', strtotime($listdoc->FECHAVENCI14)) ?>" required>
                 @endif
               </div>
               @if($listdoc->CHECK14==1)
@@ -341,7 +341,7 @@
                   <input type="file" class="form-control cargador" name="licencia" multiple=""@if($docsReque->REQUERIDO15==1) {{'required'}}@endif>
                 </div>
                 @if ($docsReque->FECHAREQUE15==1)        
-                  <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechalicencia" required>
+                  <label>Introduce la fecha de vencimiento:&nbsp;&nbsp;</label> <input type="date" name="fechalicencia" value="<?php echo date('Y-m-d', strtotime($listdoc->FECHAVENCI15)) ?>" required>
                 @endif
               </div>
               @if($listdoc->CHECK15==1)
