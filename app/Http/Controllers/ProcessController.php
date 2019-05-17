@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Auth;
 use Session;
 use App\User;
 use App\CiasNo;
@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 use App\Notifications\MessageSent;
 use Illuminate\Support\Facades\Hash;
 use webcoder31\ezxmldsig\XMLDSigToken;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 
 class ProcessController extends Controller
@@ -20,13 +22,21 @@ class ProcessController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth');
+    	$this->middleware('auth');
         $this->middleware('database');
+    	
+        
     }
 
 
 	public function Nomina()
 	{
+		try {
+		    $control =Schema::connection('sqlsrv2')->hasTable('PERIODO');
+			} catch (\Exception $e) {
+				return redirect('/home');
+			    die("Could not connect to the database.  Please check your configuration. error:" . $e );
+			}
 		$selProceso = Session::get('selProceso');
 		$periodo = Periodo::where('TIPONO',$selProceso)->where('SWCIERRE','0')->first();
 		$perfil = auth()->user()->profile_id;

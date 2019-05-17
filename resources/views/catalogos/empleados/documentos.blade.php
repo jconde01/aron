@@ -257,7 +257,7 @@
               @if($listdoc->CHECK10==1)
                 <div style="width: 49%; float: right;"><img src="{{asset('/img/contrato.jpg')}}" width="200" height="250">
                   <br><br>
-                  <a href="/catalogos/documentos/empleados/{{$listdoc->NOMBRE10}}">Visualizar</a>
+                  <!-- <a href="/catalogos/documentos/empleados/{{$listdoc->NOMBRE10}}">Visualizar</a> -->
                 </div> 
               @endif
             </div>

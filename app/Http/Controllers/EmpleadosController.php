@@ -29,6 +29,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Schema;
 
 // DB::transaction(function () use($data) {
 // });
@@ -42,6 +43,12 @@ class EmpleadosController extends Controller
     }
 
     public function index(){  
+        try {
+            $control =Schema::connection('sqlsrv2')->hasTable('PERIODO');
+            } catch (\Exception $e) {
+                return redirect('/home');
+                die("Could not connect to the database.  Please check your configuration. error:" . $e );
+            }
 
         $selProceso = Session::get('selProceso');
     	$emps = Empleado::where('TIPONO', $selProceso)->get();
@@ -95,6 +102,12 @@ class EmpleadosController extends Controller
     }
 
     public function create() {
+        try {
+            $control =Schema::connection('sqlsrv2')->hasTable('PERIODO');
+            } catch (\Exception $e) {
+                return redirect('/home');
+                die("Could not connect to the database.  Please check your configuration. error:" . $e );
+            }
         $selProceso = Session::get('selProceso');
         $cliente = auth()->user()->client;
         if ($cliente->fiscal==1 && $cliente->asimilado==1){
@@ -2069,7 +2082,12 @@ class EmpleadosController extends Controller
     }
 
     public function edit($emp){
-        
+        try {
+            $control =Schema::connection('sqlsrv2')->hasTable('PERIODO');
+            } catch (\Exception $e) {
+                return redirect('/home');
+                die("Could not connect to the database.  Please check your configuration. error:" . $e );
+            }
         
         $empl = Empleado::where('EMP', $emp)->get()->first(); 
         $empl1 = DatosGe::where('EMP', $emp)->get()->first();
@@ -2467,7 +2485,12 @@ class EmpleadosController extends Controller
 
     public function documentos($emp)
     {  
-
+        try {
+            $control =Schema::connection('sqlsrv2')->hasTable('PERIODO');
+            } catch (\Exception $e) {
+                return redirect('/home');
+                die("Could not connect to the database.  Please check your configuration. error:" . $e );
+            }
         session(['emp' => $emp]);
         $selProceso = Session::get('selProceso');
 
@@ -2564,6 +2587,7 @@ class EmpleadosController extends Controller
         $rfc_empleado= $rfc_empleado1.$rfc_empleado2.$rfc_empleado3;
         $rutaEmpleados = Client::getRutaEmpleados($cliente->cell_id,  $rfc_cliente);
         $file = $rutaEmpleados.'/'.$rfc_empleado.'/documentos/';
+        $contratos = $rutaEmpleados.'/'.$rfc_empleado.'/contratos/';
          //dd($file);
 
         $listdoc = ListaDoc::where('EMP',$emp)->first();
@@ -2759,17 +2783,21 @@ class EmpleadosController extends Controller
             }
 
         $contrato = $request->file('contrato');
+        
            if ($contrato !== null) {
                 
                 $path = $file;
                 $extension = explode(".",$contrato->getClientOriginalName());
-                $fileName = 'contrato.'.$extension[1];
-                $moved10 =  $contrato->move($path, $fileName);
+                // $fileName = 'contrato.'.$extension[1];
+
+                $nombreoriginal = $contrato->getClientOriginalName();
+
+                $moved10 =  $contrato->move($contratos, $nombreoriginal);
                 
                 if ($moved10) {
                 //     // guarda la liga en la BD
                 $listdoc->CHECK10 = 1;
-                $listdoc->NOMBRE10 = $fileName;
+                $listdoc->NOMBRE10 = $nombreoriginal;
                 $listdoc->FECHAVENCI10 = $request->input('fechacompro');
                 
                     //dd('actualizada imagen');

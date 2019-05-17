@@ -55,7 +55,7 @@ class ConsultasController extends Controller
             }
 
         }
-
+ 
         $perfil = auth()->user()->profile->id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
         // dd('fin');
@@ -104,7 +104,7 @@ class ConsultasController extends Controller
         
         $cliente = Session::get('selCliente');
         $celula_empresa = Cell::where('id', $cliente->cell_id)->first()->nombre;
-        $rfc_cliente = Session::get('rfc_cliente');
+        $rfc_cliente = CiasNo::first()->RFCCTE;
         $file= Client::getRutaBase($cliente->cell_id,$rfc_cliente) . '/Recibos/'.$sub.'/'.$archivo;
         return Response::download($file);
     }
@@ -114,9 +114,9 @@ class ConsultasController extends Controller
         
         $cliente = Session::get('selCliente');
         $celula_empresa = Cell::where('id', $cliente->cell_id)->first()->nombre;
-        $rfc_cliente = Session::get('rfc_cliente');
+        $rfc_cliente = CiasNo::first()->RFCCTE;
         $rfc_empleado = Session::get('rfc_empleado');
-        $file = Client::gerRutaEmpleados($cliente->cell_id,$rfc_cliente) .'/'.$rfc_empleado.'/contratos/'.$archivo;
+        $file = Client::getRutaEmpleados($cliente->cell_id,$rfc_cliente) .'/'.$rfc_empleado.'/contratos/'.$archivo;
         return Response()->file($file);
         //return Response::download($file);
     }
@@ -177,7 +177,7 @@ class ConsultasController extends Controller
         
         $cliente = Session::get('selCliente');
         $celula_empresa = Cell::where('id', $cliente->cell_id)->first()->nombre;
-        $rfc_cliente = Session::get('rfc_cliente');
+        $rfc_cliente = CiasNo::first()->RFCCTE;
         $file = Client::getRutaDocumentos($cliente->cell_id,$rfc_cliente).'/'.$subcarpeta.'/'.$archivo;
         return Response()->file($file);
         //return Response::download($file);
