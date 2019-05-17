@@ -104,23 +104,6 @@ h6{
   text-decoration: none;
   padding: 7px 23px 7px 23px!important;  
 }
-
-#tab5
-{
-  width: 20%; 
-  border-top: 0px; 
-  border-left: 0px; 
-  border-right: 0px; 
-  border-bottom: 2px rgb(179, 215, 243) solid;
-  border-radius: 0px; 
-  background-color: white!important; 
-}
-#a5
-{
-  font-size: 13px;
-  text-decoration: none;
-  padding: 7px 23px 7px 23px!important;  
-}
 table {
   text-align: left;
 }
@@ -414,9 +397,6 @@ table {
     .navvar{
         margin: auto !important;
         max-width: 1200px;
-    }
-    #GSCCModal2{
-      margin-left: 210px;
     }
 }
 
