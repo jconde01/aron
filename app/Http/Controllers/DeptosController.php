@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Depto;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class DeptosController extends Controller
 {
@@ -16,6 +17,12 @@ class DeptosController extends Controller
     
     public function index()
     {
+        try {
+            $control =Schema::connection('sqlsrv2')->hasTable('PERIODO');
+            } catch (\Exception $e) {
+                return redirect('/home');
+                die("Could not connect to the database.  Please check your configuration. error:" . $e );
+            }
         $deps = Depto::all();
         $deptos = Depto::all();
         $perfil = auth()->user()->profile->id;        
@@ -26,6 +33,12 @@ class DeptosController extends Controller
 
     public function create()
     {
+        try {
+            $control =Schema::connection('sqlsrv2')->hasTable('PERIODO');
+            } catch (\Exception $e) {
+                return redirect('/home');
+                die("Could not connect to the database.  Please check your configuration. error:" . $e );
+            }
         $deps = Depto::all();
         $depto = Depto::all()->last();
         $perfil = auth()->user()->profile->id;        
@@ -51,7 +64,12 @@ class DeptosController extends Controller
 
     public function edit($dep)
     {
-        
+        try {
+            $control =Schema::connection('sqlsrv2')->hasTable('PERIODO');
+            } catch (\Exception $e) {
+                return redirect('/home');
+                die("Could not connect to the database.  Please check your configuration. error:" . $e );
+            }
         $depto = Depto::where('DEPTO', $dep)->get()->first();
         $deps = Depto::all();
         $perfil = auth()->user()->profile->id;        

@@ -13,6 +13,7 @@ use App\Empleado;
 use App\Checklist;
 use setasign\Fpdi\Fpdi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 
 class ConsultasController extends Controller
 {
@@ -25,6 +26,12 @@ class ConsultasController extends Controller
 
     public function index()
     {
+        try {
+            $control =Schema::connection('sqlsrv2')->hasTable('PERIODO');
+            } catch (\Exception $e) {
+                return redirect('/home');
+                die("Could not connect to the database.  Please check your configuration. error:" . $e );
+            }
     	$selProceso = Session::get('selProceso');
     	$emps = Empleado::where('TIPONO', $selProceso)->get();
 		$perfil = auth()->user()->profile->id;        
@@ -35,6 +42,12 @@ class ConsultasController extends Controller
      public function consulta($RFC)
      // -------------------Recibos de empleados---------------------------
     { 
+        try {
+            $control =Schema::connection('sqlsrv2')->hasTable('PERIODO');
+            } catch (\Exception $e) {
+                return redirect('/home');
+                die("Could not connect to the database.  Please check your configuration. error:" . $e );
+            }
         $rfc_cliente = CiasNo::first()->RFCCTE;
         session(['rfc_cliente' => $rfc_cliente]);
         $rfc_empleado0 = $RFC;
@@ -64,7 +77,12 @@ class ConsultasController extends Controller
 
     public function indexContrato()
     {
-
+        try {
+            $control =Schema::connection('sqlsrv2')->hasTable('PERIODO');
+            } catch (\Exception $e) {
+                return redirect('/home');
+                die("Could not connect to the database.  Please check your configuration. error:" . $e );
+            }
     	$selProceso = Session::get('selProceso');
     	$emps = Empleado::where('TIPONO', $selProceso)->get();
 		$perfil = auth()->user()->profile->id;        
@@ -74,6 +92,12 @@ class ConsultasController extends Controller
 
      public function consultaContrato($RFC)
     {
+        try {
+            $control =Schema::connection('sqlsrv2')->hasTable('PERIODO');
+            } catch (\Exception $e) {
+                return redirect('/home');
+                die("Could not connect to the database.  Please check your configuration. error:" . $e );
+            }
         $rfc_cliente = CiasNo::first()->RFCCTE;
         $rfc_empleado0 = $RFC;
         $rfc_empleado1=substr ($rfc_empleado0, 0,4);
@@ -123,6 +147,12 @@ class ConsultasController extends Controller
 
     public function documentos() 
     {
+        try {
+            $control =Schema::connection('sqlsrv2')->hasTable('PERIODO');
+            } catch (\Exception $e) {
+                return redirect('/home');
+                die("Could not connect to the database.  Please check your configuration. error:" . $e );
+            }
         $rfc_cliente = CiasNo::first()->RFCCTE;
         session(['rfc_cliente' => $rfc_cliente]);
         $cliente = Session::get('selCliente');
@@ -147,7 +177,12 @@ class ConsultasController extends Controller
 
     public function subCarpetas($subcarpeta) 
     {
-        
+        try {
+            $control =Schema::connection('sqlsrv2')->hasTable('PERIODO');
+            } catch (\Exception $e) {
+                return redirect('/home');
+                die("Could not connect to the database.  Please check your configuration. error:" . $e );
+            }
         $rfc_cliente = CiasNo::first()->RFCCTE;
         session(['rfc_cliente' => $rfc_cliente]);
         $cliente = Session::get('selCliente');
@@ -186,6 +221,12 @@ class ConsultasController extends Controller
 
     public function checklist()
     {
+        try {
+            $control =Schema::connection('sqlsrv2')->hasTable('PERIODO');
+            } catch (\Exception $e) {
+                return redirect('/home');
+                die("Could not connect to the database.  Please check your configuration. error:" . $e );
+            }
         $checks = Checklist::check;
         $lists = Checklist::where('CELULA',auth()->user()->cell_id)->get();
         $clientes = Client::get();
