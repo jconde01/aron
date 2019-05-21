@@ -37,11 +37,18 @@
         <link rel="stylesheet" type="text/css" href="{{ asset('css/jquery.dataTables.css')}}">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script type="text/javascript" charset="utf8" src="{{ asset('js/jquery.dataTables.js')}}"></script>
+        <script src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script> -->
+        <!-- <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.flash.min.js"></script> -->
+        <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.html5.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.print.min.js"></script>
         <!-- fin datatables -->         
 
         <!-- graficas  -->
         <!-- <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script> -->
-        <script src=" {{ asset('js/highcharts.js')}} "></script>
+        <!-- <script src=" {{ asset('js/highcharts.js')}} "></script> -->
+        <script src="https://code.highcharts.com/highcharts.js"></script>
         <script src="https://code.highcharts.com/modules/exporting.js"></script>
         <script src="https://code.highcharts.com/modules/export-data.js"></script>
         <script src="https://code.highcharts.com/modules/drilldown.js"></script>     
@@ -75,10 +82,9 @@
     <!--  Plugin for the Sliders, full documentation here: http://refreshless.com/nouislider/ -->
     <!-- <script src="{{ asset('/js/nouislider.min.js') }}" type="text/javascript"></script> -->
 
-    <script type="text/javascript" src="{{ asset('/js/XHR.js') }}"></script>
+   
 
-    <!--  Plugin for the Datepicker, full documentation here: http://www.eyecon.ro/bootstrap-datepicker/ -->
-    <script type="text/javascript" src="{{ asset('/js/bootstrap-datepicker.js') }}"></script>
+   
     <!--  Plugin for the sidebar menu -->    
     <script type="text/javascript" src="{{ asset('/js/hc-offcanvas-nav.js') }}"></script>
     <script type="text/javascript">
