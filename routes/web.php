@@ -189,7 +189,11 @@ Route::middleware(['auth'])->prefix('consultas')->group(function () {
 	Route::get('/descargaDocumentos/{subcarpeta}/{archivo}','ConsultasController@descargaDoc');
 	Route::get('/checklist','ConsultasController@checklist');
 	Route::post('/checklist','ConsultasController@getDatosChecklist');
-	Route::post('/checklist/actualizar','ConsultasController@checklistUpdate');	 	
+	Route::post('/checklist/actualizar','ConsultasController@checklistUpdate');	
+
+	 Route::get('reportes','ReportesController@index');
+	 Route::post('/get-reporte','ReportesController@reporte');	
+	 Route::post('/get-reportePeriodo','ReportesController@reportePeriodo');
 });
 
 
