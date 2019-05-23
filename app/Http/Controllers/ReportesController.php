@@ -10,6 +10,9 @@ use App\ca2019Asimi;
 use App\Control;
 use App\ControlAsimi;
 use App\Empleado;
+use App\VarCostoActual;
+use App\VarCostoAnoA;
+use App\VariacionEstra;
 use Illuminate\Support\Facades\Schema;
 use DB;
 use App\Imss;
@@ -28,14 +31,18 @@ class ReportesController extends Controller
         $this->middleware('databaseAsimi');
     }
 
+
+
      public function index()
     { 
+     
       try {
         $control =Schema::connection('sqlsrv2')->hasTable('PERIODO');
       } catch (\Exception $e) {
         return redirect('/home');
           die("Could not connect to the database.  Please check your configuration. error:" . $e );
-      }  
+      }
+
       $perfil = auth()->user()->profile_id;        
       $navbar = ProfileController::getNavBar('',0,$perfil);
       $control = Control::select('PERIANO')
@@ -46,16 +53,24 @@ class ReportesController extends Controller
                           ->where('PERIODO','>',201854)
                           ->get();
      
-      $NoEmp = Empleado::get();
+      $NoEmp = Empleado::where('ESTATUS','!=','B')->get();;
       $NoEmp = count($NoEmp);
-    	return view('/formato1')->with(compact('control','navbar','NoEmp','controlPeriodos'));
+      if (auth()->user()->client_id == 8) {
+          $costos = VarCostoActual::get();
+          $costoAnoAs = VarCostoAnoA::get();
+          $variaciones = VariacionEstra::get();
+          $bandera = 1;
+          return view('/formato1')->with(compact('control','navbar','NoEmp','controlPeriodos','costos','costoAnoAs','variaciones','bandera'));
+        }
+      $bandera = 0; 
+    	return view('/formato1')->with(compact('control','navbar','NoEmp','controlPeriodos','bandera'));
     	
     }
 
   public function reporte(Request $periano)
     {
       
-        $empleados = EMPLEADO::get();
+        $empleados = EMPLEADO::where('ESTATUS','!=','B')->get();;
         for ($i=0; $i <count($empleados) ; $i++) { 
           $array[$i][0] = $empleados[$i]->NOMBRE;
           $array[$i][1] = 0;
@@ -241,7 +256,7 @@ class ReportesController extends Controller
   public function GetDatos($concepto,$periano) { 
  
          $datos  = DB::connection('sqlsrv2')->table('EMPLEADO')
-                        
+                        ->where('ESTATUS','!=','B')
                         ->join('ca2019','EMPLEADO.EMP','=','ca2019.EMP')
                         ->select('NOMBRE','ca2019.EMP',DB::raw('SUM(UNIDADES) as total_unidades'))
                         ->groupBy('NOMBRE','ca2019.EMP')
@@ -259,7 +274,7 @@ class ReportesController extends Controller
   public function reportePeriodo(Request $periodo)
     {
       
-        $empleados = EMPLEADO::get();
+        $empleados = EMPLEADO::where('ESTATUS','!=','B')->get();
         for ($i=0; $i <count($empleados) ; $i++) { 
           $array[$i][0] = $empleados[$i]->NOMBRE;
           $array[$i][1] = 0;
@@ -445,7 +460,7 @@ class ReportesController extends Controller
   public function GetDatosPeriodo($concepto,$periodo) { 
  
          $datos  = DB::connection('sqlsrv2')->table('EMPLEADO')
-                        
+                        ->where('ESTATUS','!=','B')
                         ->join('ca2019','EMPLEADO.EMP','=','ca2019.EMP')
                         ->select('NOMBRE','ca2019.EMP',DB::raw('SUM(UNIDADES) as total_unidades'))
                         ->groupBy('NOMBRE','ca2019.EMP')
