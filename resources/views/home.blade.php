@@ -2,7 +2,16 @@
   
 @section('title','Aron | Menú')
 @section('body-class','')
+@section('google')
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({
+                  google_ad_client: "ca-pub-4921973100573207",
+                  enable_page_level_ads: true
+             });
+        </script>
 
+@endsection
 @section('content')
 @if (isset($graficas->mensaje))
 @if ($graficas->mensaje==1)<h1 align="center" style="color: rgb(0, 190, 239);">Bienvenido a la plataforma en línea ARON!</h1>@endif
@@ -27,11 +36,15 @@
             @endif
 
             @if ($graficas->grafica3==1)
-              <li class="tab-group-item pestanas" id="tab3" style="{{ $graficas->grafica1!==1 && $graficas->grafica2!==1? 'border-bottom: 0px;border-left: 2px rgb(179, 215, 243) solid; border-right: 2px rgb(179, 215, 243) solid;border-top: 2px rgb(179, 215, 243) solid;':'' }}" onClick="cambiar_color_over(this)"><a class="tabmovil" id="a3" data-toggle="tab" href="#datosg">Faltas y Horas Extras</a></li>
+              <li class="tab-group-item pestanas" id="tab3" style="{{ $graficas->grafica1!==1 && $graficas->grafica2!==1? 'border-bottom: 0px;border-left: 2px rgb(179, 215, 243) solid; border-right: 2px rgb(179, 215, 243) solid;border-top: 2px rgb(179, 215, 243) solid;':'' }}" onClick="cambiar_color_over(this)"><a class="tabmovil" id="a3" data-toggle="tab" href="#datosg">Faltas</a></li>
             @endif
 
             @if ($graficas->grafica4==1)
-               <li class="tab-group-item pestanas" id="tab4" style="{{ $graficas->grafica1!==1 && $graficas->grafica2!==1 && $graficas->grafica3!==1? 'border-bottom: 0px;border-left: 2px rgb(179, 215, 243) solid; border-right: 2px rgb(179, 215, 243) solid;border-top: 2px rgb(179, 215, 243) solid;':'' }}" onClick="cambiar_color_over(this)"><a class="tabmovil" id="a4" data-toggle="tab" href="#datosa">Distribucion de Edades</a></li>
+              <li class="tab-group-item pestanas" id="tab4" style="{{ $graficas->grafica1!==1 && $graficas->grafica2!==1 && $graficas->grafica3!==1? 'border-bottom: 0px;border-left: 2px rgb(179, 215, 243) solid; border-right: 2px rgb(179, 215, 243) solid;border-top: 2px rgb(179, 215, 243) solid;':'' }}" onClick="cambiar_color_over(this)"><a class="tabmovil" id="a4" data-toggle="tab" href="#horas">Horas Extras</a></li>
+            @endif
+
+            @if ($graficas->grafica5==1)
+               <li class="tab-group-item pestanas" id="tab5" style="{{ $graficas->grafica1!==1 && $graficas->grafica2!==1 && $graficas->grafica3!==1 && $graficas->grafica4!==1? 'border-bottom: 0px;border-left: 2px rgb(179, 215, 243) solid; border-right: 2px rgb(179, 215, 243) solid;border-top: 2px rgb(179, 215, 243) solid;':'' }}" onClick="cambiar_color_over(this)"><a class="tabmovil" id="a5" data-toggle="tab" href="#datosa">Distribucion de Edades</a></li>
             </ul>
             @endif
 
@@ -72,6 +85,16 @@
 							@endif
 			            </div>
 
+			            <div id="horas" class="tab-pane fade{{ $graficas->grafica1!==1 && $graficas->grafica2!==1? 'in active':'' }}">
+			            	@if ($graficas->grafica3==1)
+							<div style="">
+								<div id="horas" style="margin: 0 auto">
+								</div>
+							</div>
+							<br>
+							@endif
+			            </div>
+
 			            <div id="datosa" class="tab-pane fade{{ $graficas->grafica1!==1 && $graficas->grafica2!==1 && $graficas->grafica3!==1? 'in active':'' }}">
 			            	@if ($graficas->grafica4==1)
 							<div style="">
@@ -88,11 +111,6 @@
 					    </div>
 		            </div>
 		</div>
-	<style type="text/css">
-		a{
-			bor
-		}
-	</style>
     
 </div> 
 
@@ -113,7 +131,7 @@
 				defaultSeriesType: 'line'	// Pongo que tipo de gráfica es
 			},
 			title: {
-				text: 'Faltas y Horas Extras'	// Titulo (Opcional)
+				text: 'Faltas'	// Titulo (Opcional)
 			},
 			subtitle: {
 				text: 'Vally.com'		// Subtitulo (Opcional)
@@ -155,8 +173,60 @@
 			                name: 'Faltas Injustificadas',
 			                data: [<?php if (isset($data)) { print_r($data[0])?>,<?php print_r($data[1])?>,<?php print_r($data[2])?>,<?php print_r($data[3])?>,<?php print_r($data[4])?>,<?php print_r($data[5])?>,<?php print_r($data[6])?>,<?php print_r($data[7])?>,<?php print_r($data[8])?>,<?php print_r($data[9])?>,<?php print_r($data[10])?>,<?php print_r($data[11]);
 			                }?>]
-			            },
-			            {
+			            }],
+			});	
+		});				
+</script>
+
+<script type="text/javascript">
+	var chart;
+	$(document).ready(function() {
+
+		chart = new Highcharts.Chart({
+			chart: {
+				renderTo: 'horas', 	// Le doy el nombre a la gráfica
+				defaultSeriesType: 'line'	// Pongo que tipo de gráfica es
+			},
+			title: {
+				text: 'Horas Extras'	// Titulo (Opcional)
+			},
+			subtitle: {
+				text: 'Vally.com'		// Subtitulo (Opcional)
+			},
+			// Pongo los datos en el eje de las 'X'
+			xAxis: {
+				categories: ['Ene19','Feb19','Mar19','Abr19','May19','Jun19','Jul19','Ago19','Sep19','Oct19',
+	'Nov19','Dic19'],
+					// Pongo el título para el eje de las 'X'
+					title: {
+						text: 'Meses'
+					}
+				},
+				yAxis: {
+					// Pongo el título para el eje de las 'Y'
+					title: {
+						text: 'Rango'
+					}
+				},
+				// Doy formato al la "cajita" que sale al pasar el ratón por encima de la gráfica
+				tooltip: {
+					enabled: true,
+					formatter: function() {
+						return '<b>'+ this.series.name +'</b><br/>'+
+							this.x +': '+ this.y +' '+this.series.name;
+					}
+				},
+				// Doy opciones a la gráfica
+				plotOptions: {
+					line: {
+						dataLabels: {
+							enabled: true
+						},
+						enableMouseTracking: true
+					}
+				},
+				// Doy los datos de la gráfica para dibujarlas
+				series: [{
 			                name: 'Horas extras',
 			                data: [<?php if (isset($data2)) { 
 			                	print_r($data2[0])?>,<?php print_r($data2[1])?>,<?php print_r($data2[2])?>,<?php print_r($data2[3])?>,<?php print_r($data2[4])?>,<?php print_r($data2[5])?>,<?php print_r($data2[6])?>,<?php print_r($data2[7])?>,<?php print_r($data2[8])?>,<?php print_r($data2[9])?>,<?php print_r($data2[10])?>,<?php print_r($data2[11]);
