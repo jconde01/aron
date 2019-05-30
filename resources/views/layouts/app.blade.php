@@ -59,13 +59,16 @@
         <!-- <link rel="stylesheet" href="{{ asset('css/demo.css') }}" /> -->
         <!-- --------------------google--------------------------- -->
         @yield('google')
-        <!-- <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-141215421-1"></script>
         <script>
-             (adsbygoogle = window.adsbygoogle || []).push({
-                  google_ad_client: "ca-pub-4921973100573207",
-                  enable_page_level_ads: true
-             });
-        </script> -->
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'UA-141215421-1');
+        </script>
+
     </head>
 <?php 
  
