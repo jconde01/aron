@@ -35,94 +35,87 @@ class ReportesController extends Controller
 
      public function index()
     { 
-      // $periodo = 201917;
-      //   $fiscal = $this::fiscal($periodo);
-      //   $asimilado = $this::asimilado($periodo);
+        // $fiscal = $this::fiscal(201911);
+        // $asimilado = $this::asimilado(201911);
         
         
-      //     //termino de calcular los campos para la tabla
-      //     for ($i=0; $i <count($fiscal) ; $i++) { 
-      //       foreach ($asimilado as $percepcion) {
-      //         if ($fiscal[$i]->NOMBRE==$percepcion->NOMBRE) {
-      //           $fiscal[$i]->asimilado = $percepcion->total_importe;
-      //            $fiscal[$i]->total_periodo_actual = $fiscal[$i]->asimilado + $fiscal[$i]->total_fiscal;
-      //         }
-      //       }
-      //     }
-      //   //preparo el arrelgo para regresar por ajax
-      //     for ($i=0; $i <count($fiscal) ; $i++) { 
-      //       $array[$i][0] = $fiscal[$i]->NOMBRE;
-      //       // $array[$i][1] = $fiscal[$i]->EMP;
-      //       // $array[$i][2] = $fiscal[$i]->PERIODO;
-      //       $array[$i][1] = round($fiscal[$i]->total_importe,2);
-      //       $array[$i][2] = round($fiscal[$i]->provision,2);
-      //       $array[$i][3] = round($fiscal[$i]->total_fiscal,2);
-      //       if (!isset($fiscal[$i]->asimilado)) {
-      //         $fiscal[$i]->asimilado = 0;
-      //         $fiscal[$i]->total_periodo_actual = $fiscal[$i]->total_fiscal;
-      //       }
-      //       $array[$i][4] = round($fiscal[$i]->asimilado,2); 
-      //       $array[$i][5] = round($fiscal[$i]->total_periodo_actual,2);
-      //       $array[$i][6] = 0;
-      //       $array[$i][7] = 0;
-      //       $array[$i][8] = 0;
+        //   //termino de calcular los campos para la tabla
+        //   for ($i=0; $i <count($fiscal) ; $i++) { 
+        //     foreach ($asimilado as $percepcion) {
+        //       if ($fiscal[$i]->NOMBRE==$percepcion->NOMBRE) {
+        //         $fiscal[$i]->asimilado = $percepcion->total_importe;
+        //          $fiscal[$i]->total_periodo_actual = $fiscal[$i]->asimilado + $fiscal[$i]->total_fiscal;
+        //       }
+        //     }
+        //   }
+        // //preparo el arrelgo para regresar por ajax
+        //   for ($i=0; $i <count($fiscal) ; $i++) { 
+        //     $array[$i][0] = $fiscal[$i]->NOMBRE;
+        //     // $array[$i][1] = $fiscal[$i]->EMP;
+        //     // $array[$i][2] = $fiscal[$i]->PERIODO;
+        //     $array[$i][1] = round($fiscal[$i]->total_importe,2);
+        //     $array[$i][2] = round($fiscal[$i]->provision,2);
+        //     $array[$i][3] = round($fiscal[$i]->total_fiscal,2);
+        //     if (!isset($fiscal[$i]->asimilado)) {
+        //       $fiscal[$i]->asimilado = 0;
+        //       $fiscal[$i]->total_periodo_actual = $fiscal[$i]->total_fiscal;
+        //     }
+        //     $array[$i][4] = round($fiscal[$i]->asimilado,2); 
+        //     $array[$i][5] = round($fiscal[$i]->total_periodo_actual,2);
+        //     $array[$i][6] = 0;
+        //     $array[$i][7] = 0;
+        //     $array[$i][8] = 0;
             
-      //     }
-          
-      //      $total[1]=0;
-      //      $total[2]=0;
-      //      $total[3]=0;
-      //     //---------Periodo anterior--------------------
-      //     $periodo = '2018'.substr($periodo, 4, 2);
-          
-      //       $fiscal = $this::fiscalAnoA($periodo);
-      //       $asimilado = $this::asimiladoAnoA($periodo);
-           
-             
-      //         //termino de calcular los campos para la tabla
-      //         for ($i=0; $i <count($fiscal) ; $i++) { 
-      //           foreach ($asimilado as $percepcion) {
-      //             if ($fiscal[$i]->NOMBRE==$percepcion->NOMBRE) {
-      //               $fiscal[$i]->asimilado = $percepcion->total_importe;
-      //               if (!isset($fiscal[$i]->total_fiscal)) {
-      //                 $fiscal[$i]->total_fiscal = 0;
-      //               }
-      //                $fiscal[$i]->total_periodo_actual = $fiscal[$i]->asimilado + $fiscal[$i]->total_fiscal;
-      //             }
-      //           }
-      //         }
-              
-      //     //agrego el total del periodo anterior al array
-      //     for ($i=0; $i <count($array) ; $i++) { 
-      //       foreach ($fiscal as $fisca) {
+        //   }
+        //   dd($array);
+        //    $total[1]=0;
+        //    $total[2]=0;
+        //    $total[3]=0;
+        //   //---------Periodo anterior--------------------
+        //     $fiscal = $this::fiscal($periodo->tipo);
+        //     $asimilado = $this::asimilado($periodo->tipo);
+            
+            
+        //       //termino de calcular los campos para la tabla
+        //       for ($i=0; $i <count($fiscal) ; $i++) { 
+        //         foreach ($asimilado as $percepcion) {
+        //           if ($fiscal[$i]->NOMBRE==$percepcion->NOMBRE) {
+        //             $fiscal[$i]->asimilado = $percepcion->total_importe;
+        //              $fiscal[$i]->total_periodo_actual = $fiscal[$i]->asimilado + $fiscal[$i]->total_fiscal;
+        //           }
+        //         }
+        //       }
+        //      // dd($fiscal);
+        //   //agrego el total del periodo anterior al array
+        //   for ($i=0; $i <count($array) ; $i++) { 
+        //     foreach ($fiscal as $fisca) {
 
-      //         if ($array[$i][0]==$fisca->NOMBRE) {
-      //           if (!isset($fisca->asimilado)) {
-      //         $fisca->asimilado = 0;
-      //         $fisca->total_periodo_actual = $fisca->total_fiscal;
-      //       }
-      //         $array[$i][6] = round($fisca->total_periodo_actual,2);
-      //         $variacionP = $array[$i][5]-$fisca->total_periodo_actual;
-      //         $array[$i][7] = round(abs($variacionP),2);
+        //       if ($array[$i][0]==$fisca->NOMBRE) {
+        //         if (!isset($fisca->asimilado)) {
+        //       $fisca->asimilado = 0;
+        //       $fisca->total_periodo_actual = $fisca->total_fiscal;
+        //     }
+        //       $array[$i][6] = round($fisca->total_periodo_actual,2);
+        //       $variacionP = $array[$i][5]-$fisca->total_periodo_actual;
+        //       $array[$i][7] = round(abs($variacionP),2);
               
-      //         if ($array[$i][7]!==0.0) {
-      //        $porcentaje = Round(($array[$i][7]/ $array[$i][5])*100, 2);
-      //       }else{
-      //         $porcentaje = 0;
-      //       }
+        //       if ($array[$i][7]!==0.0) {
+        //      $porcentaje = Round(($array[$i][7]/ $array[$i][5])*100, 2);
+        //     }else{
+        //       $porcentaje = 0;
+        //     }
               
-      //         $array[$i][8] = $porcentaje.'%';
-      //         $nombres[$i] = $array[$i][0];
-      //       $despliega[$i] = $array[$i][5];
-      //       $despliega2[$i] = $array[$i][6];
-      //       $total[1] = $total[1]+$array[$i][7];
-      //       $total[2] = $total[2]+$array[$i][5];
-      //       $total[3] = $total[3]+$array[$i][6];
-      //         }
-      //       }
-      //     }
-          
-      //          dd($total,$array);
+        //       $array[$i][8] = $porcentaje.'%';
+        //       $nombres[$i] = $array[$i][0];
+        //     $despliega[$i] = $array[$i][5];
+        //     $despliega2[$i] = $array[$i][6];
+        //     $total[1] = $total[1]+$array[$i][7];
+        //     $total[2] = $total[2]+$array[$i][5];
+        //     $total[3] = $total[3]+$array[$i][6];
+        //       }
+        //     }
+        //   }
+        //        dd($total);
             
       //---------------------fin-----------------------------------//
      
@@ -473,7 +466,7 @@ class ReportesController extends Controller
           foreach ($suspenciones as $suspencion) {
             for ($i=0; $i < count($array) ; $i++) { 
               if ($array[$i][0]==$suspencion->NOMBRE) {
-                $array[$i][9] = $suspencion->total_unidades*-1;
+                $array[$i][9] = $suspencion->total_unidades*1;
                 
               }
             }
@@ -596,7 +589,6 @@ class ReportesController extends Controller
          $total[2]=0;
          $total[3]=0;
         //---------Periodo anterior--------------------
-          $periodo->tipo = $periodo->tipo-1;
           $fiscal = $this::fiscal($periodo->tipo);
           $asimilado = $this::asimilado($periodo->tipo);
           
@@ -688,39 +680,17 @@ class ReportesController extends Controller
                         ->where('ProvisionAcumula.Periodo',$periodo)
                         ->get();
 
-        // for ($i=0; $i <count($datos) ; $i++) { 
-        //   foreach ($provisiones as $provision) {
-        //     if ($datos[$i]->EMP==$provision->Empleado) {
+        for ($i=0; $i <count($datos) ; $i++) { 
+          foreach ($provisiones as $provision) {
+            if ($datos[$i]->EMP==$provision->Empleado) {
 
-        //      $datos[$i]->provision = $provision->ImpEstatal+$provision->PImss+$provision->PSar+$provision->PInfonavit;
-        //      //sumamos el sueldo fiscal + las provisiones
-        //      $datos[$i]->total_fiscal = $datos[$i]->total_importe+$datos[$i]->provision;
+             $datos[$i]->provision = $provision->ImpEstatal+$provision->PImss+$provision->PSar+$provision->PInfonavit;
+             //sumamos el sueldo fiscal + las provisiones
+             $datos[$i]->total_fiscal = $datos[$i]->total_importe+$datos[$i]->provision;
 
-        //     }
-        //   }
-        // }
-
-        if (!isset($provisiones[0])) {
-          for ($i=0; $i <count($datos) ; $i++) { 
-               $datos[$i]->total_fiscal = $datos[$i]->total_importe;
-               $datos[$i]->provision = 0;
-                   //sumamos el sueldo fiscal + las provisiones
-                   $datos[$i]->total_fiscal = $datos[$i]->total_importe+$datos[$i]->provision;
-               
-              }
-            }else{
-              for ($i=0; $i <count($datos) ; $i++) { 
-                foreach ($provisiones as $provision) {
-                  if ($datos[$i]->EMP==$provision->Empleado) {
-
-                   $datos[$i]->provision = $provision->ImpEstatal+$provision->PImss+$provision->PSar+$provision->PInfonavit;
-                   //sumamos el sueldo fiscal + las provisiones
-                   $datos[$i]->total_fiscal = $datos[$i]->total_importe+$datos[$i]->provision;
-                   
-                  }
-                }
-              }
             }
+          }
+        }
 
       return $datos;
   }
@@ -762,204 +732,6 @@ class ReportesController extends Controller
           }
         }
     return $percepciones;
-  }
-
-  public function fiscalAnoA($periodo)
-  {
-    //consulta de las percepciones
-        $percepciones  = DB::connection('sqlsrv2')->table('EMPLEADO')
-                        ->where('ESTATUS','!=','B')
-                        ->join('ca2018','EMPLEADO.EMP','=','ca2018.EMP')
-                        ->select('NOMBRE','ca2018.EMP',DB::raw('SUM(IMPORTE) as total_importe'))
-                        ->groupBy('NOMBRE','ca2018.EMP')
-                        ->where('ca2018.CONCEPTO','<', 500)
-                        ->join('CONTROL','ca2018.PERIODO','=','CONTROL.PERIODO')
-                        ->select('NOMBRE','ca2018.EMP','CONTROL.PERIODO',DB::raw('SUM(IMPORTE) as total_importe'))
-                        ->groupBy('NOMBRE','ca2018.EMP','CONTROL.PERIODO')
-                        ->where('CONTROL.PERIODO',$periodo)
-                        ->get();
-                      
-      //consultas de las deducciones
-        $deducciones  = DB::connection('sqlsrv2')->table('EMPLEADO')
-                        ->where('ESTATUS','!=','B')
-                        ->join('ca2018','EMPLEADO.EMP','=','ca2018.EMP')
-                        ->select('NOMBRE','ca2018.EMP',DB::raw('SUM(IMPORTE) as total_import'))
-                        ->groupBy('NOMBRE','ca2018.EMP')
-                        ->where('ca2018.CONCEPTO','>', 499)
-                        ->join('CONTROL','ca2018.PERIODO','=','CONTROL.PERIODO')
-                        ->select('NOMBRE','ca2018.EMP','CONTROL.PERIODO',DB::raw('SUM(IMPORTE) as total_import'))
-                        ->groupBy('NOMBRE','ca2018.EMP','CONTROL.PERIODO')
-                        ->where('CONTROL.PERIODO',$periodo)
-                        ->get();
-
-        //percepciones - deducciones para obtener el sueldo neto
-        for ($i=0; $i < count($percepciones) ; $i++) { 
-          foreach ($deducciones as $deduccione) {
-            if ($percepciones[$i]->NOMBRE == $deduccione->NOMBRE) {
-              $percepciones[$i]->total_importe= $percepciones[$i]->total_importe-$deduccione->total_import;
-            }
-          }
-        }
-        $datos = $percepciones;
-
-        $provisiones = DB::connection('sqlsrv2')->table('EMPLEADO')
-                        ->where('ESTATUS','!=','B')
-                        ->join('ProvisionAcumula','EMPLEADO.EMP','=','ProvisionAcumula.Empleado')
-                        ->select('NOMBRE','ProvisionAcumula.Empleado','ProvisionAcumula.ImpEstatal','ProvisionAcumula.PImss','ProvisionAcumula.PSar','ProvisionAcumula.PInfonavit')
-                        ->where('ProvisionAcumula.Periodo',$periodo)
-                        ->get();
-        if (!isset($provisiones[0])) {
-          for ($i=0; $i <count($datos) ; $i++) { 
-               $datos[$i]->total_fiscal = $datos[$i]->total_importe;
-               
-              }
-            }else{
-              for ($i=0; $i <count($datos) ; $i++) { 
-                foreach ($provisiones as $provision) {
-                  if ($datos[$i]->EMP==$provision->Empleado) {
-
-                   $datos[$i]->provision = $provision->ImpEstatal+$provision->PImss+$provision->PSar+$provision->PInfonavit;
-                   //sumamos el sueldo fiscal + las provisiones
-                   $datos[$i]->total_fiscal = $datos[$i]->total_importe+$datos[$i]->provision;
-                   
-                  }
-                }
-              }
-            }
-          
-        
-        
-        
-
-      return $datos;
-  }
-
-  public function asimiladoAnoA($periodo)
-  {
-    //--------------parte de asimilado-----------------------------------------------
-        //consulta de las percepciones
-        $percepciones  = DB::connection('sqlsrv3')->table('EMPLEADO')
-                        ->where('ESTATUS','!=','B')
-                        ->join('ca2018','EMPLEADO.EMP','=','ca2018.EMP')
-                        ->select('NOMBRE','ca2018.EMP',DB::raw('SUM(IMPORTE) as total_importe'))
-                        ->groupBy('NOMBRE','ca2018.EMP')
-                        ->where('ca2018.CONCEPTO','<', 500)
-                        ->join('CONTROL','ca2018.PERIODO','=','CONTROL.PERIODO')
-                        ->select('NOMBRE','ca2018.EMP','CONTROL.PERIODO',DB::raw('SUM(IMPORTE) as total_importe'))
-                        ->groupBy('NOMBRE','ca2018.EMP','CONTROL.PERIODO')
-                        ->where('CONTROL.PERIODO',$periodo)
-                        ->get();
-      //consultas de las deducciones
-        $deducciones  = DB::connection('sqlsrv3')->table('EMPLEADO')
-                        ->where('ESTATUS','!=','B')
-                        ->join('ca2018','EMPLEADO.EMP','=','ca2018.EMP')
-                        ->select('NOMBRE','ca2018.EMP',DB::raw('SUM(IMPORTE) as total_import'))
-                        ->groupBy('NOMBRE','ca2018.EMP')
-                        ->where('ca2018.CONCEPTO','>', 499)
-                        ->join('CONTROL','ca2018.PERIODO','=','CONTROL.PERIODO')
-                        ->select('NOMBRE','ca2018.EMP','CONTROL.PERIODO',DB::raw('SUM(IMPORTE) as total_import'))
-                        ->groupBy('NOMBRE','ca2018.EMP','CONTROL.PERIODO')
-                        ->where('CONTROL.PERIODO',$periodo)
-                        ->get();
-       
-        //percepciones - deducciones para obtener el sueldo neto
-        for ($i=0; $i < count($percepciones) ; $i++) { 
-          foreach ($deducciones as $deduccione) {
-            if ($percepciones[$i]->NOMBRE == $deduccione->NOMBRE) {
-              $percepciones[$i]->total_importe= $percepciones[$i]->total_importe-$deduccione->total_import;
-            }
-          }
-        }
-    return $percepciones;
-  }
-
-  public function reporteCuatro(Request $periodo)
-  {
-    $fiscal = $this::fiscal($periodo);
-        $asimilado = $this::asimilado($periodo);
-        
-        
-          //termino de calcular los campos para la tabla
-          for ($i=0; $i <count($fiscal) ; $i++) { 
-            foreach ($asimilado as $percepcion) {
-              if ($fiscal[$i]->NOMBRE==$percepcion->NOMBRE) {
-                $fiscal[$i]->asimilado = $percepcion->total_importe;
-                 $fiscal[$i]->total_periodo_actual = $fiscal[$i]->asimilado + $fiscal[$i]->total_fiscal;
-              }
-            }
-          }
-        //preparo el arrelgo para regresar por ajax
-          for ($i=0; $i <count($fiscal) ; $i++) { 
-            $array[$i][0] = $fiscal[$i]->NOMBRE;
-            // $array[$i][1] = $fiscal[$i]->EMP;
-            // $array[$i][2] = $fiscal[$i]->PERIODO;
-            $array[$i][1] = round($fiscal[$i]->total_importe,2);
-            $array[$i][2] = round($fiscal[$i]->provision,2);
-            $array[$i][3] = round($fiscal[$i]->total_fiscal,2);
-            if (!isset($fiscal[$i]->asimilado)) {
-              $fiscal[$i]->asimilado = 0;
-              $fiscal[$i]->total_periodo_actual = $fiscal[$i]->total_fiscal;
-            }
-            $array[$i][4] = round($fiscal[$i]->asimilado,2); 
-            $array[$i][5] = round($fiscal[$i]->total_periodo_actual,2);
-            $array[$i][6] = 0;
-            $array[$i][7] = 0;
-            $array[$i][8] = 0;
-            
-          }
-          
-           $total[1]=0;
-           $total[2]=0;
-           $total[3]=0;
-          //---------Periodo anterior año anterior--------------------
-          $periodo = '2018'.substr($periodo, 4, 2);
-            $fiscal1 = $this::fiscalAnoA($periodo);
-            $asimilado1 = $this::asimiladoAnoA($periodo);
-            
-             
-              //termino de calcular los campos para la tabla
-              for ($i=0; $i <count($fiscal) ; $i++) { 
-                foreach ($asimilado as $percepcion) {
-                  if ($fiscal[$i]->NOMBRE==$percepcion->NOMBRE) {
-                    $fiscal[$i]->asimilado = $percepcion->total_importe;
-                    if (!isset($fiscal[$i]->total_fiscal)) {
-                      $fiscal[$i]->total_fiscal = 0;
-                    }
-                     $fiscal[$i]->total_periodo_actual = $fiscal[$i]->asimilado + $fiscal[$i]->total_fiscal;
-                  }
-                }
-              }
-              
-          //agrego el total del periodo anterior al array
-          for ($i=0; $i <count($array) ; $i++) { 
-            foreach ($fiscal as $fisca) {
-
-              if ($array[$i][0]==$fisca->NOMBRE) {
-                if (!isset($fisca->asimilado)) {
-              $fisca->asimilado = 0;
-              $fisca->total_periodo_actual = $fisca->total_fiscal;
-            }
-              $array[$i][6] = round($fisca->total_periodo_actual,2);
-              $variacionP = $array[$i][5]-$fisca->total_periodo_actual;
-              $array[$i][7] = round(abs($variacionP),2);
-              
-              if ($array[$i][7]!==0.0) {
-             $porcentaje = Round(($array[$i][7]/ $array[$i][5])*100, 2);
-            }else{
-              $porcentaje = 0;
-            }
-              
-              $array[$i][8] = $porcentaje.'%';
-              $nombres[$i] = $array[$i][0];
-            $despliega[$i] = $array[$i][5];
-            $despliega2[$i] = $array[$i][6];
-            $total[1] = $total[1]+$array[$i][7];
-            $total[2] = $total[2]+$array[$i][5];
-            $total[3] = $total[3]+$array[$i][6];
-              }
-            }
-          }
-      return response(array('tabla'=>$array,'grafica'=>$despliega,'nombres'=>$nombres,'totales'=>$total,'anterior'=>$despliega2));
   }
 
 } 

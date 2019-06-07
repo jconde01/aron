@@ -226,7 +226,7 @@
                 <th class="parrafo">Total costo FISCAL</th>
                 <th class="parrafo">Asimilados</th>
                 <th class="parrafo">Total Costo Periodo Actual</th>
-                <th class="parrafo">Total Costo Periodo Año Anterior</th>
+                <th class="parrafo">Total Costo Periodo Anterior</th>
                 <th class="parrafo">Variación en $</th>
                 <th class="parrafo">Variación en %</th>
                 
@@ -263,7 +263,7 @@
       </div>  
       <br>
                       <!-- <button type="button" id="boton3" hidden style="float: right;" onclick="javascript:imptabla2(graficaLineal2);">Imprimir Tabla</button> -->
-      <div style="display: flex;margin-top: 140px;">
+      <div style="display: flex;">
         <div id="graficaCircular2" style="margin: auto; width: 45%;" hidden>
         </div>
         <div id="graficabarras2" style="margin: auto; width: 45%;" hidden>
@@ -748,45 +748,45 @@
     });
   };
 
-  function Reporte3Barras($valores,$nombres,$valoresdos){
-    
-    Highcharts.chart('graficabarras1', {
-          chart: {
-              type: 'area'
-          },
-          title: {
-              text: 'VARIACIÓN POR PERÍODO'
-          },
-          xAxis: {
-              categories: [<?php for ($i=0; $i <$NoEmp ; $i++) { 
-                          echo '$nombres['; echo $i; echo "],";
-                        } ?>]
-          },
-          yAxis: {
-                // Pongo el título para el eje de las 'Y'
-                title: {
-                  text: 'Valor en pesos'
-                }
-              },
-          credits: {
-              enabled: false
-          },
-          series: [{
-              name: 'Costo Periodo Actual',
-              data: [<?php for ($i=0; $i <$NoEmp ; $i++) { 
-                          echo '$valores['; echo $i; echo "],";
-                        } ?>]
-          }, {
-              name: 'Costo Periodo Anterior',
-              data: [<?php for ($i=0; $i <$NoEmp ; $i++) { 
-                          echo '$valoresdos['; echo $i; echo "],";
-                        } ?>]
-          }, {
-              name: '',
-              data: []
-          }]
-      });
-  };
+function Reporte3Barras($valores,$nombres,$valoresdos){
+  
+  Highcharts.chart('graficabarras1', {
+        chart: {
+            type: 'area'
+        },
+        title: {
+            text: 'VARIACIÓN POR PERÍODO'
+        },
+        xAxis: {
+            categories: [<?php for ($i=0; $i <$NoEmp ; $i++) { 
+                        echo '$nombres['; echo $i; echo "],";
+                      } ?>]
+        },
+        yAxis: {
+              // Pongo el título para el eje de las 'Y'
+              title: {
+                text: 'Valor en pesos'
+              }
+            },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Costo Periodo Actual',
+            data: [<?php for ($i=0; $i <$NoEmp ; $i++) { 
+                        echo '$valores['; echo $i; echo "],";
+                      } ?>]
+        }, {
+            name: 'Costo Periodo Anterior',
+            data: [<?php for ($i=0; $i <$NoEmp ; $i++) { 
+                        echo '$valoresdos['; echo $i; echo "],";
+                      } ?>]
+        }, {
+            name: '',
+            data: []
+        }]
+    });
+};
   
 
 
@@ -844,49 +844,27 @@
 <script type="text/javascript">
     
   $('#variacionA').change(function() {
-    alert('Datos insuficientes');
+    
     var token = $('input[name=_token]').val();        
-    var tipo  =  $('#variacionA').val();
-
-    $.post("get-reporte-cuatro", { tipo: tipo, _token: token }, function( data ) { 
-           
-            if (data != 'Error') {
-              tabla4(data['tabla']);
-              Reporte4Circular(data['totales']);
-              Reporte4Barras(data['grafica'],data['nombres'],data['anterior']);
-              // grafica1(data['grafica'],data['nombres']);
-               
-            } else {
-                alert('Error de acceso a la base de datos. Verifique la conexión...')
-            }
-
-        });
-
-
+    
+    document.getElementById('table_4').style.display = 'block';
     document.getElementById('graficaCircular2').style.display = 'block';
     document.getElementById('graficabarras2').style.display = 'block';
-          
-  });
-
-  function tabla4($valores){
-    
-    var data = $valores;
-    document.getElementById('table_4').style.display = 'block';
-    document.getElementById('boton6').style.display = 'block';
-    $('#table_4').DataTable( {
-             destroy: true,  
-             data: data,   
+        // document.getElementById('boton3').style.display = 'block';
+        document.getElementById('boton6').style.display = 'block';
+     $('#table_4').DataTable( {
+             destroy: true,   
              "order": [[ 0, "asc" ]],
              dom: 'Bfrtip',
               buttons: [
                   'csv', 'excel', 'pdf', 'print'
               ]        
         });
-  }
-
+          
+  });
 
     var chart;
-  function Reporte4Circular ($valores) {
+  function Reporte3Circularx {
     chart = new Highcharts.Chart({
       chart: {
         renderTo: 'graficaCircular2'
@@ -924,50 +902,43 @@
         series: [{
         type: 'pie',
         name: 'Browser share',
-        data: [['Total Variación $',$valores[1]],['Total Costo Periodo Actual',$valores[2]],['Total Costo Periodo Anterior',$valores[3]]
+        data: ['Total Costo Periodo Actual',1,'Total Costo Periodo Anterior',2,'Variación en $',3
             ]
       }]
     });
-  };
+  });
 
-  function Reporte4Barras($valores,$nombres,$valoresdos){
-    Highcharts.chart('graficabarras2', {
-          chart: {
-              type: 'area'
-          },
-          title: {
-              text: 'VARIACIÓN POR PERÍODO ANUAL'
-          },
-          xAxis: {
-              categories: [<?php for ($i=0; $i <$NoEmp ; $i++) { 
-                          echo '$nombres['; echo $i; echo "],";
-                        } ?>]
-          },
-          yAxis: {
-                // Pongo el título para el eje de las 'Y'
-                title: {
-                  text: 'Valor en pesos'
-                }
-              },
-          credits: {
-              enabled: false
-          },
-          series: [{
-              name: 'Costo Periodo Actual',
-              data: [<?php for ($i=0; $i <$NoEmp ; $i++) { 
-                          echo '$valores['; echo $i; echo "],";
-                        } ?>]
-          }, {
-              name: 'Costo Periodo Año Anterior',
-              data: [<?php for ($i=0; $i <$NoEmp ; $i++) { 
-                          echo '$valoresdos['; echo $i; echo "],";
-                        } ?>]
-          }, {
-              name: '',
-              data: []
-          }]
-      });
-  };
+  Highcharts.chart('graficabarras2', {
+        chart: {
+            type: 'area'
+        },
+        title: {
+            text: 'VARIACIÓN POR PERÍODO ANUAL'
+        },
+        xAxis: {
+            categories: [1,2,3]
+        },
+        yAxis: {
+              // Pongo el título para el eje de las 'Y'
+              title: {
+                text: 'Valor en pesos'
+              }
+            },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Costo Periodo Actual',
+            data: [1,2,3]
+        }, {
+            name: 'Costo Periodo Anterior',
+            data: [1,2,3,4]
+        }, {
+            name: '',
+            data: []
+        }]
+    });
+
 
     function imprimir4(emp3){
       
