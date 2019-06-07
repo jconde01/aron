@@ -6,11 +6,11 @@
     font-size: 12px;
     border: 1px blue solid;
   }
- /* @media print{
+  @media print{
      #tabla1{
     writing-mode: tb-rl;
   }
-  }*/
+  }
 </style>
 <h3 style="margin-left: 120px;">REPORTE DE % DE ASISTENCIA MENSUAL</h3>
 <label style="margin-left: 120px;">Mes: &nbsp;</label>
@@ -129,21 +129,19 @@
     <button type="button" style="float: right;" id="boton4" hidden onclick="javascript:imprimir2(graficaLineal2);">Imprimir Reporte Completo</button> <br><br>
   </div>
 </div>
-
+@if ($bandera==1)
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------ -->
 <div style="width: 90%; margin:auto; border-bottom: 1px blue solid;">
-  <h3 style="margin-left: 35px;">REPORTE DE NÓMINA "VARIACIONES POR PERIODO"</h3>
+  <h3 style="margin-left: 35px;">INDICADOR DE NOMINA "VARIACIONES POR PERIODO"</h3>
   <label style="margin-left: 35px;">Período: &nbsp;</label>
   <select name="variacion" class="variacion" id="variacion" >
     <option value="0">Seleccione Una Opción</option>
-    @foreach ($controlPeriodos as $controlPeriodo)
-    <option value="{{$controlPeriodo->PERIODO}}">{{$controlPeriodo->PERIODO}}</option>
-    @endforeach
+    <option value="201918 DEL 01 AL 15 DE ABRIL">201918 DEL 01 AL 15 DE ABRIL</option>
   </select>
   <div style="width: 100%; margin:auto;" >
     <div  id="indicador3">
       <div id="tabla3">
-        <h3 id="titulo3" style="margin-left: 50px;" hidden>REPORTE DE NÓMINA "VARIACIONES POR PERIODO"</h3><label>Cancún, Quintana Roo, México</label>
+        <h3 id="titulo3" style="margin-left: 50px;" hidden>INDICADOR DE NOMINA "VARIACIONES POR PERIODO"</h3>
           <table id="table_3" class="display" hidden> 
             <thead>                           
               <tr>
@@ -161,36 +159,40 @@
             </thead>                   
                            
             <tbody>
+              <?php $total1 = 0;$total2 = 0;$total3 = 0;$total4 = 0;$total5 = 0;$total6 = 0;$total7 = 0;$total8 = 0; ?>
+              @foreach($costos as $costo)
 
               <tr class="pruebacolor">
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>                        
+                <td class="parrafo">{{$costo->EMPLEADO}}</td>
+                <td class="parrafo">{{'$'.number_format($costo->NOMFISCAL,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($costo->PREVISOCIAL,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($costo->TOTALFISCAL,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($costo->ASIMILADOS,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($costo->TOTALPERIACTUAL,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($costo->TOTALPERIANTERIOR,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($costo->VARIACIONPESOS,2)}}</td>
+                <td class="parrafo">{{$costo->VARIACIONPOR}}</td>                        
               </tr>
-            
+              <?php $total1 = $total1+$costo->NOMFISCAL; $total2 = $total2+$costo->PREVISOCIAL; $total3 = $total3+$costo->TOTALFISCAL; $total4 = $total4+$costo->ASIMILADOS; $total5 = $total5+$costo->TOTALPERIACTUAL; $total6 = $total6+$costo->TOTALPERIANTERIOR; $total7 = $total7+$costo->VARIACIONPESOS;  ?>
+              @endforeach
+              <?php $porce = ($total7/$total6)*100; ?>
               <tr class="pruebacolor">
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>                        
+                <td class="parrafo">Total:</td>
+                <td class="parrafo">{{'$'.number_format($total1,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($total2,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($total3,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($total4,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($total5,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($total6,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($total7,2)}}</td>
+                <td class="parrafo">{{number_format($porce,2)}}%</td>                        
               </tr>
             </tbody>
           </table>
       </div>  
       <br>
                       <!-- <button type="button" id="boton3" hidden style="float: right;" onclick="javascript:imptabla2(graficaLineal2);">Imprimir Tabla</button> -->
-      <div style="display: flex;margin-top: 140px;">
+      <div style="display: flex;">
         <div id="graficaCircular1" style="margin: auto; width: 45%;" hidden>
         </div>
         <div id="graficabarras1" style="margin: auto; width: 45%;" hidden>
@@ -205,18 +207,16 @@
 
 <!-- -------------------------------------------------------------------------------------------------------------------------------------------------- -->
 <div style="width: 90%; margin:auto; border-bottom: 1px blue solid;">
-  <h3 style="margin-left: 35px;">REPORTE VARIACIÓN DE COSTO AÑO ANTERIOR</h3>
+  <h3 style="margin-left: 35px;">INDICADOR VARIACIÓN DE COSTO AÑO ANTERIOR</h3>
   <label style="margin-left: 35px;">Período: &nbsp;</label>
   <select name="variacionA" class="variacionA" id="variacionA" >
     <option value="0">Seleccione Una Opción</option>
-    @foreach ($controlPeriodos as $controlPeriodo)
-    <option value="{{$controlPeriodo->PERIODO}}">{{$controlPeriodo->PERIODO}}</option>
-    @endforeach
+    <option value="201918 DEL 01 AL 15 DE ABRIL">201918 DEL 01 AL 15 DE ABRIL</option>
   </select>
   <div style="width: 100%; margin:auto;" >
-    <div id="indicador4">
+    <div  id="indicador4">
       <div id="tabla4">
-        <h3 id="titulo4" style="margin-left: 50px;" hidden>REPORTE VARIACIÓN DE COSTO AÑO ANTERIOR</h3>
+        <h3 id="titulo4" style="margin-left: 50px;" hidden>INDICADOR VARIACIÓN DE COSTO AÑO ANTERIOR</h3>
           <table id="table_4" class="display" hidden> 
             <thead>                           
               <tr>
@@ -234,29 +234,33 @@
             </thead>                   
                            
             <tbody>
-            
+              <?php $totalA1 = 0;$totalA2 = 0;$totalA3 = 0;$totalA4 = 0;$totalA5 = 0;$totalA6 = 0;$totalA7 = 0;$totalA8 = 0; ?>
+              @foreach($costoAnoAs as $costoAnoA)
+
               <tr class="pruebacolor">
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>                        
+                <td class="parrafo">{{$costoAnoA->EMPLEADO}}</td>
+                <td class="parrafo">{{'$'.number_format($costoAnoA->NOMINAFISCAL,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($costoAnoA->PROVISIONSOCIAL,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($costoAnoA->TOTALFISCAL,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($costoAnoA->ASIMILADOS,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($costoAnoA->TOTALPERIACTUAL,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($costoAnoA->TOTALPERIANTERIOR,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($costoAnoA->VARIACIONPESOS,2)}}</td>
+                <td class="parrafo">{{$costoAnoA->VARIACIONPOR}}</td>                        
               </tr>
-              
+              <?php $totalA1 = $totalA1+$costoAnoA->NOMINAFISCAL; $totalA2 = $totalA2+$costoAnoA->PROVISIONSOCIAL; $totalA3 = $totalA3+$costoAnoA->TOTALFISCAL; $totalA4 = $totalA4+$costoAnoA->ASIMILADOS; $totalA5 = $totalA5+$costoAnoA->TOTALPERIACTUAL; $totalA6 = $totalA6+$costoAnoA->TOTALPERIANTERIOR; $totalA7 = $totalA7+$costoAnoA->VARIACIONPESOS;  ?>
+              @endforeach
+              <?php $porce = ($totalA7/$totalA6)*100; ?>
               <tr class="pruebacolor">
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>                        
+                <td class="parrafo">Total:</td>
+                <td class="parrafo">{{'$'.number_format($totalA1,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($totalA2,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($totalA3,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($totalA4,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($totalA5,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($totalA6,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($totalA7,2)}}</td>
+                <td class="parrafo">{{number_format($porce,2)}}%</td>                        
               </tr>
             </tbody>
           </table>
@@ -278,18 +282,16 @@
 
 <!-- --------------------------------------------------------------------------------------------------------------------------------------------- -->
 <div style="width: 90%; margin:auto; border-bottom: 1px blue solid;">
-  <h3 style="margin-left: 35px;">REPORTE DE VARIACIÓN EN COSTO CON ESTRATEGIA VS SIN ESTRATREGIA</h3>
+  <h3 style="margin-left: 35px;">VARIACION EN COSTO CON ESTRATEGIA VS SIN ESTRATREGIA</h3>
   <label style="margin-left: 35px;">Período: &nbsp;</label>
   <select name="variacionE" class="variacionE" id="variacionE" >
     <option value="0">Seleccione Una Opción</option>
-    @foreach ($control as $contro)
-  <option value="{{$contro->PERIANO}}">{{$contro->PERIANO}}</option>
-  @endforeach
+    <option value="201918 DEL 01 AL 15 DE ABRIL">201918 DEL 01 AL 15 DE ABRIL</option>
   </select>
   <div style="width: 100%; margin:auto;" >
     <div  id="indicador5">
       <div id="tabla5">
-        <h3 id="titulo5" style="margin-left: 50px;" hidden>REPORTE DE VARIACIÓN EN COSTO CON ESTRATEGIA VS SIN ESTRATREGIA</h3>
+        <h3 id="titulo5" style="margin-left: 50px;" hidden>VARIACION EN COSTO CON ESTRATEGIA VS SIN ESTRATREGIA</h3>
           <table id="table_5" class="display" hidden> 
             <thead>                           
               <tr>
@@ -310,36 +312,39 @@
             </thead>                   
                            
             <tbody>
-              
+              <?php $totalB1 = 0;$totalB2 = 0;$totalB3 = 0;$totalB4 = 0;$totalB5 = 0;$totalB6 = 0;$totalB7 = 0;$totalB8 = 0;$totalB9 = 0;$totalB10 = 0; ?>
+              @foreach($variaciones as $variacion)
+
               <tr class="pruebacolor">
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>                        
+                <td class="parrafo">{{$variacion->EMPLEADO}}</td>
+                <td class="parrafo">{{'$'.number_format($variacion->SUELDONETO,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($variacion->SUELDOFISCESTRA,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($variacion->PROVISOCIAL,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($variacion->TOTALFISCAL,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($variacion->ASIMILADOS,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($variacion->TOTALESTRATEGIA,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($variacion->SUELDOFISCSINE,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($variacion->PROVISOCIALSINE,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($variacion->TOTALSINESTRA,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($variacion->AHORROCOMPA,2)}}</td>
+                <td class="parrafo">{{$variacion->AHORROPORCE}}</td>                        
               </tr>
-              
+              <?php $totalB1 = $totalB1+$variacion->SUELDONETO; $totalB2 = $totalB2+$variacion->SUELDOFISCESTRA; $totalB3 = $totalB3+$variacion->PROVISOCIAL; $totalB4 = $totalB4+$variacion->TOTALFISCAL; $totalB5 = $totalB5+$variacion->ASIMILADOS; $totalB6 = $totalB6+$variacion->TOTALESTRATEGIA; $totalB7 = $totalB7+$variacion->SUELDOFISCSINE; $totalB8 = $totalB8+$variacion->PROVISOCIALSINE; $totalB9 = $totalB9+$variacion->TOTALSINESTRA; $totalB10 = $totalB10+$variacion->AHORROCOMPA;  ?>
+              @endforeach
               <tr class="pruebacolor">
-                
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>
-                <td class="parrafo"></td>                        
+                <?php $porce = ($totalB10/$totalB9)*100; ?>
+                <td class="parrafo">Total:</td>
+                <td class="parrafo">{{'$'.number_format($totalB1,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($totalB2,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($totalB3,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($totalB4,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($totalB5,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($totalB6,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($totalB7,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($totalB8,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($totalB9,2)}}</td>
+                <td class="parrafo">{{'$'.number_format($totalB10,2)}}</td>
+                <td class="parrafo">{{number_format($porce,2)}}%</td>                        
               </tr>
             </tbody>
           </table>
@@ -352,11 +357,12 @@
         
       
     </div>
-    <button type="button" style="float: right;" id="boton7" hidden onclick="javascript:imprimir5(graficaLineal2);">Imprimir Reporte Completo</button> <br><br>
+    <button type="button" style="float: right;" id="boton7" hidden onclick="javascript:imprimir4(graficaLineal2);">Imprimir Reporte Completo</button> <br><br>
   </div>
 </div>
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------- -->
+@endif
 @include('includes.footer');
 <script type="text/javascript">
   $.ajaxSetup({
@@ -463,24 +469,7 @@
     
     document.getElementsByClassName('dt-buttons')[0].style.visibility = "hidden";
     document.getElementById('table_1_filter').style.visibility = "hidden";
-    var contador =document.getElementsByClassName('dt-buttons');
-   for (var i = 0; i < contador.length; i++) {
-     contador[i].style.visibility = "hidden";
-   }
-    var contador =document.getElementsByClassName('dataTables_filter');
-    for (var i = 0; i < contador.length; i++) {
-     contador[i].style.visibility = "hidden";
-   }
-
-   var contador =document.getElementsByClassName('dataTables_paginate');
-   for (var i = 0; i < contador.length; i++) {
-     contador[i].style.visibility = "hidden";
-   }
-
-   var contador =document.getElementsByClassName('dataTables_info');
-   for (var i = 0; i < contador.length; i++) {
-     contador[i].style.visibility = "hidden";
-   }
+    
     
   var contenido= document.getElementById('indicador1').innerHTML;
      var contenidoOriginal= document.body.innerHTML;
@@ -609,24 +598,7 @@
     // document.getElementById('boton3').style.visibility = "hidden";
     // document.getElementById('table_1_length').style.visibility = "hidden";
      // document.getElementById('table_1_filter').style.visibility = "hidden";
-    var contador =document.getElementsByClassName('dt-buttons');
-   for (var i = 0; i < contador.length; i++) {
-     contador[i].style.visibility = "hidden";
-   }
-    var contador =document.getElementsByClassName('dataTables_filter');
-    for (var i = 0; i < contador.length; i++) {
-     contador[i].style.visibility = "hidden";
-   }
-
-   var contador =document.getElementsByClassName('dataTables_paginate');
-   for (var i = 0; i < contador.length; i++) {
-     contador[i].style.visibility = "hidden";
-   }
-
-   var contador =document.getElementsByClassName('dataTables_info');
-   for (var i = 0; i < contador.length; i++) {
-     contador[i].style.visibility = "hidden";
-   }
+    
     
   var contenido= document.getElementById('indicador2').innerHTML;
      var contenidoOriginal= document.body.innerHTML;
@@ -653,58 +625,31 @@
   //   location.reload(true);
   //       return true;}        
 </script>
-
+@if ($bandera==1)
 <script type="text/javascript">
     
   $('#variacion').change(function() {
     
     var token = $('input[name=_token]').val();        
-    var tipo  =  $('#variacion').val();
-
-     $.post("get-reporte-tres", { tipo: tipo, _token: token }, function( data ) { 
-     // alert(data['totales'][1]);     
-            if (data != 'Error') {
-              tabla3(data['tabla']);
-              Reporte3Circular(data['totales']);
-              Reporte3Barras(data['grafica'],data['nombres'],data['anterior']);
-              // grafica1(data['grafica'],data['nombres']);
-               
-            } else {
-                alert('Error de acceso a la base de datos. Verifique la conexión...')
-            }
-
-        });
-
-
-    
+    var tipo  =  $('#periodo').val();
+    document.getElementById('table_3').style.display = 'block';
     document.getElementById('graficaCircular1').style.display = 'block';
     document.getElementById('graficabarras1').style.display = 'block';
-    
-
-
-
-     
-          
-  });
-
-  function tabla3($valores){
-    var data = $valores;
-    document.getElementById('table_3').style.display = 'block';
-    document.getElementById('boton5').style.display = 'block';
-    $('#table_3').DataTable( {
-             destroy: true,  
-             data: data,   
+        // document.getElementById('boton3').style.display = 'block';
+        document.getElementById('boton5').style.display = 'block';
+     $('#table_3').DataTable( {
+             destroy: true,   
              "order": [[ 0, "asc" ]],
              dom: 'Bfrtip',
               buttons: [
                   'csv', 'excel', 'pdf', 'print'
               ]        
         });
-  }
+          
+  });
 
     var chart;
-  function Reporte3Circular($valores) {
-    
+  $(document).ready(function() {
     chart = new Highcharts.Chart({
       chart: {
         renderTo: 'graficaCircular1'
@@ -742,14 +687,12 @@
         series: [{
         type: 'pie',
         name: 'Browser share',
-        data: [['Total Variación $',$valores[1]],['Total Costo Periodo Actual',$valores[2]],['Total Costo Periodo Anterior',$valores[3]]
+        data: [['Total Costo Periodo Actual',<?php echo $total5; ?>],['Total Costo Periodo Anterior',<?php echo $total6; ?>],['Variación en $',<?php echo $total7; ?>]
             ]
       }]
     });
-  };
+  });
 
-function Reporte3Barras($valores,$nombres,$valoresdos){
-  
   Highcharts.chart('graficabarras1', {
         chart: {
             type: 'area'
@@ -758,9 +701,8 @@ function Reporte3Barras($valores,$nombres,$valoresdos){
             text: 'VARIACIÓN POR PERÍODO'
         },
         xAxis: {
-            categories: [<?php for ($i=0; $i <$NoEmp ; $i++) { 
-                        echo '$nombres['; echo $i; echo "],";
-                      } ?>]
+            categories: [<?php foreach ($costos as $costo) {
+              ?>'<?php echo $costo->EMPLEADO;?>',<?php } ?>]
         },
         yAxis: {
               // Pongo el título para el eje de las 'Y'
@@ -773,21 +715,17 @@ function Reporte3Barras($valores,$nombres,$valoresdos){
         },
         series: [{
             name: 'Costo Periodo Actual',
-            data: [<?php for ($i=0; $i <$NoEmp ; $i++) { 
-                        echo '$valores['; echo $i; echo "],";
-                      } ?>]
+            data: [<?php foreach ($costos as $costo) {
+              ?><?php echo $costo->TOTALPERIACTUAL;?>,<?php } ?>]
         }, {
             name: 'Costo Periodo Anterior',
-            data: [<?php for ($i=0; $i <$NoEmp ; $i++) { 
-                        echo '$valoresdos['; echo $i; echo "],";
-                      } ?>]
+            data: [<?php foreach ($costos as $costo) {
+              ?><?php echo $costo->TOTALPERIANTERIOR;?>,<?php } ?>]
         }, {
             name: '',
             data: []
         }]
     });
-};
-  
 
 
     function imprimir3(emp3){
@@ -796,25 +734,8 @@ function Reporte3Barras($valores,$nombres,$valoresdos){
     // document.getElementById('boton3').style.visibility = "hidden";
     // document.getElementById('table_1_length').style.visibility = "hidden";
      // document.getElementById('table_1_filter').style.visibility = "hidden";
-   var contador =document.getElementsByClassName('dt-buttons');
-   for (var i = 0; i < contador.length; i++) {
-     contador[i].style.visibility = "hidden";
-   }
-    var contador =document.getElementsByClassName('dataTables_filter');
-    for (var i = 0; i < contador.length; i++) {
-     contador[i].style.visibility = "hidden";
-   }
-
-   var contador =document.getElementsByClassName('dataTables_paginate');
-   for (var i = 0; i < contador.length; i++) {
-     contador[i].style.visibility = "hidden";
-   }
-
-   var contador =document.getElementsByClassName('dataTables_info');
-   for (var i = 0; i < contador.length; i++) {
-     contador[i].style.visibility = "hidden";
-   }
-
+    
+    
   var contenido= document.getElementById('indicador3').innerHTML;
      var contenidoOriginal= document.body.innerHTML;
 
@@ -864,7 +785,7 @@ function Reporte3Barras($valores,$nombres,$valoresdos){
   });
 
     var chart;
-  function Reporte3Circularx {
+  $(document).ready(function() {
     chart = new Highcharts.Chart({
       chart: {
         renderTo: 'graficaCircular2'
@@ -902,7 +823,7 @@ function Reporte3Barras($valores,$nombres,$valoresdos){
         series: [{
         type: 'pie',
         name: 'Browser share',
-        data: ['Total Costo Periodo Actual',1,'Total Costo Periodo Anterior',2,'Variación en $',3
+        data: [['Total Costo Periodo Actual',<?php echo $totalA5; ?>],['Total Costo Periodo Anterior',<?php echo $totalA6; ?>],['Variación en $',<?php echo $totalA7; ?>]
             ]
       }]
     });
@@ -916,7 +837,8 @@ function Reporte3Barras($valores,$nombres,$valoresdos){
             text: 'VARIACIÓN POR PERÍODO ANUAL'
         },
         xAxis: {
-            categories: [1,2,3]
+            categories: [<?php foreach ($costoAnoAs as $costo) {
+              ?>'<?php echo $costo->EMPLEADO;?>',<?php } ?>]
         },
         yAxis: {
               // Pongo el título para el eje de las 'Y'
@@ -929,10 +851,12 @@ function Reporte3Barras($valores,$nombres,$valoresdos){
         },
         series: [{
             name: 'Costo Periodo Actual',
-            data: [1,2,3]
+            data: [<?php foreach ($costoAnoAs as $costo) {
+              ?><?php echo $costo->TOTALPERIACTUAL;?>,<?php } ?>]
         }, {
             name: 'Costo Periodo Anterior',
-            data: [1,2,3,4]
+            data: [<?php foreach ($costoAnoAs as $costo) {
+              ?><?php echo $costo->TOTALPERIANTERIOR;?>,<?php } ?>]
         }, {
             name: '',
             data: []
@@ -946,24 +870,7 @@ function Reporte3Barras($valores,$nombres,$valoresdos){
     // document.getElementById('boton3').style.visibility = "hidden";
     // document.getElementById('table_1_length').style.visibility = "hidden";
      // document.getElementById('table_1_filter').style.visibility = "hidden";
-    var contador =document.getElementsByClassName('dt-buttons');
-   for (var i = 0; i < contador.length; i++) {
-     contador[i].style.visibility = "hidden";
-   }
-    var contador =document.getElementsByClassName('dataTables_filter');
-    for (var i = 0; i < contador.length; i++) {
-     contador[i].style.visibility = "hidden";
-   }
-
-   var contador =document.getElementsByClassName('dataTables_paginate');
-   for (var i = 0; i < contador.length; i++) {
-     contador[i].style.visibility = "hidden";
-   }
-
-   var contador =document.getElementsByClassName('dataTables_info');
-   for (var i = 0; i < contador.length; i++) {
-     contador[i].style.visibility = "hidden";
-   }
+    
     
   var contenido= document.getElementById('indicador4').innerHTML;
      var contenidoOriginal= document.body.innerHTML;
@@ -1058,17 +965,17 @@ function Reporte3Barras($valores,$nombres,$valoresdos){
               "data": [
                   {
                       "name": "Total Costo CON Estrategia",
-                      "y": 123,
+                      "y": <?php echo $totalB6; ?>,
                       "drilldown": ""
                   },
                   {
                       "name": "Total Costo SIN Estrategia",
-                      "y": 1234,
+                      "y": <?php echo $totalB9; ?>,
                       "drilldown": ""
                   },
                   {
                       "name": "Ahorro Compañía",
-                      "y":12345,
+                      "y":<?php echo $totalB10; ?>,
                       "drilldown": ""
                   }
               ]
@@ -1297,30 +1204,13 @@ function Reporte3Barras($valores,$nombres,$valoresdos){
   });
 
 
-    function imprimir5(emp3){
+    function imprimir4(emp3){
       
     document.getElementById('titulo5').style.display = 'block';
     // document.getElementById('boton3').style.visibility = "hidden";
     // document.getElementById('table_1_length').style.visibility = "hidden";
      // document.getElementById('table_1_filter').style.visibility = "hidden";
-    var contador =document.getElementsByClassName('dt-buttons');
-   for (var i = 0; i < contador.length; i++) {
-     contador[i].style.visibility = "hidden";
-   }
-    var contador =document.getElementsByClassName('dataTables_filter');
-    for (var i = 0; i < contador.length; i++) {
-     contador[i].style.visibility = "hidden";
-   }
-
-   var contador =document.getElementsByClassName('dataTables_paginate');
-   for (var i = 0; i < contador.length; i++) {
-     contador[i].style.visibility = "hidden";
-   }
-
-   var contador =document.getElementsByClassName('dataTables_info');
-   for (var i = 0; i < contador.length; i++) {
-     contador[i].style.visibility = "hidden";
-   }
+    
     
   var contenido= document.getElementById('indicador5').innerHTML;
      var contenidoOriginal= document.body.innerHTML;
@@ -1347,4 +1237,5 @@ function Reporte3Barras($valores,$nombres,$valoresdos){
   //   location.reload(true);
   //       return true;}        
 </script>
+@endif
 @endsection
