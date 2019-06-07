@@ -269,7 +269,7 @@ class ReportesController extends Controller
           foreach ($suspenciones as $suspencion) {
             for ($i=0; $i < count($array) ; $i++) { 
               if ($array[$i][0]==$suspencion->NOMBRE) {
-                $array[$i][9] = $suspencion->total_unidades*1;
+                $array[$i][9] = $suspencion->total_unidades*-1;
                 
               }
             }
