@@ -35,11 +35,41 @@ class ReportesController extends Controller
 
      public function index()
     { 
-      // $periodo = 201917;
-      //   $fiscal = $this::fiscal($periodo);
-      //   $asimilado = $this::asimilado($periodo);
+      // $provisiones = DB::connection('sqlsrv2')->table('EMPLEADO')
+      //                   ->where('ESTATUS','!=','B')
+      //                   ->join('ProvisionAcumula','EMPLEADO.EMP','=','ProvisionAcumula.Empleado')
+      //                   ->select('NOMBRE','ProvisionAcumula.Empleado','ProvisionAcumula.ImpEstatal','ProvisionAcumula.PImss','ProvisionAcumula.PSar','ProvisionAcumula.PInfonavit')
+      //                   ->where('ProvisionAcumula.Periodo',201923)
+      //                   ->get();
+      //   $percepciones  = DB::connection('sqlsrv2')->table('EMPLEADO')
+      //                   ->where('ESTATUS','!=','B')
+      //                   ->join('ProvisionAcumula','EMPLEADO.EMP','=','ProvisionAcumula.Empleado')
+      //                   ->select('NOMBRE',DB::raw('SUM(ImpEstatal) as total_ImpEstatal'),DB::raw('SUM(PImss) as total_PImss'),DB::raw('SUM(PSar) as total_PSar'),DB::raw('SUM(PInfonavit) as total_PInfonavit'))
+      //                   ->groupBy('NOMBRE')
+      //                   // ->where('ca2019.CONCEPTO','<', 500)
+      //                    ->join('CONTROL','ProvisionAcumula.Periodo','=','CONTROL.PERIODO')
+      //                    ->select('NOMBRE',DB::raw('SUM(ImpEstatal) as total_ImpEstatal'),DB::raw('SUM(PImss) as total_PImss'),DB::raw('SUM(PSar) as total_PSar'),DB::raw('SUM(PInfonavit) as total_PInfonavit'))
+      //                    ->groupBy('NOMBRE')
+      //                   // ->groupBy('NOMBRE','NetoMensual','ca2019.EMP','CONTROL.PERIODO')
+      //                    ->where('CONTROL.PERIANO',201906)
+      //                   ->get();
+
+      // $percepciones  = DB::connection('sqlsrv2')->table('EMPLEADO')
+      //                   ->where('ESTATUS','!=','B')
+      //                   ->join('ProvisionAcumula','EMPLEADO.EMP','=','ProvisionAcumula.Empleado')
+      //                   ->select('NOMBRE','ProvisionAcumula.Pmensual')
+      //                   ->groupBy('NOMBRE','ProvisionAcumula.Pmensual')
+      //                   ->join('CONTROL','ProvisionAcumula.Periodo','=','CONTROL.PERIODO')
+      //                   ->select('NOMBRE','CONTROL.PERIANO','ProvisionAcumula.Pmensual')
+      //                   ->groupBy('NOMBRE','CONTROL.PERIANO','ProvisionAcumula.Pmensual')
+      //                   ->where('CONTROL.PERIANO',201906)
+      //                   ->get();
+                  // dd($provisiones,$percepciones);
+      // $periodo = 201906;
+      //   $fiscal = $this::fiscalNeto($periodo);
+      //   $asimilado = $this::asimiladoNeto($periodo);
         
-        
+      //     // dd($fiscal,$asimilado);
       //     //termino de calcular los campos para la tabla
       //     for ($i=0; $i <count($fiscal) ; $i++) { 
       //       foreach ($asimilado as $percepcion) {
@@ -52,77 +82,45 @@ class ReportesController extends Controller
       //   //preparo el arrelgo para regresar por ajax
       //     for ($i=0; $i <count($fiscal) ; $i++) { 
       //       $array[$i][0] = $fiscal[$i]->NOMBRE;
-      //       // $array[$i][1] = $fiscal[$i]->EMP;
+      //        $array[$i][1] = $fiscal[$i]->NetoMensual; //netomensual
       //       // $array[$i][2] = $fiscal[$i]->PERIODO;
-      //       $array[$i][1] = round($fiscal[$i]->total_importe,2);
-      //       $array[$i][2] = round($fiscal[$i]->provision,2);
-      //       $array[$i][3] = round($fiscal[$i]->total_fiscal,2);
+      //       $array[$i][2] = round($fiscal[$i]->total_importe,2); //sueldo fiscal
+      //       $array[$i][3] = round($fiscal[$i]->provision,2); //provision social con estrategia
+      //       $array[$i][4] = round($fiscal[$i]->total_fiscal,2); //total fiscal
       //       if (!isset($fiscal[$i]->asimilado)) {
       //         $fiscal[$i]->asimilado = 0;
       //         $fiscal[$i]->total_periodo_actual = $fiscal[$i]->total_fiscal;
       //       }
-      //       $array[$i][4] = round($fiscal[$i]->asimilado,2); 
-      //       $array[$i][5] = round($fiscal[$i]->total_periodo_actual,2);
-      //       $array[$i][6] = 0;
-      //       $array[$i][7] = 0;
+      //       $array[$i][5] = round($fiscal[$i]->asimilado,2); 
+      //       $array[$i][6] = round($fiscal[$i]->total_periodo_actual,2);
+      //       $array[$i][7] = $fiscal[$i]->NetoMensual;
       //       $array[$i][8] = 0;
+      //       $array[$i][9] = 0;
+      //       $array[$i][10] = 0;
+      //       $array[$i][11] = 0;
             
       //     }
-          
-      //      $total[1]=0;
-      //      $total[2]=0;
-      //      $total[3]=0;
-      //     //---------Periodo anterior--------------------
-      //     $periodo = '2018'.substr($periodo, 4, 2);
-          
-      //       $fiscal = $this::fiscalAnoA($periodo);
-      //       $asimilado = $this::asimiladoAnoA($periodo);
-           
-             
-      //         //termino de calcular los campos para la tabla
-      //         for ($i=0; $i <count($fiscal) ; $i++) { 
-      //           foreach ($asimilado as $percepcion) {
-      //             if ($fiscal[$i]->NOMBRE==$percepcion->NOMBRE) {
-      //               $fiscal[$i]->asimilado = $percepcion->total_importe;
-      //               if (!isset($fiscal[$i]->total_fiscal)) {
-      //                 $fiscal[$i]->total_fiscal = 0;
-      //               }
-      //                $fiscal[$i]->total_periodo_actual = $fiscal[$i]->asimilado + $fiscal[$i]->total_fiscal;
-      //             }
-      //           }
-      //         }
-              
-      //     //agrego el total del periodo anterior al array
-      //     for ($i=0; $i <count($array) ; $i++) { 
-      //       foreach ($fiscal as $fisca) {
 
-      //         if ($array[$i][0]==$fisca->NOMBRE) {
-      //           if (!isset($fisca->asimilado)) {
-      //         $fisca->asimilado = 0;
-      //         $fisca->total_periodo_actual = $fisca->total_fiscal;
-      //       }
-      //         $array[$i][6] = round($fisca->total_periodo_actual,2);
-      //         $variacionP = $array[$i][5]-$fisca->total_periodo_actual;
-      //         $array[$i][7] = round(abs($variacionP),2);
-              
-      //         if ($array[$i][7]!==0.0) {
-      //        $porcentaje = Round(($array[$i][7]/ $array[$i][5])*100, 2);
-      //       }else{
-      //         $porcentaje = 0;
-      //       }
-              
-      //         $array[$i][8] = $porcentaje.'%';
-      //         $nombres[$i] = $array[$i][0];
-      //       $despliega[$i] = $array[$i][5];
-      //       $despliega2[$i] = $array[$i][6];
-      //       $total[1] = $total[1]+$array[$i][7];
-      //       $total[2] = $total[2]+$array[$i][5];
-      //       $total[3] = $total[3]+$array[$i][6];
+      //     $provisiones = $this::Provision($periodo);
+          
+      //     $total[1]=0;
+      //     $total[2]=0;
+      //      $total[3]=0;
+      //     for ($i=0; $i <count($array) ; $i++) { 
+      //       foreach ($provisiones as $provision) {
+      //         if ($array[$i][0]==$provision->NOMBRE) {
+      //           $array[$i][8] = $provision->Pmensual; //<-Provision mensual o estimado del empleado
+      //           $array[$i][9] = $array[$i][8]+$array[$i][7]; //total costo sin estrategia promensual + sueldo sin estrategia
+      //           $array[$i][10] = $array[$i][9]-$array[$i][6]; //difeencia entre total con estrategia y sin estra (ahorro compañia)
+      //           $array[$i][11] = Round(($array[$i][10]/ $array[$i][9])*100, 2).'%';
+      //           $total[1] = $total[1]+$array[$i][6];
+      //           $total[2] = $total[2]+$array[$i][9];
+      //           $total[3] = $total[3]+$array[$i][10];
       //         }
       //       }
       //     }
-          
-      //          dd($total,$array);
+      //     dd($array,$total);
+           
             
       //---------------------fin-----------------------------------//
      
@@ -304,33 +302,6 @@ class ReportesController extends Controller
           $nombres[$i] = $array[$i][0];
           $despliega[$i] = $porcentaje;
         }
-
-        // $arrSku = array('empleado' => array('nombre' => 1), 'empleado1' => array('nombre' => 10) );
-      
-        // $arrNewSku = array();
-        // $incI = 0;
-        //  $inc = 0;
-        // foreach($array AS $arrKey => $arrData){
-
-        // $arrNewSku[$incI]['nombre'] = $arrData[$inc];
-        // $arrNewSku[$incI]['uno'] = $arrData[$inc+1];
-        // $arrNewSku[$incI]['dos'] = $arrData[$inc+2];
-        // $arrNewSku[$incI]['tres'] = $arrData[$inc+3];
-        // $arrNewSku[$incI]['cuatro'] = $arrData[$inc+4];
-        // $arrNewSku[$incI]['cinco'] = $arrData[$inc+5];
-        // $arrNewSku[$incI]['seis'] = $arrData[$inc+6];
-        // $arrNewSku[$incI]['siete'] = $arrData[$inc+7];
-        // $arrNewSku[$incI]['ocho'] = $arrData[$inc+8];
-        // $arrNewSku[$incI]['nueve'] = $arrData[$inc+9];
-        // $arrNewSku[$incI]['10'] = $arrData[$inc+10];
-        // $incI++;
-        
-        // }
-
-        // //Convert array to json form...
-        // $encodedSku = json_encode($arrNewSku);
-        // return response($encodedSku);
-      
       
        return response(array('tabla'=>$array,'grafica'=>$despliega,'nombres'=>$nombres));
       
@@ -508,33 +479,6 @@ class ReportesController extends Controller
           $nombres[$i] = $array[$i][0];
           $despliega[$i] = $porcentaje;
         }
-
-        // $arrSku = array('empleado' => array('nombre' => 1), 'empleado1' => array('nombre' => 10) );
-      
-        // $arrNewSku = array();
-        // $incI = 0;
-        //  $inc = 0;
-        // foreach($array AS $arrKey => $arrData){
-
-        // $arrNewSku[$incI]['nombre'] = $arrData[$inc];
-        // $arrNewSku[$incI]['uno'] = $arrData[$inc+1];
-        // $arrNewSku[$incI]['dos'] = $arrData[$inc+2];
-        // $arrNewSku[$incI]['tres'] = $arrData[$inc+3];
-        // $arrNewSku[$incI]['cuatro'] = $arrData[$inc+4];
-        // $arrNewSku[$incI]['cinco'] = $arrData[$inc+5];
-        // $arrNewSku[$incI]['seis'] = $arrData[$inc+6];
-        // $arrNewSku[$incI]['siete'] = $arrData[$inc+7];
-        // $arrNewSku[$incI]['ocho'] = $arrData[$inc+8];
-        // $arrNewSku[$incI]['nueve'] = $arrData[$inc+9];
-        // $arrNewSku[$incI]['10'] = $arrData[$inc+10];
-        // $incI++;
-        
-        // }
-
-        // //Convert array to json form...
-        // $encodedSku = json_encode($arrNewSku);
-        // return response($encodedSku);
-      
       
        return response(array('tabla'=>$array,'grafica'=>$despliega,'nombres'=>$nombres));
       
@@ -962,4 +906,202 @@ class ReportesController extends Controller
       return response(array('tabla'=>$array,'grafica'=>$despliega,'nombres'=>$nombres,'totales'=>$total,'anterior'=>$despliega2));
   }
 
+  public function fiscalNeto($periodo)
+  {
+    //consulta de las percepciones
+        $percepciones  = DB::connection('sqlsrv2')->table('EMPLEADO')
+                        ->where('ESTATUS','!=','B')
+                        ->join('ca2019','EMPLEADO.EMP','=','ca2019.EMP')
+                        ->select('NOMBRE','NetoMensual','ca2019.EMP',DB::raw('SUM(IMPORTE) as total_importe'))
+                        ->groupBy('NOMBRE','ca2019.EMP')
+                        ->where('ca2019.CONCEPTO','<', 500)
+                        ->join('CONTROL','ca2019.PERIODO','=','CONTROL.PERIODO')
+                        ->select('NOMBRE','NetoMensual','ca2019.EMP',DB::raw('SUM(IMPORTE) as total_importe'))
+                        ->groupBy('NOMBRE','NetoMensual','ca2019.EMP')
+                        ->where('CONTROL.PERIANO',$periodo)
+                        ->select('NOMBRE','NetoMensual',DB::raw('SUM(IMPORTE) as total_importe'))
+                        ->groupBy('NOMBRE','NetoMensual')
+                        ->get();
+      //consultas de las deducciones
+        $deducciones  = DB::connection('sqlsrv2')->table('EMPLEADO')
+                        ->where('ESTATUS','!=','B')
+                        ->join('ca2019','EMPLEADO.EMP','=','ca2019.EMP')
+                        ->select('NOMBRE','NetoMensual','ca2019.EMP',DB::raw('SUM(IMPORTE) as total_import'))
+                        ->groupBy('NOMBRE','ca2019.EMP')
+                        ->where('ca2019.CONCEPTO','>', 499)
+                        ->join('CONTROL','ca2019.PERIODO','=','CONTROL.PERIODO')
+                        ->select('NOMBRE','NetoMensual','ca2019.EMP',DB::raw('SUM(IMPORTE) as total_import'))
+                        ->groupBy('NOMBRE','NetoMensual','ca2019.EMP')
+                        ->where('CONTROL.PERIANO',$periodo)
+                        ->select('NOMBRE','NetoMensual',DB::raw('SUM(IMPORTE) as total_import'))
+                        ->groupBy('NOMBRE','NetoMensual')
+                        ->get();
+
+        // dd($percepciones,$deducciones);
+        //percepciones - deducciones para obtener el sueldo neto
+        for ($i=0; $i < count($percepciones) ; $i++) { 
+          foreach ($deducciones as $deduccione) {
+            if ($percepciones[$i]->NOMBRE == $deduccione->NOMBRE) {
+              $percepciones[$i]->total_importe= $percepciones[$i]->total_importe-$deduccione->total_import;
+            }
+          }
+        }
+
+        $datos = $percepciones;
+
+        $provisiones = DB::connection('sqlsrv2')->table('EMPLEADO')
+                        ->where('ESTATUS','!=','B')
+                        ->join('ProvisionAcumula','EMPLEADO.EMP','=','ProvisionAcumula.Empleado')
+                        ->select('NOMBRE',DB::raw('SUM(ImpEstatal) as total_ImpEstatal'),DB::raw('SUM(PImss) as total_PImss'),DB::raw('SUM(PSar) as total_PSar'),DB::raw('SUM(PInfonavit) as total_PInfonavit'))
+                        ->groupBy('NOMBRE')
+                        // ->where('ca2019.CONCEPTO','<', 500)
+                         ->join('CONTROL','ProvisionAcumula.Periodo','=','CONTROL.PERIODO')
+                         ->select('NOMBRE',DB::raw('SUM(ImpEstatal) as total_ImpEstatal'),DB::raw('SUM(PImss) as total_PImss'),DB::raw('SUM(PSar) as total_PSar'),DB::raw('SUM(PInfonavit) as total_PInfonavit'))
+                         ->groupBy('NOMBRE')
+                        // ->groupBy('NOMBRE','NetoMensual','ca2019.EMP','CONTROL.PERIODO')
+                         ->where('CONTROL.PERIANO',$periodo)
+                        ->get();
+            // dd($datos,$provisiones);
+        if (!isset($provisiones[0])) {
+          for ($i=0; $i <count($datos) ; $i++) { 
+               $datos[$i]->total_fiscal = $datos[$i]->total_importe;
+               $datos[$i]->provision = 0;
+                   //sumamos el sueldo fiscal + las provisiones
+                   $datos[$i]->total_fiscal = $datos[$i]->total_importe+$datos[$i]->provision;
+               
+              }
+            }else{
+              for ($i=0; $i <count($datos) ; $i++) { 
+                foreach ($provisiones as $provision) {
+                  if ($datos[$i]->NOMBRE==$provision->NOMBRE) {
+
+                   $datos[$i]->provision = $provision->total_ImpEstatal+$provision->total_PImss+$provision->total_PSar+$provision->total_PInfonavit;
+                   //sumamos el sueldo fiscal + las provisiones
+                   $datos[$i]->total_fiscal = $datos[$i]->total_importe+$datos[$i]->provision;
+                   
+                  }
+                }
+              }
+            }
+// dd($datos);
+      return $datos;
+  }
+
+  public function asimiladoNeto($periodo)
+  {
+    //--------------parte de asimilado-----------------------------------------------
+        //consulta de las percepciones
+        $percepciones  = DB::connection('sqlsrv2')->table('EMPLEADO')
+                        ->where('ESTATUS','!=','B')
+                        ->join('ca2019','EMPLEADO.EMP','=','ca2019.EMP')
+                        ->select('NOMBRE','NetoMensual','ca2019.EMP',DB::raw('SUM(IMPORTE) as total_importe'))
+                        ->groupBy('NOMBRE','ca2019.EMP')
+                        ->where('ca2019.CONCEPTO','<', 500)
+                        ->join('CONTROL','ca2019.PERIODO','=','CONTROL.PERIODO')
+                        ->select('NOMBRE','NetoMensual','ca2019.EMP',DB::raw('SUM(IMPORTE) as total_importe'))
+                        ->groupBy('NOMBRE','NetoMensual','ca2019.EMP')
+                        ->where('CONTROL.PERIANO',$periodo)
+                        ->select('NOMBRE','NetoMensual',DB::raw('SUM(IMPORTE) as total_importe'))
+                        ->groupBy('NOMBRE','NetoMensual')
+                        ->get();
+      //consultas de las deducciones
+        $deducciones  = DB::connection('sqlsrv2')->table('EMPLEADO')
+                        ->where('ESTATUS','!=','B')
+                        ->join('ca2019','EMPLEADO.EMP','=','ca2019.EMP')
+                        ->select('NOMBRE','NetoMensual','ca2019.EMP',DB::raw('SUM(IMPORTE) as total_import'))
+                        ->groupBy('NOMBRE','ca2019.EMP')
+                        ->where('ca2019.CONCEPTO','>', 499)
+                        ->join('CONTROL','ca2019.PERIODO','=','CONTROL.PERIODO')
+                        ->select('NOMBRE','NetoMensual','ca2019.EMP',DB::raw('SUM(IMPORTE) as total_import'))
+                        ->groupBy('NOMBRE','NetoMensual','ca2019.EMP')
+                        ->where('CONTROL.PERIANO',$periodo)
+                        ->select('NOMBRE','NetoMensual',DB::raw('SUM(IMPORTE) as total_import'))
+                        ->groupBy('NOMBRE','NetoMensual')
+                        ->get();
+       
+        //percepciones - deducciones para obtener el sueldo neto
+        for ($i=0; $i < count($percepciones) ; $i++) { 
+          foreach ($deducciones as $deduccione) {
+            if ($percepciones[$i]->NOMBRE == $deduccione->NOMBRE) {
+              $percepciones[$i]->total_importe= $percepciones[$i]->total_importe-$deduccione->total_import;
+            }
+          }
+        }
+    return $percepciones;
+  }
+
+  public function Provision($periodo)
+  {
+    $provisiones = DB::connection('sqlsrv2')->table('EMPLEADO')
+                        ->where('ESTATUS','!=','B')
+                        ->join('ProvisionAcumula','EMPLEADO.EMP','=','ProvisionAcumula.Empleado')
+                        ->select('NOMBRE','ProvisionAcumula.Pmensual')
+                        ->groupBy('NOMBRE','ProvisionAcumula.Pmensual')
+                        ->join('CONTROL','ProvisionAcumula.Periodo','=','CONTROL.PERIODO')
+                        ->select('NOMBRE','CONTROL.PERIANO','ProvisionAcumula.Pmensual')
+                        ->groupBy('NOMBRE','CONTROL.PERIANO','ProvisionAcumula.Pmensual')
+                        ->where('CONTROL.PERIANO',$periodo)
+                        ->get();
+    return $provisiones;
+  }
+
+  public function ReporteCinco(Request $periodo)
+  {
+      $periodo = $periodo->tipo;
+        $fiscal = $this::fiscalNeto($periodo);
+        $asimilado = $this::asimiladoNeto($periodo);
+        
+         // dd($fiscal,$asimilado);
+          //termino de calcular los campos para la tabla
+          for ($i=0; $i <count($fiscal) ; $i++) { 
+            foreach ($asimilado as $percepcion) {
+              if ($fiscal[$i]->NOMBRE==$percepcion->NOMBRE) {
+                $fiscal[$i]->asimilado = $percepcion->total_importe;
+                 $fiscal[$i]->total_periodo_actual = $fiscal[$i]->asimilado + $fiscal[$i]->total_fiscal;
+              }
+            }
+          }
+        //preparo el arrelgo para regresar por ajax
+          for ($i=0; $i <count($fiscal) ; $i++) { 
+            $array[$i][0] = $fiscal[$i]->NOMBRE;
+             $array[$i][1] = $fiscal[$i]->NetoMensual; //netomensual
+            // $array[$i][2] = $fiscal[$i]->PERIODO;
+            $array[$i][2] = round($fiscal[$i]->total_importe,2); //sueldo fiscal
+            $array[$i][3] = round($fiscal[$i]->provision,2); //provision social con estrategia
+            $array[$i][4] = round($fiscal[$i]->total_fiscal,2); //total fiscal
+            if (!isset($fiscal[$i]->asimilado)) {
+              $fiscal[$i]->asimilado = 0;
+              $fiscal[$i]->total_periodo_actual = $fiscal[$i]->total_fiscal;
+            }
+            $array[$i][5] = round($fiscal[$i]->asimilado,2); 
+            $array[$i][6] = round($fiscal[$i]->total_periodo_actual,2);
+            $array[$i][7] = round($fiscal[$i]->NetoMensual,2);
+            $array[$i][8] = 0;
+            $array[$i][9] = 0;
+            $array[$i][10] = 0;
+            $array[$i][11] = 0;
+            
+          }
+
+          $provisiones = $this::Provision($periodo);
+          
+          $total[1]=0;
+          $total[2]=0;
+           $total[3]=0;
+          for ($i=0; $i <count($array) ; $i++) { 
+            foreach ($provisiones as $provision) {
+              if ($array[$i][0]==$provision->NOMBRE) {
+                $array[$i][8] = round($provision->Pmensual,2); //<-Provision mensual o estimado del empleado
+                $array[$i][9] = round($array[$i][8]+$array[$i][7],2); //total costo sin estrategia promensual + sueldo sin estrategia
+                $array[$i][10] = round($array[$i][9]-$array[$i][6],2); //difeencia entre total con estrategia y sin estra (ahorro compañia)
+                $array[$i][11] = Round(($array[$i][10]/ $array[$i][9])*100, 2).'%'; //porcentaje de ahorro
+                $total[1] = round($total[1]+$array[$i][6],2); //total con estrategia
+                $total[2] = round($total[2]+$array[$i][9],2); //total sin estrategia
+                $total[3] = round($total[3]+$array[$i][10],2); //total de ahorro
+              }
+            }
+          }
+
+          return response(array('tabla'=>$array,'totales'=>$total));
+  }
 } 
