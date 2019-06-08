@@ -1054,7 +1054,7 @@
 
     var chart;
   function Reporte5Barras($valores){
-    alert($valores[1]);
+    
     Highcharts.chart('container2', {
         chart: {
             type: 'column'
