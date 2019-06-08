@@ -16,6 +16,7 @@ use App\VariacionEstra;
 use Illuminate\Support\Facades\Schema;
 use DB;
 use App\Imss;
+use App\Puesto;
 // use Maatwebsite\Excel\Facades\Excel;
 use Excel;
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -35,95 +36,6 @@ class ReportesController extends Controller
 
      public function index()
     { 
-      // $provisiones = DB::connection('sqlsrv2')->table('EMPLEADO')
-      //                   ->where('ESTATUS','!=','B')
-      //                   ->join('ProvisionAcumula','EMPLEADO.EMP','=','ProvisionAcumula.Empleado')
-      //                   ->select('NOMBRE','ProvisionAcumula.Empleado','ProvisionAcumula.ImpEstatal','ProvisionAcumula.PImss','ProvisionAcumula.PSar','ProvisionAcumula.PInfonavit')
-      //                   ->where('ProvisionAcumula.Periodo',201923)
-      //                   ->get();
-      //   $percepciones  = DB::connection('sqlsrv2')->table('EMPLEADO')
-      //                   ->where('ESTATUS','!=','B')
-      //                   ->join('ProvisionAcumula','EMPLEADO.EMP','=','ProvisionAcumula.Empleado')
-      //                   ->select('NOMBRE',DB::raw('SUM(ImpEstatal) as total_ImpEstatal'),DB::raw('SUM(PImss) as total_PImss'),DB::raw('SUM(PSar) as total_PSar'),DB::raw('SUM(PInfonavit) as total_PInfonavit'))
-      //                   ->groupBy('NOMBRE')
-      //                   // ->where('ca2019.CONCEPTO','<', 500)
-      //                    ->join('CONTROL','ProvisionAcumula.Periodo','=','CONTROL.PERIODO')
-      //                    ->select('NOMBRE',DB::raw('SUM(ImpEstatal) as total_ImpEstatal'),DB::raw('SUM(PImss) as total_PImss'),DB::raw('SUM(PSar) as total_PSar'),DB::raw('SUM(PInfonavit) as total_PInfonavit'))
-      //                    ->groupBy('NOMBRE')
-      //                   // ->groupBy('NOMBRE','NetoMensual','ca2019.EMP','CONTROL.PERIODO')
-      //                    ->where('CONTROL.PERIANO',201906)
-      //                   ->get();
-
-      // $percepciones  = DB::connection('sqlsrv2')->table('EMPLEADO')
-      //                   ->where('ESTATUS','!=','B')
-      //                   ->join('ProvisionAcumula','EMPLEADO.EMP','=','ProvisionAcumula.Empleado')
-      //                   ->select('NOMBRE','ProvisionAcumula.Pmensual')
-      //                   ->groupBy('NOMBRE','ProvisionAcumula.Pmensual')
-      //                   ->join('CONTROL','ProvisionAcumula.Periodo','=','CONTROL.PERIODO')
-      //                   ->select('NOMBRE','CONTROL.PERIANO','ProvisionAcumula.Pmensual')
-      //                   ->groupBy('NOMBRE','CONTROL.PERIANO','ProvisionAcumula.Pmensual')
-      //                   ->where('CONTROL.PERIANO',201906)
-      //                   ->get();
-                  // dd($provisiones,$percepciones);
-      // $periodo = 201906;
-      //   $fiscal = $this::fiscalNeto($periodo);
-      //   $asimilado = $this::asimiladoNeto($periodo);
-        
-      //     // dd($fiscal,$asimilado);
-      //     //termino de calcular los campos para la tabla
-      //     for ($i=0; $i <count($fiscal) ; $i++) { 
-      //       foreach ($asimilado as $percepcion) {
-      //         if ($fiscal[$i]->NOMBRE==$percepcion->NOMBRE) {
-      //           $fiscal[$i]->asimilado = $percepcion->total_importe;
-      //            $fiscal[$i]->total_periodo_actual = $fiscal[$i]->asimilado + $fiscal[$i]->total_fiscal;
-      //         }
-      //       }
-      //     }
-      //   //preparo el arrelgo para regresar por ajax
-      //     for ($i=0; $i <count($fiscal) ; $i++) { 
-      //       $array[$i][0] = $fiscal[$i]->NOMBRE;
-      //        $array[$i][1] = $fiscal[$i]->NetoMensual; //netomensual
-      //       // $array[$i][2] = $fiscal[$i]->PERIODO;
-      //       $array[$i][2] = round($fiscal[$i]->total_importe,2); //sueldo fiscal
-      //       $array[$i][3] = round($fiscal[$i]->provision,2); //provision social con estrategia
-      //       $array[$i][4] = round($fiscal[$i]->total_fiscal,2); //total fiscal
-      //       if (!isset($fiscal[$i]->asimilado)) {
-      //         $fiscal[$i]->asimilado = 0;
-      //         $fiscal[$i]->total_periodo_actual = $fiscal[$i]->total_fiscal;
-      //       }
-      //       $array[$i][5] = round($fiscal[$i]->asimilado,2); 
-      //       $array[$i][6] = round($fiscal[$i]->total_periodo_actual,2);
-      //       $array[$i][7] = $fiscal[$i]->NetoMensual;
-      //       $array[$i][8] = 0;
-      //       $array[$i][9] = 0;
-      //       $array[$i][10] = 0;
-      //       $array[$i][11] = 0;
-            
-      //     }
-
-      //     $provisiones = $this::Provision($periodo);
-          
-      //     $total[1]=0;
-      //     $total[2]=0;
-      //      $total[3]=0;
-      //     for ($i=0; $i <count($array) ; $i++) { 
-      //       foreach ($provisiones as $provision) {
-      //         if ($array[$i][0]==$provision->NOMBRE) {
-      //           $array[$i][8] = $provision->Pmensual; //<-Provision mensual o estimado del empleado
-      //           $array[$i][9] = $array[$i][8]+$array[$i][7]; //total costo sin estrategia promensual + sueldo sin estrategia
-      //           $array[$i][10] = $array[$i][9]-$array[$i][6]; //difeencia entre total con estrategia y sin estra (ahorro compañia)
-      //           $array[$i][11] = Round(($array[$i][10]/ $array[$i][9])*100, 2).'%';
-      //           $total[1] = $total[1]+$array[$i][6];
-      //           $total[2] = $total[2]+$array[$i][9];
-      //           $total[3] = $total[3]+$array[$i][10];
-      //         }
-      //       }
-      //     }
-      //     dd($array,$total);
-           
-            
-      //---------------------fin-----------------------------------//
-     
       try {
         $control =Schema::connection('sqlsrv2')->hasTable('PERIODO');
       } catch (\Exception $e) {
@@ -143,8 +55,10 @@ class ReportesController extends Controller
      
       $NoEmp = Empleado::where('ESTATUS','!=','B')->get();;
       $NoEmp = count($NoEmp);
+      $NoPues = Puesto::get();
+      $NoPues = count($NoPues);
       
-    	return view('/formato1')->with(compact('control','navbar','NoEmp','controlPeriodos','bandera'));
+    	return view('/formato1')->with(compact('control','navbar','NoEmp','controlPeriodos','bandera','NoPues'));
     	
     }
 
@@ -1103,5 +1017,20 @@ class ReportesController extends Controller
           }
 
           return response(array('tabla'=>$array,'totales'=>$total));
+  }
+
+  public function ReporteSeis(Request $reporte)
+  {
+    $puestos = Puesto::get();
+      for ($i=0; $i < count($puestos) ; $i++) { 
+        $array[$i][0] = $puestos[$i]->NOMBRE;
+        $array[$i][1] = $puestos[$i]->AUTORIZADA;
+        $array[$i][2] = $puestos[$i]->OCUPADAS;
+        $array[$i][3] = round(($array[$i][2]/$array[$i][1])*100,2).'%';
+        $nombres[$i] = $puestos[$i]->NOMBRE;
+        $total[$i] = round(($array[$i][2]/$array[$i][1])*100,2);
+      }
+
+    return response(array('tabla'=>$array,'nombres'=>$nombres,'totales'=>$total));
   }
 } 

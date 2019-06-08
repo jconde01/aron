@@ -24,7 +24,7 @@
 <div style="width: 90%; margin:auto; border-bottom: 1px blue solid;" >
   <div  id="indicador1">
     <div id="tabla1">
-      <h3 id="titulo1" style="margin-left: 50px;" hidden>REPORTE DE % DE ASISTENCIA MENSUAL</h3>
+      <h3 id="titulo1" style="margin-left: 50px;" hidden>REPORTE DE % DE ASISTENCIA MENSUAL</h3> <label id="ubicacion1" style="float: right;"></label>
           <table id="table_1" class="display" hidden> 
                     <thead>                           
                         <tr>
@@ -84,7 +84,7 @@
   <div style="width: 100%; margin:auto;" >
     <div  id="indicador2">
       <div id="tabla2">
-        <h3 id="titulo2" style="margin-left: 50px;" hidden>REPORTE DE % DE ASISTENCIA POR PERÍODO</h3>
+        <h3 id="titulo2" style="margin-left: 50px;" hidden>REPORTE DE % DE ASISTENCIA POR PERÍODO</h3><label id="ubicacion2" style="float: right;"></label>
           <table id="table_2" class="display" hidden> 
             <thead>                           
               <tr>
@@ -132,7 +132,7 @@
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------ -->
 <div style="width: 90%; margin:auto; border-bottom: 1px blue solid;">
-  <h3 style="margin-left: 35px;">REPORTE DE NÓMINA "VARIACIONES POR PERIODO"</h3>
+  <h3 style="margin-left: 35px;">REPORTE DE NÓMINA "VARIACIONES POR PERIODO"</h3> 
   <label style="margin-left: 35px;">Período: &nbsp;</label>
   <select name="variacion" class="variacion" id="variacion" >
     <option value="0">Seleccione Una Opción</option>
@@ -143,7 +143,7 @@
   <div style="width: 100%; margin:auto;" >
     <div  id="indicador3">
       <div id="tabla3">
-        <h3 id="titulo3" style="margin-left: 50px;" hidden>REPORTE DE NÓMINA "VARIACIONES POR PERIODO"</h3><label>Cancún, Quintana Roo, México</label>
+        <h3 id="titulo3" style="margin-left: 50px;" hidden>REPORTE DE NÓMINA "VARIACIONES POR PERIODO"</h3><label id="ubicacion3" style="float: right;"></label>
           <table id="table_3" class="display" hidden> 
             <thead>                           
               <tr>
@@ -216,7 +216,7 @@
   <div style="width: 100%; margin:auto;" >
     <div id="indicador4">
       <div id="tabla4">
-        <h3 id="titulo4" style="margin-left: 50px;" hidden>REPORTE VARIACIÓN DE COSTO AÑO ANTERIOR</h3>
+        <h3 id="titulo4" style="margin-left: 50px;" hidden>REPORTE VARIACIÓN DE COSTO AÑO ANTERIOR</h3><label id="ubicacion4" style="float: right;"></label>
           <table id="table_4" class="display" hidden> 
             <thead>                           
               <tr>
@@ -279,7 +279,7 @@
 <!-- --------------------------------------------------------------------------------------------------------------------------------------------- -->
 <div style="width: 90%; margin:auto; border-bottom: 1px blue solid;">
   <h3 style="margin-left: 35px;">REPORTE DE VARIACIÓN EN COSTO CON ESTRATEGIA VS SIN ESTRATREGIA</h3>
-  <label style="margin-left: 35px;">Período: &nbsp;</label>
+  <label style="margin-left: 35px;">Mes: &nbsp;</label>
   <select name="variacionE" class="variacionE" id="variacionE" >
     <option value="0">Seleccione Una Opción</option>
     @foreach ($control as $contro)
@@ -289,7 +289,7 @@
   <div style="width: 100%; margin:auto;" >
     <div  id="indicador5">
       <div id="tabla5">
-        <h3 id="titulo5" style="margin-left: 50px;" hidden>REPORTE DE VARIACIÓN EN COSTO CON ESTRATEGIA VS SIN ESTRATREGIA</h3>
+        <h3 id="titulo5" style="margin-left: 50px;" hidden>REPORTE DE VARIACIÓN EN COSTO CON ESTRATEGIA VS SIN ESTRATREGIA</h3><label id="ubicacion5" style="float: right;"></label>
           <table id="table_5" class="display" hidden> 
             <thead>                           
               <tr>
@@ -353,6 +353,60 @@
       
     </div>
     <button type="button" style="float: right;" id="boton7" hidden onclick="javascript:imprimir5(graficaLineal2);">Imprimir Reporte Completo</button> <br><br>
+  </div>
+</div>
+
+<!-- ------------------------------------------------------------------------------------------------------------------------------------------- -->
+<!-- --------------------------------------------------------------------------------------------------------------------------------------------- -->
+<div style="width: 90%; margin:auto; border-bottom: 1px blue solid;">
+  <h3 style="margin-left: 35px;">REPORTE DE PLAZAS</h3>
+  <label style="margin-left: 35px;">Generar Reporte: &nbsp;</label>
+  <select name="plazas" class="plazas" id="plazas" >
+    <option value="0">Seleccione Para Generar</option> 
+    <option value="1">Generar</option>
+  </select>
+  <div style="width: 100%; margin:auto;" >
+    <div  id="indicador6">
+      <div id="tabla6">
+        <h3 id="titulo6" style="margin-left: 50px;" hidden>REPORTE DE PLAZAS</h3><label id="ubicacion6" style="float: right;"></label>
+          <table id="table_6" class="display" hidden> 
+            <thead>                           
+              <tr>
+                <th class="parrafo">PUESTO</th>
+                <th class="parrafo">PLAZAS AUTORIZADAS</th>
+                <th class="parrafo">PLAZAS OCUPADAS</th>
+                <th class="parrafo">% DE PLAZAS COMPLETAS</th>
+              </tr>  
+            </thead>                   
+                           
+            <tbody>
+              
+              <tr class="pruebacolor">
+                <td class="parrafo"></td>
+                <td class="parrafo"></td>
+                <td class="parrafo"></td>
+                <td class="parrafo"></td>                        
+              </tr>
+              
+              <tr class="pruebacolor">
+                
+                <td class="parrafo"></td>
+                <td class="parrafo"></td>
+                <td class="parrafo"></td>
+                <td class="parrafo"></td>                      
+              </tr>
+            </tbody>
+          </table>
+      </div>  
+      <br>
+                      <!-- <button type="button" id="boton3" hidden style="float: right;" onclick="javascript:imptabla2(graficaLineal2);">Imprimir Tabla</button> -->
+      
+        <div id="container6" style="  width: 70%;padding-right: 340px; padding-left: 0px; margin-left: 150px;" hidden>
+        </div>
+        
+      
+    </div>
+    <button type="button" style="float: right;" id="boton8" hidden onclick="javascript:imprimir6(graficaLineal2);">Imprimir Reporte Completo</button> <br><br>
   </div>
 </div>
 
@@ -460,6 +514,26 @@
     function imprim1(imp1){
       
       document.getElementById('titulo1').style.display = 'block';
+      marcacion = new Date()
+      /* Capturamos la Hora */
+      Hora = marcacion.getHours()
+      /* Capturamos los Minutos */
+      Minutos = marcacion.getMinutes()
+      /* Capturamos los Segundos */
+      Segundos = marcacion.getSeconds()
+      /*variable para el apóstrofe de am o pm*/
+      dn = "a.m"
+      if (Hora > 12) {
+      dn = "p.m"
+      Hora = Hora - 12
+      }
+      if (Hora == 0)
+      Hora = 12
+      /* Si la Hora, los Minutos o los Segundos son Menores o igual a 9, le añadimos un 0 */
+      if (Hora <= 9) Hora = "0" + Hora
+      if (Minutos <= 9) Minutos = "0" + Minutos
+      if (Segundos <= 9) Segundos = "0" + Segundos
+      document.getElementById('ubicacion1').innerHTML = 'Cancún, Quintana Roo, México &nbsp;&nbsp;&nbsp;'+' HORA: '+ Hora + ":" + Minutos + ":" + Segundos+ " " + dn;
     
     document.getElementsByClassName('dt-buttons')[0].style.visibility = "hidden";
     document.getElementById('table_1_filter').style.visibility = "hidden";
@@ -606,9 +680,26 @@
     function imprimir2(emp3){
       
     document.getElementById('titulo2').style.display = 'block';
-    // document.getElementById('boton3').style.visibility = "hidden";
-    // document.getElementById('table_1_length').style.visibility = "hidden";
-     // document.getElementById('table_1_filter').style.visibility = "hidden";
+    marcacion = new Date()
+      /* Capturamos la Hora */
+      Hora = marcacion.getHours()
+      /* Capturamos los Minutos */
+      Minutos = marcacion.getMinutes()
+      /* Capturamos los Segundos */
+      Segundos = marcacion.getSeconds()
+      /*variable para el apóstrofe de am o pm*/
+      dn = "a.m"
+      if (Hora > 12) {
+      dn = "p.m"
+      Hora = Hora - 12
+      }
+      if (Hora == 0)
+      Hora = 12
+      /* Si la Hora, los Minutos o los Segundos son Menores o igual a 9, le añadimos un 0 */
+      if (Hora <= 9) Hora = "0" + Hora
+      if (Minutos <= 9) Minutos = "0" + Minutos
+      if (Segundos <= 9) Segundos = "0" + Segundos
+      document.getElementById('ubicacion2').innerHTML = 'Cancún, Quintana Roo, México &nbsp;&nbsp;&nbsp;'+' HORA: '+ Hora + ":" + Minutos + ":" + Segundos+ " " + dn;
     var contador =document.getElementsByClassName('dt-buttons');
    for (var i = 0; i < contador.length; i++) {
      contador[i].style.visibility = "hidden";
@@ -786,9 +877,26 @@
     function imprimir3(emp3){
       
     document.getElementById('titulo3').style.display = 'block';
-    // document.getElementById('boton3').style.visibility = "hidden";
-    // document.getElementById('table_1_length').style.visibility = "hidden";
-     // document.getElementById('table_1_filter').style.visibility = "hidden";
+    marcacion = new Date()
+      /* Capturamos la Hora */
+      Hora = marcacion.getHours()
+      /* Capturamos los Minutos */
+      Minutos = marcacion.getMinutes()
+      /* Capturamos los Segundos */
+      Segundos = marcacion.getSeconds()
+      /*variable para el apóstrofe de am o pm*/
+      dn = "a.m"
+      if (Hora > 12) {
+      dn = "p.m"
+      Hora = Hora - 12
+      }
+      if (Hora == 0)
+      Hora = 12
+      /* Si la Hora, los Minutos o los Segundos son Menores o igual a 9, le añadimos un 0 */
+      if (Hora <= 9) Hora = "0" + Hora
+      if (Minutos <= 9) Minutos = "0" + Minutos
+      if (Segundos <= 9) Segundos = "0" + Segundos
+      document.getElementById('ubicacion3').innerHTML = 'Cancún, Quintana Roo, México &nbsp;&nbsp;&nbsp;'+' HORA: '+ Hora + ":" + Minutos + ":" + Segundos+ " " + dn;
    var contador =document.getElementsByClassName('dt-buttons');
    for (var i = 0; i < contador.length; i++) {
      contador[i].style.visibility = "hidden";
@@ -965,9 +1073,26 @@
     function imprimir4(emp3){
       
     document.getElementById('titulo4').style.display = 'block';
-    // document.getElementById('boton3').style.visibility = "hidden";
-    // document.getElementById('table_1_length').style.visibility = "hidden";
-     // document.getElementById('table_1_filter').style.visibility = "hidden";
+    marcacion = new Date()
+      /* Capturamos la Hora */
+      Hora = marcacion.getHours()
+      /* Capturamos los Minutos */
+      Minutos = marcacion.getMinutes()
+      /* Capturamos los Segundos */
+      Segundos = marcacion.getSeconds()
+      /*variable para el apóstrofe de am o pm*/
+      dn = "a.m"
+      if (Hora > 12) {
+      dn = "p.m"
+      Hora = Hora - 12
+      }
+      if (Hora == 0)
+      Hora = 12
+      /* Si la Hora, los Minutos o los Segundos son Menores o igual a 9, le añadimos un 0 */
+      if (Hora <= 9) Hora = "0" + Hora
+      if (Minutos <= 9) Minutos = "0" + Minutos
+      if (Segundos <= 9) Segundos = "0" + Segundos
+      document.getElementById('ubicacion4').innerHTML = 'Cancún, Quintana Roo, México &nbsp;&nbsp;&nbsp;'+' HORA: '+ Hora + ":" + Minutos + ":" + Segundos+ " " + dn;
     var contador =document.getElementsByClassName('dt-buttons');
    for (var i = 0; i < contador.length; i++) {
      contador[i].style.visibility = "hidden";
@@ -1341,9 +1466,26 @@
     function imprimir5(emp3){
       
     document.getElementById('titulo5').style.display = 'block';
-    // document.getElementById('boton3').style.visibility = "hidden";
-    // document.getElementById('table_1_length').style.visibility = "hidden";
-     // document.getElementById('table_1_filter').style.visibility = "hidden";
+    marcacion = new Date()
+      /* Capturamos la Hora */
+      Hora = marcacion.getHours()
+      /* Capturamos los Minutos */
+      Minutos = marcacion.getMinutes()
+      /* Capturamos los Segundos */
+      Segundos = marcacion.getSeconds()
+      /*variable para el apóstrofe de am o pm*/
+      dn = "a.m"
+      if (Hora > 12) {
+      dn = "p.m"
+      Hora = Hora - 12
+      }
+      if (Hora == 0)
+      Hora = 12
+      /* Si la Hora, los Minutos o los Segundos son Menores o igual a 9, le añadimos un 0 */
+      if (Hora <= 9) Hora = "0" + Hora
+      if (Minutos <= 9) Minutos = "0" + Minutos
+      if (Segundos <= 9) Segundos = "0" + Segundos
+      document.getElementById('ubicacion5').innerHTML = 'Cancún, Quintana Roo, México &nbsp;&nbsp;&nbsp;'+' HORA: '+ Hora + ":" + Minutos + ":" + Segundos+ " " + dn;
     var contador =document.getElementsByClassName('dt-buttons');
    for (var i = 0; i < contador.length; i++) {
      contador[i].style.visibility = "hidden";
@@ -1374,18 +1516,164 @@
 
     location.reload(true);
         return true;}
-  // function imptabla2(imp4){
-  //   document.getElementById('titulo2').style.display = 'block';
-  //   var contenido= document.getElementById('tabla2').innerHTML;
-  //    var contenidoOriginal= document.body.innerHTML;
+       
+</script>
 
-  //    document.body.innerHTML = contenido;
+<script type="text/javascript">
+  $.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+  });  
+  $('#plazas').change(function() {
+    var token = $('input[name=_token]').val();        
+    var tipo  =  $('#plazas').val();
 
-  //    window.print();
+        $.post("get-reporte-seis", { tipo: tipo, _token: token }, function( data ) {  
 
-  //    document.body.innerHTML = contenidoOriginal;
+            if (data != 'Error') {
+              tabla6(data['tabla']);
+              grafica6(data['totales'],data['nombres']);
+               
+            } else {
+                alert('Error de acceso a la base de datos. Verifique la conexión...')
+            }
 
-  //   location.reload(true);
-  //       return true;}        
+        });   
+  });
+
+
+  function tabla6($valores) {
+
+       var data = $valores;
+        document.getElementById('table_6').style.display = 'block';
+        
+        document.getElementById('boton8').style.display = 'block';
+        $('#table_6').DataTable( {
+             destroy: true,
+             data: data,   
+             "order": [[ 0, "desc" ]],
+             dom: 'Bfrtip',
+              buttons: [
+                  'csv', 'excel', 'pdf', 'print'
+              ]
+        });
+      
+    };
+ 
+  var chart;
+  function grafica6($valores,$nombres) {
+    document.getElementById('container6').style.display = 'block';
+    chart = new Highcharts.Chart({
+      chart: {
+        renderTo: 'container6',  // Le doy el nombre a la gráfica
+        defaultSeriesType: 'line' // Pongo que tipo de gráfica es
+      },
+      title: {
+        text: '% de plazas completas'  // Titulo (Opcional)
+      },
+      subtitle: {
+        text: 'Vally.com'   // Subtitulo (Opcional)
+      },
+      // Pongo los datos en el eje de las 'X'
+      xAxis: {
+        categories: [<?php for ($i=0; $i <$NoPues ; $i++) { 
+                        echo '$nombres['; echo $i; echo "],";
+                      } ?>],
+          // Pongo el título para el eje de las 'X'
+          title: {
+            text: 'Plazas'
+          }
+        },
+        yAxis: {
+          // Pongo el título para el eje de las 'Y'
+          title: {
+            text: 'Rango'
+          }
+        },
+        // Doy formato al la "cajita" que sale al pasar el ratón por encima de la gráfica
+        tooltip: {
+          enabled: true,
+          formatter: function() {
+            return '<b>'+ this.series.name +'</b><br/>'+
+              this.x +': '+ this.y +' '+this.series.name;
+          }
+        },
+        // Doy opciones a la gráfica
+        plotOptions: {
+          line: {
+            dataLabels: {
+              enabled: true
+            },
+            enableMouseTracking: true
+          }
+        },
+        // Doy los datos de la gráfica para dibujarlas
+        series: [{
+                      name: '% de Plazas Completas',
+                      data: [<?php for ($i=0; $i <$NoPues ; $i++) { 
+                        echo '$valores['; echo $i; echo "],";
+                      } ?>]
+                  }],
+      }); 
+    };
+
+  function imprimir6(imp1){
+      
+      document.getElementById('titulo6').style.display = 'block';
+      marcacion = new Date()
+      /* Capturamos la Hora */
+      Hora = marcacion.getHours()
+      /* Capturamos los Minutos */
+      Minutos = marcacion.getMinutes()
+      /* Capturamos los Segundos */
+      Segundos = marcacion.getSeconds()
+      /*variable para el apóstrofe de am o pm*/
+      dn = "a.m"
+      if (Hora > 12) {
+      dn = "p.m"
+      Hora = Hora - 12
+      }
+      if (Hora == 0)
+      Hora = 12
+      /* Si la Hora, los Minutos o los Segundos son Menores o igual a 9, le añadimos un 0 */
+      if (Hora <= 9) Hora = "0" + Hora
+      if (Minutos <= 9) Minutos = "0" + Minutos
+      if (Segundos <= 9) Segundos = "0" + Segundos
+      document.getElementById('ubicacion6').innerHTML = 'Cancún, Quintana Roo, México &nbsp;&nbsp;&nbsp;'+' HORA: '+ Hora + ":" + Minutos + ":" + Segundos+ " " + dn;
+    
+    document.getElementsByClassName('dt-buttons')[0].style.visibility = "hidden";
+    // document.getElementById('table_1_filter').style.visibility = "hidden";
+    var contador =document.getElementsByClassName('dt-buttons');
+   for (var i = 0; i < contador.length; i++) {
+     contador[i].style.visibility = "hidden";
+   }
+
+    var contador =document.getElementsByClassName('dataTables_filter');
+    for (var i = 0; i < contador.length; i++) {
+     contador[i].style.visibility = "hidden";
+   }
+
+   var contador =document.getElementsByClassName('dataTables_paginate');
+   for (var i = 0; i < contador.length; i++) {
+     contador[i].style.visibility = "hidden";
+   }
+
+   var contador =document.getElementsByClassName('dataTables_info');
+   for (var i = 0; i < contador.length; i++) {
+     contador[i].style.visibility = "hidden";
+   }
+    
+  var contenido= document.getElementById('indicador6').innerHTML;
+     var contenidoOriginal= document.body.innerHTML;
+
+     document.body.innerHTML = contenido;
+
+     window.print();
+
+     document.body.innerHTML = contenidoOriginal;
+
+    location.reload(true);
+        return true;}    
 </script>
 @endsection
