@@ -36,9 +36,6 @@ class ReportesController extends Controller
 
      public function index()
     { 
-      
-
-      // dd($horasE,$faltas,$array,$nombres,$faltas);
       try {
         $control =Schema::connection('sqlsrv2')->hasTable('PERIODO');
       } catch (\Exception $e) {
@@ -60,48 +57,8 @@ class ReportesController extends Controller
       $NoEmp = count($NoEmp);
       $NoPues = Puesto::get();
       $NoPues = count($NoPues);
-
-          $horasE = ca2019::whereBetween('CONCEPTO', [200,201])
-          ->select('PERIODO',DB::raw('SUM(importe) as total_importe'),DB::raw('0 as estatus'))
-          ->groupBy('PERIODO')
-          ->get();
-
-          $faltas = ca2019::where('CONCEPTO', 408)
-          ->select('PERIODO',DB::raw('SUM(importe) as total_importe'),DB::raw('0 as estatus'))
-          ->groupBy('PERIODO')
-          ->get();
-
-          for ($i=0; $i <count($horasE) ; $i++) { 
-            $array[$i][0] = $horasE[$i]->PERIODO;
-            $array[$i][1] = $horasE[$i]->total_importe;
-            $horasE[$i]->estatus = 1;
-            $nombres[$i] = "PERIODO ".$horasE[$i]->PERIODO;
-            foreach ($faltas as $falta) {
-              if ( $array[$i][0]==$falta->PERIODO) {
-                 $array[$i][2]=$falta->total_importe;
-                 $falta->estatus = 1;
-              }
-            }
-          }
-          foreach ($faltas as $falta) {
-              if ($falta->estatus=="0") {
-                $i = count($array);
-                 $array[$i][0]=$falta->PERIODO;
-                 $array[$i][1]=0;
-                 $array[$i][2]=$falta->total_importe;
-                 $falta->estatus = 1;
-                 $nombres[count($nombres)] = "PERIODO ".$array[$i][0];
-              }
-            }
-          for ($i=0; $i < count($array); $i++) { 
-            if (!isset($array[$i][2])) {
-             $array[$i][2] = 0;
-            }  
-          }
-      $array = count($array);
       
-      
-    	return view('/formato1')->with(compact('control','navbar','NoEmp','controlPeriodos','bandera','NoPues','array'));
+    	return view('/formato1')->with(compact('control','navbar','NoEmp','controlPeriodos','bandera','NoPues'));
     	
     }
 
@@ -1075,55 +1032,5 @@ class ReportesController extends Controller
       }
 
     return response(array('tabla'=>$array,'nombres'=>$nombres,'totales'=>$total));
-  }
-
-  public function ReporteSiete(Request $reporte)
-  {
-    $horasE = ca2019::whereBetween('CONCEPTO', [200,201])
-      ->select('PERIODO',DB::raw('SUM(importe) as total_importe'),DB::raw('0 as estatus'))
-      ->groupBy('PERIODO')
-      ->get();
-
-      $faltas = ca2019::where('CONCEPTO', 408)
-      ->select('PERIODO',DB::raw('SUM(importe) as total_importe'),DB::raw('0 as estatus'))
-      ->groupBy('PERIODO')
-      ->get();
-
-      for ($i=0; $i <count($horasE) ; $i++) { 
-        $array[$i][0] = $horasE[$i]->PERIODO;
-        $array[$i][1] = $horasE[$i]->total_importe;
-        $horasE[$i]->estatus = 1;
-        $nombres[$i] = "PERIODO ".$horasE[$i]->PERIODO;
-
-        foreach ($faltas as $falta) {
-          if ( $array[$i][0]==$falta->PERIODO) {
-             $array[$i][2]=$falta->total_importe;
-             $falta->estatus = 1;
-          }
-        }
-      }
-      foreach ($faltas as $falta) {
-          if ($falta->estatus=="0") {
-            $i = count($array);
-             $array[$i][0]=$falta->PERIODO;
-             $array[$i][1]=0;
-             $array[$i][2]=$falta->total_importe;
-             $falta->estatus = 1;
-             $nombres[count($nombres)] = "PERIODO ".$array[$i][0];
-          }
-        }
-
-        for ($i=0; $i < count($array); $i++) { 
-          if (!isset($array[$i][2])) {
-           $array[$i][2] = 0;
-          }  
-        }
-        for ($i=0; $i < count($array); $i++) { 
-          $horas_importe[$i]= round($array[$i][1],2);
-          $aus_importe[$i]= round($array[$i][2],2)*-1;
-        }
-
-
-    return response(array('tabla'=>$array,'nombres'=>$nombres,'horas'=>$horas_importe,'aus'=>$aus_importe));
   }
 } 

@@ -198,7 +198,6 @@ Route::middleware(['auth'])->prefix('consultas')->group(function () {
 	 Route::post('/get-reporte-cuatro','ReportesController@reporteCuatro');
 	 Route::post('/get-reporte-cinco','ReportesController@ReporteCinco');
 	 Route::post('/get-reporte-seis','ReportesController@ReporteSeis');
-	 Route::post('/get-reporte-siete','ReportesController@ReporteSiete');
 });
 
 
