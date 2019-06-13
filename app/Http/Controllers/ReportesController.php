@@ -188,7 +188,7 @@ class ReportesController extends Controller
           foreach ($IncGenerals as $IncGeneral) {
             for ($i=0; $i < count($array) ; $i++) { 
               if ($array[$i][0]==$IncGeneral->NOMBRE) {
-                $array[$i][6] = $IncGeneral->total_unidades*1;
+                $array[$i][6] = $IncGeneral->total_unidades*-1;
                 
               }
             }
@@ -259,8 +259,37 @@ class ReportesController extends Controller
           $nombres[$i] = $array[$i][0];
           $despliega[$i] = $porcentaje;
         }
-      
-       return response(array('tabla'=>$array,'grafica'=>$despliega,'nombres'=>$nombres));
+
+         
+        $totales[1]=0;$totales[2]=0;$totales[3]=0;$totales[4]=0;$totales[5]=0;$totales[6]=0;$totales[7]=0;$totales[8]=0;$totales[9]=0;$totales[10]=0;
+        for ($i=0; $i <count($array) ; $i++) {  
+          $totales[1]= $totales[1]+$array[$i][1];
+          $totales[2]= $totales[2]+$array[$i][2];
+          $totales[3]= $totales[3]+$array[$i][3];
+          $totales[4]= $totales[4]+$array[$i][4];
+          $totales[5]= $totales[5]+$array[$i][5];
+          $totales[6]= $totales[6]+$array[$i][6];
+          $totales[7]= $totales[7]+$array[$i][7];
+          $totales[8]= $totales[8]+$array[$i][8];
+          $totales[9]= $totales[9]+$array[$i][9];
+          $totales[10]= $totales[10]+$array[$i][10];
+          $total = $totales[2]+$totales[3]+$totales[4]+$totales[5]+$totales[6]+$totales[7]+$totales[8]+$totales[9]+$totales[10];
+          $totales[11]= Round(($total/$totales[1])*100, 2)."%";
+        }
+        $i = count($array);
+        $array[$i][0]="Total:";
+        $array[$i][1]= $totales[1];
+        $array[$i][2]= $totales[2];
+        $array[$i][3]= $totales[3];
+        $array[$i][4]= $totales[4];
+        $array[$i][5]= $totales[5];
+        $array[$i][6]= $totales[6];
+        $array[$i][7]= $totales[7];
+        $array[$i][8]= $totales[8];
+        $array[$i][9]= $totales[9];
+        $array[$i][10]= $totales[10];
+        $array[$i][11]= $totales[11];
+       return response(array('tabla'=>$array,'grafica'=>$despliega,'nombres'=>$nombres, 'totales'=>$totales));
       
     }
 
@@ -436,6 +465,37 @@ class ReportesController extends Controller
           $nombres[$i] = $array[$i][0];
           $despliega[$i] = $porcentaje;
         }
+
+        $totales[1]=0;$totales[2]=0;$totales[3]=0;$totales[4]=0;$totales[5]=0;$totales[6]=0;$totales[7]=0;$totales[8]=0;$totales[9]=0;$totales[10]=0;
+        for ($i=0; $i <count($array) ; $i++) {  
+          $totales[1]= $totales[1]+$array[$i][1];
+          $totales[2]= $totales[2]+$array[$i][2];
+          $totales[3]= $totales[3]+$array[$i][3];
+          $totales[4]= $totales[4]+$array[$i][4];
+          $totales[5]= $totales[5]+$array[$i][5];
+          $totales[6]= $totales[6]+$array[$i][6];
+          $totales[7]= $totales[7]+$array[$i][7];
+          $totales[8]= $totales[8]+$array[$i][8];
+          $totales[9]= $totales[9]+$array[$i][9];
+          $totales[10]= $totales[10]+$array[$i][10];
+          $total = $totales[2]+$totales[3]+$totales[4]+$totales[5]+$totales[6]+$totales[7]+$totales[8]+$totales[9]+$totales[10];
+          
+        }
+        
+        $i = count($array);
+        $array[$i][0]="Total:";
+        $array[$i][1]= $totales[1];
+        $array[$i][2]= $totales[2];
+        $array[$i][3]= $totales[3];
+        $array[$i][4]= $totales[4];
+        $array[$i][5]= $totales[5];
+        $array[$i][6]= $totales[6];
+        $array[$i][7]= $totales[7];
+        $array[$i][8]= $totales[8];
+        $array[$i][9]= $totales[9];
+        $array[$i][10]= $totales[10];
+        $porcentaje = Round((($totales[1]-$total)/$totales[1])*100, 2)."%"; 
+        $array[$i][11]= $porcentaje;
       
        return response(array('tabla'=>$array,'grafica'=>$despliega,'nombres'=>$nombres));
       
@@ -541,6 +601,29 @@ class ReportesController extends Controller
             }
           }
         }
+        $sumatoria[1]=0;$sumatoria[2]=0;$sumatoria[3]=0;$sumatoria[4]=0;
+        for ($i=0; $i <count($array) ; $i++) { 
+          $sumatoria[1] = $sumatoria[1]+$array[$i][1];
+          $sumatoria[2] = $sumatoria[2]+$array[$i][2];
+          $sumatoria[3] = $sumatoria[3]+$array[$i][3];
+          $sumatoria[4] = $sumatoria[4]+$array[$i][4];
+          
+        }
+        $i = count($array);
+        $array[$i][0]= "Total: ";
+        $array[$i][1]= round($sumatoria[1],2);
+        $array[$i][2]= round($sumatoria[2],2);
+        $array[$i][3]= round($sumatoria[3],2);
+        $array[$i][4]= round($sumatoria[4],2);
+        $array[$i][5]= round($total[2],2);
+        $array[$i][6]= round($total[3],2);
+        $array[$i][7]= round($total[1],2);
+        if ($array[$i][7]!==0.0) {
+           $porcentaje = Round(($array[$i][7]/ $array[$i][5])*100, 2);
+          }else{
+            $porcentaje = 0;
+          }
+        $array[$i][8]=$porcentaje.'%';
       
        return response(array('tabla'=>$array,'grafica'=>$despliega,'nombres'=>$nombres,'totales'=>$total,'anterior'=>$despliega2));
         // return response($periodo->tipo);
@@ -1059,6 +1142,33 @@ class ReportesController extends Controller
             }
           }
 
+          $sumatoria[1]=0;$sumatoria[2]=0;$sumatoria[3]=0;$sumatoria[4]=0;$sumatoria[5]=0;$sumatoria[6]=0;$sumatoria[7]=0;$sumatoria[8]=0;$sumatoria[9]=0;$sumatoria[10]=0;
+          for ($i=0; $i <count($array) ; $i++) { 
+            $sumatoria[1]=$sumatoria[1]+$array[$i][1];
+            $sumatoria[2]=$sumatoria[2]+$array[$i][2];
+            $sumatoria[3]=$sumatoria[3]+$array[$i][3];
+            $sumatoria[4]=$sumatoria[4]+$array[$i][4];
+            $sumatoria[5]=$sumatoria[5]+$array[$i][5];
+            $sumatoria[6]=$sumatoria[6]+$array[$i][6];
+            $sumatoria[7]=$sumatoria[7]+$array[$i][7];
+            $sumatoria[8]=$sumatoria[8]+$array[$i][8];
+            $sumatoria[9]=$sumatoria[9]+$array[$i][9];
+            $sumatoria[10]=$sumatoria[10]+$array[$i][10];
+          }
+          $i=count($array);
+          $array[$i][0]= "Total:";
+          $array[$i][1]= round($sumatoria[1],2);
+          $array[$i][2]= round($sumatoria[2],2);
+          $array[$i][3]= round($sumatoria[3],2);
+          $array[$i][4]= round($sumatoria[4],2);
+          $array[$i][5]= round($sumatoria[5],2);
+          $array[$i][6]= round($sumatoria[6],2);
+          $array[$i][7]= round($sumatoria[7],2);
+          $array[$i][8]= round($sumatoria[8],2);
+          $array[$i][9]= round($sumatoria[9],2);
+          $array[$i][10]= round($sumatoria[10],2);
+          $array[$i][11] = Round(($array[$i][10]/ $array[$i][9])*100, 2).'%';
+
           return response(array('tabla'=>$array,'totales'=>$total));
   }
 
@@ -1073,6 +1183,18 @@ class ReportesController extends Controller
         $nombres[$i] = $puestos[$i]->NOMBRE;
         $total[$i] = round(($array[$i][2]/$array[$i][1])*100,2);
       }
+      $sumatoria[1] = 0; $sumatoria[2]=0;
+      for ($i=0; $i <count($array) ; $i++) { 
+        $sumatoria[1]= $sumatoria[1]+$array[$i][1];
+        $sumatoria[2]= $sumatoria[2]+$array[$i][2];
+      }
+
+      $i = count($array);
+      $array[$i][0]= "Total";
+      $array[$i][1]= $sumatoria[1];
+      $array[$i][2]= $sumatoria[2];
+      $array[$i][3]= round(($array[$i][2]/$array[$i][1])*100,2).'%';
+
 
     return response(array('tabla'=>$array,'nombres'=>$nombres,'totales'=>$total));
   }
@@ -1122,7 +1244,16 @@ class ReportesController extends Controller
           $horas_importe[$i]= round($array[$i][1],2);
           $aus_importe[$i]= round($array[$i][2],2)*-1;
         }
+        $sumatoria[1]=0;$sumatoria[2]=0;
+        for ($i=0; $i <count($array) ; $i++) { 
+          $sumatoria[1] = $sumatoria[1] + $array[$i][1];
+          $sumatoria[2] = $sumatoria[2] + $array[$i][2];
+        }
 
+        $i = count($array);
+        $array[$i][0]="Total:";
+        $array[$i][1]=$sumatoria[1];
+        $array[$i][2]=$sumatoria[2];
 
     return response(array('tabla'=>$array,'nombres'=>$nombres,'horas'=>$horas_importe,'aus'=>$aus_importe));
   }

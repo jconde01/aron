@@ -3,8 +3,15 @@
 <input type="hidden" name="_token" value="{{ csrf_token() }}">
 <style type="text/css" >
   .parrafo{
-    font-size: 12px;
+    font-size: 16px;
     border: 1px blue solid;
+    border-bottom: 3px blue solid;
+
+  }
+  table{
+    padding: 0px; border-radius: 0px;
+    margin-top: 10px;
+
   }
  /* @media print{
      #tabla1{
@@ -23,46 +30,74 @@
 <br><br>
 <div style="width: 90%; margin:auto; border-bottom: 1px blue solid;" >
   <div  id="indicador1">
-    <div id="tabla1">
+    <div id="tabla1" style="width: 97%;margin: auto;margin-right: 100px;">
       <h3 id="titulo1" style="margin-left: 50px;" hidden>REPORTE DE % DE ASISTENCIA MENSUAL</h3> <label id="ubicacion1" style="float: right;"></label>
           <table id="table_1" class="display" hidden> 
                     <thead>                           
                         <tr>
-                            <th class="parrafo">Empleado</th>
-                            <th class="parrafo">Per. Normal</th>
-                            <th class="parrafo">INC. Maternal</th>
-                            <th class="parrafo">INC. Transito</th>
-                            <th class="parrafo">INC. Enf. Profesional</th>
-                            <th class="parrafo">INC. Acc. Trabajo</th>
-                            <th class="parrafo">INC. Enf. Gral</th>
-                            <th class="parrafo">Retardos</th>
-                            <th class="parrafo">Per. S/Goce de Sueldo</th>
-                            <th class="parrafo">Suspención</th>
-                            <th class="parrafo">Faltas</th>
-                            <th class="parrafo">% de Asistencia</th>
+                            <th>Empleado</th>
+                            <th>Per. Normal</th>
+                            <th>INC. Maternal</th>
+                            <th>INC. Transito</th>
+                            <th>INC. Enf. Profesional</th>
+                            <th>INC. Acc. Trabajo</th>
+                            <th>INC. Enf. Gral</th>
+                            <th>Retardos</th>
+                            <th>Per. S/Goce de Sueldo</th>
+                            <th>Suspención</th>
+                            <th>Faltas</th>
+                            <th>% de Asistencia</th>
                         </tr>  
                     </thead>                   
                          
                     <tbody>
                         <tr class="pruebacolor">
-                            <td class="parrafo"></td>
-                            <td class="parrafo"></td>
-                            <td class="parrafo"></td>
-                            <td class="parrafo"></td>
-                            <td class="parrafo"></td>
-                            <td class="parrafo"></td>
-                            <td class="parrafo"></td>
-                            <td class="parrafo"></td>
-                            <td class="parrafo"></td>
-                            <td class="parrafo"></td>
-                            <td class="parrafo"></td>
-                            <td class="parrafo"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
                                        
                         </tr>  
                     </tbody>
                              
                     </table>
-          </div>  
+            
+          </div> 
+          <!-- <table id="totales1" style="clear: both;width: 100%;" hidden> 
+                    <thead style="">                           
+                        <tr style="">
+                            <td class="parrafo" id="reporte1_total0" style="width: 9.5%;"></td>
+                            <td class="parrafo" id="reporte1_total1" style="width: 8.5%;"></td>
+                            <td class="parrafo"  id="reporte1_total2"></td>
+                            <td class="parrafo" id="reporte1_total3"></td>
+                            <td class="parrafo" id="reporte1_total4"></td>
+                            <td class="parrafo" id="reporte1_total5"></td>
+                            <td class="parrafo" id="reporte1_total6"></td>
+                            <td class="parrafo" id="reporte1_total7"></td>
+                            <td class="parrafo" id="reporte1_total8"></td>
+                            <td class="parrafo" id="reporte1_total9"></td>
+                            <td class="parrafo" id="reporte1_total10"></td>
+                            <td class="parrafo" id="reporte1_total11"></td>
+                           
+                        </tr>  
+                    </thead>                   
+                         
+                    <tbody>
+                        <tr class="pruebacolor">
+                            
+                                       
+                        </tr>  
+                    </tbody>
+                             
+                    </table> -->
                     <br>
                     
     <div id="graficaLineal" style="margin: auto; width: 1200px;">
@@ -481,6 +516,18 @@
             if (data != 'Error') {
               tabla(data['tabla']);
               grafica1(data['grafica'],data['nombres']);
+              // document.getElementById('reporte1_total0').innerHTML=data['totales'][0];
+              // document.getElementById('reporte1_total1').innerHTML=data['totales'][1];
+              // document.getElementById('reporte1_total2').innerHTML=data['totales'][2];
+              // document.getElementById('reporte1_total3').innerHTML=data['totales'][3];
+              // document.getElementById('reporte1_total4').innerHTML=data['totales'][4];
+              // document.getElementById('reporte1_total5').innerHTML=data['totales'][5];
+              // document.getElementById('reporte1_total6').innerHTML=data['totales'][6];
+              // document.getElementById('reporte1_total7').innerHTML=data['totales'][7];
+              // document.getElementById('reporte1_total8').innerHTML=data['totales'][8];
+              // document.getElementById('reporte1_total9').innerHTML=data['totales'][9];
+              // document.getElementById('reporte1_total10').innerHTML=data['totales'][10];
+              // document.getElementById('reporte1_total11').innerHTML=data['totales'][11];
                
             } else {
                 alert('Error de acceso a la base de datos. Verifique la conexión...')
@@ -494,12 +541,13 @@
 
        var data = $valores;
         document.getElementById('table_1').style.display = 'block';
+        // document.getElementById('totales1').style.display = 'block';
         
         document.getElementById('boton2').style.display = 'block';
         $('#table_1').DataTable( {
              destroy: true,
              data: data,   
-             "order": [[ 0, "desc" ]],
+             "order": [[ 1, "asc" ]],
              dom: 'Bfrtip',
               buttons: [
                   'csv', 'excel', 'pdf', 'print'
@@ -665,7 +713,7 @@
         $('#table_2').DataTable( {
              destroy: true,
              data: data,   
-             "order": [[ 0, "desc" ]],
+             "order": [[ 1, "asc" ]],
              dom: 'Bfrtip',
               buttons: [
                   'csv', 'excel', 'pdf', 'print'
@@ -833,7 +881,7 @@
     $('#table_3').DataTable( {
              destroy: true,  
              data: data,   
-             "order": [[ 0, "asc" ]],
+             "order": [[ 1, "asc" ]],
              dom: 'Bfrtip',
               buttons: [
                   'csv', 'excel', 'pdf', 'print'
@@ -1032,7 +1080,7 @@
     $('#table_4').DataTable( {
              destroy: true,  
              data: data,   
-             "order": [[ 0, "asc" ]],
+             "order": [[ 1, "asc" ]],
              dom: 'Bfrtip',
               buttons: [
                   'csv', 'excel', 'pdf', 'print'
@@ -1224,7 +1272,7 @@
     $('#table_5').DataTable( {
              destroy: true,  
              data: data,   
-             "order": [[ 0, "asc" ]],
+             "order": [[ 1, "asc" ]],
              dom: 'Bfrtip',
               buttons: [
                   'csv', 'excel', 'pdf', 'print'
@@ -1607,7 +1655,7 @@
         $('#table_6').DataTable( {
              destroy: true,
              data: data,   
-             "order": [[ 0, "desc" ]],
+             "order": [[ 1, "asc" ]],
              dom: 'Bfrtip',
               buttons: [
                   'csv', 'excel', 'pdf', 'print'
@@ -1765,7 +1813,7 @@
         $('#table_7').DataTable( {
              destroy: true,
              data: data,   
-             "order": [[ 0, "desc" ]],
+             "order": [[ 0, "asc" ]],
              dom: 'Bfrtip',
               buttons: [
                   'csv', 'excel', 'pdf', 'print'
