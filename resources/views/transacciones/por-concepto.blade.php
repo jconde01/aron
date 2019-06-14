@@ -43,7 +43,7 @@
                 <div class="form-group label-floating">
                     <label class="control-label">Período:</label>
                     <select class="form-control pdo" id="pdo" name="Pdo">
-                        <option value="0" selected>Seleccione el período...</option>
+                        
                         @foreach ($periodos as $pdo)
                             <option value="{{ $pdo->PERIODO }}">{{ $pdo->PERIODO . ' - Inicia: ' . date('d-m-Y',strtotime($pdo->FECINI)) . ' - Finaliza: ' . date('d-m-Y',strtotime($pdo->FECFIN)) }}</option>
                         @endforeach

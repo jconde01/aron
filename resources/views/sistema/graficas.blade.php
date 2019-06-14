@@ -17,7 +17,7 @@
                 <table class="table" style="width: 400px; margin: auto;">
                         
                         <tr>
-                            <th>Faltas y Horas Extras</th>
+                            <th>Costo de Nómina</th>
                             <td class="text-center"><input type="hidden" name="grafica1" value="0"><input type="checkbox" name="grafica1" value="1" {{ $graficas->grafica1? 'checked':'' }}></td>    
                         </tr>
                                                      
@@ -27,17 +27,17 @@
                         </tr>
 
                          <tr>
-                            <th>Costo de Nómina</th>
+                            <th>Faltas</th>
                             <td class="text-center"><input type="hidden" name="grafica3" value="0"><input type="checkbox" name="grafica3" value="1" {{ $graficas->grafica3? 'checked':'' }}></td>    
                         </tr>
 
                         <tr>
-                            <th>Distribucion de Edades</th>
+                            <th>Horas Extras</th>
                             <td class="text-center"><input type="hidden" name="grafica4" value="0"><input type="checkbox" name="grafica4" value="1" {{ $graficas->grafica4? 'checked':'' }}></td>
                         </tr>
 
                         <tr>
-                            <th>Proximamente ... </th>
+                            <th>Distribucion de Edades</th>
                             <td class="text-center"><input type="hidden" name="grafica5" value="0"><input type="checkbox" name="grafica5" value="1" {{ $graficas->grafica5? 'checked':'' }}></td>    
                         </tr>
 

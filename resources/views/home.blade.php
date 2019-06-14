@@ -2,23 +2,8 @@
   
 @section('title','Aron | Menú')
 @section('body-class','')
-@section('google')
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-        <script>
-             (adsbygoogle = window.adsbygoogle || []).push({
-                  google_ad_client: "ca-pub-4921973100573207",
-                  enable_page_level_ads: true
-             });
-        </script>
-
-@endsection
 @section('content')
-@if (isset($graficas->mensaje))
-@if ($graficas->mensaje==1)<h1 align="center" style="color: rgb(0, 190, 239);">Bienvenido a la plataforma en línea ARON!</h1>@endif
-@endif
 @if (isset($graficas->grafica1))
-@if ($graficas->grafica1==1 || $graficas->grafica2==1 || $graficas->grafica3==1 || $graficas->grafica4==1)
-@endif
 
 <h1 align="center" style="color: rgb(0, 190, 239);">INDICADORES</h1>
 <br>
@@ -86,7 +71,9 @@
 			            </div>
 
 			            <div id="horas" class="tab-pane fade{{ $graficas->grafica1!==1 && $graficas->grafica2!==1? 'in active':'' }}">
-			            	@if ($graficas->grafica3==1)
+
+			            	@if ($graficas->grafica4==1)
+			            	 
 							<div style="">
 								<div id="horas" style="margin: 0 auto">
 								</div>
@@ -96,7 +83,7 @@
 			            </div>
 
 			            <div id="datosa" class="tab-pane fade{{ $graficas->grafica1!==1 && $graficas->grafica2!==1 && $graficas->grafica3!==1? 'in active':'' }}">
-			            	@if ($graficas->grafica4==1)
+			            	@if ($graficas->grafica5==1)
 							<div style="">
 								<div id="container2" style="margin: 0 auto">
 								</div>		
@@ -105,10 +92,6 @@
 							@endif
 			            </div>
 
-
-					    <div id="documentos" class="tab-pane fade">
-					    	<h1>5</h1>
-					    </div>
 		            </div>
 		</div>
     
@@ -177,65 +160,67 @@
 			});	
 		});				
 </script>
+@if (isset($graficas->grafica1))
+	@if ($graficas->grafica4==1)
+		<script type="text/javascript">
+			var chart;
+			$(document).ready(function() {
 
-<script type="text/javascript">
-	var chart;
-	$(document).ready(function() {
-
-		chart = new Highcharts.Chart({
-			chart: {
-				renderTo: 'horas', 	// Le doy el nombre a la gráfica
-				defaultSeriesType: 'line'	// Pongo que tipo de gráfica es
-			},
-			title: {
-				text: 'Horas Extras'	// Titulo (Opcional)
-			},
-			subtitle: {
-				text: 'Vally.com'		// Subtitulo (Opcional)
-			},
-			// Pongo los datos en el eje de las 'X'
-			xAxis: {
-				categories: ['Ene19','Feb19','Mar19','Abr19','May19','Jun19','Jul19','Ago19','Sep19','Oct19',
-	'Nov19','Dic19'],
-					// Pongo el título para el eje de las 'X'
+				chart = new Highcharts.Chart({
+					chart: {
+						renderTo: 'horas', 	// Le doy el nombre a la gráfica
+						defaultSeriesType: 'line'	// Pongo que tipo de gráfica es
+					},
 					title: {
-						text: 'Meses'
-					}
-				},
-				yAxis: {
-					// Pongo el título para el eje de las 'Y'
-					title: {
-						text: 'Rango'
-					}
-				},
-				// Doy formato al la "cajita" que sale al pasar el ratón por encima de la gráfica
-				tooltip: {
-					enabled: true,
-					formatter: function() {
-						return '<b>'+ this.series.name +'</b><br/>'+
-							this.x +': '+ this.y +' '+this.series.name;
-					}
-				},
-				// Doy opciones a la gráfica
-				plotOptions: {
-					line: {
-						dataLabels: {
-							enabled: true
+						text: 'Horas Extras'	// Titulo (Opcional)
+					},
+					subtitle: {
+						text: 'Vally.com'		// Subtitulo (Opcional)
+					},
+					// Pongo los datos en el eje de las 'X'
+					xAxis: {
+						categories: ['Ene19','Feb19','Mar19','Abr19','May19','Jun19','Jul19','Ago19','Sep19','Oct19',
+			'Nov19','Dic19'],
+							// Pongo el título para el eje de las 'X'
+							title: {
+								text: 'Meses'
+							}
 						},
-						enableMouseTracking: true
-					}
-				},
-				// Doy los datos de la gráfica para dibujarlas
-				series: [{
-			                name: 'Horas extras',
-			                data: [<?php if (isset($data2)) { 
-			                	print_r($data2[0])?>,<?php print_r($data2[1])?>,<?php print_r($data2[2])?>,<?php print_r($data2[3])?>,<?php print_r($data2[4])?>,<?php print_r($data2[5])?>,<?php print_r($data2[6])?>,<?php print_r($data2[7])?>,<?php print_r($data2[8])?>,<?php print_r($data2[9])?>,<?php print_r($data2[10])?>,<?php print_r($data2[11]);
-			                }?>]
-			            }],
-			});	
-		});				
-</script>
-
+						yAxis: {
+							// Pongo el título para el eje de las 'Y'
+							title: {
+								text: 'Rango'
+							}
+						},
+						// Doy formato al la "cajita" que sale al pasar el ratón por encima de la gráfica
+						tooltip: {
+							enabled: true,
+							formatter: function() {
+								return '<b>'+ this.series.name +'</b><br/>'+
+									this.x +': '+ this.y +' '+this.series.name;
+							}
+						},
+						// Doy opciones a la gráfica
+						plotOptions: {
+							line: {
+								dataLabels: {
+									enabled: true
+								},
+								enableMouseTracking: true
+							}
+						},
+						// Doy los datos de la gráfica para dibujarlas
+						series: [{
+					                name: 'Horas extras',
+					                data: [<?php if (isset($data2)) { 
+					                	print_r($data2[0])?>,<?php print_r($data2[1])?>,<?php print_r($data2[2])?>,<?php print_r($data2[3])?>,<?php print_r($data2[4])?>,<?php print_r($data2[5])?>,<?php print_r($data2[6])?>,<?php print_r($data2[7])?>,<?php print_r($data2[8])?>,<?php print_r($data2[9])?>,<?php print_r($data2[10])?>,<?php print_r($data2[11]);
+					                }?>]
+					            }],
+					});	
+				});				
+		</script>
+	@endif
+@endif
 <script type="text/javascript">
 	var chart;
 	$(document).ready(function() {
