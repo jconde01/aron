@@ -1047,7 +1047,7 @@ class ReportesController extends Controller
   {
     //--------------parte de asimilado-----------------------------------------------
         //consulta de las percepciones
-        $percepciones  = DB::connection('sqlsrv2')->table('EMPLEADO')
+        $percepciones  = DB::connection('sqlsrv3')->table('EMPLEADO')
                         ->where('ESTATUS','!=','B')
                         ->join('ca2019','EMPLEADO.EMP','=','ca2019.EMP')
                         ->select('NOMBRE','NetoMensual','ca2019.EMP',DB::raw('SUM(IMPORTE) as total_importe'))
@@ -1061,7 +1061,7 @@ class ReportesController extends Controller
                         ->groupBy('NOMBRE','NetoMensual')
                         ->get();
       //consultas de las deducciones
-        $deducciones  = DB::connection('sqlsrv2')->table('EMPLEADO')
+        $deducciones  = DB::connection('sqlsrv3')->table('EMPLEADO')
                         ->where('ESTATUS','!=','B')
                         ->join('ca2019','EMPLEADO.EMP','=','ca2019.EMP')
                         ->select('NOMBRE','NetoMensual','ca2019.EMP',DB::raw('SUM(IMPORTE) as total_import'))
