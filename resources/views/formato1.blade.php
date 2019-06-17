@@ -921,7 +921,7 @@
             color: '#000000',
             connectorColor: '#000000',
             formatter: function() {
-              return '<b>'+ this.point.name +'</b>: '+ this.y +' pesos';
+              return '<b>'+ this.point.name +'</b>: $'+ this.y +' pesos';
             }
           }
         }
@@ -929,7 +929,7 @@
         series: [{
         type: 'pie',
         name: 'Browser share',
-        data: [['Total Variación $',$valores[1]],['Total Costo Periodo Actual',$valores[2]],['Total Costo Periodo Anterior',$valores[3]]
+        data: [['Total Variación',$valores[1]],['Total Costo Periodo Actual',$valores[2]],['Total Costo Periodo Anterior',$valores[3]]
             ]
       }]
     });
@@ -1310,14 +1310,14 @@
                 borderWidth: 0,
                 dataLabels: {
                     enabled: true,
-                    format: '{point.y:.1f} en total'
+                    format: '${point.y:.1f} pesos en total'
                 }
             }
         },
 
         tooltip: {
             headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}</b> del total<br/>'
+            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>${point.y:.2f}</b> pesos del total<br/>'
         },
 
         "series": [

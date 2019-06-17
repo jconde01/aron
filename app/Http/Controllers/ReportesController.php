@@ -245,6 +245,7 @@ class ReportesController extends Controller
         
         $despliega[] = 0;
         $despliega[] = '';
+        $total_porcentaje = 0;
         for ($i=0; $i < count($array) ; $i++) {
           $totalF = $array[$i][2]+$array[$i][3]+$array[$i][4]+$array[$i][5]+$array[$i][6]+$array[$i][8]+$array[$i][9]+$array[$i][10];
           $array[$i][1] = $array[$i][1] - $totalF;
@@ -258,6 +259,7 @@ class ReportesController extends Controller
           $array[$i][11] = $porcentaje.'%';
           $nombres[$i] = $array[$i][0];
           $despliega[$i] = $porcentaje;
+          $total_porcentaje = $total_porcentaje + $porcentaje;
         }
 
          
@@ -288,7 +290,7 @@ class ReportesController extends Controller
         $array[$i][8]= $totales[8];
         $array[$i][9]= $totales[9];
         $array[$i][10]= $totales[10];
-        $array[$i][11]= $totales[11];
+        $array[$i][11]= round($total_porcentaje/(count($array)-1),2).'%';
        return response(array('tabla'=>$array,'grafica'=>$despliega,'nombres'=>$nombres, 'totales'=>$totales));
       
     }
@@ -601,6 +603,9 @@ class ReportesController extends Controller
             }
           }
         }
+          $total[1] = round($total[1]);
+          $total[2] = round($total[2]);
+          $total[3] = round($total[3]);
         $sumatoria[1]=0;$sumatoria[2]=0;$sumatoria[3]=0;$sumatoria[4]=0;
         for ($i=0; $i <count($array) ; $i++) { 
           $sumatoria[1] = $sumatoria[1]+$array[$i][1];
@@ -624,6 +629,17 @@ class ReportesController extends Controller
             $porcentaje = 0;
           }
         $array[$i][8]=$porcentaje.'%';
+
+        for ($i=0; $i <count($array) ; $i++) { 
+          $array[$i][1]= '$'.number_format($array[$i][1],2);
+          $array[$i][2]= '$'.number_format($array[$i][2],2);
+          $array[$i][3]= '$'.number_format($array[$i][3],2);
+          $array[$i][4]= '$'.number_format($array[$i][4],2);
+          $array[$i][5]= '$'.number_format($array[$i][5],2);
+          $array[$i][6]= '$'.number_format($array[$i][6],2);
+          $array[$i][7]= '$'.number_format($array[$i][7],2);
+          
+        }
       
        return response(array('tabla'=>$array,'grafica'=>$despliega,'nombres'=>$nombres,'totales'=>$total,'anterior'=>$despliega2));
         // return response($periodo->tipo);
@@ -1169,6 +1185,19 @@ class ReportesController extends Controller
           $array[$i][10]= round($sumatoria[10],2);
           $array[$i][11] = Round(($array[$i][10]/ $array[$i][9])*100, 2).'%';
 
+          for ($i=0; $i <count($array) ; $i++) { 
+            $array[$i][1]= '$'.number_format($array[$i][1],2); 
+            $array[$i][2]= '$'.number_format($array[$i][2],2);
+            $array[$i][3]= '$'.number_format($array[$i][3],2);
+            $array[$i][4]= '$'.number_format($array[$i][4],2);
+            $array[$i][5]= '$'.number_format($array[$i][5],2);
+            $array[$i][6]= '$'.number_format($array[$i][6],2);
+            $array[$i][7]= '$'.number_format($array[$i][7],2);
+            $array[$i][8]= '$'.number_format($array[$i][8],2);
+            $array[$i][9]= '$'.number_format($array[$i][9],2);
+            $array[$i][10]= '$'.number_format($array[$i][10],2);
+          }
+
           return response(array('tabla'=>$array,'totales'=>$total));
   }
 
@@ -1219,7 +1248,7 @@ class ReportesController extends Controller
 
         foreach ($faltas as $falta) {
           if ( $array[$i][0]==$falta->PERIODO) {
-             $array[$i][2]=$falta->total_importe;
+             $array[$i][2]=$falta->total_importe*-1;
              $falta->estatus = 1;
           }
         }
@@ -1229,7 +1258,7 @@ class ReportesController extends Controller
             $i = count($array);
              $array[$i][0]=$falta->PERIODO;
              $array[$i][1]=0;
-             $array[$i][2]=$falta->total_importe;
+             $array[$i][2]=$falta->total_importe*-1;
              $falta->estatus = 1;
              $nombres[count($nombres)] = "PERIODO ".$array[$i][0];
           }
@@ -1242,7 +1271,7 @@ class ReportesController extends Controller
         }
         for ($i=0; $i < count($array); $i++) { 
           $horas_importe[$i]= round($array[$i][1],2);
-          $aus_importe[$i]= round($array[$i][2],2)*-1;
+          $aus_importe[$i]= round($array[$i][2],2);
         }
         $sumatoria[1]=0;$sumatoria[2]=0;
         for ($i=0; $i <count($array) ; $i++) { 
