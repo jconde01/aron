@@ -1284,6 +1284,13 @@ class ReportesController extends Controller
         $array[$i][1]=$sumatoria[1];
         $array[$i][2]=$sumatoria[2];
 
+        for ($i=0; $i <count($array) ; $i++) { 
+          $array[$i][1]='$'.number_format($array[$i][1],2);
+          $array[$i][2]='$'.number_format($array[$i][2],2);
+        }
+
+        
+
     return response(array('tabla'=>$array,'nombres'=>$nombres,'horas'=>$horas_importe,'aus'=>$aus_importe));
   }
 } 
