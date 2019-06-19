@@ -250,25 +250,31 @@ class XActsController extends Controller
 		    				->select('METODO','PARAM1','PARAM2')->get()->first();
 
 		    foreach ($data->emp as $key => $emp) {
-		    	$empleado = Empleado::where('TIPONO',$selProceso)->where('EMP',$emp)
-		    					->select('CUENTA','SUELDO','PROMED','INTEG','INTIV')->get()->first();
+		    	$empleado = Empleado::where('TIPONO',$selProceso)->where('RFC',$emp)
+		    					->select('EMP','CUENTA','SUELDO','PROMED','INTEG','INTIV')->get()->first();
+		    					
 		    	$imss = New Imss();
 		    	$imss->TIPONO = $selProceso;
-		    	$imss->EMP = $emp;
+		    	$imss->EMP = $empleado->EMP;
 		    	$imss->SUELDO = $empleado->SUELDO;
 		    	$imss->SUELDONUE = $empleado->SUELDO;
 		    	$imss->INTEG = $empleado->INTEG;
 		    	$imss->INTIV = $empleado->INTIV;
 		    	$imss->INTEGNUE = $empleado->INTEG;
 		    	$imss->INTIVNUE = $empleado->INTIV;
+
 		    	$imss->REFIMSS = $data->refIMSS[$key] . "";
+
 		    	$imss->FECHA = date('d-m-Y', strtotime($data->fecha[$key]));
+
 		    	$imss->DIAS = $data->dias[$key];
+
 		    	$imss->CONCEPTO = $data->Concepto;
 		    	$imss->PERIODO = $data->Periodo;
 		    	$imss->CLAVE = $data->Clave;
-		    	$imss->save();
 
+		    	$imss->save();
+		    
             	// If rstgrid!Refimss <> "" Then
 	            //    rstincapa.Filter = "emp = '" & rstgrid!Emp & "' and refimss = '" & rstgrid!Refimss & "' and fecha = " &  rstgrid!Fecha
 	            //    If rstincapa.RecordCount <= 0 Then
@@ -288,7 +294,7 @@ class XActsController extends Controller
 
 				if ($data->refIMSS[$key] != null) {
 					try {
-						$incapa = Incapa::where('EMP',$emp)
+						$incapa = Incapa::where('EMP',$empleado->EMP)
 									->where('REFIMSS',$data->refIMSS[$key])
 									->where('FECHA',$data->fecha[$key])->firstOrFail();
 						$incapa->DIAS = $data->dias[$key];
@@ -298,7 +304,7 @@ class XActsController extends Controller
 						// Error handling code
 					  	// No se encontró el registro. Crea uno nuevo...
 					  	$incapa = New Incapa();
-					  	$incapa->EMP = $emp;
+					  	$incapa->EMP = $empleado->EMP;
 					  	$incapa->REFIMSS = $data->refIMSS[$key] . '';
 					  	$incapa->Fecha = date('d-m-Y', strtotime($data->fecha[$key]));
 					  	$incapa->DIAS = $data->dias[$key];
@@ -317,7 +323,7 @@ class XActsController extends Controller
 		    $totalizados = [];					// arreglo de los empleados que YA FUERON totalizados
 		    $totIndex = 0;						// Indice actual de el arreglo anterior
 		    $empIndex = 0;						// Indice de la tabla recibida enn el Request
-		    $currEmp = $data->emp[$empIndex];	// Empleado actual que será totalizado
+		    $currEmp = $empleado->EMP;	// Empleado actual que será totalizado
 		    $terminado = 0;						// Flag de proceso termiinado
 		    while ($terminado !== 1 && $empIndex < count($data->emp)) {
 			    $totalizados[$totIndex] = $currEmp;	// Agrega a la tabla el empleado a ser totalizado
@@ -351,7 +357,7 @@ class XActsController extends Controller
 			    	$mov->cuenta = '';
 			    	//dd($mov);
 			    	$mov->save();
-
+			    	
 			    	// Aqui viene el doble ciclo...
 			    	$empIndex++; 							// Incrementa el indice del arreglo de empleados
 			    	$continuar = 1;
