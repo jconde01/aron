@@ -572,7 +572,12 @@ class XActsController extends Controller
 		    	$mov->METODO = $concepto->TIPCONCEP . $concepto->TIPCALCUL . $concepto->METODO;
 		    	$mov->METODOISP = $concepto->METODOISP;		// Para que grabar esto en Movtos si está en CONCEPTOS ???????
 		    	$mov->UNIDADES = $data->unidades[$key];
-		    	$mov->CUENTA = $data->cuenta[$key];			// para que grabar la cuenta si esta asociada a un solo empleado?????
+		    	$mov->CATEG = $emp;
+		    	if ($data->cuenta[$key]=='undefined') {
+		    		$mov->CUENTA =null;
+		    	}else{
+		    		$mov->CUENTA = $data->cuenta[$key];
+		    	}		// para que grabar la cuenta si esta asociada a un solo empleado?????
 		    	$mov->save();
 		    }
 		});
