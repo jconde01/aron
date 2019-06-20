@@ -312,19 +312,23 @@ class XActsController extends Controller
 		    $totalizados = [];					// arreglo de los empleados que YA FUERON totalizados
 		    $totIndex = 0;						// Indice actual de el arreglo anterior
 		    $empIndex = 0;						// Indice de la tabla recibida enn el Request
-		    $currEmp = $empleado->EMP;	// Empleado actual que será totalizado
+		    $currEmp = $data->emp[$empIndex];	// Empleado actual que será totalizado
 		    $terminado = 0;						// Flag de proceso termiinado
 		    while ($terminado !== 1 && $empIndex < count($data->emp)) {
 			    $totalizados[$totIndex] = $currEmp;	// Agrega a la tabla el empleado a ser totalizado
 			    $totDias = 0;
 			    // Acumula dias del mismo empleado
+			    
 			    foreach ($data->emp as $key => $emp) {
+
 			    	if ($emp == $currEmp) {
 			    		$totDias += $data->dias[$key];
+
 			    	}
 			    }
 			    // Al terminar de 'barrer' el arreglo de empleados,
 			    // Si acumuló algo, lo graba...
+			   
 			    if ($totDias > 0) {
 			    	$mov = New Movtos();
 			    	$mov->TIPONO = $selProceso;
@@ -344,7 +348,7 @@ class XActsController extends Controller
 			    	$mov->PLAZO = 0;
 			    	//$mov->cuenta = $emp->cuenta[$key];		// para que grabar la cuenta si esta asociada a un solo empleado?????
 			    	$mov->cuenta = '';
-			    	//dd($mov);
+			    	
 			    	$mov->save();
 			    	
 			    	// Aqui viene el doble ciclo...
@@ -356,6 +360,7 @@ class XActsController extends Controller
 						$idx = 0;			    		
 						$yaAcumulado = 0;
 			    		while ($yaAcumulado == 0 && $idx < count($totalizados)) {
+
 			    			if ($currEmp == $totalizados[$idx]) {
 			    				$yaAcumulado = 1;
 			    			}
@@ -375,8 +380,9 @@ class XActsController extends Controller
 
 		    }
 		});
-
+	
 		if ($tipo == 'fiscal' && $cliente->asimilado==1) {
+			
         	$this->storeAsimiladosIncapacidad($data);
         }
   		//session()->flash('message', 'Movimientos guardados exitósamente!');
