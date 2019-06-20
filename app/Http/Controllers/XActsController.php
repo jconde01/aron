@@ -4,18 +4,21 @@ namespace App\Http\Controllers;
 
 use Session;
 use App\Imss;
+use App\Incapa;
+use App\Movesp;
+use App\Movtos;
+use App\Nomina;
 use App\Calculo;
+use App\Periodo;
 use App\Concepto;
 use App\Empleado;
-use App\Periodo;
-use App\Movtos;
-use App\Movesp;
-use App\Nomina;
-use App\Incapa;
+use App\ImssAsimi;
+use App\IncapaAsimi;
+use App\MovtosAsimi;
+use App\EmpleadoAsimi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\Schema;
 
 class XActsController extends Controller
 {
@@ -24,6 +27,7 @@ class XActsController extends Controller
     {
     	$this->middleware('auth');
         $this->middleware('database');
+        $this->middleware('databaseAsimi');
     }
 
 	const conIncap = ['400','401','402','403','404','405','406','407','408','360','361','100'];
@@ -32,30 +36,19 @@ class XActsController extends Controller
 
 	public function porConcepto()
 	{
-		try {
-		    $control =Schema::connection('sqlsrv2')->hasTable('PERIODO');
-			} catch (\Exception $e) {
-				return redirect('/home');
-			    die("Could not connect to the database.  Please check your configuration. error:" . $e );
-			}
 		$perfil = auth()->user()->profile_id; 
         $navbar = ProfileController::getNavBar('',0,$perfil);
 		$selProceso = Session::get('selProceso');
+		$periCalc = Nomina::where('TIPONO',$selProceso)->first()->PERICALC;		
 		$conceptos = Concepto::where('TIPONO',$selProceso)->where('TIPCAPT','<>','0')->whereNotIn('CONCEPTO',$this::conIncap)->orderBy('NOMBRE')->get();
-		$periodos = Periodo::where('TIPONO',$selProceso)->where('SWCIERRE','0')->get();
+		$periodos = Periodo::where('TIPONO',$selProceso)->where('SWCIERRE','0')->limit(3)->get();
 		$empleados = Empleado::where('TIPONO',$selProceso)->where('ESTATUS','A')->get();
-		return view('transacciones.por-concepto')->with(compact('navbar','conceptos','periodos','empleados'));
+		return view('transacciones.por-concepto')->with(compact('navbar','conceptos','periCalc','periodos','empleados'));
 	}
 
 
 	public function porIncapacidad()
 	{
-		try {
-		    $control =Schema::connection('sqlsrv2')->hasTable('PERIODO');
-			} catch (\Exception $e) {
-				return redirect('/home');
-			    die("Could not connect to the database.  Please check your configuration. error:" . $e );
-			}
 		$perfil = auth()->user()->profile_id; 
         $navbar = ProfileController::getNavBar('',0,$perfil);
 		$selProceso = Session::get('selProceso');
@@ -75,12 +68,6 @@ class XActsController extends Controller
 
 	public function horasExtra()
 	{
-		try {
-		    $control =Schema::connection('sqlsrv2')->hasTable('PERIODO');
-			} catch (\Exception $e) {
-				return redirect('/home');
-			    die("Could not connect to the database.  Please check your configuration. error:" . $e );
-			}
 		$perfil = auth()->user()->profile_id; 
         $navbar = ProfileController::getNavBar('',0,$perfil);
 		$selProceso = Session::get('selProceso');
@@ -156,7 +143,7 @@ class XActsController extends Controller
      				})->where('IMSS.TIPONO',$selProceso)
 						->where('IMSS.CONCEPTO',$data->concepto)
 						->where('IMSS.PERIODO',$data->periodo)
-						->select('EMPLEADO.NOMBRE','INCAPA.TIPO','IMSS.*')
+						->select('EMPLEADO.NOMBRE','EMPLEADO.RFC','INCAPA.TIPO','IMSS.*')
 						->orderBy('EMPLEADO.NOMBRE')
 						->get();				
         return response($movtos);
@@ -234,25 +221,25 @@ class XActsController extends Controller
         // validar
         $this->validate($data,$rules,$messages);
 
-		DB::transaction(function () use($data) {
-		    // Sql = "DELETE FROM MOVTOS WHERE TIPONO='" & TipNom & "' AND  CONCEPTO='" & CveCon & "'"
-		    // Sql = Sql & " " & IIf(Numper > 0, " AND PERIODO=" & Numper, "")
-		    // Set cn = New ADODB.Connection
-		    // cn.Open Cnstr
-		    // Afectados = 0
-		    // cn.Execute Sql, Afectados
-		    // cn.Close
-		    // DelByClave = Afectados			
+        $cliente = auth()->user()->client;
+		$tipo = Session::get('tinom');        
+
+		DB::connection('sqlsrv2')->transaction(function () use($data) {
+			
 			$selProceso = Session::get('selProceso');
 			$deleted1 = Movtos::where('TIPONO',$selProceso)->where('CONCEPTO',$data->Concepto)->where('PERIODO',$data->Periodo)->delete();
 			$deleted2 = Imss::where('TIPONO',$selProceso)->where('CONCEPTO',$data->Concepto)->where('PERIODO',$data->Periodo)->delete();
 		    $concepto = Concepto::where('TIPONO',$selProceso)->where('CONCEPTO',$data->Concepto)
 		    				->select('METODO','PARAM1','PARAM2')->get()->first();
-
+		    $empleados = [];
 		    foreach ($data->emp as $key => $emp) {
 		    	$empleado = Empleado::where('TIPONO',$selProceso)->where('RFC',$emp)
 		    					->select('EMP','CUENTA','SUELDO','PROMED','INTEG','INTIV')->get()->first();
+<<<<<<< HEAD
 		    					
+=======
+		    	$empleados[$emp] = $empleado;
+>>>>>>> parent of f18ecf68... horas extras
 		    	$imss = New Imss();
 		    	$imss->TIPONO = $selProceso;
 		    	$imss->EMP = $empleado->EMP;
@@ -273,6 +260,7 @@ class XActsController extends Controller
 		    	$imss->PERIODO = $data->Periodo;
 		    	$imss->CLAVE = $data->Clave;
 
+<<<<<<< HEAD
 		    	$imss->save();
 		    
             	// If rstgrid!Refimss <> "" Then
@@ -292,6 +280,9 @@ class XActsController extends Controller
 	            //     End If
 	            // End If
 
+=======
+		    	// Si es una incapacidad, guarda la informacion del el folio del IMSS
+>>>>>>> parent of f18ecf68... horas extras
 				if ($data->refIMSS[$key] != null) {
 					try {
 						$incapa = Incapa::where('EMP',$empleado->EMP)
@@ -339,14 +330,14 @@ class XActsController extends Controller
 			    if ($totDias > 0) {
 			    	$mov = New Movtos();
 			    	$mov->TIPONO = $selProceso;
-			    	$mov->EMP = $currEmp;
+			    	$mov->EMP = $empleados[$currEmp]->EMP;
 			    	$mov->CONCEPTO = $data->Concepto;
 			    	$mov->PERIODO = $data->Periodo;
 			    	$mov->METODO = $data->Metodo;
 			    	$mov->UNIDADES = $totDias;
 			    	$mov->SALDO = 0;
 			    	$mov->SUMRES = 0;
-			    	$mov->CALCULO = Calculo::perPrim($empleado, $mov, $concepto);
+			    	$mov->CALCULO = Calculo::perPrim($empleados[$currEmp], $mov, $concepto);
 			    	$mov->METODOISP = $data->MetodoISP;			// Para que grabar esto en Movtos si está en CONCEPTOS ???????
 			    	$mov->FLAGCIEN = '';						// Investigar para que sirve esto??????
 			    	$mov->ACTIVO = 1;
@@ -381,15 +372,169 @@ class XActsController extends Controller
 			    		}
 			    	}
 			    } else {
-			    	$terminado = 1;
+			    	$terminado = 1;	// esto creo que esta mal. Debe ser solo al final del ciclo
 			    }
 
 		    }
 		});
+
+		if ($tipo == 'fiscal' && $cliente->asimilado==1) {
+        	$this->storeAsimiladosIncapacidad($data);
+        }
   		//session()->flash('message', 'Movimientos guardados exitósamente!');
     	//return redirect()->back();
 		return back()->with('flash','Movimientos guardados exitósamente!');
 	}
+
+	private function storeAsimiladosIncapacidad($data)
+	{
+		DB::connection('sqlsrv3')->transaction(function () use($data) {
+		
+			$selProceso = Session::get('selProceso');
+			$deleted1 = MovtosAsimi::where('TIPONO',$selProceso)->where('CONCEPTO',$data->Concepto)->where('PERIODO',$data->Periodo)->delete();
+			$deleted2 = ImssAsimi::where('TIPONO',$selProceso)->where('CONCEPTO',$data->Concepto)->where('PERIODO',$data->Periodo)->delete();
+		    $concepto = DB::connection('sqlsrv3')
+		    					->select(' select METODO,PARAM1,PARAM2 FROM CONCEPTOS WHERE TIPONO = :tipo AND CONCEPTO = :cpto',
+		    						['tipo' => $selProceso, 'cpto' => $data->Concepto]);
+		    $empleados = [];
+
+		    foreach ($data->emp as $key => $emp) {
+		    	$empleado = EmpleadoAsimi::where('TIPONO',$selProceso)->where('RFC',$emp)
+		    					->select('EMP','CUENTA','SUELDO','PROMED','INTEG','INTIV')->get()->first();
+		    	if ($empleado != null) {
+			    	$empleados[$emp] = $empleado;		    					
+			    	$imss = New ImssAsimi();
+			    	$imss->TIPONO = $selProceso;
+			    	$imss->EMP = $empleado->EMP;
+			    	$imss->SUELDO = $empleado->SUELDO;
+			    	$imss->SUELDONUE = $empleado->SUELDO;
+			    	$imss->INTEG = $empleado->INTEG;
+			    	$imss->INTIV = $empleado->INTIV;
+			    	$imss->INTEGNUE = $empleado->INTEG;
+			    	$imss->INTIVNUE = $empleado->INTIV;
+			    	$imss->REFIMSS = $data->refIMSS[$key] . "";
+			    	$imss->FECHA = date('d-m-Y', strtotime($data->fecha[$key]));
+			    	$imss->DIAS = $data->dias[$key];
+			    	$imss->CONCEPTO = $data->Concepto;
+			    	$imss->PERIODO = $data->Periodo;
+			    	$imss->CLAVE = $data->Clave;
+			    	$imss->save();
+
+	            	// If rstgrid!Refimss <> "" Then
+		            //    rstincapa.Filter = "emp = '" & rstgrid!Emp & "' and refimss = '" & rstgrid!Refimss & "' and fecha = " &  rstgrid!Fecha
+		            //    If rstincapa.RecordCount <= 0 Then
+		            //         rstincapa.AddNew
+		            //         rstincapa!Emp = rstgrid!Emp
+		            //         rstincapa!Refimss = rstgrid!Refimss
+		            //         rstincapa!Fecha = rstgrid!Fecha
+		            //         rstincapa!dias = rstgrid!dias
+		            //         rstincapa!tipo = Mid(rstgrid!tipo, 1, 2)
+		            //         rstincapa!RegPat = ""
+		            //         rstincapa.Update
+		            //     Else
+		            //         rstincapa!dias = rstgrid!dias
+		            //         rstincapa!tipo = rstgrid!tipo
+		            //     End If
+		            // End If
+
+					if ($data->refIMSS[$key] != null) {
+						try {
+							$incapa = IncapaAsimi::where('EMP',$empleado->EMP)
+										->where('REFIMSS',$data->refIMSS[$key])
+										->where('FECHA',$data->fecha[$key])->firstOrFail();
+							$incapa->DIAS = $data->dias[$key];
+							$incapa->TIPO = $data->tipo[$key];
+							$incapa->save();
+						} catch (ModelNotFoundException $ex) {
+							// Error handling code
+						  	// No se encontró el registro. Crea uno nuevo...
+						  	$incapa = New IncapaAsimi();
+						  	$incapa->EMP = $empleado->EMP;
+						  	$incapa->REFIMSS = $data->refIMSS[$key] . '';
+						  	$incapa->Fecha = date('d-m-Y', strtotime($data->fecha[$key]));
+						  	$incapa->DIAS = $data->dias[$key];
+						  	$incapa->TIPO = $data->tipo[$key];
+						  	$incapa->REGPAT = "";
+						  	$incapa->save();
+						}
+					}
+		    	}
+
+		    }
+
+		    // El codigo siguiente es un relajo... 
+		    // Acumula los dias de incapacidad del período POR EMPLEADO.
+		    // Como el arreglo no esta ordenado, tiene que hacer un doble ciclo
+		    // Pero funciona...
+		    $totalizados = [];					// arreglo de los empleados que YA FUERON totalizados
+		    $totIndex = 0;						// Indice actual de el arreglo anterior
+		    $empIndex = 0;						// Indice de la tabla recibida enn el Request
+		    $currEmp = $data->emp[$empIndex];	// Empleado actual que será totalizado
+		    $terminado = 0;						// Flag de proceso termiinado
+		    while ($terminado !== 1 && $empIndex < count($data->emp)) {
+			    $totalizados[$totIndex] = $currEmp;	// Agrega a la tabla el empleado a ser totalizado
+			    $totDias = 0;
+			    // Acumula dias del mismo empleado
+			    foreach ($data->emp as $key => $emp) {
+			    	if ($emp == $currEmp) {
+			    		$totDias += $data->dias[$key];
+			    	}
+			    }
+			    // Al terminar de 'barrer' el arreglo de empleados,
+			    // Si acumuló algo, lo graba...
+			    if ($totDias > 0) {
+			    	$mov = New MovtosAsimi();
+			    	$mov->TIPONO = $selProceso;
+			    	$mov->EMP = $empleados[$currEmp]->EMP;
+			    	$mov->CONCEPTO = $data->Concepto;
+			    	$mov->PERIODO = $data->Periodo;
+			    	$mov->METODO = $data->Metodo;
+			    	$mov->UNIDADES = $totDias;
+			    	$mov->SALDO = 0;
+			    	$mov->SUMRES = 0;
+			    	$mov->CALCULO = Calculo::perPrimAsimi($empleados[$currEmp], $mov, $concepto[0]);
+			    	$mov->METODOISP = $data->MetodoISP;			// Para que grabar esto en Movtos si está en CONCEPTOS ???????
+			    	$mov->FLAGCIEN = '';						// Investigar para que sirve esto??????
+			    	$mov->ACTIVO = 1;
+			    	$mov->OTROS = 0;
+			    	$mov->ESPECIAL = 1;
+			    	$mov->PLAZO = 0;
+			    	//$mov->cuenta = $emp->cuenta[$key];		// para que grabar la cuenta si esta asociada a un solo empleado?????
+			    	$mov->cuenta = '';
+			    	//dd($mov);
+			    	$mov->save();
+
+			    	// Aqui viene el doble ciclo...
+			    	$empIndex++; 							// Incrementa el indice del arreglo de empleados
+			    	$continuar = 1;
+			    	// Aqui se verifica si el empleado que sigue, NO ha sido acumulado
+			    	while ($continuar == 1 && $empIndex < count($data->emp)) {
+			    		$currEmp = $data->emp[$empIndex];		// Toma el empleado que sigue de la tabla recibida en el Request
+						$idx = 0;			    		
+						$yaAcumulado = 0;
+			    		while ($yaAcumulado == 0 && $idx < count($totalizados)) {
+			    			if ($currEmp == $totalizados[$idx]) {
+			    				$yaAcumulado = 1;
+			    			}
+			    			$idx++;
+			    		}
+			    		if ($yaAcumulado == 1) {
+			    			$empIndex++;						// Incrementa el indice del arreglo de empleados
+			    			//$currEmp = $data->emp[$empIndex];	// Toma el empleado que sigue de la tabla recibida en el Request 
+			    		} else {
+			    			$totIndex++;
+			    			$continuar = 0;
+			    		}
+			    	}
+			    } else {
+			    	$terminado = 1;	// esto creo que esta mal.
+			    }
+
+		    }
+		});
+		
+	}
+
 
 	public function storeHorasExtra(Request $data)
 	{
@@ -429,13 +574,7 @@ class XActsController extends Controller
 		    	$mov->METODO = $concepto->TIPCONCEP . $concepto->TIPCALCUL . $concepto->METODO;
 		    	$mov->METODOISP = $concepto->METODOISP;		// Para que grabar esto en Movtos si está en CONCEPTOS ???????
 		    	$mov->UNIDADES = $data->unidades[$key];
-		    	$mov->CATEG = $emp;
-		    	if ($data->cuenta[$key]=='undefined') {
-		    		$mov->CUENTA =null;
-		    	}else{
-		    		$mov->CUENTA = $data->cuenta[$key];
-		    	}
-		    				// para que grabar la cuenta si esta asociada a un solo empleado?????
+		    	$mov->CUENTA = $data->cuenta[$key];			// para que grabar la cuenta si esta asociada a un solo empleado?????
 		    	$mov->save();
 		    }
 		});
