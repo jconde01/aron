@@ -235,11 +235,10 @@ class XActsController extends Controller
 		    foreach ($data->emp as $key => $emp) {
 		    	$empleado = Empleado::where('TIPONO',$selProceso)->where('RFC',$emp)
 		    					->select('EMP','CUENTA','SUELDO','PROMED','INTEG','INTIV')->get()->first();
-<<<<<<< HEAD
+
 		    					
-=======
 		    	$empleados[$emp] = $empleado;
->>>>>>> parent of f18ecf68... horas extras
+
 		    	$imss = New Imss();
 		    	$imss->TIPONO = $selProceso;
 		    	$imss->EMP = $empleado->EMP;
@@ -260,7 +259,6 @@ class XActsController extends Controller
 		    	$imss->PERIODO = $data->Periodo;
 		    	$imss->CLAVE = $data->Clave;
 
-<<<<<<< HEAD
 		    	$imss->save();
 		    
             	// If rstgrid!Refimss <> "" Then
@@ -280,9 +278,9 @@ class XActsController extends Controller
 	            //     End If
 	            // End If
 
-=======
+
 		    	// Si es una incapacidad, guarda la informacion del el folio del IMSS
->>>>>>> parent of f18ecf68... horas extras
+
 				if ($data->refIMSS[$key] != null) {
 					try {
 						$incapa = Incapa::where('EMP',$empleado->EMP)
