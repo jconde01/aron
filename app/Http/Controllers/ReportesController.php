@@ -22,6 +22,7 @@ use Excel;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use App\Conceptos_Asimilados_A;
 
 class ReportesController extends Controller
 {
@@ -71,35 +72,48 @@ class ReportesController extends Controller
           ->groupBy('PERIODO')
           ->get();
 
-          for ($i=0; $i <count($horasE) ; $i++) { 
-            $array[$i][0] = $horasE[$i]->PERIODO;
-            $array[$i][1] = $horasE[$i]->total_importe;
-            $horasE[$i]->estatus = 1;
-            $nombres[$i] = "PERIODO ".$horasE[$i]->PERIODO;
+          if (count($horasE)) {
+            
+            for ($i=0; $i <count($horasE) ; $i++) { 
+              $array[$i][0] = $horasE[$i]->PERIODO;
+              $array[$i][1] = $horasE[$i]->total_importe;
+              $horasE[$i]->estatus = 1;
+              $nombres[$i] = "PERIODO ".$horasE[$i]->PERIODO;
+              foreach ($faltas as $falta) {
+                if ( $array[$i][0]==$falta->PERIODO) {
+                   $array[$i][2]=$falta->total_importe;
+                   $falta->estatus = 1;
+                }
+              }
+            }
             foreach ($faltas as $falta) {
-              if ( $array[$i][0]==$falta->PERIODO) {
-                 $array[$i][2]=$falta->total_importe;
-                 $falta->estatus = 1;
+                if ($falta->estatus=="0") {
+                  $i = count($array);
+                   $array[$i][0]=$falta->PERIODO;
+                   $array[$i][1]=0;
+                   $array[$i][2]=$falta->total_importe;
+                   $falta->estatus = 1;
+                   $nombres[count($nombres)] = "PERIODO ".$array[$i][0];
+                }
               }
+            for ($i=0; $i < count($array); $i++) { 
+              if (!isset($array[$i][2])) {
+               $array[$i][2] = 0;
+              }  
+            }
+          }else{
+            for ($i=0; $i <count($faltas) ; $i++) { 
+              $array[$i][0] = $faltas[$i]->PERIODO;
+              $array[$i][1] = $faltas[$i]->total_importe;
+              
+              $nombres[$i] = "PERIODO ".$faltas[$i]->PERIODO;
+              
             }
           }
-          foreach ($faltas as $falta) {
-              if ($falta->estatus=="0") {
-                $i = count($array);
-                 $array[$i][0]=$falta->PERIODO;
-                 $array[$i][1]=0;
-                 $array[$i][2]=$falta->total_importe;
-                 $falta->estatus = 1;
-                 $nombres[count($nombres)] = "PERIODO ".$array[$i][0];
-              }
-            }
-          for ($i=0; $i < count($array); $i++) { 
-            if (!isset($array[$i][2])) {
-             $array[$i][2] = 0;
-            }  
-          }
+
+          
       $array = count($array);
-      
+    
       
     	return view('/formato1')->with(compact('control','navbar','NoEmp','controlPeriodos','bandera','NoPues','array'));
     	
@@ -1230,7 +1244,7 @@ class ReportesController extends Controller
 
   public function ReporteSiete(Request $reporte)
   {
-    $horasE = ca2019::whereBetween('CONCEPTO', [200,201])
+    $horasE = Conceptos_Asimilados_A::whereBetween('CONCEPTO', [200,201])
       ->select('PERIODO',DB::raw('SUM(importe) as total_importe'),DB::raw('0 as estatus'))
       ->groupBy('PERIODO')
       ->get();
@@ -1240,54 +1254,92 @@ class ReportesController extends Controller
       ->groupBy('PERIODO')
       ->get();
 
-      for ($i=0; $i <count($horasE) ; $i++) { 
-        $array[$i][0] = $horasE[$i]->PERIODO;
-        $array[$i][1] = $horasE[$i]->total_importe;
-        $horasE[$i]->estatus = 1;
-        $nombres[$i] = "PERIODO ".$horasE[$i]->PERIODO;
+      if (count($horasE)) {
 
+        for ($i=0; $i <count($horasE) ; $i++) { 
+          $array[$i][0] = $horasE[$i]->PERIODO;
+          $array[$i][1] = $horasE[$i]->total_importe;
+          $horasE[$i]->estatus = 1;
+          $nombres[$i] = "PERIODO ".$horasE[$i]->PERIODO;
+
+          foreach ($faltas as $falta) {
+            if ( $array[$i][0]==$falta->PERIODO) {
+               $array[$i][2]=$falta->total_importe*-1;
+               $falta->estatus = 1;
+            }
+          }
+        }
         foreach ($faltas as $falta) {
-          if ( $array[$i][0]==$falta->PERIODO) {
-             $array[$i][2]=$falta->total_importe*-1;
-             $falta->estatus = 1;
+            if ($falta->estatus=="0") {
+              $i = count($array);
+               $array[$i][0]=$falta->PERIODO;
+               $array[$i][1]=0;
+               $array[$i][2]=$falta->total_importe*-1;
+               $falta->estatus = 1;
+               $nombres[count($nombres)] = "PERIODO ".$array[$i][0];
+            }
           }
-        }
-      }
-      foreach ($faltas as $falta) {
-          if ($falta->estatus=="0") {
+
+          for ($i=0; $i < count($array); $i++) { 
+            if (!isset($array[$i][2])) {
+             $array[$i][2] = 0;
+            }  
+          }
+          for ($i=0; $i < count($array); $i++) { 
+            $horas_importe[$i]= round($array[$i][1],2);
+            $aus_importe[$i]= round($array[$i][2],2);
+          }
+          $sumatoria[1]=0;$sumatoria[2]=0;
+          for ($i=0; $i <count($array) ; $i++) { 
+            $sumatoria[1] = $sumatoria[1] + $array[$i][1];
+            $sumatoria[2] = $sumatoria[2] + $array[$i][2];
+          }
+
+          $i = count($array);
+          $array[$i][0]="Total:";
+          $array[$i][1]=$sumatoria[1];
+          $array[$i][2]=$sumatoria[2];
+
+          for ($i=0; $i <count($array) ; $i++) { 
+            $array[$i][1]='$'.number_format($array[$i][1],2);
+            $array[$i][2]='$'.number_format($array[$i][2],2);
+          }
+        }else{
+          for ($i=0; $i <count($faltas) ; $i++) { 
+              $array[$i][0] = $faltas[$i]->PERIODO;
+              $array[$i][2] = $faltas[$i]->total_importe;
+              
+              $nombres[$i] = "PERIODO ".$faltas[$i]->PERIODO;
+              
+            }
+
+            for ($i=0; $i < count($array); $i++) { 
+              if (!isset($array[$i][1])) {
+               $array[$i][1] = 0;
+              }  
+            }
+            for ($i=0; $i < count($array); $i++) { 
+              $horas_importe[$i]= round($array[$i][1],2);
+              $aus_importe[$i]= round($array[$i][2],2);
+            }
+            $sumatoria[1]=0;$sumatoria[2]=0;
+            for ($i=0; $i <count($array) ; $i++) { 
+              $sumatoria[1] = $sumatoria[1] + $array[$i][1];
+              $sumatoria[2] = $sumatoria[2] + $array[$i][2];
+            }
+
             $i = count($array);
-             $array[$i][0]=$falta->PERIODO;
-             $array[$i][1]=0;
-             $array[$i][2]=$falta->total_importe*-1;
-             $falta->estatus = 1;
-             $nombres[count($nombres)] = "PERIODO ".$array[$i][0];
-          }
+            $array[$i][0]="Total:";
+            $array[$i][1]=$sumatoria[1];
+            $array[$i][2]=$sumatoria[2];
+
+            for ($i=0; $i <count($array) ; $i++) { 
+              $array[$i][1]='$'.number_format($array[$i][1],2);
+              $array[$i][2]='$'.number_format($array[$i][2],2);
+            }
         }
 
-        for ($i=0; $i < count($array); $i++) { 
-          if (!isset($array[$i][2])) {
-           $array[$i][2] = 0;
-          }  
-        }
-        for ($i=0; $i < count($array); $i++) { 
-          $horas_importe[$i]= round($array[$i][1],2);
-          $aus_importe[$i]= round($array[$i][2],2);
-        }
-        $sumatoria[1]=0;$sumatoria[2]=0;
-        for ($i=0; $i <count($array) ; $i++) { 
-          $sumatoria[1] = $sumatoria[1] + $array[$i][1];
-          $sumatoria[2] = $sumatoria[2] + $array[$i][2];
-        }
-
-        $i = count($array);
-        $array[$i][0]="Total:";
-        $array[$i][1]=$sumatoria[1];
-        $array[$i][2]=$sumatoria[2];
-
-        for ($i=0; $i <count($array) ; $i++) { 
-          $array[$i][1]='$'.number_format($array[$i][1],2);
-          $array[$i][2]='$'.number_format($array[$i][2],2);
-        }
+        
 
         
 
