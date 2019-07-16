@@ -34,6 +34,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AppController;
 //use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Conceptos_Asimilados;
+use App\Conceptos_Asimilados_A;
 
 
 class HomeController extends Controller
@@ -681,7 +683,7 @@ class HomeController extends Controller
     //----------------------------------------------grafica de horas extra 2019------------------------------------------------
                     if ($ca2019table==true) {
                       $prueba = Control::get();
-                      $ca2018 = ca2019::whereBetween('CONCEPTO', [200,201])->get();
+                      $ca2018 = Conceptos_Asimilados::whereBetween('CONCEPTO', [200,201])->get();
                       $periano = 0;
                       $periano2 = 0;
                       $sumaunidades2=0;
@@ -725,7 +727,7 @@ class HomeController extends Controller
                           if ($cliente->asimilado==1) {
                             if ($ca2019tableAsimi==true) {
                               $pruebaAsimi = ControlAsimi::get();
-                              $ca2018Asimi = ca2019Asimi::whereBetween('CONCEPTO', [200,201])->get();
+                              $ca2018Asimi = Conceptos_Asimilados_A::whereBetween('CONCEPTO', [200,201])->get();
                               $perianoAsimi = 0;
                               $periano2Asimi = 0;
                               $sumaunidades2Asimi=0;
@@ -954,7 +956,7 @@ class HomeController extends Controller
         $usuario_mensaje = $id.'administrador'.$id;
          if (Cache::get( $usuario_mensaje)!==1) {
            
-            Cache::put($usuario_mensaje, 1, 2880); //2880
+            Cache::put($usuario_mensaje, 1, 1); //2880
            
             $notificado = '';
             $documentos = DB::connection('sqlsrv2')->table('LISTADOCUMENTOS')
@@ -963,6 +965,7 @@ class HomeController extends Controller
             $hoy = date_create();
             $pre2 = '';
             $pre3 = '';
+           
             foreach ($documentos as $documento) 
             {
                
@@ -972,10 +975,13 @@ class HomeController extends Controller
                 $nombre = 'FECHAVENCI'.$i;
                 $fecha = date_create($documento->$nombre);
                 $tiempo = date_diff($fecha, $hoy);
+                
                 $lista = ListaDoc::documentos;
                 if ($documento->$nombre !== null)
                 {
-                  if ($tiempo->m<=1) {           
+
+                  if ($tiempo->m<=1) {   
+                    
                     $notificado = $notificado.'Documento '.$lista[$i].' &nbsp; '."\n".'<br>'.'<br/>';              
                   }
                 }
@@ -990,7 +996,7 @@ class HomeController extends Controller
             }
             
             if ($pre3!=="") {
-                  
+                  // dd($pre);
                   $recipient = User::where('id',auth()->id())->first();          
                   $message = Message::create([
                   'sender_id' => auth()->id(),
