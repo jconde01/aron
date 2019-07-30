@@ -1,9 +1,5 @@
-<?php
-  
+<?php 
 namespace App\Http\Controllers;
-
-//use Symfony\Component\Console\Output as Output;
-
 use DB;
 use Auth;
 use App\User;
@@ -25,18 +21,15 @@ use App\DatosGe;
 use App\Profilew;
 use App\ListaDoc;
 use App\Checklist;
-//use Illuminate\Database\Schema;
 use Illuminate\Http\Request;
 use App\Notifications\MessageSent;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AppController;
-//use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use App\Conceptos_Asimilados;
 use App\Conceptos_Asimilados_A;
-
 
 class HomeController extends Controller
 {
@@ -53,13 +46,11 @@ class HomeController extends Controller
     }
 
     /**
-     * Show the application dashboard.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        
+    {       
         $perfil = auth()->user()->profile_id;
         $id_usuario = auth()->user()->id;
         $graficas = Graph::where('usuario_id', $id_usuario)->first();
@@ -92,8 +83,7 @@ class HomeController extends Controller
                 $selProceso = Session::get('selProceso');
                 if ($selProceso != '') {                    
 
-    //-------------------------------------inicio de graficas de departamentos ocupados----------------------------------------
-                   
+    //-------------------------------------inicio de graficas de departamentos ocupados----------------------------------------               
                     $dep = Depto::get();
                     $deptos = Empleado::where('ESTATUS','!=','B')->get();
                     $contador = 0;
@@ -121,14 +111,10 @@ class HomeController extends Controller
                        $data3[$cont]=$guar3;
                     }                   
     //---------------------------------------------------fin de grafica de departamentos---------------------------------------
-
-
     //----------------------------------------------inicio de grafica de edades------------------------------------------------
                   $empleadoG = DB::connection('sqlsrv2')->table('EMPGEN')
                         ->join('EMPLEADO','EMPGEN.EMP','=','EMPLEADO.EMP')->where('ESTATUS','!=','B')
                         ->get();
-                  //$empleadoG = DatosGe::select('BORN')->get();
-                  //dd($empleadoG);
                   $hoy = date_create();
                   $cont20=0;
                   $cont26=0;
@@ -163,10 +149,8 @@ class HomeController extends Controller
                      }                    
                   }
     //-------------------------------------------fin de grafica de edades------------------------------------------------------
-
     //-------------------------------------inicio grafica cosoto de nomina 2018------------------------------------------------
-                    $ca2018table =Schema::connection('sqlsrv2')->hasTable('CA2018');
-                    
+                    $ca2018table =Schema::connection('sqlsrv2')->hasTable('CA2018');        
                     if ($ca2018table == true) {
                       $control2 = Control::get();
                       $ca18 = ca2018::where('CONCEPTO', '<', 500)->get();                                      
@@ -187,10 +171,8 @@ class HomeController extends Controller
                       $total12 = 0;
                       foreach ($control2 as $conl) {                       
                           $suma = 0;
-                          foreach ($ca18 as $ca) {
-                              
-                                 if ($ca->PERIODO == $conl->PERIODO) {
-                                 
+                          foreach ($ca18 as $ca) {                    
+                                 if ($ca->PERIODO == $conl->PERIODO) {              
                                      $suma = $suma + $ca->IMPORTE;
                                      if ($conl->PERIANO== 201801) {
                                          $total1=$total1 + $ca->IMPORTE;
@@ -308,23 +290,15 @@ class HomeController extends Controller
                       $septiembre=$total9-$total99;
                       $octubre=$total10-$total100;
                       $noviembre=$total11-$total111;
-                      $diciembre=$total12-$total122;
-                     
+                      $diciembre=$total12-$total122;                   
                       $data4=[$enero,$febrero,$marzo,$abril,$mayo,$junio,$julio,$agosto,$septiembre,$octubre,$noviembre,$diciembre];
                     }else{
                       $data4=[0,0,0,0,0,0,0,0,0,0,0,0];
-                    }
-                    
+                    }                    
     //----------------------------------------Fin de la grafica costo de nomina2018--------------------------------------------
-
-    
-
-
-
                         $cliente = auth()->user()->client;
                         if ($cliente->fiscal==1 && $cliente->asimilado==1){
-                          $selCliente = auth()->user()->client;
-                       
+                          $selCliente = auth()->user()->client;                     
                           $cia = $selCliente->asimilado_bda; 
                           $empresaTisanom = Empresa::where('CIA',$cia)->first();
                           Config::set("database.connections.sqlsrv3", [
@@ -337,12 +311,9 @@ class HomeController extends Controller
                               ]);
                           session(['sqlsrv3' => Config::get("database.connections.sqlsrv3")]);
                         }
-
     //---------------------------------------inicio grafica cosoto de nomina 2019----------------------------------------------
                                       $ca2019table =Schema::connection('sqlsrv2')->hasTable('CA2019');
-                                      if ($ca2019table == true) {
-                                       
-                                      
+                                      if ($ca2019table == true) {                                    
                                         $l9control2 = Control::get();
                                         $l9ca18 = ca2019::where('CONCEPTO', '<', 500)->get();                                    
                                         $l9suma = 0;
@@ -403,8 +374,7 @@ class HomeController extends Controller
                                                        }
                                                    }                           
                                             }                     
-                                        }
-                                        
+                                        }                                       
                                         $l9control = Control::get();
                                         $l9ca18 = ca2019::where('CONCEPTO', '>', 499)->get();
                                         $l9suma = 0;
@@ -471,7 +441,6 @@ class HomeController extends Controller
                                                 }                        
                                             }                       
                                         }
-
                                         $l9enero=$l9total1-$l9tota111;
                                         $l9febrero=$l9total2-$l9total22;
                                         $l9marzo=$l9total3-$l9total33;
@@ -672,19 +641,14 @@ class HomeController extends Controller
                                               $l9diciembre = $l9diciembre + 0;
                                             }
                                           }
-                                        }
-
-                                        
-                                       
+                                        }                                    
                                         $l9data4=[$l9enero,$l9febrero,$l9marzo,$l9abril,$l9mayo,$l9junio,$l9julio,$l9agosto,$l9septiembre,$l9octubre,$l9noviembre,$l9diciembre];
-                                        //dd($l9data4);
     //---------------------------------------Fin de la grafica costo de nomina2019---------------------------------------------
 
     //----------------------------------------------grafica de horas extra 2019------------------------------------------------
                     if ($ca2019table==true) {
                       $prueba = Control::get();
-                      $ca2018 = Conceptos_Asimilados::whereBetween('CONCEPTO', [200,201])->get();
-                      
+                      $ca2018 = Conceptos_Asimilados::whereBetween('CONCEPTO', [200,201])->get();                      
                       $periano = 0;
                       $periano2 = 0;
                       $sumaunidades2=0;
@@ -721,15 +685,13 @@ class HomeController extends Controller
                           $guardador2[20] = 0;
                           $guardador2[22] = 0;
                           $guardador2[24] = 0;
-                    }
-                      
+                    }                     
                       //-----------------Asimilados 2019 horas extra----------------
                       if ($AsimiFiscal=='fiscal') {
                           if ($cliente->asimilado==1) {
                             if ($ca2019tableAsimi==true) {
                               $pruebaAsimi = ControlAsimi::get();
                               $ca2018Asimi = Conceptos_Asimilados_A::whereBetween('CONCEPTO', [200,201])->get();
-
                               $perianoAsimi = 0;
                               $periano2Asimi = 0;
                               $sumaunidades2Asimi=0;
@@ -744,11 +706,9 @@ class HomeController extends Controller
                                                     $sumaunidades2Asimi=0;                                         
                                                 }
                                               foreach ($ca2018Asimi as $caAsimi) {
-                                                   if ($caAsimi->PERIODO==$prueba2Asimi->PERIODO) {
-                                                      
+                                                   if ($caAsimi->PERIODO==$prueba2Asimi->PERIODO) {                                               
                                                         $sumaunidadesAsimi = $sumaunidadesAsimi+$caAsimi->UNIDADES;
-                                                        $sumaunidades2Asimi = $sumaunidades2Asimi+$caAsimi->UNIDADES;
-                                                        
+                                                        $sumaunidades2Asimi = $sumaunidades2Asimi+$caAsimi->UNIDADES;  
                                                         $periano2Asimi = $prueba2Asimi->PERIANO;
                                                     }                                           
                                               }       
@@ -765,20 +725,16 @@ class HomeController extends Controller
                             $guardador2[18] = $guardador2[18] + $guardador2Asimi[18] + $guardador2Asimi[31];
                             $guardador2[20] = $guardador2[20] + $guardador2Asimi[20] + $guardador2Asimi[33];
                             $guardador2[22] = $guardador2[22] + $guardador2Asimi[22] + $guardador2Asimi[35];
-                            $guardador2[24] = $guardador2[24] + $guardador2Asimi[24] + $guardador2Asimi[37];
-                            
+                            $guardador2[24] = $guardador2[24] + $guardador2Asimi[24] + $guardador2Asimi[37];                          
                             }
                           }
                       }       
                       //-----------------Fin  Asimilados 2019 horas extra----------------
-
-                      $data2= [$guardador2[2],$guardador2[4],$guardador2[6],$guardador2[8],$guardador2[10],$guardador2[12],$guardador2[14],$guardador2[16],$guardador2[18],$guardador2[20],$guardador2[22],$guardador2[24]];
-                                       
+                      $data2= [$guardador2[2],$guardador2[4],$guardador2[6],$guardador2[8],$guardador2[10],$guardador2[12],$guardador2[14],$guardador2[16],$guardador2[18],$guardador2[20],$guardador2[22],$guardador2[24]];                                
     //--------------------------------------------------------Fin de grafica de horas extras 2019------------------------------
 
     //-------------------------------------------Inicio de graficas de faltas injustificadas 2019------------------------------
                   if ($ca2019table==true) {
-                    
                         $guardador[2] = 0;
                         $guardador[4] = 0;
                         $guardador[6] = 0;
@@ -793,14 +749,11 @@ class HomeController extends Controller
                         $guardador[24] = 0;
                      }  
                       $faltas = ca2019::where('CONCEPTO', 408)
-                      ->select('PERIODO')
-                      
+                      ->select('PERIODO')                  
                       ->join('CONTROL','ca2019.PERIODO','=','CONTROL.PERIODO')
                       ->select('PERIANO',DB::raw('SUM(UNIDADES) as total_unidades'))
                       ->groupBy('PERIANO')
-                      ->get();  
-                       
-                       
+                      ->get();                        
                        for ($i=0; $i <12 ; $i++) { 
                           if (isset($faltas[$i])) {
                             if ('201901'==$faltas[$i]->PERIANO) {
@@ -838,16 +791,11 @@ class HomeController extends Controller
                             }
                             if ('201912'==$faltas[$i]->PERIANO) {
                               $guardador[24] = $faltas[$i]->total_unidades;
-                            }
-                             
-                             
+                            }                                                        
                           }
-                       }
-                    
-                    $data= [$guardador[2]*-1,$guardador[4]*-1,$guardador[6]*-1,$guardador[8]*-1,$guardador[10]*-1,$guardador[12]*-1,$guardador[14]*-1,$guardador[16]*-1,$guardador[18]*-1,$guardador[20]*-1,$guardador[22]*-1,$guardador[24]*-1];
-                    
-    //------------------------------------------------Fin de grafica de faltas injustificadas 2019-----------------------------
-                       
+                       }                   
+                    $data= [$guardador[2]*-1,$guardador[4]*-1,$guardador[6]*-1,$guardador[8]*-1,$guardador[10]*-1,$guardador[12]*-1,$guardador[14]*-1,$guardador[16]*-1,$guardador[18]*-1,$guardador[20]*-1,$guardador[22]*-1,$guardador[24]*-1];                   
+    //------------------------------------------Fin de grafica de faltas injustificadas 2019----------------------------                     
                         $navbar = ProfileController::getNavBar('',0,$perfil);
                         $documentos = ListaDoc::get();
                         //dd($documentos);
@@ -858,11 +806,8 @@ class HomeController extends Controller
             }
         }
     }
-
-
     public function setSessionData(Request $request)
     {
-
         $selProceso = $request->proceso;
         $selProcessObj = Nomina::select('NOMBRE','MINIMODF')->where('TIPONO',$selProceso)->first();
         $clienteYProceso = auth()->user()->client->Nombre . " - " . $selProcessObj->NOMBRE;
@@ -870,7 +815,6 @@ class HomeController extends Controller
         session(['selProceso' => $selProceso]);
         session(['minimoDF' => $selProcessObj->MINIMODF]);
         session(['clienteYProceso' => $clienteYProceso]);
-
         return redirect('home');
     }    
     //inicia codigo escrito por Ricardo Cordero
@@ -878,15 +822,13 @@ class HomeController extends Controller
     {
         $id_usuario = auth()->user()->id;
         $graficas = Graph::where('usuario_id', $id_usuario)->first();
-
         $perfil = auth()->user()->profile_id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
         return view('sistema.graficas')->with(compact('graficas', 'navbar'));
     }
 
     public function update(Request $request)
-    {
-        
+    {     
         $id_usuario = auth()->user()->id;
         $grafica = Graph::where('usuario_id', $id_usuario)->first();
         $grafica->mensaje = $request->input('mensaje');
@@ -900,16 +842,13 @@ class HomeController extends Controller
         $grafica->grafica8 = $request->input('grafica8');
         $grafica->grafica9 = $request->input('grafica9');
         $grafica->grafica10 = $request->input('grafica10');
-        //dd($grafica);
         $grafica->save();
         $graficas = Graph::where('usuario_id', $id_usuario)->first();
-
         $perfil = auth()->user()->profile_id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
         return back()->with('flash','Actualizacion exitosa');
     }
     //termina codigo escrito por Ricardo Cordero.
-
     private static function setConn($tipo) {
         $objCliente = auth()->user()->client;
         if ($tipo == 'fiscal') {
@@ -939,25 +878,20 @@ class HomeController extends Controller
         session(['selProceso' => $selProceso]);
         session(['minimoDF' => $selProcessObj->MINIMODF]);
         session(['clienteYProceso' => $clienteYProceso]);
-
 //--------------------------Notificaciones de documentos vencidos al administrador del cliente-----------------------------------
         $id = auth()->id();
         $usuario_mensaje = $id.'administrador'.$id;
-         if (Cache::get( $usuario_mensaje)!==1) {
-           
-            Cache::put($usuario_mensaje, 1, 1); //2880
-           
+         if (Cache::get( $usuario_mensaje)!==1) {           
+            Cache::put($usuario_mensaje, 1, 1); //2880         
             $notificado = '';
             $documentos = DB::connection('sqlsrv2')->table('LISTADOCUMENTOS')
                         ->join('EMPLEADO','LISTADOCUMENTOS.EMP','=','EMPLEADO.EMP')
                         ->get();
             $hoy = date_create();
             $pre2 = '';
-            $pre3 = '';
-           
+            $pre3 = '';          
             foreach ($documentos as $documento) 
-            {
-               
+            {            
                $notificado = ' ';
               for ($i=1; $i <16 ; $i++) 
               { 
@@ -968,9 +902,7 @@ class HomeController extends Controller
                 $lista = ListaDoc::documentos;
                 if ($documento->$nombre !== null)
                 {
-
-                  if ($tiempo->m<=1) {   
-                    
+                  if ($tiempo->m<=1) {                     
                     $notificado = $notificado.'Documento '.$lista[$i].' &nbsp; '."\n".'<br>'.'<br/>';              
                   }
                 }
@@ -979,13 +911,11 @@ class HomeController extends Controller
               if ($pre !== ' ') {
                 $pre2 = 'Los siguientes documentos del empleado: '. $documento->EMP.' estan por vencer.'."\n".$pre."\n".'<br>'.'<br/>';
               }
-
               $pre3 = $pre3.$pre2;
               $pre2 = '';
             }
             
             if ($pre3!=="") {
-                  // dd($pre);
                   $recipient = User::where('id',auth()->id())->first();          
                   $message = Message::create([
                   'sender_id' => auth()->id(),
@@ -993,14 +923,9 @@ class HomeController extends Controller
                   'body' => $pre3
                   ]);
                   $recipient->notify(new MessageSent($message));
-            }
-            
-              
-         }
-        
-//--------------------------FIN Notificaciones de documentos vencidos al administrador del cliente-----------------------------------
-          
-        return true;
+            }           
+         }        
+//----------------------FIN Notificaciones de documentos vencidos al administrador del cliente--------------------------------          
+      return true;
     }
-
 }
