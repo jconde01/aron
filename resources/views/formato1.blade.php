@@ -633,7 +633,7 @@
       <br>
                       <!-- <button type="button" id="boton3" hidden style="float: right;" onclick="javascript:imptabla2(graficaLineal2);">Imprimir Tabla</button> -->
       
-        <div id="container8" style="  width: 70%;padding-right: 340px; padding-left: 0px; margin-left: 150px;" hidden>
+        <div id="container8" style="  width: 80%;padding-right: 340px; padding-left: 0px; margin-left: 150px;" hidden>
         </div>
         
       
@@ -2341,20 +2341,86 @@
     },
     series: [{
         name: 'ALTAS',
-        data: [9, 8, 3, 6, 6, 5, 10, 8, 0, 0, 0, 0]
+        data: [9, 8, 3, 6, 6, 5, 10, 8, 0, 0, 0, 0],
+        dataLabels: {
+                enabled: true,
+                rotation: 0,
+                color: '#FFFFFF',
+                align: 'right',
+                y: 10, // 10 pixels down from the top
+                style: {
+                    fontSize: '10px',
+                    fontFamily: 'helvetica, arial, sans-serif',
+                    textShadow: false,
+                    fontWeight: 'normal'
+
+                }
+            }
 
     }, {
         name: 'BAJAS',
-        data: [5, 4, 1, 4, 1, 2, 6, 3, 0, 0, 0, 0]
+        data: [5, 4, 1, 4, 1, 2, 6, 3, 0, 0, 0, 0],
+        dataLabels: {
+                enabled: true,
+                rotation: 0,
+                color: '#FFFFFF',
+                align: 'right',
+                y: 10, // 10 pixels down from the top
+                style: {
+                    fontSize: '10px',
+                    fontFamily: 'helvetica, arial, sans-serif',
+                    textShadow: false,
+                    fontWeight: 'normal'
+
+                }
+            }
 
     }, {
         name: 'No. DE TRABAJADORES AL INICIAR PERIODO',
-        data: [45, 49, 53, 55, 57, 62, 65, 69, 0, 0, 0, 0]
+        data: [45, 49, 53, 55, 57, 62, 65, 69, 0, 0, 0, 0],
+        dataLabels: {
+                enabled: true,
+                rotation: 0,
+                color: '#FFFFFF',
+                align: 'right',
+                y: 10, // 10 pixels down from the top
+                style: {
+                    fontSize: '10px',
+                    fontFamily: 'helvetica, arial, sans-serif',
+                    textShadow: false,
+                    fontWeight: 'normal'
+
+                }
+            }
 
     }, {
         name: 'No. TRABAJADORES AL FINAL PERIODO',
-        data: [49, 53, 55, 57, 62, 65, 69, 74, 0, 0, 0, 0]
+        data: [49, 53, 55, 57, 62, 65, 69, 74, 0, 0, 0, 0],
+        dataLabels: {
+                enabled: true,
+                rotation: 0,
+                color: '#FFFFFF',
+                align: 'right',
+                y: 10, // 10 pixels down from the top
+                style: {
+                    fontSize: '10px',
+                    fontFamily: 'helvetica, arial, sans-serif',
+                    textShadow: false,
+                    fontWeight: 'normal'
 
+                }
+            }
+
+    },
+    {
+        type: 'spline',
+        name: 'IRP',
+        data: [8.51, 7.84, 3.70, 3.57, 8.40, 4.72, 5.97, 6.99],
+        marker: {
+            lineWidth: 2,
+            lineColor: Highcharts.getOptions().colors[3],
+            fillColor: 'white'
+        }
     }]
   });
       };
@@ -2515,13 +2581,42 @@
     },
     series: [{
         name: 'F',
-        data: [3, 0, 0, 3, 0, 1, 4, 1, 0, 0, 0, 0]
+        data: [3, 0, 0, 3, 0, 1, 4, 1, 0, 0, 0, 0],
+        dataLabels: {
+                enabled: true,
+                rotation: 0,
+                color: '#FFFFFF',
+                align: 'right',
+                y: 10, // 10 pixels down from the top
+                style: {
+                    fontSize: '10px',
+                    fontFamily: 'helvetica, arial, sans-serif',
+                    textShadow: false,
+                    fontWeight: 'normal'
+
+                }
+            }
 
     }, {
         name: 'M',
-        data: [2, 2, 1, 1, 1, 1, 2, 2, 0, 0, 0, 0]
+        data: [2, 2, 1, 1, 1, 1, 2, 2, 0, 0, 0, 0],
+        dataLabels: {
+                enabled: true,
+                rotation: 0,
+                color: '#FFFFFF',
+                align: 'right',
+                y: 10, // 10 pixels down from the top
+                style: {
+                    fontSize: '10px',
+                    fontFamily: 'helvetica, arial, sans-serif',
+                    textShadow: false,
+                    fontWeight: 'normal'
 
-    }]
+                }
+            }
+
+    },]
+
     });
   };
 
@@ -2576,7 +2671,21 @@
     },
     series: [{
         name: 'TOTAL',
-        data: [1, 3, 3, 2, 1, 2, 4, 4, 2, 1, 1]
+        data: [1, 3, 3, 2, 1, 2, 4, 4, 2, 1, 1],
+        dataLabels: {
+                enabled: true,
+                rotation: 0,
+                color: '#FFFFFF',
+                align: 'right',
+                y: 10, // 10 pixels down from the top
+                style: {
+                    fontSize: '10px',
+                    fontFamily: 'helvetica, arial, sans-serif',
+                    textShadow: false,
+                    fontWeight: 'normal'
+
+                }
+            }
 
     }]
     });
