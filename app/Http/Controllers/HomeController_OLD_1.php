@@ -684,7 +684,6 @@ class HomeController extends Controller
                     if ($ca2019table==true) {
                       $prueba = Control::get();
                       $ca2018 = Conceptos_Asimilados::whereBetween('CONCEPTO', [200,201])->get();
-                      
                       $periano = 0;
                       $periano2 = 0;
                       $sumaunidades2=0;
@@ -729,7 +728,6 @@ class HomeController extends Controller
                             if ($ca2019tableAsimi==true) {
                               $pruebaAsimi = ControlAsimi::get();
                               $ca2018Asimi = Conceptos_Asimilados_A::whereBetween('CONCEPTO', [200,201])->get();
-
                               $perianoAsimi = 0;
                               $periano2Asimi = 0;
                               $sumaunidades2Asimi=0;
@@ -745,40 +743,61 @@ class HomeController extends Controller
                                                 }
                                               foreach ($ca2018Asimi as $caAsimi) {
                                                    if ($caAsimi->PERIODO==$prueba2Asimi->PERIODO) {
-                                                      
+                                                       
                                                         $sumaunidadesAsimi = $sumaunidadesAsimi+$caAsimi->UNIDADES;
                                                         $sumaunidades2Asimi = $sumaunidades2Asimi+$caAsimi->UNIDADES;
-                                                        
                                                         $periano2Asimi = $prueba2Asimi->PERIANO;
                                                     }                                           
                                               }       
                                             $infoAsimi = array_push($guardador2Asimi,$sumaunidades2Asimi);                                
                                           }
-                            $guardador2[2] = $guardador2[2] + $guardador2Asimi[2] + $guardador2Asimi[15];
-                            $guardador2[4] = $guardador2[4] + $guardador2Asimi[4] + $guardador2Asimi[17];
-                            $guardador2[6] = $guardador2[6] + $guardador2Asimi[6] + $guardador2Asimi[19];
-                            $guardador2[8] = $guardador2[8] + $guardador2Asimi[8] + $guardador2Asimi[21];
-                            $guardador2[10] = $guardador2[10] + $guardador2Asimi[10] + $guardador2Asimi[23];
-                            $guardador2[12] = $guardador2[12] + $guardador2Asimi[12] + $guardador2Asimi[25];
-                            $guardador2[14] = $guardador2[14] + $guardador2Asimi[14] + $guardador2Asimi[27] ;
-                            $guardador2[16] = $guardador2[16] + $guardador2Asimi[16] + $guardador2Asimi[29];
-                            $guardador2[18] = $guardador2[18] + $guardador2Asimi[18] + $guardador2Asimi[31];
-                            $guardador2[20] = $guardador2[20] + $guardador2Asimi[20] + $guardador2Asimi[33];
-                            $guardador2[22] = $guardador2[22] + $guardador2Asimi[22] + $guardador2Asimi[35];
-                            $guardador2[24] = $guardador2[24] + $guardador2Asimi[24] + $guardador2Asimi[37];
-                            
+                            $guardador2[2] = $guardador2[2] + $guardador2Asimi[2];
+                            $guardador2[4] = $guardador2[4] + $guardador2Asimi[4];
+                            $guardador2[6] = $guardador2[6] + $guardador2Asimi[6];
+                            $guardador2[8] = $guardador2[8] + $guardador2Asimi[8];
+                            $guardador2[10] = $guardador2[10] + $guardador2Asimi[10];
+                            $guardador2[12] = $guardador2[12] + $guardador2Asimi[12];
+                            $guardador2[14] = $guardador2[14] + $guardador2Asimi[14];
+                            $guardador2[16] = $guardador2[16] + $guardador2Asimi[16];
+                            $guardador2[18] = $guardador2[18] + $guardador2Asimi[18];
+                            $guardador2[20] = $guardador2[20] + $guardador2Asimi[20];
+                            $guardador2[22] = $guardador2[22] + $guardador2Asimi[22];
+                            $guardador2[24] = $guardador2[24] + $guardador2Asimi[24];
                             }
                           }
                       }       
                       //-----------------Fin  Asimilados 2019 horas extra----------------
 
-                      $data2= [$guardador2[2],$guardador2[4],$guardador2[6],$guardador2[8],$guardador2[10],$guardador2[12],$guardador2[14],$guardador2[16],$guardador2[18],$guardador2[20],$guardador2[22],$guardador2[24]];
-                                       
+                      $data2= [$guardador2[2],$guardador2[4],$guardador2[6],$guardador2[8],$guardador2[10],$guardador2[12],$guardador2[14],$guardador2[16],$guardador2[18],$guardador2[20],$guardador2[22],$guardador2[24]];                   
     //--------------------------------------------------------Fin de grafica de horas extras 2019------------------------------
 
     //-------------------------------------------Inicio de graficas de faltas injustificadas 2019------------------------------
                   if ($ca2019table==true) {
-                    
+                      $prueba = Control::get();
+                      $ca2018 = ca2019::where('CONCEPTO', 408)->get();
+                      $periano = 0;
+                      $periano2 = 0;
+                      $sumaunidades2=0;
+                      $sumadesuma = 0;
+                      $contador = 0;
+                      $guardador = array();  
+                      foreach ($prueba as $prueba2) {
+                          $contador = $contador+1;
+                          $periano = $prueba2->PERIANO;
+                          $sumaunidades=0;
+                          if ($periano!=$periano2) {
+                                $sumaunidades2=0;                                         
+                          }
+                          foreach ($ca2018 as $ca) {
+                              if ($ca->PERIODO==$prueba2->PERIODO) {
+                                    $sumaunidades = $sumaunidades+($ca->UNIDADES*-1);
+                                    $sumaunidades2 = $sumaunidades2+$ca->UNIDADES;
+                                    $periano2 = $prueba2->PERIANO;
+                              }    
+                          }       
+                          $info = array_push($guardador,$sumaunidades2);                                
+                      }
+                    }else{
                         $guardador[2] = 0;
                         $guardador[4] = 0;
                         $guardador[6] = 0;
@@ -791,61 +810,53 @@ class HomeController extends Controller
                         $guardador[20] = 0;
                         $guardador[22] = 0;
                         $guardador[24] = 0;
-                     }  
-                      $faltas = ca2019::where('CONCEPTO', 408)
-                      ->select('PERIODO')
-                      
-                      ->join('CONTROL','ca2019.PERIODO','=','CONTROL.PERIODO')
-                      ->select('PERIANO',DB::raw('SUM(UNIDADES) as total_unidades'))
-                      ->groupBy('PERIANO')
-                      ->get();  
-                       
-                       
-                       for ($i=0; $i <12 ; $i++) { 
-                          if (isset($faltas[$i])) {
-                            if ('201901'==$faltas[$i]->PERIANO) {
-                              $guardador[2] = $faltas[$i]->total_unidades;
-                            }
-                            if ('201902'==$faltas[$i]->PERIANO) {
-                              $guardador[4] = $faltas[$i]->total_unidades;
-                            }
-                            if ('201903'==$faltas[$i]->PERIANO) {
-                              $guardador[6] = $faltas[$i]->total_unidades;
-                            }
-                            if ('201904'==$faltas[$i]->PERIANO) {
-                              $guardador[8] = $faltas[$i]->total_unidades;
-                            }
-                            if ('201905'==$faltas[$i]->PERIANO) {
-                              $guardador[10] = $faltas[$i]->total_unidades;
-                            }
-                            if ('201906'==$faltas[$i]->PERIANO) {
-                              $guardador[12] = $faltas[$i]->total_unidades;
-                            }
-                            if ('201907'==$faltas[$i]->PERIANO) {
-                              $guardador[14] = $faltas[$i]->total_unidades;
-                            }
-                            if ('201908'==$faltas[$i]->PERIANO) {
-                              $guardador[16] = $faltas[$i]->total_unidades;
-                            }
-                            if ('201909'==$faltas[$i]->PERIANO) {
-                              $guardador[18] = $faltas[$i]->total_unidades;
-                            }
-                            if ('201910'==$faltas[$i]->PERIANO) {
-                              $guardador[20] = $faltas[$i]->total_unidades;
-                            }
-                            if ('201911'==$faltas[$i]->PERIANO) {
-                              $guardador[22] = $faltas[$i]->total_unidades;
-                            }
-                            if ('201912'==$faltas[$i]->PERIANO) {
-                              $guardador[24] = $faltas[$i]->total_unidades;
-                            }
-                             
-                             
+                    }  
+                    
+                    //-------------Asimilados---------------------------------------------
+                    if ($AsimiFiscal=='fiscal') {
+                      if ($cliente->asimilado==1) {
+                        if ($ca2019tableAsimi==true) {
+                          $pruebaAsimi = ControlAsimi::get();
+                          $ca2018Asimi = ca2019Asimi::where('CONCEPTO', 408)->get();
+                          $perianoAsimi = 0;
+                          $periano2Asimi = 0;
+                          $sumaunidades2Asimi=0;
+                          $sumadesumaAsimi = 0;
+                          $contadorAsimi = 0;
+                          $guardadorAsimi = array();  
+                          foreach ($pruebaAsimi as $prueba2Asimi) {
+                              $contadorAsimi = $contadorAsimi+1;
+                              $perianoAsimi = $prueba2Asimi->PERIANO;
+                              $sumaunidadesAsimi=0;
+                              if ($perianoAsimi!=$periano2Asimi) {
+                                    $sumaunidades2Asimi=0;                                         
+                              }
+                              foreach ($ca2018Asimi as $caAsimi) {
+                                  if ($caAsimi->PERIODO==$prueba2Asimi->PERIODO) {
+                                        $sumaunidadesAsimi = $sumaunidadesAsimi+($caAsimi->UNIDADES*-1);
+                                        $sumaunidades2Asimi = $sumaunidades2Asimi+$caAsimi->UNIDADES;
+                                        $periano2Asimi = $prueba2Asimi->PERIANO;
+                                  }    
+                              }       
+                              $infoAsimi = array_push($guardadorAsimi,$sumaunidades2Asimi);                                
                           }
-                       }
-                    
+                          $guardador[2] = $guardador[2] + $guardadorAsimi[2];
+                          $guardador[4] = $guardador[4] + $guardadorAsimi[4];
+                          $guardador[6] = $guardador[6] + $guardadorAsimi[6];
+                          $guardador[8] = $guardador[8] + $guardadorAsimi[8];
+                          $guardador[10] = $guardador[10] + $guardadorAsimi[10];
+                          $guardador[12] = $guardador[12] + $guardadorAsimi[12];
+                          $guardador[14] = $guardador[14] + $guardadorAsimi[14];
+                          $guardador[16] = $guardador[16] + $guardadorAsimi[16];
+                          $guardador[18] = $guardador[18] + $guardadorAsimi[18];
+                          $guardador[20] = $guardador[20] + $guardadorAsimi[20];
+                          $guardador[22] = $guardador[22] + $guardadorAsimi[22];
+                          $guardador[24] = $guardador[24] + $guardadorAsimi[24];
+                        }
+                      }
+                    }
+                    //-------------------------fin asimilados                                
                     $data= [$guardador[2]*-1,$guardador[4]*-1,$guardador[6]*-1,$guardador[8]*-1,$guardador[10]*-1,$guardador[12]*-1,$guardador[14]*-1,$guardador[16]*-1,$guardador[18]*-1,$guardador[20]*-1,$guardador[22]*-1,$guardador[24]*-1];
-                    
     //------------------------------------------------Fin de grafica de faltas injustificadas 2019-----------------------------
                        
                         $navbar = ProfileController::getNavBar('',0,$perfil);
