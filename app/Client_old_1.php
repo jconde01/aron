@@ -5,9 +5,6 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\User;
 use App\CiasNo;
-use App\Nomina;
-use Session;
-
 
 class Client extends Model
 {
@@ -15,27 +12,15 @@ class Client extends Model
     public static function getRutaBase($celula, $rfc)
     {
         $sucursal = CiasNo::first()->Agrupador;
-        $selProceso = Session::get('selProceso');
-        $NoNominas = Nomina::get();
-        $NoNominas = count($NoNominas);
-        
-        if ($sucursal == null) {            
-            if ($NoNominas>1) {
-                $nomina = Nomina::where('TIPONO',$selProceso)->first();
-                $nombre = explode(" ", $nomina->NOMBRE);
-                return '../utilerias/Nominas/Celula'.$celula.'/'.trim($rfc).'/'.$nombre[1];
-            }else{
-               return '../utilerias/Nominas/Celula'.$celula.'/'.trim($rfc); 
-            }            
+        // dd($sucursal);
+        if ($sucursal == null) {
+
+            return '../utilerias/Nominas/Celula'.$celula.'/'.trim($rfc);
         }else{
-             if ($NoNominas>1) {
-                $nomina = Nomina::where('TIPONO',$selProceso)->first();
-                $nombre = explode(" ", $nomina->NOMBRE);
-                return '../utilerias/Nominas/Celula'.$celula.'/'.trim($rfc).'/'.$sucursal.'/'.$nombre[1];
-            }else{
-               return '../utilerias/Nominas/Celula'.$celula.'/'.trim($rfc).'/'.$sucursal;
-            }
+            
+            return '../utilerias/Nominas/Celula'.$celula.'/'.trim($rfc).'/'.$sucursal;
         }
+        
     }
 
     public static function getRutaCertificado($celula, $rfc)
