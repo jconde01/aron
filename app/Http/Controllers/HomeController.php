@@ -717,14 +717,47 @@ class HomeController extends Controller
                             $guardador2[2] = $guardador2[2] + $guardador2Asimi[2] + $guardador2Asimi[15];
                             $guardador2[4] = $guardador2[4] + $guardador2Asimi[4] + $guardador2Asimi[17];
                             $guardador2[6] = $guardador2[6] + $guardador2Asimi[6] + $guardador2Asimi[19];
+                            if (!isset($guardador2Asimi[21])) {
+                             $guardador2Asimi[21] = 0;
+                            }
                             $guardador2[8] = $guardador2[8] + $guardador2Asimi[8] + $guardador2Asimi[21];
+                            if (!isset($guardador2Asimi[23])) {
+                             $guardador2Asimi[23] = 0;
+                            }
                             $guardador2[10] = $guardador2[10] + $guardador2Asimi[10] + $guardador2Asimi[23];
+                            if (!isset($guardador2Asimi[25])) {
+                             $guardador2Asimi[25] = 0;
+                            }
                             $guardador2[12] = $guardador2[12] + $guardador2Asimi[12] + $guardador2Asimi[25];
-                            $guardador2[14] = $guardador2[14] + $guardador2Asimi[14] + $guardador2Asimi[27] ;
+                            if (!isset($guardador2Asimi[27])) {
+                             $guardador2Asimi[27] = 0;
+                            }
+                            $guardador2[14] = $guardador2[14] + $guardador2Asimi[14] + $guardador2Asimi[27];
+                            if (!isset($guardador2Asimi[29])) {
+                             $guardador2Asimi[29] = 0;
+                            }
                             $guardador2[16] = $guardador2[16] + $guardador2Asimi[16] + $guardador2Asimi[29];
+                            if (!isset($guardador2Asimi[31])) {
+                             $guardador2Asimi[31] = 0;
+                            }
                             $guardador2[18] = $guardador2[18] + $guardador2Asimi[18] + $guardador2Asimi[31];
+                            if (!isset($guardador2Asimi[33])) {
+                             $guardador2Asimi[33] = 0;
+                            }
                             $guardador2[20] = $guardador2[20] + $guardador2Asimi[20] + $guardador2Asimi[33];
+                            if (!isset($guardador2Asimi[35])) {
+                             $guardador2Asimi[35] = 0;
+                            }
+                            if (!isset($guardador2Asimi[22])) {
+                             $guardador2Asimi[22] = 0;
+                            }
                             $guardador2[22] = $guardador2[22] + $guardador2Asimi[22] + $guardador2Asimi[35];
+                            if (!isset($guardador2Asimi[37])) {
+                             $guardador2Asimi[37] = 0;
+                            }
+                            if (!isset($guardador2Asimi[24])) {
+                             $guardador2Asimi[24] = 0;
+                            }
                             $guardador2[24] = $guardador2[24] + $guardador2Asimi[24] + $guardador2Asimi[37];                          
                             }
                           }
@@ -798,7 +831,6 @@ class HomeController extends Controller
     //------------------------------------------Fin de grafica de faltas injustificadas 2019----------------------------                     
                         $navbar = ProfileController::getNavBar('',0,$perfil);
                         $documentos = ListaDoc::get();
-                        //dd($documentos);
                         return view('home')->with(compact('navbar', 'graficas','data','data2','data3','cont20','cont26','cont31', 'cont36','cont41','cont46','cont60','data4','l9data4'));
                 } else {
                     return view('sistema.chooseTipoYProceso')->with(compact('cliente'));
@@ -882,7 +914,7 @@ class HomeController extends Controller
         $id = auth()->id();
         $usuario_mensaje = $id.'administrador'.$id;
          if (Cache::get( $usuario_mensaje)!==1) {           
-            Cache::put($usuario_mensaje, 1, 1); //2880         
+            Cache::put($usuario_mensaje, 1, 2880 ); //2880         
             $notificado = '';
             $documentos = DB::connection('sqlsrv2')->table('LISTADOCUMENTOS')
                         ->join('EMPLEADO','LISTADOCUMENTOS.EMP','=','EMPLEADO.EMP')
@@ -897,8 +929,7 @@ class HomeController extends Controller
               { 
                 $nombre = 'FECHAVENCI'.$i;
                 $fecha = date_create($documento->$nombre);
-                $tiempo = date_diff($fecha, $hoy);
-                
+                $tiempo = date_diff($fecha, $hoy);    
                 $lista = ListaDoc::documentos;
                 if ($documento->$nombre !== null)
                 {
