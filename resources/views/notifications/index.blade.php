@@ -24,13 +24,13 @@
 						 </li>
 					@endforeach
 				</ul>
-			</div>
+			</div> 
 			<div class="col-sm-6">
 				<h2>Leídas</h2>
  				<ul class="list-group">
 					@foreach($readNotifications as $readNotification)
 						 <li class="list-group-item">
-						 	<a href="{{ $readNotification->data['link'] }}">
+						 	<a href="{{ $readNotification->data['link'] }}/{{ $readNotification->id }}">
 						 		{{ $readNotification->data['text'] }}
 						 	</a>
 						 </li>
