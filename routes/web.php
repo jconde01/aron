@@ -25,7 +25,7 @@ Route::middleware(['auth'])->group(function () {
 	//Route::post('/home','HomeController@getProcesos')->name('home');
 	Route::get('/messages/create/{id}', 'MessagesController@create');
 	Route::post('/messages/store', 'MessagesController@store')->name('messages.store');
-	Route::get('/messages/{id}/{id_read}', 'MessagesController@show')->name('messages.show');
+	Route::get('/messages/{id}', 'MessagesController@show')->name('messages.show');
 	Route::get('/notificaciones','NotificationsController@index');
 	Route::patch('/notificaciones/leida/{id}','NotificationsController@read');
 	Route::get('/descarga/{sub}/{ru}','ConsultasController@descarga');

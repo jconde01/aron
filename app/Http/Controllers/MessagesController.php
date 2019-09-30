@@ -8,7 +8,6 @@ use App\Client;
 use App\Message;
 use Illuminate\Http\Request;
 use App\Notifications\MessageSent;
-Use Illuminate\Notifications\DatabaseNotification;
 
 class MessagesController extends Controller
 {
@@ -73,10 +72,9 @@ class MessagesController extends Controller
     	return redirect('/notificaciones')->with('flash','Tu mensaje ha sido enviado');
     }
 
-    public function show($id,$id_read)
+    public function show($id)
     {
         $message = Message::findOrFail($id);
-        DatabaseNotification::find($id_read)->markAsRead();
         $perfil = auth()->user()->profile_id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
         return view('messages.show')->with(compact('message', 'navbar'));
