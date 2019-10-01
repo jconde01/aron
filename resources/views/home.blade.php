@@ -29,15 +29,15 @@
             @endif
 
             @if ($graficas->grafica5==1)
-               <li class="tab-group-item pestanas" id="tab5" style="{{ $graficas->grafica1!==1 && $graficas->grafica2!==1 && $graficas->grafica3!==1 && $graficas->grafica4!==1? 'border-bottom: 0px;border-left: 2px rgb(179, 215, 243) solid; border-right: 2px rgb(179, 215, 243) solid;border-top: 2px rgb(179, 215, 243) solid;':'' }}" onClick="cambiar_color_over(this)"><a class="tabmovil" id="a5" data-toggle="tab" href="#datosa">Distribucion de Edades</a></li>
+               <li class="tab-group-item pestanas" id="tab5" style="{{ $graficas->grafica1!==1 && $graficas->grafica2!==1 && $graficas->grafica3!==1 && $graficas->grafica4!==1? 'border-bottom: 0px;border-left: 2px rgb(179, 215, 243) solid; border-right: 2px rgb(179, 215, 243) solid;border-top: 2px rgb(179, 215, 243) solid;':'' }}" onClick="cambiar_color_over(this)"><a class="tabmovil" id="a5" data-toggle="tab" href="#datosa">Distribución de Edades</a></li>
             
             @endif
             @if ($graficas->grafica6==1)
-               <li class="tab-group-item pestanas" id="tab6" style="{{ $graficas->grafica1!==1 && $graficas->grafica2!==1 && $graficas->grafica3!==1 && $graficas->grafica4!==1 && $graficas->grafica5!==1? 'border-bottom: 0px;border-left: 2px rgb(179, 215, 243) solid; border-right: 2px rgb(179, 215, 243) solid;border-top: 2px rgb(179, 215, 243) solid;':'' }}" onClick="cambiar_color_over(this)"><a class="tabmovil" id="a6" data-toggle="tab" href="#tabseis">REPORTE DE PLAZAS</a></li>
+               <li class="tab-group-item pestanas" id="tab6" style="{{ $graficas->grafica1!==1 && $graficas->grafica2!==1 && $graficas->grafica3!==1 && $graficas->grafica4!==1 && $graficas->grafica5!==1? 'border-bottom: 0px;border-left: 2px rgb(179, 215, 243) solid; border-right: 2px rgb(179, 215, 243) solid;border-top: 2px rgb(179, 215, 243) solid;':'' }}" onClick="cambiar_color_over(this)"><a class="tabmovil" id="a6" data-toggle="tab" href="#tabseis">Reporte de Plazas</a></li>
             
             @endif
             @if ($graficas->grafica7==1)
-               <li class="tab-group-item pestanas" id="tab7" style="{{ $graficas->grafica1!==1 && $graficas->grafica2!==1 && $graficas->grafica3!==1 && $graficas->grafica4!==1 && $graficas->grafica5!==1 && $graficas->grafica6!==1? 'border-bottom: 0px;border-left: 2px rgb(179, 215, 243) solid; border-right: 2px rgb(179, 215, 243) solid;border-top: 2px rgb(179, 215, 243) solid;':'' }}" onClick="cambiar_color_over(this)"><a class="tabmovil" id="a7" data-toggle="tab" href="#tabsiete">CAUSAS DE BAJA</a></li>
+               <li class="tab-group-item pestanas" id="tab7" style="{{ $graficas->grafica1!==1 && $graficas->grafica2!==1 && $graficas->grafica3!==1 && $graficas->grafica4!==1 && $graficas->grafica5!==1 && $graficas->grafica6!==1? 'border-bottom: 0px;border-left: 2px rgb(179, 215, 243) solid; border-right: 2px rgb(179, 215, 243) solid;border-top: 2px rgb(179, 215, 243) solid;':'' }}" onClick="cambiar_color_over(this)"><a class="tabmovil" id="a7" data-toggle="tab" href="#tabsiete">Causas de Baja</a></li>
             
             @endif
 

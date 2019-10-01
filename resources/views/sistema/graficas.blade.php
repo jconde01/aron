@@ -37,22 +37,22 @@
                         </tr>
 
                         <tr>
-                            <th>Distribucion de Edades</th>
+                            <th>Distribución de Edades</th>
                             <td class="text-center"><input type="hidden" name="grafica5" value="0"><input type="checkbox" name="grafica5" value="1" {{ $graficas->grafica5? 'checked':'' }}></td>    
                         </tr>
 
                         <tr>
-                            <th>Proximamente ... </th>
+                            <th>Reporte de Plazas</th>
                             <td class="text-center"><input type="hidden" name="grafica6" value="0"><input type="checkbox" name="grafica6" value="1" {{ $graficas->grafica6? 'checked':'' }}></td>    
                         </tr>
 
                         <tr>
-                            <th>Proximamente ... </th>
+                            <th>Causas de Baja</th>
                             <td class="text-center"><input type="hidden" name="grafica7" value="0"><input type="checkbox" name="grafica7" value="1" {{ $graficas->grafica7? 'checked':'' }}></td>
                         </tr>
 
                         <tr>
-                            <th>Proximamente ... </th>
+                            <th>IRP</th>
                             <td class="text-center"><input type="hidden" name="grafica8" value="0"><input type="checkbox" name="grafica8" value="1" {{ $graficas->grafica8? 'checked':'' }}></td>
                         </tr>
 
