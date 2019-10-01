@@ -50,10 +50,10 @@ h6{
 }
 #a1
 {
-  
+  border:1px red solid;
   font-size: 13px;
   text-decoration: none; 
-  padding: 7px 30px 7px 30px!important; 
+  padding: 7px 45px 7px 45px!important; 
 }
 #tab2
 {
@@ -67,9 +67,10 @@ h6{
 }
 #a2
 {
+  border:1px red solid;
   font-size: 13px;
   text-decoration: none;
-  padding: 7px 4px 7px 4px!important;  
+  padding: 7px 16px 7px 16px!important;  
 }
 #tab3
 {
@@ -83,10 +84,10 @@ h6{
 }
 #a3
 {
- 
+  border:1px red solid;
   font-size: 13px;
   text-decoration: none;
-  padding: 7px 43px 7px 43px!important;  
+  padding: 7px 80px 7px 80px!important;  
 }
 #tab4
 {
@@ -100,9 +101,10 @@ h6{
 }
 #a4
 {
+  border:1px red solid;
   font-size: 13px;
   text-decoration: none;
-  padding: 7px 23px 7px 23px!important;  
+  padding: 7px 60px 7px 60px!important;  
 }
 
 #tab5
@@ -117,9 +119,61 @@ h6{
 }
 #a5
 {
+  border:1px red solid;
   font-size: 13px;
   text-decoration: none;
-  padding: 7px 23px 7px 23px!important;  
+  padding: 7px 30px 7px 30px!important;  
+}
+#tab6
+{
+  width: 20%; 
+  border-top: 0px; 
+  border-left: 0px; 
+  border-right: 0px; 
+  border-bottom: 2px rgb(179, 215, 243) solid;
+  border-radius: 0px; 
+  background-color: white!important; 
+}
+#a6
+{
+  border:1px red solid;
+  font-size: 13px;
+  text-decoration: none;
+  padding: 7px 30px 7px 30px!important;  
+}
+#tab7
+{
+  width: 20%; 
+  border-top: 0px; 
+  border-left: 0px; 
+  border-right: 0px; 
+  border-bottom: 2px rgb(179, 215, 243) solid;
+  border-radius: 0px; 
+  background-color: white!important; 
+}
+#a7
+{
+  border:1px red solid;
+  font-size: 13px;
+  text-decoration: none;
+  padding: 7px 40px 7px 40px!important;  
+}
+#tab8
+{
+  width: 20%; 
+  border-top: 0px; 
+  border-left: 0px; 
+  border-right: 0px; 
+  border-bottom: 2px rgb(179, 215, 243) solid;
+  border-radius: 0px; 
+  background-color: white!important; 
+}
+#a8
+{
+  border:1px red solid;
+  font-size: 13px;
+  text-decoration: none;
+  padding: 7px 85px 7px 85px!important;  
 }
 table {
   text-align: left;

@@ -8,9 +8,9 @@
 <h1 align="center" style="color: rgb(0, 190, 239);">INDICADORES</h1>
 <br>
 
-<div class="row">
+<div class="row" style="">
 	
-		<div class="col-md-8 col-md-offset-2" style="">  
+		<div class="col-md-12" style="">  
             <ul class="tab horizontal" style=" width: 100%; display: flex; justify-content: center;">
             @if ($graficas->grafica1==1)
               <li class="tab-group-item pestanas" onClick="cambiar_color_over(this)" id="tab1"><a class="tabmovil" data-toggle="tab" id="a1" href="#nomina1">Costo de Nómina</a></li>
@@ -30,68 +30,119 @@
 
             @if ($graficas->grafica5==1)
                <li class="tab-group-item pestanas" id="tab5" style="{{ $graficas->grafica1!==1 && $graficas->grafica2!==1 && $graficas->grafica3!==1 && $graficas->grafica4!==1? 'border-bottom: 0px;border-left: 2px rgb(179, 215, 243) solid; border-right: 2px rgb(179, 215, 243) solid;border-top: 2px rgb(179, 215, 243) solid;':'' }}" onClick="cambiar_color_over(this)"><a class="tabmovil" id="a5" data-toggle="tab" href="#datosa">Distribucion de Edades</a></li>
-            </ul>
+            
+            @endif
+            @if ($graficas->grafica6==1)
+               <li class="tab-group-item pestanas" id="tab6" style="{{ $graficas->grafica1!==1 && $graficas->grafica2!==1 && $graficas->grafica3!==1 && $graficas->grafica4!==1 && $graficas->grafica5!==1? 'border-bottom: 0px;border-left: 2px rgb(179, 215, 243) solid; border-right: 2px rgb(179, 215, 243) solid;border-top: 2px rgb(179, 215, 243) solid;':'' }}" onClick="cambiar_color_over(this)"><a class="tabmovil" id="a6" data-toggle="tab" href="#tabseis">REPORTE DE PLAZAS</a></li>
+            
+            @endif
+            @if ($graficas->grafica7==1)
+               <li class="tab-group-item pestanas" id="tab7" style="{{ $graficas->grafica1!==1 && $graficas->grafica2!==1 && $graficas->grafica3!==1 && $graficas->grafica4!==1 && $graficas->grafica5!==1 && $graficas->grafica6!==1? 'border-bottom: 0px;border-left: 2px rgb(179, 215, 243) solid; border-right: 2px rgb(179, 215, 243) solid;border-top: 2px rgb(179, 215, 243) solid;':'' }}" onClick="cambiar_color_over(this)"><a class="tabmovil" id="a7" data-toggle="tab" href="#tabsiete">CAUSAS DE BAJA</a></li>
+            
             @endif
 
+            @if ($graficas->grafica8==1)
+               <li class="tab-group-item pestanas" id="tab8" style="{{ $graficas->grafica1!==1 && $graficas->grafica2!==1 && $graficas->grafica3!==1 && $graficas->grafica4!==1 && $graficas->grafica5!==1 && $graficas->grafica6!==1 && $graficas->grafica7!==1? 'border-bottom: 0px;border-left: 2px rgb(179, 215, 243) solid; border-right: 2px rgb(179, 215, 243) solid;border-top: 2px rgb(179, 215, 243) solid;':'' }}" onClick="cambiar_color_over(this)"><a class="tabmovil" id="a8" data-toggle="tab" href="#tabocho">IRP</a></li>
+            
+            @endif
+
+            </ul>
             
             
     	</div>
 	    <div class="col-md-8 col-md-offset-2">
 		            <div class="tab-content">
-		        
+		        		@if ($graficas->grafica1==1)
 			            <div id="nomina1" class="tab-pane fade in active" style="">
-			            	@if ($graficas->grafica1==1)
+			            	
 							<div style=" ">
 								
 								<div id="container" style="margin: 0 auto">
 								</div>
 							</div>
 							<br>
-							 @endif
+							 
 			            </div>
-			           
-
+			           @endif
+			           @if ($graficas->grafica2==1)
 			            <div id="nomina2" class="tab-pane fade{{ $graficas->grafica1!==1? 'in active':'' }}" style="">
-			            	@if ($graficas->grafica2==1)
+			            	
 							<div style="">
 								<div id="graficaCircular" style="margin: 0 auto">
 								</div>		
 							</div>
 							<br>
-							@endif
+							
 			            </div>
+			            @endif
+			            @if ($graficas->grafica3==1)
 			            <div id="datosg" class="tab-pane fade{{ $graficas->grafica1!==1 && $graficas->grafica2!==1? 'in active':'' }}">
-			            	@if ($graficas->grafica3==1)
+			            	
 							<div style="">
 								<div id="graficaLineal" style="margin: 0 auto">
 								</div>
 							</div>
 							<br>
-							@endif
+							
 			            </div>
+			            @endif
+			            @if ($graficas->grafica4==1)
+			            <div id="horas" class="tab-pane fade{{ $graficas->grafica1!==1 && $graficas->grafica2!==1 && $graficas->grafica3!==1? 'in active':'' }}">
 
-			            <div id="horas" class="tab-pane fade{{ $graficas->grafica1!==1 && $graficas->grafica2!==1? 'in active':'' }}">
-
-			            	@if ($graficas->grafica4==1)
+			            	
 			            	 
 							<div style="">
 								<div id="horas" style="margin: 0 auto">
 								</div>
 							</div>
 							<br>
-							@endif
+							
 			            </div>
-
-			            <div id="datosa" class="tab-pane fade{{ $graficas->grafica1!==1 && $graficas->grafica2!==1 && $graficas->grafica3!==1? 'in active':'' }}">
-			            	@if ($graficas->grafica5==1)
+			            @endif
+			            @if ($graficas->grafica5==1)
+			            <div id="datosa" class="tab-pane fade{{ $graficas->grafica1!==1 && $graficas->grafica2!==1 && $graficas->grafica3!==1 && $graficas->grafica4!==1? 'in active':'' }}">
+			            	
 							<div style="">
 								<div id="container2" style="margin: 0 auto">
 								</div>		
 							</div>
 							<br>
-							@endif
+							
 			            </div>
-
+			            @endif
+			            @if ($graficas->grafica6==1)
+			            <div id="tabseis" class="tab-pane fade{{ $graficas->grafica1!==1 && $graficas->grafica2!==1 && $graficas->grafica3!==1 && $graficas->grafica4!==1 && $graficas->grafica5!==1? 'in active':'' }}">
+			            	
+							<div style="">
+								<div id="containerseis" style="margin: 0 auto">
+								</div>		
+							</div>
+							<br>
+							
+			            </div>
+			            @endif
+			            @if ($graficas->grafica7==1)
+			            <div id="tabsiete" class="tab-pane fade{{ $graficas->grafica1!==1 && $graficas->grafica2!==1 && $graficas->grafica3!==1 && $graficas->grafica4!==1 && $graficas->grafica5!==1 && $graficas->grafica6!==1? 'in active':'' }}">
+			            	
+							<div style="">
+								<div id="containersiete" style="margin: 0 auto">
+								</div>		
+							</div>
+							<br>
+							
+			            </div>
+			            @endif
+			            @if ($graficas->grafica8==1)
+			            <div id="tabocho" class="tab-pane fade{{ $graficas->grafica1!==1 && $graficas->grafica2!==1 && $graficas->grafica3!==1 && $graficas->grafica4!==1 && $graficas->grafica5!==1 && $graficas->grafica6!==1 && $graficas->grafica7!==1? 'in active':'' }}">
+			            	
+							<div style="">
+								<div id="containerocho" style="margin: 0 auto">
+								</div>		
+							</div>
+							<br>
+							
+			            </div>
+			            @endif
 		            </div>
 		</div>
     
@@ -104,6 +155,22 @@
 @include('includes.footer');
 @endif
 </html>
+@if (isset($graficas->grafica1))
+<script type="text/javascript">
+	$( document ).ready(function() {
+	@if ($graficas->grafica6==1)
+    plazas();
+     @endif
+    @if ($graficas->grafica7==1)
+    grafica10();
+    @endif
+    @if ($graficas->grafica8==1)
+     grafica8();
+   	@endif
+   
+});
+</script>
+@if ($graficas->grafica3==1)
 <script type="text/javascript">
 	var chart;
 	$(document).ready(function() {
@@ -160,6 +227,7 @@
 			});	
 		});				
 </script>
+@endif
 @if (isset($graficas->grafica1))
 	@if ($graficas->grafica4==1)
 		<script type="text/javascript">
@@ -221,6 +289,7 @@
 		</script>
 	@endif
 @endif
+ @if ($graficas->grafica2==1)
 <script type="text/javascript">
 	var chart;
 	$(document).ready(function() {
@@ -275,7 +344,8 @@
 		});
 	});			
 </script>
-
+@endif
+@if ($graficas->grafica1==1)
 <script type="text/javascript">
 	Highcharts.chart('container', {
     chart: {
@@ -312,7 +382,8 @@
     }]
 });
 </script>
-
+@endif
+@if ($graficas->grafica5==1)
 <script type="text/javascript">
 	
 	// Create the chart
@@ -618,6 +689,8 @@
 	    }
 	});
 </script>
+@endif
+
 <!-- ----- cambio de color pestañas---------------- -->
 <script type="text/javascript">
     function cambiar_color_over(pestana){ 
@@ -640,4 +713,303 @@
     } 
 </script>
 <!-- ----------- fin de cambio de color pestañas------------------ -->
+	@if ($graficas->grafica6==1)
+	<!-- grafica de plazas -->
+	<script type="text/javascript">
+	  $.ajaxSetup({
+	    headers: {
+	        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+	            }
+	  });  
+	  function plazas() {
+	    var token = $('input[name=_token]').val();        
+	    var tipo  =  1;
+
+	        $.post("/consultas/get-reporte-seis", { tipo: tipo, _token: token }, function( data ) {  
+
+	            if (data != 'Error') {
+	              grafica6(data['totales'],data['nombres']);
+	               
+	            } else {
+	                alert('Error de acceso a la base de datos. Verifique la conexión...')
+	            }
+
+	        });   
+	  };
+	 
+	  var chart;
+	  function grafica6($valores,$nombres) {
+	    
+	    chart = new Highcharts.Chart({
+	      chart: {
+	        renderTo: 'containerseis',  // Le doy el nombre a la gráfica
+	        defaultSeriesType: 'line' // Pongo que tipo de gráfica es
+	      },
+	      title: {
+	        text: '% de plazas completas'  // Titulo (Opcional)
+	      },
+	      subtitle: {
+	        text: 'Vally.com'   // Subtitulo (Opcional)
+	      },
+	      // Pongo los datos en el eje de las 'X'
+	      xAxis: {
+	        categories: [<?php for ($i=0; $i <$NoPues ; $i++) { 
+	                        echo '$nombres['; echo $i; echo "],";
+	                      } ?>],
+	          // Pongo el título para el eje de las 'X'
+	          title: {
+	            text: 'Plazas'
+	          }
+	        },
+	        yAxis: {
+	          // Pongo el título para el eje de las 'Y'
+	          title: {
+	            text: 'Rango'
+	          }
+	        },
+	        // Doy formato al la "cajita" que sale al pasar el ratón por encima de la gráfica
+	        tooltip: {
+	          enabled: true,
+	          formatter: function() {
+	            return '<b>'+ this.series.name +'</b><br/>'+
+	              this.x +': '+ this.y +' '+this.series.name;
+	          }
+	        },
+	        // Doy opciones a la gráfica
+	        plotOptions: {
+	          line: {
+	            dataLabels: {
+	              enabled: true
+	            },
+	            enableMouseTracking: true
+	          }
+	        },
+	        // Doy los datos de la gráfica para dibujarlas
+	        series: [{
+	                      name: '% de Plazas Completas',
+	                      data: [<?php for ($i=0; $i <$NoPues ; $i++) { 
+	                        echo '$valores['; echo $i; echo "],";
+	                      } ?>]
+	                  }],
+	      }); 
+	    };
+	</script>
+	@endif
+	@if ($graficas->grafica7==1)
+	<!-- grafica causa de bajas -->
+	<script type="text/javascript">
+
+	  function grafica10() {
+	    
+	    Highcharts.chart('containersiete', {
+	    chart: {
+	        type: 'column'
+	    },
+	    title: {
+	        text: 'MOTIVOS DE BAJA'
+	    },
+	    subtitle: {
+	        text: 'Fuente: aron.com.mx'
+	    },
+	    xAxis: {
+	        categories: [
+	            'ACOSO',
+	            'CAMBIO DE RESIDENCIA',
+	            'CUIDADO DE SUS HIJOS',
+	            'LEJANIA',
+	            'MAYORES PRESTACIONES',
+	            'MEJOR HORARIO',
+	            'MEJOR SUELDO',
+	            'OTRO EMPLEO',
+	            'PROBLEMAS FAMILIARES',
+	            'PROBLEMAS PERSONALES',
+	            'RENUNCIA VOLUNTARIA'
+	        ],
+	        crosshair: true
+	    },
+	    yAxis: {
+	        min: 0,
+	        title: {
+	            text: ''
+	        }
+	    },
+	    tooltip: {
+	        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+	        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+	            '<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
+	        footerFormat: '</table>',
+	        shared: true,
+	        useHTML: true
+	    },
+	    plotOptions: {
+	        column: {
+	            pointPadding: 0.2,
+	            borderWidth: 0
+	        }
+	    },
+	    series: [{
+	        name: 'TOTAL',
+	        data: [1, 3, 3, 2, 1, 2, 4, 4, 2, 1, 1],
+	        dataLabels: {
+	                enabled: true,
+	                rotation: 0,
+	                color: '#FFFFFF',
+	                align: 'right',
+	                y: 10, // 10 pixels down from the top
+	                style: {
+	                    fontSize: '10px',
+	                    fontFamily: 'helvetica, arial, sans-serif',
+	                    textShadow: false,
+	                    fontWeight: 'normal'
+
+	                }
+	            }
+
+	    }]
+	    });
+	  };
+	</script>
+	@endif
+	@if ($graficas->grafica8==1)
+	<!-- grafica IRP -->
+	<script type="text/javascript">
+	   var chart;
+	  function grafica8() {
+	    
+	    
+	    Highcharts.chart('containerocho', {
+	    chart: {
+	        type: 'column'
+	    },
+	    title: {
+	        text: 'IRP'
+	    },
+	    subtitle: {
+	        text: 'Fuente: aron.com.mx'
+	    },
+	    xAxis: {
+	        categories: [
+	            'ENERO',
+	            'FEBRERO',
+	            'MARZO',
+	            'ABRIL',
+	            'MAYO',
+	            'JUNIO',
+	            'JULIO',
+	            'AGOSTO',
+	            'SEPTIEMBRE',
+	            'OCTUBRE',
+	            'NOVIEMBRE',
+	            'DICIEMBRE'
+	        ],
+	        crosshair: true
+	    },
+	    yAxis: {
+	        min: 0,
+	        title: {
+	            text: ''
+	        }
+	    },
+	    tooltip: {
+	        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+	        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+	            '<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
+	        footerFormat: '</table>',
+	        shared: true,
+	        useHTML: true
+	    },
+	    plotOptions: {
+	        column: {
+	            pointPadding: 0.2,
+	            borderWidth: 0
+	        }
+	    },
+	    series: [{
+	        name: 'ALTAS',
+	        data: [9, 8, 3, 6, 6, 5, 10, 8, 0, 0, 0, 0],
+	        dataLabels: {
+	                enabled: true,
+	                rotation: 0,
+	                color: '#FFFFFF',
+	                align: 'right',
+	                y: 10, // 10 pixels down from the top
+	                style: {
+	                    fontSize: '10px',
+	                    fontFamily: 'helvetica, arial, sans-serif',
+	                    textShadow: false,
+	                    fontWeight: 'normal'
+
+	                }
+	            }
+
+	    }, {
+	        name: 'BAJAS',
+	        data: [5, 4, 1, 4, 1, 2, 6, 3, 0, 0, 0, 0],
+	        dataLabels: {
+	                enabled: true,
+	                rotation: 0,
+	                color: '#FFFFFF',
+	                align: 'right',
+	                y: 10, // 10 pixels down from the top
+	                style: {
+	                    fontSize: '10px',
+	                    fontFamily: 'helvetica, arial, sans-serif',
+	                    textShadow: false,
+	                    fontWeight: 'normal'
+
+	                }
+	            }
+
+	    }, {
+	        name: 'No. DE TRABAJADORES AL INICIAR PERIODO',
+	        data: [45, 49, 53, 55, 57, 62, 65, 69, 0, 0, 0, 0],
+	        dataLabels: {
+	                enabled: true,
+	                rotation: 0,
+	                color: '#FFFFFF',
+	                align: 'right',
+	                y: 10, // 10 pixels down from the top
+	                style: {
+	                    fontSize: '10px',
+	                    fontFamily: 'helvetica, arial, sans-serif',
+	                    textShadow: false,
+	                    fontWeight: 'normal'
+
+	                }
+	            }
+
+	    }, {
+	        name: 'No. TRABAJADORES AL FINAL PERIODO',
+	        data: [49, 53, 55, 57, 62, 65, 69, 74, 0, 0, 0, 0],
+	        dataLabels: {
+	                enabled: true,
+	                rotation: 0,
+	                color: '#FFFFFF',
+	                align: 'right',
+	                y: 10, // 10 pixels down from the top
+	                style: {
+	                    fontSize: '10px',
+	                    fontFamily: 'helvetica, arial, sans-serif',
+	                    textShadow: false,
+	                    fontWeight: 'normal'
+
+	                }
+	            }
+
+	    },
+	    {
+	        type: 'spline',
+	        name: 'IRP',
+	        data: [8.51, 7.84, 3.70, 3.57, 8.40, 4.72, 5.97, 6.99],
+	        marker: {
+	            lineWidth: 2,
+	            lineColor: Highcharts.getOptions().colors[3],
+	            fillColor: 'white'
+	        }
+	    }]
+	  });
+	      };
+	</script>
+	@endif
+@endif
 @endsection

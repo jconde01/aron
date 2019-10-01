@@ -30,6 +30,7 @@ use App\Http\Controllers\AppController;
 use Illuminate\Support\Facades\Schema;
 use App\Conceptos_Asimilados;
 use App\Conceptos_Asimilados_A;
+use App\Puesto;
 
 class HomeController extends Controller
 {
@@ -831,7 +832,9 @@ class HomeController extends Controller
     //------------------------------------------Fin de grafica de faltas injustificadas 2019----------------------------                     
                         $navbar = ProfileController::getNavBar('',0,$perfil);
                         $documentos = ListaDoc::get();
-                        return view('home')->with(compact('navbar', 'graficas','data','data2','data3','cont20','cont26','cont31', 'cont36','cont41','cont46','cont60','data4','l9data4'));
+                         $NoPues = Puesto::get();
+                          $NoPues = count($NoPues);
+                        return view('home')->with(compact('navbar', 'graficas','data','data2','data3','cont20','cont26','cont31', 'cont36','cont41','cont46','cont60','data4','l9data4','NoPues'));
                 } else {
                     return view('sistema.chooseTipoYProceso')->with(compact('cliente'));
                 }
