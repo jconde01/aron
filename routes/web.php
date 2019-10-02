@@ -179,6 +179,7 @@ Route::middleware(['auth'])->prefix('consultas')->group(function () {
 	Route::get('/recibos/{id}/consulta','ConsultasController@consulta');
 	Route::get('/contratos','ConsultasController@indexContrato');
 	Route::get('/contratos/{id}/consulta','ConsultasController@consultaContrato');
+	Route::post('/contratos/fechas','ConsultasController@fechasContratos');
 	Route::get('/documentos','ConsultasController@documentos');
 	Route::get('/documentos/{subcarpeta}','ConsultasController@subCarpetas');
 	Route::get('/timbrado','TimbradoController@index');

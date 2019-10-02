@@ -31,8 +31,42 @@
             echo '<span style="color: white;">'.$e->getMessage().'</span>'; 
            } 
          ?>                           
-         
+      
       </div>
+      @if ($documentos!==null)
+      <form method="POST" action=" {{url('/consultas/contratos/fechas')}} ">
+        {{ csrf_field() }}
+        <input type="hidden" name="NoEmp" value="{{$NoEmpleado}}">
+        <div style="border: 1px red solid;">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="bmd-label-floating">Contrato 3 Meses</label>
+              <input type="date" name="tres" class="form-control" value="{{$documentos->tresmeses}}">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="bmd-label-floating">Contrato 6 Meses</label>
+              <input type="date" name="seis" class="form-control" value="{{$documentos->seismeses}}">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="bmd-label-floating">Contrato Indefinido</label>
+              <input type="hidden" name="indefinido" value="0" class="form-control">
+              <input type="checkbox" name="indefinido" value="1" class="form-control" @if ($documentos->indefinido==1) checked @endif>
+            </div>
+          </div>
+          <button class="btn btn-primary">Guardar</button> 
+        </div>
+      </form>
+      @else
+          <div style="background-color: red;color: white; border-radius: 5px; text-align: center;">
+            <h3>Para activar las fechas de los contratos favor de ir al catálogo de empleados y a continuación los documentos del empleado requerido o dandole click al sig. link -> <a href="{{url('/catalogos/empleados/'.$NoEmpleado.'/documentos')}}" rel="tooltip" title="Documentos" class="btn btn-warning btn-simple btn-xs">
+                                <i class="fa fa-file"></i>
+                              </a></h3>
+          </div>
+      @endif
 
     </div>
   </div>

@@ -14,6 +14,7 @@ use App\Checklist;
 use setasign\Fpdi\Fpdi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
+use App\ListaDoc;
 
 class ConsultasController extends Controller
 {
@@ -109,7 +110,7 @@ class ConsultasController extends Controller
         $celula_empresa = Cell::where('id', $cliente->cell_id)->first()->nombre;
         $ruta = Client::getRutaEmpleados($cliente->cell_id,$rfc_cliente). '/' . $rfc_empleado . '/contratos';
          if (is_dir($ruta)){
-            echo "si se pudo";
+            // echo "si se pudo";
         }else{
             try {
             mkdir($ruta,0755,true);
@@ -118,9 +119,29 @@ class ConsultasController extends Controller
             }
 
         }
+        $NoEmpleado = Empleado::where('RFC', $RFC)->first()->EMP;
+        $documentos = ListaDoc::where('EMP',$NoEmpleado)->first();
         $perfil = auth()->user()->profile->id;        
         $navbar = ProfileController::getNavBar('',0,$perfil);
-    	return view('consultas.contratos.consulta')->with(compact('navbar','ruta')); 
+    	return view('consultas.contratos.consulta')->with(compact('navbar','ruta','NoEmpleado','documentos')); 
+    }
+
+    public function fechasContratos(Request $request)
+    {
+        $documentos = ListaDoc::where('EMP',$request->NoEmp)->first();
+        // $documentos = ListaDoc::where('EMP',0100012)->first();
+        // dd($documentos);
+        if ($documentos!==null) {
+            $documentos->tresmeses = $request->tres;
+            $documentos->seismeses = $request->seis;
+            $documentos->indefinido = $request->indefinido;
+            $documentos->save();
+            return redirect('/consultas/contratos')->with('flash','Se ha actualizado las fechas de los contratos correctamente.');
+        }else{
+            return back()->with('warning','No se puede actualizar la fecha de los contratos ya que el empleado no tiene registro de documentos, favor de consultar el apartado de documentos en el catálogo de empleados.');
+        }
+        
+        
     }
 
      public function descarga($sub, $archivo)
