@@ -433,6 +433,7 @@
 		promed = Number($('.emp').find(':selected').data('promed'));
 		periodo = $('#periodo').val();
  		descuento = $('#descuento').val();
+
  		fecha = $('#fecha').val();
 		unidades = $('#unidades').val();
 		if (pantalla == 4) {
@@ -469,7 +470,7 @@
 		        	var col7 = row.insertCell(7);
 		        	var col8 = row.insertCell(8);
 		        	var checked = (activo)?'checked':'';
-
+		        	
 					col3.innerHTML = '<td><input type="text" class="unidades" name="unidades[]" style="border:0px;width:100px!important;text-align:right!important;" readonly value="'+descuento+'" /></td>';
 					col4.innerHTML = '<td><input type="text" class="saldo" name="saldo[]"  style="border:0px;width:150px!important;text-align:right!important;" readonly value="'+saldo+'" /></td>';
 					col5.innerHTML = '<td><input type="checkbox" class="activo" name="activo[]"  style="border:0px;width:150px!important;text-align:center!important;" readonly '+ checked +'/></td>';
@@ -480,6 +481,7 @@
 						'&nbsp&nbsp<a href="#" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs"><i class="fa fa-times"></i></a>'+'</td>';
 			        break;
 			    case 3:
+			    
 					col3.innerHTML = '<td><input type="text" class="unidades" name="unidades[]" style="border:0px;width:150px!important;text-align:right!important;" readonly value="'+unidades+'"/></td>';	
 					col4.innerHTML = '<td><input type="text" class="calculo" name="calculo[]"  style="border:0px;width:150px!important;text-align:right!important;" readonly value="'+calculo+'"/></td>';
 					col5.innerHTML = '<td class="td-actions text-center">'+
@@ -487,6 +489,7 @@
 						'&nbsp&nbsp<a href="#" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs"><i class="fa fa-times"></i></a>'+'</td>';
 			    	break;
 			    case 4:
+			  
 					col3.innerHTML = '<td><input type="text" class="unidades" name="unidades[]" style="border:0px;width:150px!important;text-align:right;" readonly value="'+unidades+'" /></td>';
 					col4.innerHTML = '<td><input type="text" class="calculo" name="calculo[]" readonly value="'+calculo+'" /></td>'; col4.style.display = 'none';
 					col5.innerHTML = '<td class="td-actions text-center">'+
@@ -494,6 +497,7 @@
 						'&nbsp&nbsp<a href="#" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs"><i class="fa fa-times"></i></a>'+'</td>';
 			    	break;
 			    case 5:
+			    // alert(descuento);
 		        	var col6 = row.insertCell(6);
 		        	var col7 = row.insertCell(7);
 
