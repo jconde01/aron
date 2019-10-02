@@ -17,19 +17,13 @@
                        Presentación
                     </a>
                 </li>
-                <li>
-                    <a href=""data-toggle="modal" data-target="#GSCCModal1">
-                        Video
-                    </a>
-                    
-
-                </li>
+                
             </ul>
             <div style="" id="GSCCModal1" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                              <div class="modal-dialog">
                                 <div class="modal-content">
                                   <div class="modal-header">                                 
-                                    <h4 class="modal-title" id="myModalLabel">Video</h4>
+                                    
                                   </div>
                                   <div class="modal-body" style="text-align: center;">
                                     <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/ZDCRHgOl0aU?rel=0&amp;controls=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
