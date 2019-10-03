@@ -917,7 +917,7 @@ class HomeController extends Controller
         $id = auth()->id();
         $usuario_mensaje = $id.'administrador'.$id;
          if (Cache::get( $usuario_mensaje)!==1) {           
-            Cache::put($usuario_mensaje, 1, 2880 ); //2880         
+            Cache::put($usuario_mensaje, 1, 1 ); //2880         
             $notificado = '';
             $documentos = DB::connection('sqlsrv2')->table('LISTADOCUMENTOS')
                         ->join('EMPLEADO','LISTADOCUMENTOS.EMP','=','EMPLEADO.EMP')
@@ -926,8 +926,33 @@ class HomeController extends Controller
             $pre2 = '';
             $pre3 = '';          
             foreach ($documentos as $documento) 
-            {            
+            {          
                $notificado = ' ';
+               if ($documento->tresmeses!==null) {
+                 $tresmeses = date_create($documento->tresmeses);
+                 $fechatres = date_diff($tresmeses, $hoy);
+                 
+                 if ($fechatres->days<=15) {
+                  $notificado = $notificado.' <br> Contrato de 3 meses  &nbsp; '."\n".'<br>'.'<br/>';
+                 }
+               }
+
+               if ($documento->seismeses!==null) {
+                 $seismeses = date_create($documento->seismeses);
+                 $fechaseis = date_diff($seismeses, $hoy);
+                 
+                 if ($fechatres->days<=30) {
+                  $notificado = $notificado.' <br> Contrato de 6 meses  &nbsp; '."\n".'<br>'.'<br/>';
+                 }
+               }
+
+               if ($documento->indefinido!==1) {
+                
+                  $notificado = $notificado.' <br>No cuenta con Contrato indefinido  &nbsp; '."\n".'<br>'.'<br/>';
+                 
+               }
+               
+               // dd($fechatres->days);  
               for ($i=1; $i <16 ; $i++) 
               { 
                 $nombre = 'FECHAVENCI'.$i;
