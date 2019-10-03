@@ -917,7 +917,7 @@ class HomeController extends Controller
         $id = auth()->id();
         $usuario_mensaje = $id.'administrador'.$id;
          if (Cache::get( $usuario_mensaje)!==1) {           
-            Cache::put($usuario_mensaje, 1, 1 ); //2880         
+            Cache::put($usuario_mensaje, 1, 2880 ); //2880         
             $notificado = '';
             $documentos = DB::connection('sqlsrv2')->table('LISTADOCUMENTOS')
                         ->join('EMPLEADO','LISTADOCUMENTOS.EMP','=','EMPLEADO.EMP')
