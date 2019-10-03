@@ -37,7 +37,7 @@
       <form method="POST" action=" {{url('/consultas/contratos/fechas')}} ">
         {{ csrf_field() }}
         <input type="hidden" name="NoEmp" value="{{$NoEmpleado}}">
-        <div style="border: 1px blue solid; border-radius: 5px;">
+        <div style="margin-top: 5px;">
           <div class="col-md-4">
             <div class="form-group">
               <label class="bmd-label-floating">Contrato 3 Meses</label>
