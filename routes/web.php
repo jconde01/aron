@@ -26,6 +26,7 @@ Route::middleware(['auth'])->group(function () {
 	Route::get('/messages/create/{id}', 'MessagesController@create');
 	Route::post('/messages/store', 'MessagesController@store')->name('messages.store');
 	Route::get('/messages/{id}', 'MessagesController@show')->name('messages.show');
+	Route::get('/messages/{id}/{id_leer}', 'MessagesController@showLeer');
 	Route::get('/notificaciones','NotificationsController@index');
 	Route::patch('/notificaciones/leida/{id}','NotificationsController@read');
 	Route::get('/descarga/{sub}/{ru}','ConsultasController@descarga');

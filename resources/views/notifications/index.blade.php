@@ -12,8 +12,9 @@
 				<h2 >No leídas</h2>
  				<ul class="list-group">
 					@foreach($unreadNotifications as $unreadNotification)
+					
 						 <li class="list-group-item">
-						 	<a href="{{ $unreadNotification->data['link'] }}">
+						 	<a href="{{ $unreadNotification->data['link'] }}/{{ $unreadNotification->id }}">
 						 		{{ $unreadNotification->data['text'] }}
 						 	</a>
 						 	<form method="POST" action="{{ url('notificaciones/leida/' . $unreadNotification->id ) }}"  class="pull-right">
