@@ -11,7 +11,9 @@ use App\Client;
 use App\CiasNo;
 use Session;
 use App\Cell;
+use App\Nomina;
 use Response;
+use App\Checklist;
 use App\Message;
 use setasign\Fpdi\Fpdi;
 use Illuminate\Http\Request;
@@ -19,6 +21,7 @@ use App\Notifications\MessageSent;
 use Illuminate\Support\Facades\Hash;
 use webcoder31\ezxmldsig\XMLDSigToken;
 use App\Http\Controllers\ProcessController;
+use Illuminate\Support\Facades\Schema;
 
  
 class TimbradoController extends Controller
@@ -33,6 +36,12 @@ class TimbradoController extends Controller
     // despliega los docuentos pendientes por autorizar
     public function index()
     {
+        try {
+            $control =Schema::connection('sqlsrv2')->hasTable('PERIODO');
+            } catch (\Exception $e) {
+                return redirect('/home');
+                die("Could not connect to the database.  Please check your configuration. error:" . $e );
+            }
     	$rfc_cliente = CiasNo::first()->RFCCTE;
         Session(['rfc_cliente' => $rfc_cliente]);
         $cliente = Session::get('selCliente');
@@ -46,7 +55,22 @@ class TimbradoController extends Controller
     // Firma un documento con la llave privada del cliente
     public function firmar(Request $request)
     {
-        
+        $selCliente = Session::get('selCliente');
+        $perical = Nomina::first()->PERICALC;
+        $AsimiFiscal = Session::get('tinom');
+        if ($AsimiFiscal=='fiscal') {
+            $cia = $selCliente->fiscal_bda;
+        }else{
+            $cia = $selCliente->asimilado_bda;
+        }
+        $fecha = getdate();
+        $hora =$fecha['mday'].'-'.$fecha['mon'].'-'.$fecha['year'].' '. $fecha['hours'].':'.$fecha['minutes'];
+        $checklist = Checklist::where('CIA',$cia)->where('PERICALC',$perical)->first();
+        $checklist->CHECK22 = 1;
+        $checklist->FECHA22 = $hora;
+        $checklist->save();
+        //dd($checklist,$fecha,$hora);
+
         $cliente = Session::get('selCliente');
         $hashedPassword = $cliente->pkey_passwd;
         if (!Hash::check($request->pkey_pwd, $hashedPassword)) {
@@ -119,6 +143,8 @@ class TimbradoController extends Controller
             'body' => "El usuario " . auth()->user()->name . " ha autorizado el proceso de la nómina del cliente " . $cliente->Nombre . ". Archivo autorizado: " . $ruta_pdf
         ]);
         $recipient->notify(new MessageSent($message));
+        
+
     	return back()->with('flash','Confirmacion exitosa. Se ha enviado una notificacion a la célula para su proceso... gracias.');
     }
 
@@ -136,6 +162,12 @@ class TimbradoController extends Controller
 
     // Despliega TODAS las nominas Firmadas
     public function consultaAutorizadas() {
+        try {
+            $control =Schema::connection('sqlsrv2')->hasTable('PERIODO');
+            } catch (\Exception $e) {
+                return redirect('/home');
+                die("Could not connect to the database.  Please check your configuration. error:" . $e );
+            }
         $cliente = Session::get('selCliente');
         $rfc_cliente = CiasNo::first()->RFCCTE;
         $ruta = Client::getRutaAutorizados($cliente->cell_id,$rfc_cliente);
